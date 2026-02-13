@@ -1,0 +1,8 @@
+# AI模型对比测试工具依赖包
+# 安装: pip install -r requirements.txt
+
+# HTTP请求库
+requests>=2.31.0
+
+# 环境变量管理（可选，用于从.env文件加载）
+python-dotenv>=1.0.0

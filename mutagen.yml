@@ -1,0 +1,36 @@
+sync:
+  defaults:
+    mode: two-way-resolved
+    conflictStrategy: newer
+
+  ai-website:
+    source: .
+    destination: root@8.135.37.159:/var/www/ai-coming-website
+    mode: two-way-resolved
+    ignore:
+      vcs: true
+      paths:
+        - /node_modules
+        - package-lock.json
+        - /.env
+        - /.env.local
+        - /logs
+        - *.log
+        - .DS_Store
+        - /backup
+        - test-*.html
+        - test_*.py
+        - qwen-comparison-*.json
+        - test-*-quickstart.md
+        - server.js
+        - server-ubuntu.js
+        - api-cloud.js
+        - admin-accounts-secure.js
+        - PROJECT_*.md
+        - API_*.md
+        - *_GUIDE.md
+        - *_TEST.md
+        - README_*.md
+    permissions:
+      mode: portable
+    batchMode: true

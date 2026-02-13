@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资讯 - AIcoming</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="AIcoming - 专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析，让一部分人先用起来">
+    <meta name="keywords" content="AI,人工智能,机器学习,深度学习,AI资讯,技术动态,行业趋势">
+    <meta name="author" content="AIcoming">
+    <meta name="robots" content="index, follow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="AIcoming - AI资讯中心">
+    <meta property="og:description" content="专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aicoming.com">
+    <meta property="og:image" content="https://aicoming.com/pic/AIcoming_zixunye.png">
+    <meta property="og:site_name" content="AIcoming">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AIcoming - AI资讯中心">
+    <meta name="twitter:description" content="专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析">
+    <meta name="twitter:image" content="https://aicoming.com/pic/AIcoming_zixunye.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AIcoming - AI资讯中心",
+        "description": "专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析",
+        "url": "https://aicoming.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://aicoming.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "AIcoming",
+            "url": "https://aicoming.com",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://aicoming.com/pic/AIcoming_zixunye.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- API服务层 -->
+    <script src="api.js"></script>
+
+    <style>
+        /* 时间轴样式 */
+        .timeline-item {
+            position: relative;
+            padding: 12px 16px;
+            margin-left: 8px;
+            border-left: 3px solid #e5e7eb;
+            border-radius: 0 8px 8px 0;
+            background: #f9fafb;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -7.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #9ca3af;
+            transition: all 0.2s ease;
+        }
+        .timeline-item:hover {
+            background: #eff6ff;
+            border-left-color: #3b82f6;
+            transform: translateX(4px);
+        }
+        .timeline-item:hover::before {
+            border-color: #3b82f6;
+        }
+        .timeline-item.active {
+            background: #dbeafe;
+            border-left-color: #2563eb;
+        }
+        .timeline-item.active::before {
+            background: #2563eb;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        .timeline-date {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+        .timeline-count {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .timeline-item.active .timeline-date {
+            color: #1e40af;
+        }
+        .timeline-item.active .timeline-count {
+            color: #3b82f6;
+        }
+
+        /* 自定义滚动条样式 */
+        #timelineContainer::-webkit-scrollbar {
+            width: 6px;
+        }
+        #timelineContainer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        #timelineContainer::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        #timelineContainer::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 文章列表样式 */
+        .article-item {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .article-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        .article-item.tech {
+            border-left-color: #3b82f6;
+        }
+        .article-item.policy {
+            border-left-color: #10b981;
+        }
+        .article-item.business {
+            border-left-color: #f59e0b;
+        }
+        .article-item.product {
+            border-left-color: #8b5cf6;
+        }
+
+        /* 大纲链接样式 */
+        .outline-link {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #4b5563;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+        .outline-link:hover {
+            background: #f3f4f6;
+            color: #2563eb;
+            border-left-color: #2563eb;
+        }
+        .outline-link.active {
+            background: #eff6ff;
+            color: #2563eb;
+            border-left-color: #2563eb;
+            font-weight: 500;
+        }
+
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 回到顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- 导航栏容器 -->
+    <div class="nav-container" id="navContainer">
+        <!-- 完整导航栏 -->
+        <nav class="bg-white shadow-lg" id="fullNav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="index.html">
+                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                        </a>
+                    </div>
+
+                    <!-- 桌面端导航菜单 - 居中 -->
+                    <div class="hidden lg:block flex-1 flex justify-center">
+                        <div class="flex items-center space-x-2 modern-nav ml-16">
+                            <a href="index.html" class="nav-link" onclick="setActiveNav(this)">首页</a>
+                            <a href="news.html" class="nav-link active" onclick="setActiveNav(this)">AI资讯</a>
+                        </div>
+                    </div>
+
+                    <!-- 中等屏幕导航菜单 - 居中 -->
+                    <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                        <div class="flex items-center space-x-1 modern-nav ml-8">
+                            <a href="index.html" class="nav-link" onclick="setActiveNav(this)">首页</a>
+                            <a href="news.html" class="nav-link active" onclick="setActiveNav(this)">AI资讯</a>
+                        </div>
+                    </div>
+
+                    <!-- 移动端菜单按钮 -->
+                    <div class="md:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 移动端菜单 -->
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="mobile-nav-link" onclick="setActiveNav(this)">首页</a>
+                    <a href="news.html" class="mobile-nav-link active" onclick="setActiveNav(this)">AI资讯</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 简化导航栏 -->
+        <nav class="nav-simplified hidden" id="simplifiedNav">
+            <div class="nav-content">
+                <button class="back-button" onclick="showFullNav()">
+                    <i class="fas fa-arrow-left mr-2"></i>返回
+                </button>
+                <div class="nav-tabs">
+                    <div class="nav-tab active" onclick="switchTab('today', event)">今日快讯</div>
+                    <div class="nav-tab" onclick="switchTab('weekly', event)">每周资讯</div>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div x-data="{ mobileMenuOpen: false, currentTab: 'today' }" class="content-section">
+        <!-- 热点标签云 -->
+        <section class="hot-keywords" id="hotKeywords" itemscope itemtype="https://schema.org/ItemList">
+            <div class="keyword-wall" id="keywordWall" itemprop="itemListElement">
+            </div>
+        </section>
+
+        <!-- AI资讯展示区域 - 三段式布局 -->
+        <section class="py-8 bg-gray-50" id="newsSection" style="margin-top: 0px;">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- 三段式布局容器 -->
+                <div class="flex gap-8">
+                    <!-- 左侧：历史时间轴 -->
+                    <aside class="w-48 flex-shrink-0 hidden lg:block">
+                        <div class="sticky top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                <i class="far fa-calendar-alt mr-2 text-blue-600"></i>
+                                历史文章
+                            </h3>
+
+                            <!-- 月份选择器 -->
+                            <div class="mb-4">
+                                <select id="monthSelector" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="all">全部月份</option>
+                                </select>
+                            </div>
+
+                            <!-- 时间轴容器 -->
+                            <div id="timelineContainer" class="space-y-2 max-h-[600px] overflow-y-auto pr-2">
+                                <!-- 时间轴将通过JavaScript动态生成 -->
+                                <div class="text-center py-8 text-gray-500 text-sm">
+                                    <i class="fas fa-spinner fa-spin mb-2"></i>
+                                    <p>加载中...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- 中间：文章内容 -->
+                    <main class="flex-1 min-w-0">
+                        <!-- 顶部控制栏 -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-4">
+                                <h2 class="text-2xl font-bold text-gray-900" id="sectionTitle">今日快讯</h2>
+                                <!-- 每周资讯功能已禁用 -->
+                                <!-- <div class="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+                                    <button class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white" onclick="switchContentTab('today')" id="todayTab">今日快讯</button>
+                                    <button class="px-4 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-white hover:text-gray-900" onclick="switchContentTab('weekly')" id="weeklyTab">每周资讯</button>
+                                </div> -->
+                            </div>
+                        </div>
+
+                        <!-- 地区筛选 -->
+                        <div class="mb-6">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium text-gray-500">地区：</span>
+                                <div class="flex space-x-2">
+                                    <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('all')" id="allFilter">全部</button>
+                                    <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('china')" id="chinaFilter">中国</button>
+                                    <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('global')" id="globalFilter">全球</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 文章列表容器 -->
+                        <div id="articlesContainer">
+                            <!-- 文章将通过JavaScript动态加载 -->
+                            <div class="text-center py-12">
+                                <div class="text-gray-500">
+                                    <i class="fas fa-newspaper text-4xl mb-4"></i>
+                                    <p class="text-lg">正在加载今日快讯...</p>
+                                    <p class="text-sm mt-2">如果没有内容，请先通过API导入新闻数据</p>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <!-- 右侧：内容大纲 -->
+                    <aside class="w-56 flex-shrink-0 hidden xl:block">
+                        <div class="sticky top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                <i class="fas fa-list mr-2 text-blue-600"></i>
+                                内容大纲
+                            </h3>
+                            <div id="outlineContainer" class="bg-white rounded-lg shadow-md p-4">
+                                <!-- 大纲将通过JavaScript动态生成 -->
+                                <div class="text-sm text-gray-500 text-center py-4">
+                                    加载中...
+                                </div>
+                            </div>
+
+                            <!-- 统计信息 -->
+                            <div class="mt-6 bg-white rounded-lg shadow-md p-4">
+                                <h4 class="text-sm font-bold text-gray-900 mb-3">
+                                    <i class="fas fa-chart-bar mr-2 text-blue-600"></i>
+                                    今日统计
+                                </h4>
+                                <div id="statsContainer" class="space-y-2 text-sm">
+                                    <!-- 统计信息将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- 回到顶部按钮 -->
+        <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+
+        <!-- 公共底部组件 -->
+        <div id="footer-container"></div>
+    </div>
+
+    <script src="main.js"></script>
+
+    <!-- 初始化新闻页面 -->
+    <script>
+        // 页面加载时初始化新闻数据
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('news.html 页面加载完成，开始加载新闻数据...');
+            if (typeof loadNewsData === 'function') {
+                loadNewsData();
+            } else {
+                console.error('loadNewsData 函数未找到');
+            }
+        });
+    </script>
+
+    <!-- 加载公共底部组件 -->
+    <script>
+        // 加载公共底部组件
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('加载底部组件失败:', error);
+                // 如果加载失败，显示默认底部
+                document.getElementById('footer-container').innerHTML = `
+                    <footer class="py-4" style="background-color: #F2F2F2; color: #64696E; z-index: 1000; position: relative;">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center">
+                                <p style="color: #64696E;">
+                                    © 2026 AIcoming. 保留所有权利。让一部分人先用起来。
+                                </p>
+                            </div>
+                        </div>
+                    </footer>
+                `;
+            });
+    </script>
+</body>
+</html>

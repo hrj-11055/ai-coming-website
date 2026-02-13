@@ -1,0 +1,41 @@
+{
+  "name": "ai-news-backend",
+  "version": "2.0.0",
+  "description": "AI资讯管理系统后端服务 - 企业级MySQL版本",
+  "main": "server-mysql.js",
+  "scripts": {
+    "start": "node server-mysql.js",
+    "start:dev": "nodemon server-mysql.js",
+    "start:prod": "NODE_ENV=production node server-mysql.js",
+    "start:legacy": "node server-json.js",
+    "dev": "nodemon server-mysql.js",
+    "install:env": "cp .env.example .env || echo 'Please create .env file from .env.example'",
+    "db:init": "mysql -u root -p < database/schema.sql",
+    "db:migrate": "node scripts/migrate-data.js",
+    "test:models": "python3 test_model_comparison.py",
+    "test:models:custom": "python3 test_model_comparison.py",
+    "test:prompt": "node scripts/prompt-comparison-test.js",
+    "test:prompt:py": "python3 scripts/prompt_comparison_test.py"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "ai",
+    "news",
+    "backend",
+    "api",
+    "mysql",
+    "enterprise"
+  ],
+  "author": "AI资讯系统",
+  "license": "MIT"
+}

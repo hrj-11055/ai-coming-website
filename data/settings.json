@@ -1,0 +1,8 @@
+{
+  "todayNewsDisplayCount": 20,
+  "maxDisplayCount": 50,
+  "minDisplayCount": 1,
+  "autoArchiveEnabled": true,
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-12T12:10:46.814Z"
+}

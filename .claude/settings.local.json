@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test:*)",
+      "Bash(chmod:*)",
+      "Bash(./run.sh:*)",
+      "Bash(npm start)",
+      "Bash(cat:*)",
+      "Bash(npm run start:*)",
+      "Bash(ls:*)",
+      "Bash(python3:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)",
+      "Bash(wc:*)",
+      "Bash(dos2unix:*)",
+      "Bash(mutagen sync:*)",
+      "Bash(mutagen project start:*)",
+      "Bash(mutagen create:*)",
+      "Bash(ssh root@8.135.37.159 \"ls -la /var/www/html/report/ 2>/dev/null | head -10 || echo ''目录不存在''\")",
+      "Bash(ssh root@8.135.37.159:*)",
+      "Bash(scp:*)",
+      "Skill(bmad-bmm-create-excalidraw-diagram)",
+      "Bash(npm:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
