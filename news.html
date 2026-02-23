@@ -33,6 +33,20 @@
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <script>
+        (function() {
+            var probe = document.createElement('div');
+            probe.className = 'hidden';
+            probe.style.position = 'absolute';
+            probe.style.visibility = 'hidden';
+            document.documentElement.appendChild(probe);
+            var hiddenWorks = window.getComputedStyle(probe).display === 'none';
+            probe.remove();
+            if (!hiddenWorks) {
+                document.documentElement.classList.add('tw-fallback');
+            }
+        })();
+    </script>
 
     <!-- 结构化数据 -->
     <script type="application/ld+json">
