@@ -1,14 +1,16 @@
 // Load environment variables from .env file
 require('dotenv').config();
 
-const express = require('express');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
+const { createApp } = require('./server/app');
+const { createAuthMiddleware } = require('./server/middleware/auth');
+const { generateId } = require('./server/utils/ids');
+const { createAuthRouter } = require('./server/routes/auth');
+const { createSettingsRouter } = require('./server/routes/settings');
+const { createKeywordsRouter } = require('./server/routes/keywords');
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -33,19 +35,8 @@ const DAILY_ARCHIVE_DIR = path.join(ARCHIVE_DIR, 'daily');
 const WEEKLY_ARCHIVE_DIR = path.join(ARCHIVE_DIR, 'weekly');
 const LOGO_DIR = path.join(ROOT_DIR, 'logos');
 
-app.use(cors());
-app.use(express.json());
-
 const staticRoot = process.env.STATIC_ROOT;
-if (staticRoot) {
-    const resolvedStaticRoot = path.resolve(ROOT_DIR, staticRoot);
-    if (fs.existsSync(resolvedStaticRoot)) {
-        app.use(express.static(resolvedStaticRoot));
-        console.log('Serving static files from ' + resolvedStaticRoot);
-    } else {
-        console.warn('STATIC_ROOT ' + resolvedStaticRoot + ' not found; static hosting disabled.');
-    }
-}
+const app = createApp({ rootDir: ROOT_DIR, staticRoot });
 
 for (const dir of [DATA_DIR, ARCHIVE_DIR, DAILY_ARCHIVE_DIR, WEEKLY_ARCHIVE_DIR, LOGO_DIR]) {
     if (!fs.existsSync(dir)) {
@@ -114,22 +105,6 @@ function initDataFiles() {
         };
         fs.writeFileSync(SETTINGS_FILE, JSON.stringify(defaultSettings, null, 2));
     }
-}
-
-function generateId(type = 'daily') {
-    const now = new Date();
-    const year = now.getFullYear().toString();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    
-    // 类型标识
-    const typeCode = type === 'weekly' ? 'W' : '';
-    
-    // 生成4位流水码（0001-9999）
-    const sequence = Math.floor(Math.random() * 9999) + 1;
-    const sequenceStr = sequence.toString().padStart(4, '0');
-    
-    return year + month + day + typeCode + sequenceStr;
 }
 
 // 读取数据
@@ -272,22 +247,7 @@ function getWeekStartDate(date) {
 }
 
 // JWT验证中间件
-function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({ error: '访问令牌缺失' });
-    }
-
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({ error: '访问令牌无效' });
-        }
-        req.user = user;
-        next();
-    });
-}
+const authenticateToken = createAuthMiddleware(JWT_SECRET);
 
 // ==================== IP监控和封禁功能 ====================
 
@@ -461,6 +421,24 @@ function monitorAPIRateLimit(req, res, next) {
 // 应用中间件
 app.use(checkIPBan);
 app.use(monitorAPIRateLimit);
+app.use('/api', createAuthRouter({
+    readData,
+    adminsFile: ADMINS_FILE,
+    jwtSecret: JWT_SECRET
+}));
+app.use('/api', createSettingsRouter({
+    readData,
+    writeData,
+    settingsFile: SETTINGS_FILE,
+    authenticateToken
+}));
+app.use('/api', createKeywordsRouter({
+    readData,
+    writeData,
+    keywordsFile: KEYWORDS_FILE,
+    authenticateToken,
+    generateId
+}));
 
 // 定期清理过期数据（每小时执行一次）
 setInterval(() => {
@@ -476,126 +454,6 @@ setInterval(() => {
         console.log(`清理了 ${apiCalls.length - validCalls.length} 条过期API调用记录`);
     }
 }, 3600000); // 1小时
-
-// 管理员登录
-app.post('/api/auth/login', (req, res) => {
-    const { username, password } = req.body;
-    const admins = readData(ADMINS_FILE);
-    const admin = admins.find(a => a.username === username);
-
-    if (!admin || !bcrypt.compareSync(password, admin.password_hash)) {
-        return res.status(401).json({ error: '用户名或密码错误' });
-    }
-
-    const token = jwt.sign(
-        { id: admin.id, username: admin.username, role: admin.role },
-        JWT_SECRET,
-        { expiresIn: '24h' }
-    );
-
-    res.json({
-        success: true,
-        token: token,
-        user: {
-            username: admin.username,
-            role: admin.role
-        }
-    });
-});
-
-// 关键词管理API
-app.get('/api/keywords', (req, res) => {
-    const keywords = readData(KEYWORDS_FILE);
-    res.json(keywords);
-});
-
-app.post('/api/keywords', authenticateToken, (req, res) => {
-    const { text, weight, size } = req.body;
-    const keywords = readData(KEYWORDS_FILE);
-    
-    const newKeyword = {
-        id: Date.now(),
-        text,
-        weight: weight || 1,
-        size: size || 'small',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-    };
-    
-    keywords.push(newKeyword);
-    
-    if (writeData(KEYWORDS_FILE, keywords)) {
-        res.json({ id: newKeyword.id, message: '关键词添加成功' });
-    } else {
-        res.status(500).json({ error: '添加关键词失败' });
-    }
-});
-
-app.put('/api/keywords/:id', authenticateToken, (req, res) => {
-    const { id } = req.params;
-    const { text, weight, size, fontSize } = req.body;
-    const keywords = readData(KEYWORDS_FILE);
-    
-    const index = keywords.findIndex(k => k.id == id);
-    if (index === -1) {
-        return res.status(404).json({ error: '关键词不存在' });
-    }
-    
-    keywords[index] = {
-        ...keywords[index],
-        text,
-        weight,
-        size,
-        fontSize,
-        updated_at: new Date().toISOString()
-    };
-    
-    if (writeData(KEYWORDS_FILE, keywords)) {
-        res.json({ message: '关键词更新成功' });
-    } else {
-        res.status(500).json({ error: '更新关键词失败' });
-    }
-});
-
-app.delete('/api/keywords/:id', authenticateToken, (req, res) => {
-    const { id } = req.params;
-    const keywords = readData(KEYWORDS_FILE);
-    
-    const filteredKeywords = keywords.filter(k => k.id != id);
-    
-    if (writeData(KEYWORDS_FILE, filteredKeywords)) {
-        res.json({ message: '关键词删除成功' });
-    } else {
-        res.status(500).json({ error: '删除关键词失败' });
-    }
-});
-
-// 批量导入关键词
-app.post('/api/keywords/batch', authenticateToken, (req, res) => {
-    const { keywords } = req.body;
-    
-    if (!Array.isArray(keywords)) {
-        return res.status(400).json({ error: '关键词数据格式错误' });
-    }
-
-    const existingKeywords = readData(KEYWORDS_FILE);
-    const newKeywords = keywords.map(keyword => ({
-        id: generateId('daily'), // 关键词使用日格式
-        text: keyword.text,
-        weight: keyword.weight || 1,
-        size: keyword.size || 'small',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-    }));
-    
-    const allKeywords = [...existingKeywords, ...newKeywords];
-    
-    if (writeData(KEYWORDS_FILE, allKeywords)) {
-        res.json({ message: `成功导入 ${keywords.length} 个关键词` });
-    } else {
-        res.status(500).json({ error: '批量导入关键词失败' });
-    }
-});
 
 // 新闻管理API
 app.get('/api/news', (req, res) => {
@@ -1339,43 +1197,6 @@ app.post('/api/restore', authenticateToken, (req, res) => {
     }
     
     res.json({ message: '数据恢复成功' });
-});
-
-// 设置管理API
-app.get('/api/settings', (req, res) => {
-    try {
-        const settings = readData(SETTINGS_FILE);
-        res.json(settings);
-    } catch (error) {
-        console.error('读取设置失败:', error);
-        res.status(500).json({ error: '读取设置失败' });
-    }
-});
-
-app.post('/api/settings', authenticateToken, (req, res) => {
-    try {
-        const { todayNewsDisplayCount } = req.body;
-        
-        if (todayNewsDisplayCount && (todayNewsDisplayCount < 1 || todayNewsDisplayCount > 50)) {
-            return res.status(400).json({ error: '显示数量必须在1-50之间' });
-        }
-        
-        const settings = readData(SETTINGS_FILE);
-        const updatedSettings = {
-            ...settings,
-            ...req.body,
-            lastUpdated: new Date().toISOString()
-        };
-        
-        if (writeData(SETTINGS_FILE, updatedSettings)) {
-            res.json({ message: '设置更新成功', settings: updatedSettings });
-        } else {
-            res.status(500).json({ error: '设置更新失败' });
-        }
-    } catch (error) {
-        console.error('更新设置失败:', error);
-        res.status(500).json({ error: '更新设置失败' });
-    }
 });
 
 // 历史数据管理API
