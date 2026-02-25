@@ -21,7 +21,12 @@
       "Bash(scp:*)",
       "Skill(bmad-bmm-create-excalidraw-diagram)",
       "Bash(npm:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "mcp__zread__get_repo_structure",
+      "Bash(lsof:*)",
+      "Bash(pgrep:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

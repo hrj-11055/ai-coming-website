@@ -12,6 +12,31 @@ This is an AI News Management System (AI资讯管理系统) - an enterprise-leve
 
 ## Important Notes
 
+### CRITICAL: Linux Server Deployment (macOS Development)
+
+**This project is developed on macOS but deployed to a Linux server. ALL code changes must be compatible with Linux.**
+
+**Target Server**:
+- Host: `8.135.37.159`
+- Path: `/var/www/ai-coming-website`
+- OS: Linux (Ubuntu/Debian)
+- Sync Tool: Mutagen (configured in `mutagen.yml`)
+
+**Linux Compatibility Checklist** (verify before syncing):
+1. **File paths**: Use forward slashes `/`, never backslashes `\`
+2. **Line endings**: Shell scripts must use LF, not CRLF (see below)
+3. **Case sensitivity**: Linux is case-sensitive (`app.js` ≠ `App.js`)
+4. **File permissions**: Executable scripts need `chmod +x`
+5. **Node.js version**: Ensure compatibility with server's Node.js version
+6. **Environment variables**: `.env` is excluded from sync, configure separately on server
+7. **Absolute paths**: Avoid hardcoded macOS paths like `/Users/...`
+
+**Sync Status**:
+- Current: **NOT ACTIVE** (no sync session running)
+- When ready to sync: `mutagen project start`
+- Check sync status: `mutagen sync list`
+- Pause sync before major changes: `mutagen project pause`
+
 ### Line Ending Issues (Linux Deployment)
 
 **Problem**: When creating shell scripts on macOS and deploying to Linux servers, you may encounter:
@@ -188,16 +213,38 @@ Critical `.env` variables:
 
 ## Deployment
 
-**Mutagen Real-time Sync** (Recommended for Development):
+### Production Server
+- **Host**: `8.135.37.159`
+- **Path**: `/var/www/ai-coming-website`
+- **User**: `root`
+- **OS**: Linux
+
+### Mutagen Real-time Sync
+
+**Configuration**: `mutagen.yml`
 ```bash
-# Setup Mutagen synchronization with cloud server
-./sync-setup.sh
+# Start sync (when ready)
+mutagen project start
+
+# Check sync status
+mutagen sync list
+
+# Pause sync
+mutagen project pause
+
+# Resume sync
+mutagen project resume
+
+# Terminate sync
+mutagen project terminate
 ```
 
-This will:
-- Configure bidirectional sync between local and cloud server
-- Automatically sync code changes to server
-- Exclude node_modules, logs, and temporary files
+**Excluded from sync** (see `mutagen.yml`):
+- `node_modules/`, `package-lock.json`
+- `.env`, `.env.local`
+- `logs/`, `*.log`
+- `.DS_Store`, macOS files
+- Test files, backups
 
 **Server Requirements**:
 - SSH access with key-based authentication
