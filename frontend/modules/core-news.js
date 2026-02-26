@@ -684,10 +684,12 @@ function generateWordCloud() {
     
     const placedElements = [];
 
+    const topPadding = 50;
+    const bottomPadding = 70;
     const titleHeight = 30;
     const titleWidth = 100;
     const titleLeft = 20;
-    const titleTop = 35;
+    const titleTop = 20;
     
     placedElements.push({
         left: titleLeft,
@@ -841,10 +843,10 @@ function generateWordCloud() {
         if (!placed) {
             while (attempts < 50 && !placed) {
                 const maxLeft = Math.max(0, width - elementWidth - 20);
-                const maxTop = Math.max(0, height - elementHeight - 70); // 底部保持70px空间
+                const maxTop = Math.max(0, height - elementHeight - bottomPadding); // 底部保持70px空间
 
                 left = Math.random() * maxLeft + 10;
-                top = Math.random() * maxTop + 70; // 顶部保持70px空间
+                top = Math.random() * maxTop + topPadding; // 顶部保持50px空间
                 
                 if (!checkOverlap(element, left, top)) {
                     placed = true;
@@ -854,7 +856,7 @@ function generateWordCloud() {
             
             if (!placed) {
                 left = Math.random() * (width - elementWidth - 20) + 10;
-                top = Math.random() * (height - elementHeight - 70) + 70;
+                top = Math.random() * (height - elementHeight - bottomPadding) + topPadding;
             }
         }
         

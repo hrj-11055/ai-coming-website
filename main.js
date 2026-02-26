@@ -29,7 +29,7 @@ let currentFilter = 'all';
 let currentCategory = 'all';
 let currentTab = 'today';
 let dailyHistoryOffset = 0;
-let weeklyHistoryOffset = 0;
+let weeklyHistoryOffset = 0; // legacy variable kept for compatibility with old handlers
 let aiKeywords = [];
 
 // 页面加载完成后初始化
@@ -72,47 +72,25 @@ function showFullNav() {
 }
 
 function switchTab(tab, event) {
-    currentTab = tab;
+    currentTab = 'today';
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(t => t.classList.remove('active'));
     if (event && event.target) {
         event.target.classList.add('active');
     }
-    
-    if (tab === 'today') {
-        switchContentTab('today');
-    } else {
-        switchContentTab('weekly');
-    }
+    switchContentTab('today');
 }
 
 function switchContentTab(tab) {
-    // 每周资讯功能已禁用，强制使用今日快讯
-    tab = 'today';
-
-    currentTab = tab;
-    const todayTab = document.getElementById('todayTab');
-    const weeklyTab = document.getElementById('weeklyTab');
+    currentTab = 'today';
     const sectionTitle = document.getElementById('sectionTitle');
     const historyToggleText = document.getElementById('historyToggleText');
     const categoryFilters = document.getElementById('categoryFilters');
-    
-    if (tab === 'today') {
-        todayTab.className = 'px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white';
-        weeklyTab.className = 'px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-white hover:text-gray-900';
-        sectionTitle.textContent = '今日快讯';
-        historyToggleText.textContent = '每日回看';
-        categoryFilters.classList.add('hidden'); // 隐藏分类筛选
-        currentCategory = 'all'; // 重置分类筛选
-        loadNewsData();
-    } else {
-        todayTab.className = 'px-3 py-1.5 rounded-md text-sm font-medium transition-colors text-gray-600 hover:bg-white hover:text-gray-900';
-        weeklyTab.className = 'px-3 py-1.5 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white';
-        sectionTitle.textContent = '每周资讯';
-        historyToggleText.textContent = '每周回看';
-        categoryFilters.classList.remove('hidden'); // 显示分类筛选
-        loadWeeklyNewsData();
-    }
+    if (sectionTitle) sectionTitle.textContent = '今日快讯';
+    if (historyToggleText) historyToggleText.textContent = '每日回看';
+    if (categoryFilters) categoryFilters.classList.add('hidden');
+    currentCategory = 'all';
+    loadNewsData();
     
     // 更新历史回看控制区域
     updateHistoryControls();
@@ -136,11 +114,7 @@ function filterArticles(filter) {
     });
     
     // 根据当前标签页加载对应的数据
-    if (currentTab === 'weekly') {
-        loadWeeklyNewsData();
-    } else {
-        loadNewsData();
-    }
+    loadNewsData();
 }
 
 // 分类筛选函数
@@ -155,51 +129,27 @@ function filterByCategory(category) {
     document.getElementById(category + 'Filter').className = 'px-3 py-1.5 text-xs font-medium bg-blue-600 text-white rounded-md transition-colors';
     
     // 根据当前标签页加载对应的数据
-    if (currentTab === 'weekly') {
-        loadWeeklyNewsData();
-    } else {
-        loadNewsData();
-    }
+    loadNewsData();
 }
 
 // 历史回看相关函数
 function toggleHistoryView() {
     const dailyControls = document.getElementById('dailyHistoryControls');
-    const weeklyControls = document.getElementById('weeklyHistoryControls');
     const historyToggleBtn = document.getElementById('historyToggleBtn');
-    
-    if (currentTab === 'today') {
-        if (dailyControls.classList.contains('hidden')) {
-            dailyControls.classList.remove('hidden');
-            historyToggleBtn.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-green-200 text-green-800 hover:bg-green-300 border border-green-400';
-            loadDailyHistoryData();
-        } else {
-            dailyControls.classList.add('hidden');
-            historyToggleBtn.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-green-100 text-green-700 hover:bg-green-200 border border-green-300';
-        }
+
+    if (dailyControls.classList.contains('hidden')) {
+        dailyControls.classList.remove('hidden');
+        historyToggleBtn.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-green-200 text-green-800 hover:bg-green-300 border border-green-400';
+        loadDailyHistoryData();
     } else {
-        if (weeklyControls.classList.contains('hidden')) {
-            weeklyControls.classList.remove('hidden');
-            historyToggleBtn.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-green-200 text-green-800 hover:bg-green-300 border border-green-400';
-            loadWeeklyHistoryData();
-        } else {
-            weeklyControls.classList.add('hidden');
-            historyToggleBtn.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-green-100 text-green-700 hover:bg-green-200 border border-green-300';
-        }
+        dailyControls.classList.add('hidden');
+        historyToggleBtn.className = 'px-4 py-2 rounded-lg font-medium transition-colors bg-green-100 text-green-700 hover:bg-green-200 border border-green-300';
     }
 }
 
 function updateHistoryControls() {
     const dailyControls = document.getElementById('dailyHistoryControls');
-    const weeklyControls = document.getElementById('weeklyHistoryControls');
-    
-    if (currentTab === 'today') {
-        dailyControls.classList.add('hidden');
-        weeklyControls.classList.add('hidden');
-    } else {
-        dailyControls.classList.add('hidden');
-        weeklyControls.classList.add('hidden');
-    }
+    dailyControls.classList.add('hidden');
 }
 
 // 历史回看导航函数
@@ -718,10 +668,12 @@ function generateWordCloud() {
     
     const placedElements = [];
 
+    const topPadding = 50;
+    const bottomPadding = 70;
     const titleHeight = 30;
     const titleWidth = 100;
     const titleLeft = 20;
-    const titleTop = 35;
+    const titleTop = 20;
     
     placedElements.push({
         left: titleLeft,
@@ -875,10 +827,10 @@ function generateWordCloud() {
         if (!placed) {
             while (attempts < 50 && !placed) {
                 const maxLeft = Math.max(0, width - elementWidth - 20);
-                const maxTop = Math.max(0, height - elementHeight - 70); // 底部保持70px空间
+                const maxTop = Math.max(0, height - elementHeight - bottomPadding); // 底部保持70px空间
 
                 left = Math.random() * maxLeft + 10;
-                top = Math.random() * maxTop + 70; // 顶部保持70px空间
+                top = Math.random() * maxTop + topPadding; // 顶部保持50px空间
                 
                 if (!checkOverlap(element, left, top)) {
                     placed = true;
@@ -888,7 +840,7 @@ function generateWordCloud() {
             
             if (!placed) {
                 left = Math.random() * (width - elementWidth - 20) + 10;
-                top = Math.random() * (height - elementHeight - 70) + 70;
+                top = Math.random() * (height - elementHeight - bottomPadding) + topPadding;
             }
         }
         
