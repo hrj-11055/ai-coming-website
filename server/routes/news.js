@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { parseIntParam } = require('../utils/validation');
 
 function normalizeNewsPayload(rawData) {
     return Array.isArray(rawData) ? rawData : (rawData.articles || []);
@@ -23,6 +24,100 @@ function createNewsRouter({
     dailyArchiveDir
 }) {
     const router = express.Router();
+    const NEWS_DATES_CACHE_TTL_MS = 45000;
+    let datesCache = { data: null, expiresAt: 0 };
+
+    function invalidateDatesCache() {
+        datesCache = { data: null, expiresAt: 0 };
+    }
+
+    function buildDatesData() {
+        const datesMap = new Map();
+
+        const currentNews = readData(newsFile);
+        currentNews.forEach(article => {
+            const createdAt = article.created_at;
+            if (!createdAt || typeof createdAt !== 'string' || !createdAt.includes('T')) {
+                return;
+            }
+
+            const date = createdAt.split('T')[0];
+            if (!datesMap.has(date)) {
+                datesMap.set(date, { date, count: 0, source: 'current' });
+            }
+            datesMap.get(date).count++;
+        });
+
+        if (fs.existsSync(dailyArchiveDir)) {
+            const archiveFiles = fs.readdirSync(dailyArchiveDir).filter(f => f.endsWith('.json') && f.startsWith('news-'));
+
+            archiveFiles.forEach(file => {
+                const match = file.match(/news-(\d{4}-\d{2}-\d{2})\.json/);
+                if (!match) return;
+
+                const date = match[1];
+                try {
+                    const filePath = path.join(dailyArchiveDir, file);
+                    const archivedNews = readJsonFileSafe(filePath);
+                    const count = archivedNews.length || 0;
+
+                    if (!datesMap.has(date)) {
+                        datesMap.set(date, { date, count, source: 'archive' });
+                    } else {
+                        datesMap.get(date).count += count;
+                    }
+                } catch (error) {
+                    console.error(`读取归档文件 ${file} 失败:`, error);
+                }
+            });
+        }
+
+        if (fs.existsSync(dataDir)) {
+            const dataFiles = fs.readdirSync(dataDir).filter(f => {
+                return (f.match(/^news-\d{4}-\d{2}-\d{2}\.json$/) || f.match(/^\d{4}-\d{2}-\d{2}\.json$/)) && f !== 'news.json';
+            });
+
+            dataFiles.forEach(file => {
+                const match = file.match(/(\d{4}-\d{2}-\d{2})\.json$/);
+                if (!match) return;
+
+                const date = match[1];
+                if (datesMap.has(date)) {
+                    return;
+                }
+
+                try {
+                    const filePath = path.join(dataDir, file);
+                    const archivedNews = readJsonFileSafe(filePath);
+                    const count = archivedNews.length || 0;
+
+                    if (!datesMap.has(date)) {
+                        datesMap.set(date, { date, count, source: 'data' });
+                    } else {
+                        datesMap.get(date).count += count;
+                    }
+                } catch (error) {
+                    console.error(`读取data目录文件 ${file} 失败:`, error);
+                }
+            });
+        }
+
+        return Array.from(datesMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
+    function getDatesDataCached() {
+        const now = Date.now();
+        if (datesCache.data && datesCache.expiresAt > now) {
+            return datesCache.data;
+        }
+
+        const datesArray = buildDatesData();
+        datesCache = {
+            data: datesArray,
+            expiresAt: now + NEWS_DATES_CACHE_TTL_MS
+        };
+        return datesArray;
+    }
 
     // 新闻管理API
     router.get('/news', (req, res) => {
@@ -72,9 +167,12 @@ function createNewsRouter({
             news = news.filter(n => n.country === mappedCountry);
         }
 
+        const normalizedOffset = parseIntParam(offset, { defaultValue: 0, min: 0, max: 100000 });
+        const normalizedLimit = parseIntParam(displayLimit, { defaultValue: 20, min: 1, max: 100 });
+
         news = news
             .sort((a, b) => (b.importance_score || 0) - (a.importance_score || 0))
-            .slice(parseInt(offset, 10), parseInt(offset, 10) + parseInt(displayLimit, 10));
+            .slice(normalizedOffset, normalizedOffset + normalizedLimit);
 
         res.json(news);
     });
@@ -82,72 +180,7 @@ function createNewsRouter({
     // 获取所有可用的历史日期
     router.get('/news/dates', (req, res) => {
         try {
-            const datesMap = new Map();
-
-            const currentNews = readData(newsFile);
-            currentNews.forEach(article => {
-                const date = article.created_at ? article.created_at.split('T')[0] : new Date().toISOString().split('T')[0];
-                if (!datesMap.has(date)) {
-                    datesMap.set(date, { date, count: 0, source: 'current' });
-                }
-                datesMap.get(date).count++;
-            });
-
-            if (fs.existsSync(dailyArchiveDir)) {
-                const archiveFiles = fs.readdirSync(dailyArchiveDir).filter(f => f.endsWith('.json') && f.startsWith('news-'));
-
-                archiveFiles.forEach(file => {
-                    const match = file.match(/news-(\d{4}-\d{2}-\d{2})\.json/);
-                    if (!match) return;
-
-                    const date = match[1];
-                    try {
-                        const filePath = path.join(dailyArchiveDir, file);
-                        const archivedNews = readJsonFileSafe(filePath);
-                        const count = archivedNews.length || 0;
-
-                        if (!datesMap.has(date)) {
-                            datesMap.set(date, { date, count, source: 'archive' });
-                        } else {
-                            datesMap.get(date).count += count;
-                        }
-                    } catch (error) {
-                        console.error(`读取归档文件 ${file} 失败:`, error);
-                    }
-                });
-            }
-
-            if (fs.existsSync(dataDir)) {
-                const dataFiles = fs.readdirSync(dataDir).filter(f => {
-                    return (f.match(/^news-\d{4}-\d{2}-\d{2}\.json$/) || f.match(/^\d{4}-\d{2}-\d{2}\.json$/)) && f !== 'news.json';
-                });
-
-                dataFiles.forEach(file => {
-                    const match = file.match(/(\d{4}-\d{2}-\d{2})\.json$/);
-                    if (!match) return;
-
-                    const date = match[1];
-                    if (datesMap.has(date) && datesMap.get(date).source === 'archive') {
-                        return;
-                    }
-
-                    try {
-                        const filePath = path.join(dataDir, file);
-                        const archivedNews = readJsonFileSafe(filePath);
-                        const count = archivedNews.length || 0;
-
-                        if (!datesMap.has(date)) {
-                            datesMap.set(date, { date, count, source: 'data' });
-                        } else {
-                            datesMap.get(date).count += count;
-                        }
-                    } catch (error) {
-                        console.error(`读取data目录文件 ${file} 失败:`, error);
-                    }
-                });
-            }
-
-            const datesArray = Array.from(datesMap.values()).sort((a, b) => new Date(b.date) - new Date(a.date));
+            const datesArray = getDatesDataCached();
 
             res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
             res.set('Pragma', 'no-cache');
@@ -238,6 +271,7 @@ function createNewsRouter({
         news.push(newNews);
 
         if (writeData(newsFile, news)) {
+            invalidateDatesCache();
             res.json({ id: newNews.id, message: '新闻添加成功' });
         } else {
             res.status(500).json({ error: '添加新闻失败' });
@@ -268,6 +302,7 @@ function createNewsRouter({
         };
 
         if (writeData(newsFile, news)) {
+            invalidateDatesCache();
             res.json({ message: '新闻更新成功' });
         } else {
             res.status(500).json({ error: '更新新闻失败' });
@@ -281,6 +316,7 @@ function createNewsRouter({
         const filteredNews = news.filter(n => n.id != id);
 
         if (writeData(newsFile, filteredNews)) {
+            invalidateDatesCache();
             res.json({ message: '新闻删除成功' });
         } else {
             res.status(500).json({ error: '删除新闻失败' });
@@ -316,6 +352,7 @@ function createNewsRouter({
             }));
 
             if (writeData(newsFile, newNews)) {
+                invalidateDatesCache();
                 res.json({
                     message: `成功导入 ${articles.length} 篇新闻`,
                     archived: archiveResult.archived,

@@ -2,10 +2,30 @@ const express = require('express');
 
 function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateToken, generateId }) {
     const router = express.Router();
+    const KEYWORDS_CACHE_TTL_MS = 45000;
+    let keywordsCache = { data: null, expiresAt: 0 };
+
+    function readKeywordsWithCache() {
+        const now = Date.now();
+        if (keywordsCache.data && keywordsCache.expiresAt > now) {
+            return keywordsCache.data;
+        }
+
+        const freshKeywords = readData(keywordsFile);
+        keywordsCache = {
+            data: freshKeywords,
+            expiresAt: now + KEYWORDS_CACHE_TTL_MS
+        };
+        return freshKeywords;
+    }
+
+    function invalidateKeywordsCache() {
+        keywordsCache = { data: null, expiresAt: 0 };
+    }
 
     // 关键词管理API
     router.get('/keywords', (req, res) => {
-        const keywords = readData(keywordsFile);
+        const keywords = readKeywordsWithCache();
         res.json(keywords);
     });
 
@@ -25,6 +45,7 @@ function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateT
         keywords.push(newKeyword);
 
         if (writeData(keywordsFile, keywords)) {
+            invalidateKeywordsCache();
             res.json({ id: newKeyword.id, message: '关键词添加成功' });
         } else {
             res.status(500).json({ error: '添加关键词失败' });
@@ -51,6 +72,7 @@ function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateT
         };
 
         if (writeData(keywordsFile, keywords)) {
+            invalidateKeywordsCache();
             res.json({ message: '关键词更新成功' });
         } else {
             res.status(500).json({ error: '更新关键词失败' });
@@ -64,6 +86,7 @@ function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateT
         const filteredKeywords = keywords.filter(k => k.id != id);
 
         if (writeData(keywordsFile, filteredKeywords)) {
+            invalidateKeywordsCache();
             res.json({ message: '关键词删除成功' });
         } else {
             res.status(500).json({ error: '删除关键词失败' });
@@ -91,6 +114,7 @@ function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateT
         const allKeywords = [...existingKeywords, ...newKeywords];
 
         if (writeData(keywordsFile, allKeywords)) {
+            invalidateKeywordsCache();
             res.json({ message: `成功导入 ${keywords.length} 个关键词` });
         } else {
             res.status(500).json({ error: '批量导入关键词失败' });
