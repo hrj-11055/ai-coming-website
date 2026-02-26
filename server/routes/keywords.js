@@ -1,6 +1,13 @@
 const express = require('express');
 
-function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateToken, generateId }) {
+function createKeywordsRouter({
+    readData,
+    writeData,
+    keywordsFile,
+    authenticateToken,
+    generateId,
+    refreshWeeklyKeywords
+}) {
     const router = express.Router();
     const KEYWORDS_CACHE_TTL_MS = 45000;
     let keywordsCache = { data: null, expiresAt: 0 };
@@ -118,6 +125,32 @@ function createKeywordsRouter({ readData, writeData, keywordsFile, authenticateT
             res.json({ message: `成功导入 ${keywords.length} 个关键词` });
         } else {
             res.status(500).json({ error: '批量导入关键词失败' });
+        }
+    });
+
+    router.post('/keywords/refresh-weekly', authenticateToken, async (req, res) => {
+        if (typeof refreshWeeklyKeywords !== 'function') {
+            return res.status(501).json({
+                error: '功能未启用',
+                message: 'weekly keywords job is not configured'
+            });
+        }
+
+        try {
+            const result = await refreshWeeklyKeywords();
+            if (result && result.updated) {
+                invalidateKeywordsCache();
+            }
+
+            return res.json({
+                message: result && result.updated ? '词云关键词已按上周新闻更新' : '任务已执行',
+                result: result || null
+            });
+        } catch (error) {
+            return res.status(500).json({
+                error: '周关键词刷新失败',
+                message: error.message
+            });
         }
     });
 
