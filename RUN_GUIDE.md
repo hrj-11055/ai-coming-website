@@ -104,6 +104,12 @@ npm install
 - 检查 `.env` 中的数据库配置
 - 使用 JSON 模式作为替代方案
 
+**问题**: SSH 能连端口但握手阶段断开（`kex_exchange_identification`）
+- 高概率是本地 TUN 代理干扰 SSH 握手（不是服务器挂了）
+- 优先关闭本地代理 TUN，再重试 `ssh -vvv <host>`
+- 完整排障记录见：
+  - `docs/SSH_TUN_PROXY_INCIDENT_2026-02-27.md`
+
 ### MySQL 迁移建议
 
 - 当前主线固定为 JSON 存储。

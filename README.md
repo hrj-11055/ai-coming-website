@@ -40,7 +40,10 @@ AIcoming 是一个 AI 资讯聚合与管理系统，包含前台展示页面和�
 ### 数据与脚本
 
 - 数据目录：`data/`
-- 常用脚本：`run.sh`, `start.sh`, `server-sync.sh`, `setup-server-sync.sh`, `sync-*.sh`
+- 常用脚本：
+  - 启动：`run.sh`, `start.sh`
+  - 每日同步：`sync-json-news.sh`（服务器 cron 调用）
+  - 每周关键词：`scripts/run-weekly-keywords-once.sh`, `scripts/setup-weekly-keywords-cron.sh`
 
 ## 启动方式（JSON-only）
 
@@ -90,7 +93,7 @@ npm start
 1. `main.js` 体量过大（单文件多职责）。
 2. `server-json.js` 体量过大（单文件过多路由/逻辑）。
 3. 前端页面依赖 CDN（Tailwind/Alpine/FA），网络波动会引发样式退化。
-4. 同步脚本使用 `pkill + nohup`，缺少标准进程管理和健康检查闭环。
+4. 自动化链路以 `cron + sync-json-news.sh + pm2` 为主，需持续关注日志告警与失败重试。
 5. 文档多且分散，存在历史信息。
 
 ## 重构方向（本轮）

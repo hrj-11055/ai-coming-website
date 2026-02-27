@@ -49,6 +49,22 @@ fi
 
 filename=$(basename "$LATEST_JSON")
 file_date=$(stat -c %y "$LATEST_JSON" | cut -d' ' -f1)
+name_date=$(echo "$filename" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+today=$(date +%F)
+yesterday=$(date -d "yesterday" +%F)
+
+# 防呆：避免目录残留旧文件导致误导入历史数据
+# 仅允许导入文件名日期在 [昨天, 今天] 区间内的数据
+if [ -z "$name_date" ]; then
+    log "⚠️  文件名不符合日期格式，跳过导入: $filename"
+    exit 0
+fi
+
+if [[ "$name_date" < "$yesterday" || "$name_date" > "$today" ]]; then
+    log "⚠️  检测到过期/异常日期文件，跳过导入: $filename (允许区间: $yesterday ~ $today)"
+    exit 0
+fi
+
 log ""
 log "📄 发现最新新闻: $filename"
 log "📅 文件时间: $file_date"
