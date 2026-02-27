@@ -8,3 +8,4 @@ reports-archive/
 qwen-comparison-*.json
 *.backup
 .DS_Store
+logs/

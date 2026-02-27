@@ -1,0 +1,41 @@
+import {
+    setActiveNav,
+    showFullNav,
+    switchTab,
+    switchContentTab,
+    filterArticles,
+    filterByCategory,
+    toggleHistoryView,
+    navigateDailyHistory,
+    navigateWeeklyHistory,
+    selectDailyDate,
+    selectWeeklyDate,
+    loadNewsData,
+    loadNewsByDate,
+    scrollToTop,
+    scrollToArticleByDate,
+    scrollToArticleByTime,
+    scrollToArticleByIndex,
+    highlightArticle
+} from './core-news.js';
+
+Object.assign(window, {
+    setActiveNav,
+    showFullNav,
+    switchTab,
+    switchContentTab,
+    filterArticles,
+    filterByCategory,
+    toggleHistoryView,
+    navigateDailyHistory,
+    navigateWeeklyHistory,
+    selectDailyDate,
+    selectWeeklyDate,
+    loadNewsData,
+    loadNewsByDate,
+    scrollToTop,
+    scrollToArticleByDate,
+    scrollToArticleByTime,
+    scrollToArticleByIndex,
+    highlightArticle
+});

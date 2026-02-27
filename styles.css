@@ -1,5 +1,47 @@
 /* AI资讯网站样式文件 */
 
+:root {
+    --ai-font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --ai-font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Courier New", monospace;
+
+    --ai-bg-page: #ffffff;
+    --ai-bg-muted: #f3f4f6;
+    --ai-bg-surface: #ffffff;
+    --ai-bg-soft: #f9fafb;
+
+    --ai-text-primary: #111827;
+    --ai-text-secondary: #374151;
+    --ai-text-muted: #6b7280;
+
+    --ai-border: #e5e7eb;
+    --ai-border-strong: #cbd5e1;
+
+    --ai-brand-500: #667eea;
+    --ai-brand-600: #5b6fd9;
+    --ai-brand-700: #4c63cf;
+    --ai-accent-500: #764ba2;
+    --ai-success-500: #10b981;
+    --ai-success-600: #059669;
+    --ai-danger-500: #ef4444;
+
+    --ai-radius-sm: 8px;
+    --ai-radius-md: 12px;
+    --ai-radius-lg: 16px;
+    --ai-radius-pill: 999px;
+
+    --ai-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --ai-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --ai-shadow-brand: 0 8px 24px rgba(102, 126, 234, 0.22);
+
+    --ai-gradient-brand: linear-gradient(135deg, var(--ai-brand-500) 0%, var(--ai-accent-500) 100%);
+}
+
+html,
+body {
+    font-family: var(--ai-font-ui);
+    color: var(--ai-text-primary);
+}
+
 /* Tailwind CDN 不可用时的最小兜底样式（仅作用于 news.html） */
 .tw-fallback .hidden { display: none !important; }
 .tw-fallback .block { display: block !important; }
@@ -99,7 +141,7 @@
 }
 
 .gradient-bg {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--ai-gradient-brand);
 }
 
 /* 词云样式 */
@@ -204,8 +246,8 @@
 .nav-simplified {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--ai-border);
+    box-shadow: var(--ai-shadow-sm);
 }
 
 .nav-simplified .nav-content {
@@ -219,8 +261,8 @@
 .nav-tabs {
     display: flex;
     gap: 0;
-    background: #f8f9fa;
-    border-radius: 8px;
+    background: var(--ai-bg-soft);
+    border-radius: var(--ai-radius-sm);
     padding: 4px;
 }
 
@@ -230,17 +272,17 @@
     cursor: pointer;
     transition: all 0.2s ease;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--ai-text-muted);
 }
 
 .nav-tab.active {
-    background: white;
-    color: #1f2937;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--ai-bg-surface);
+    color: var(--ai-text-primary);
+    box-shadow: var(--ai-shadow-sm);
 }
 
 .nav-tab:hover {
-    color: #1f2937;
+    color: var(--ai-text-primary);
 }
 
 /* 现代化导航样式 */
@@ -253,24 +295,24 @@
     position: relative;
     display: inline-block;
     padding: 12px 20px;
-    color: #374151;
+    color: var(--ai-text-secondary);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
-    border-radius: 8px;
+    border-radius: var(--ai-radius-sm);
     margin: 0 4px;
 }
 
 .nav-link:hover {
-    color: #1f2937;
-    background: rgba(59, 130, 246, 0.1);
+    color: var(--ai-text-primary);
+    background: rgba(102, 126, 234, 0.12);
     transform: translateY(-2px);
 }
 
 .nav-link.active {
-    color: #1f2937;
-    background: rgba(59, 130, 246, 0.15);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    color: var(--ai-text-primary);
+    background: rgba(102, 126, 234, 0.18);
+    box-shadow: var(--ai-shadow-brand);
 }
 
 .nav-link::before {
@@ -280,7 +322,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, #667eea, #764ba2);
+    background: var(--ai-gradient-brand);
     transition: all 0.3s ease;
     transform: translateX(-50%);
 }
@@ -293,33 +335,33 @@
 .mobile-nav-link {
     display: block;
     padding: 12px 16px;
-    color: #374151;
+    color: var(--ai-text-secondary);
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
-    border-radius: 8px;
+    border-radius: var(--ai-radius-sm);
     margin: 4px 0;
 }
 
 .mobile-nav-link:hover,
 .mobile-nav-link.active {
-    color: #1f2937;
-    background: rgba(59, 130, 246, 0.1);
+    color: var(--ai-text-primary);
+    background: rgba(102, 126, 234, 0.12);
 }
 
 .back-button {
-    background: #3b82f6;
+    background: var(--ai-brand-600);
     color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: var(--ai-radius-sm);
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
 }
 
 .back-button:hover {
-    background: #2563eb;
+    background: var(--ai-brand-700);
 }
 
 .content-section {
@@ -327,7 +369,7 @@
 }
 
 .hot-keywords {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--ai-gradient-brand);
     color: #ff6b9d;
     padding: 10px 0 10px 0;
     margin-top: 30px;
@@ -408,9 +450,9 @@
 }
 
 .news-section {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: var(--ai-bg-surface);
+    border-radius: var(--ai-radius-md);
+    box-shadow: var(--ai-shadow-md);
     overflow: hidden;
     margin-bottom: 30px;
 }
@@ -418,7 +460,7 @@
 .news-header {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     padding: 20px 30px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--ai-border);
 }
 
 .news-title {
@@ -441,10 +483,10 @@
 
 .filter-tab {
     padding: 8px 16px;
-    border-radius: 20px;
-    background: white;
-    border: 1px solid #e2e8f0;
-    color: #64748b;
+    border-radius: var(--ai-radius-pill);
+    background: var(--ai-bg-surface);
+    border: 1px solid var(--ai-border);
+    color: var(--ai-text-muted);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -452,9 +494,9 @@
 }
 
 .filter-tab.active {
-    background: #3b82f6;
+    background: var(--ai-brand-600);
     color: white;
-    border-color: #3b82f6;
+    border-color: var(--ai-brand-600);
 }
 
 .filter-tab:hover {
@@ -463,7 +505,7 @@
 }
 
 .filter-tab.active:hover {
-    background: #2563eb;
+    background: var(--ai-brand-700);
 }
 
 .history-controls {
@@ -477,8 +519,8 @@
     padding: 6px 12px;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    color: #64748b;
+    border-radius: var(--ai-radius-sm);
+    color: var(--ai-text-muted);
     font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -517,9 +559,9 @@
 }
 
 .date-link.active {
-    background: #3b82f6;
+    background: var(--ai-brand-600);
     color: white;
-    border-color: #3b82f6;
+    border-color: var(--ai-brand-600);
 }
 
 .date-link.disabled {
@@ -540,8 +582,8 @@
 }
 
 .filter-button.active {
-    border-color: #3b82f6;
-    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    border-color: var(--ai-brand-600);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.22);
 }
 
 .weekly-filter-section {
@@ -569,17 +611,17 @@
 }
 
 .article-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--ai-bg-surface);
+    border-radius: var(--ai-radius-md);
+    box-shadow: var(--ai-shadow-sm);
     overflow: hidden;
     transition: all 0.3s ease;
-    border: 1px solid #f1f5f9;
+    border: 1px solid var(--ai-border);
 }
 
 .article-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--ai-shadow-md);
 }
 
 .article-header {
@@ -630,7 +672,7 @@
 }
 
 .article-title a:hover {
-    color: #3b82f6;
+    color: var(--ai-brand-600);
 }
 
 .article-keyinfo {
@@ -668,7 +710,7 @@
 }
 
 .article-read-more {
-    color: #3b82f6;
+    color: var(--ai-brand-600);
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
@@ -676,7 +718,7 @@
 }
 
 .article-read-more:hover {
-    color: #1d4ed8;
+    color: var(--ai-brand-700);
 }
 
 .footer {

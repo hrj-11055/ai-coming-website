@@ -2,6 +2,11 @@
   "name": "ai-news-backend",
   "version": "2.0.0",
   "description": "AI资讯管理系统后端服务 - JSON主线，支持后续MySQL迁移",
+  "packageManager": "npm@10.9.4",
+  "engines": {
+    "node": "22.22.0",
+    "npm": "10.9.4"
+  },
   "main": "server-json.js",
   "scripts": {
     "start": "node server-json.js",
@@ -22,6 +27,7 @@
     "weekly:keywords:once": "node scripts/run-weekly-keywords-once.js",
     "weekly:keywords:once:linux": "bash scripts/run-weekly-keywords-once.sh",
     "weekly:keywords:cron:install": "bash scripts/setup-weekly-keywords-cron.sh",
+    "check:assets": "node scripts/check-logo-paths.js",
     "data:normalize:dry": "node scripts/normalize-daily-files.js",
     "data:normalize:apply": "node scripts/normalize-daily-files.js --apply",
     "data:backup": "node scripts/data-backup.js",

@@ -6,6 +6,7 @@ AIcoming 是一个 AI 资讯聚合与管理系统，包含前台展示页面和�
 1. 以 `JSON 文件存储` 为唯一运行主线，优先保证稳定和交付速度。
 2. 完成前后端重构与模块化，降低维护成本。
 3. 在数据规模增大后，再切换到 MySQL。
+4. MySQL 切换时使用 `npm run start:mysql`，并通过 `npm run db:migrate` 迁移数据。
 
 ## 当前技术策略（重要）
 
@@ -15,7 +16,7 @@ AIcoming 是一个 AI 资讯聚合与管理系统，包含前台展示页面和�
 
 ## 项目目标
 
-1. 展示每日 AI 快讯、每周资讯、热点关键词和工具目录。
+1. 展示每日 AI 快讯、热点关键词和工具目录。
 2. 提供管理员登录、内容管理、统计、数据导入/归档能力。
 3. 支持从外部 JSON 报告自动同步并上线展示。
 
@@ -25,7 +26,9 @@ AIcoming 是一个 AI 资讯聚合与管理系统，包含前台展示页面和�
 
 - 页面：`index.html`, `news.html`, `admin-login.html`, `admin-analytics.html`, `admin-ipban.html`
 - 样式：`styles.css`
-- 前端逻辑：`main.js`
+- 前端逻辑（模块入口）：`frontend/bootstrap.js`
+- 前端核心模块：`frontend/modules/*`（含 `state/api-client/news-service/*-controller/*-view`）
+- 兼容旧逻辑：`main.js`（历史文件，逐步迁移）
 - API 客户端：`api.js`
 
 ### 后端
@@ -37,7 +40,7 @@ AIcoming 是一个 AI 资讯聚合与管理系统，包含前台展示页面和�
 ### 数据与脚本
 
 - 数据目录：`data/`
-- 常用脚本：`run.sh`, `start.sh`, `server-sync-fixed.sh`, `sync-*.sh`, `setup-*.sh`
+- 常用脚本：`run.sh`, `start.sh`, `server-sync.sh`, `setup-server-sync.sh`, `sync-*.sh`
 
 ## 启动方式（JSON-only）
 
@@ -60,7 +63,7 @@ cp .env.example .env
 ### 3) 启动服务
 
 ```bash
-npm run start:legacy
+npm start
 ```
 
 或：
@@ -76,11 +79,10 @@ npm run start:legacy
 - 认证：`/api/auth/login`
 - 关键词：`/api/keywords*`
 - 新闻：`/api/news*`, `/api/news/dates`, `/api/news/date/:date`
-- 每周资讯：`/api/weekly-news*`
 - 工具：`/api/tools*`, `/api/tools/categories`
 - 统计与设置：`/api/stats`, `/api/settings`
 - 访问追踪与 IP 管理：`/api/visit/*`, `/api/banned-ips*`, `/api/api-calls/stats`
-- 归档与模板：`/api/archive/*`, `/api/news/template`, `/api/weekly-news/template`
+- 归档与模板：`/api/archive/*`, `/api/news/template`
 - 报告与 AI 调用：`/api/reports*`, `/api/ai/chat`
 
 ## 当前主要技术债（重构重点）
@@ -101,11 +103,11 @@ npm run start:legacy
 
 ## 推荐文档
 
-1. `PROJECT_ARCHITECTURE.md`
-2. `RUN_GUIDE.md`
-3. `ENV-CONFIG-GUIDE.md`
-4. `DATA_SYNC_GUIDE.md`
-5. `SERVER_COMPARISON.md`
+1. `RUN_GUIDE.md`
+2. `API_CONTRACT.md`
+3. `BASELINE_CHECKLIST.md`
+4. `REFACTOR_PLAN_DAILY.md`
+5. `docs/archive/legacy/README.md`（历史文档索引）
 
 ## 维护说明
 

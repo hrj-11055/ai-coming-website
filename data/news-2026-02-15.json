@@ -1,0 +1,178 @@
+[
+  {
+    "title": "类脑计算机实现物理模拟方程求解，突破传统超算能耗限制",
+    "key_point": "基于人脑模型的神经形态计算机首次成功求解物理模拟背后的复杂方程，该任务此前被认为只能由高能耗超级计算机完成。",
+    "summary": "神经形态计算在物理模拟等科学计算领域的首次成功应用，标志着其从概念验证迈向解决实际复杂问题。这动摇了传统冯·诺依曼架构在科学计算领域的统治地位，为特定高算力、低功耗场景提供了颠覆性替代方案。其核心信号在于，AI硬件正从通用加速向专用、仿生架构演进，可能开辟一个全新的高性能计算细分市场，并对英伟达等传统算力巨头构成长期结构性挑战。",
+    "source_url": "https://www.sciencedaily.com/releases/2026/02/260213223923.htm",
+    "source_name": "Science Daily AI",
+    "category": "研究",
+    "sub_category": "学术突破",
+    "country": "global",
+    "importance_score": 7
+  },
+  {
+    "title": "印度批准110亿美元国家引导基金，重点投资深科技与制造业",
+    "key_point": "印度政府批准一项总额110亿美元的母基金，将通过私人风险投资机构，投资于深科技与制造业领域的初创企业。",
+    "summary": "印度政府批准110亿美元国家引导风险投资基金，通过私人风投投向深科技与制造业。此举释放明确信号：印度正通过国家资本强力引导产业升级，从传统互联网服务向硬科技与实体制造转型。这标志着全球AI与科技产业竞争进入新阶段，即国家资本深度介入，以塑造本土供应链和关键技术能力。对于寻求全球化布局的跨国科技公司和风投而言，印度市场的投资逻辑和竞争格局将发生结构性变化，需重新评估政策风险与市场机会。",
+    "source_url": "https://techcrunch.com/2026/02/14/india-doubles-down-on-state-backed-venture-capital-approving-1-1b-fund/",
+    "source_name": "TechCrunch AI",
+    "category": "政策",
+    "sub_category": "国际合作",
+    "country": "global",
+    "importance_score": 7
+  },
+  {
+    "title": "字节跳动发布豆包Seed 2.0：多模态与搜索能力对标GPT-5.2",
+    "key_point": "字节跳动发布豆包Seed 2.0多模态模型，提供Pro、Lite、Mini及Code四个版本，在BrowseComp评测集上搜索能力与GPT-5.2持平。",
+    "summary": "豆包Seed 2.0在视觉/视频理解及非结构化文档处理上展现SOTA潜力，其搜索Agent能力在关键评测集上追平GPT-5.2。这标志着中国大模型在特定应用场景（如办公文档处理、视频理解）已具备全球顶级竞争力，并开始侵蚀OpenAI在搜索增强领域的领先地位。模型采用“主模型通用+专用模型（Code）补强”的策略，更聚焦商业化落地效率，而非单纯追求全能。",
+    "source_url": "https://x.com/Khazix0918/status/2022669250486505806",
+    "source_name": "数字生命卢卡兹",
+    "category": "技术",
+    "sub_category": "大模型",
+    "country": "cn",
+    "importance_score": 7
+  },
+  {
+    "title": "Seedance2.0 视频模型发布，引发迪士尼版权侵权争议",
+    "key_point": "AI视频模型Seedance2.0发布，其生成的视频内容被指涉嫌侵犯迪士尼旗下皮克斯动画《机器人总动员》角色形象版权，迪士尼法务部门已介入调查。",
+    "summary": "Seedance2.0作为新一代AI视频模型，其生成内容与迪士尼IP的高度相似性，将AI生成内容的知识产权边界问题推至前台。这不仅是单一公司的法律纠纷，更揭示了AI内容产业发展的核心瓶颈：在缺乏明确版权归属与合理使用界定标准的情况下，技术能力越强，面临的合规风险越高。该事件将加速全球范围内对AI生成内容版权法规的讨论与制定，短期内可能抑制部分AI视频应用的商业化探索，但长期看是行业走向规范化的必经阵痛。",
+    "source_url": "https://www.tmtpost.com/7880797.html",
+    "source_name": "钛媒体AI",
+    "category": "政策",
+    "sub_category": "知识产权",
+    "country": "global",
+    "importance_score": 7
+  },
+  {
+    "title": "阿里通义千问DAU逼近字节豆包，中国大模型应用竞争格局生变",
+    "key_point": "阿里通义千问近期日活跃用户数（DAU）已接近字节跳动豆包，两者均处于千万级别，标志着中国大模型应用市场头部竞争加剧。",
+    "summary": "通义千问DAU快速逼近豆包，显示阿里通过产品迭代、价格策略和生态整合，在C端应用市场取得关键进展。这打破了豆包此前在用户规模上的领先态势，标志着中国大模型竞争从技术参数比拼进入用户留存与场景渗透的深水区。信号在于：1）免费策略和功能集成是当前获取用户的核心手段；2）头部厂商的竞争焦点正从B端转向更广阔的C端用户心智与使用时长争夺。",
+    "source_url": "https://www.tmtpost.com/7880850.html",
+    "source_name": "钛媒体AI",
+    "category": "商业",
+    "sub_category": "市场竞争",
+    "country": "cn",
+    "importance_score": 7
+  },
+  {
+    "title": "谷歌推出Gemini 2.0 Flash模型，推理成本降至Claude 3.5 Sonnet的1/50",
+    "key_point": "谷歌DeepMind发布Gemini 2.0 Flash模型，推理成本为每百万输入Token 0.075美元，是Anthropic Claude 3.5 Sonnet价格的1/50，并推出上下文长度达200万Token的Gemini 2.0 Pro实验版。",
+    "summary": "谷歌此次发布的核心信号在于，通过Gemini 2.0 Flash将大模型推理成本降至极致，直接针对Anthropic等竞争对手的商业模式发起价格战。这标志着行业竞争焦点正从纯性能比拼，转向性能、成本与速度的综合较量。对于企业客户而言，成本成为关键决策变量，可能加速AI应用的大规模部署。长期看，基础模型可能进一步商品化，利润空间向应用层和定制化服务转移。",
+    "source_url": "https://www.tmtpost.com/7880733.html",
+    "source_name": "钛媒体AI",
+    "category": "技术",
+    "sub_category": "大模型",
+    "country": "global",
+    "importance_score": 7
+  },
+  {
+    "title": "好莱坞组织就Seedance 2.0视频生成器涉嫌侵权提出异议",
+    "key_point": "好莱坞多家组织公开反对新发布的AI视频模型Seedance 2.0，指控其已成为“公然”侵犯版权的工具。",
+    "summary": "好莱坞行业组织对Seedance 2.0的抵制，是生成式AI技术商业化进程中，内容产业与AI开发者之间知识产权冲突的典型体现。这起事件的核心信号在于，AI视频生成能力已触及内容创作的核心价值链，引发了传统版权持有者对利益被侵蚀的强烈反弹。其真正的瓶颈并非技术本身，而是缺乏清晰、可执行的法律框架来界定AI生成内容的版权归属与合理使用边界。这预示着，未来AI视频模型的普及速度将很大程度上取决于法律与监管环境的演变，而非单纯的技术迭代。",
+    "source_url": "https://techcrunch.com/2026/02/14/hollywood-isnt-happy-about-the-new-seedance-2-0-video-generator/",
+    "source_name": "TechCrunch AI",
+    "category": "政策",
+    "sub_category": "知识产权",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "Cherryrock Capital 逆势专注被忽视的创始人，回归早期风投模式",
+    "key_point": "前TaskUs CEO Stacy Brown-Philpot创立Cherryrock Capital，在硅谷追逐大额融资和热门AI交易之际，专注于投资被主流风投忽视的创始人，回归早期风投模式。",
+    "summary": "Stacy Brown-Philpot创立Cherryrock Capital，标志着一种对当前硅谷风投主流趋势的背离。当前市场过度集中于大额融资和AI热点交易，导致大量非AI或非明星背景的创始人融资困难。此举揭示了主流风投市场的结构性盲点，可能为捕捉下一波未被充分关注的创新浪潮（如垂直领域应用、传统行业数字化）提供了差异化策略。长期来看，这可能是对当前AI投资过热的一种风险对冲，并可能重塑早期投资的价值发现逻辑。",
+    "source_url": "https://techcrunch.com/2026/02/14/stacy-brown-philpot-cherryrock-capital-vc/",
+    "source_name": "TechCrunch",
+    "category": "商业",
+    "sub_category": "融资并购",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "xAI前员工称马斯克正积极削弱Grok安全限制",
+    "key_point": "据一位前员工透露，Elon Musk正在“积极”推动xAI的Grok聊天机器人变得“更加不受约束”。",
+    "summary": "马斯克推动Grok“不受约束”的举措，是其与OpenAI等主流AI公司“安全优先”路线公开分歧的延续。这标志着AI领域“效率/能力”与“安全/对齐”两大阵营的竞争进入新阶段。对投资者而言，需评估xAI此举是差异化竞争策略，还是将引发更严厉的监管审查，从而影响其长期商业化和生态构建能力。",
+    "source_url": "https://techcrunch.com/2026/02/14/is-safety-is-dead-at-xai/",
+    "source_name": "TechCrunch AI",
+    "category": "观点",
+    "sub_category": "伦理讨论",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "谷歌向Ultra订阅者开放Gemini 3 Deep Think，聚焦科学工程任务",
+    "key_point": "谷歌将专为科学和工程工作设计的Gemini 3 Deep Think模型，面向Gemini应用中的AI Ultra订阅用户开放。",
+    "summary": "谷歌将Gemini 3 Deep Think模型向付费订阅者开放，标志着其大模型战略从通用能力向垂直专业领域（尤其是科学工程）的深化。此举旨在通过提供高精度、长链推理的专业工具，在高端企业服务市场与OpenAI、Anthropic形成差异化竞争。真正的瓶颈在于模型对复杂物理世界和工程约束的理解与生成能力，以及如何与专业软件（如CAD）无缝集成。若成功，将加速AI在研发设计、先进制造等领域的范式转移，但当前仍处于早期验证阶段。",
+    "source_url": "https://www.digitaltrends.com/cool-tech/google-boosts-gemini-3-deep-think-ai-and-its-a-huge-milestone-for-3d-printing/",
+    "source_name": "Digital Trends",
+    "category": "产品",
+    "sub_category": "企业服务",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "美国国土安全部向科技公司发出数百份传票，要求披露批评ICE账户身份",
+    "key_point": "美国国土安全部向科技公司发出数百份传票，要求其识别在社交媒体上批评美国移民和海关执法局（ICE）的匿名账户所有者的身份。",
+    "summary": "美国国土安全部（DHS）近期向科技公司发出数百份传票，要求其披露批评美国移民和海关执法局（ICE）的社交媒体账户所有者身份。这标志着政府监管压力正从内容审查转向直接追溯匿名言论源头。此举将迫使科技公司在言论自由、用户隐私与法律合规之间做出更艰难的选择，可能重塑平台对匿名账户的政策。对于依赖用户生成内容和全球运营的科技公司，特别是社交媒体平台，这增加了法律与声誉风险，并可能影响其在特定市场的运营策略。",
+    "source_url": "https://techcrunch.com/2026/02/14/homeland-security-reportedly-sent-hundreds-of-subpoenas-seeking-to-unmask-anti-ice-accounts/",
+    "source_name": "TechCrunch",
+    "category": "政策",
+    "sub_category": "内容监管",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "xAI前员工称马斯克正积极降低Grok安全约束",
+    "key_point": "据TechCrunch报道，一位前xAI员工透露，埃隆·马斯克正“积极”推动其Grok聊天机器人变得“更不受约束”，此举引发对该公司AI安全承诺的质疑。",
+    "summary": "马斯克推动xAI的Grok模型降低安全约束，这标志着AI领域“对齐”与“能力”路线之争的公开化。此举可能旨在通过更“自由”的交互体验，在短期内从OpenAI、Anthropic等强调安全的竞争对手处争夺用户。长期看，这增加了模型滥用风险，可能加速监管介入，并迫使整个行业在商业化速度与安全护栏之间做出更明确的战略选择。",
+    "source_url": "https://techcrunch.com/2026/02/14/is-safety-is-dead-at-xai/",
+    "source_name": "TechCrunch",
+    "category": "观点",
+    "sub_category": "技术争议",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "Android 17 引入跨设备与网页应用无缝切换功能",
+    "key_point": "Android 17 操作系统将支持应用在手机、平板、电脑及网页端之间无缝切换，用户任务可在不同设备间连续进行。",
+    "summary": "Android 17 的核心功能更新聚焦于提升 Google 生态内的跨设备连续性。这并非简单的功能迭代，而是 Google 强化其生态系统壁垒、对抗苹果 Continuity 和微软 Phone Link 的关键一步。真正的瓶颈在于第三方应用开发者的适配意愿与速度，以及跨平台（尤其是与 Windows/macOS）的体验一致性。此举旨在将用户更深地绑定在 Google 服务内，是平台竞争从单一设备转向多设备协同体验的标志性动作。",
+    "source_url": "https://www.digitaltrends.com/phones/android-17-brings-seamless-app-handoff-across-devices-and-web/",
+    "source_name": "Digital Trends",
+    "category": "产品",
+    "sub_category": "消费应用",
+    "country": "global",
+    "importance_score": 6
+  },
+  {
+    "title": "ChatGPT Pro会员使用Codex进行并行开发，7日额度消耗仅38%",
+    "key_point": "用户使用ChatGPT Pro会员的GPT-5.3-codex功能进行两个项目的并行开发，在7天使用周期内，其额度消耗仅为38%。",
+    "summary": "用户反馈表明，ChatGPT Pro会员的GPT-5.3-codex模型在实际并行开发场景中，其预设的“防沉迷”或额度限制并未构成显著瓶颈。这释放出一个关键信号：OpenAI可能正在通过宽松的初期使用策略，加速其高级编程辅助工具在开发者群体中的渗透与习惯培养。此举旨在快速占领开发者心智，构建使用粘性，直接冲击GitHub Copilot等现有编程辅助工具的付费用户基础。对于投资决策而言，需密切关注此类“软性”市场策略对开发者工具赛道竞争格局的长期影响。",
+    "source_url": "https://x.com/Khazix0918/status/2022732707894300848",
+    "source_name": "数字生命卢卡兹",
+    "category": "产品",
+    "sub_category": "开发者工具",
+    "country": "global",
+    "importance_score": 5
+  },
+  {
+    "title": "谷歌重启Pixel手机Android 17 Beta测试",
+    "key_point": "谷歌在短暂暂停后，重新向Pixel手机用户推送Android 17 Beta版本，提供新系统改进与开发者工具的早期访问。",
+    "summary": "谷歌重启Android 17 Beta测试，表明其内部解决了导致暂停的关键技术或稳定性问题。此举是谷歌维持其移动生态开发者关系与早期反馈收集的关键常规操作。对于顶级投资者而言，该事件本身技术影响有限，但需关注其背后信号：谷歌正加速其AI与操作系统（如Gemini模型集成、设备端AI功能）的融合进程，以应对苹果iOS 18及端侧AI的竞争压力。长期看，操作系统层将成为AI能力落地的核心战场。",
+    "source_url": "https://www.digitaltrends.com/phones/your-pixel-is-getting-android-17-again/",
+    "source_name": "Digital Trends",
+    "category": "产品",
+    "sub_category": "消费应用",
+    "country": "global",
+    "importance_score": 4
+  },
+  {
+    "title": "吴恩达情人节发文，以AI术语隐喻行业热情",
+    "key_point": "AI领域知名学者吴恩达于2月14日在社交媒体平台X发布推文，以“每次见到你们都会提高我的温度参数”这一技术术语，向AI从业者表达节日问候。",
+    "summary": "吴恩达此次发言并非技术发布或商业公告，而是一次行业文化层面的表达。其核心信号在于，通过将“温度参数”这一影响模型输出随机性与创造性的技术概念，类比为从业者间的互动热情，反映了AI社区内部高度活跃、充满创造力的氛围。这从侧面印证了当前AI领域人才密度高、交流频繁的现状，是行业处于高速发展期和范式转移阶段的重要文化特征。对于投资者而言，此类非正式但高影响力的社区互动，是评估生态系统健康度和人才吸引力的一个软性指标。",
+    "source_url": "https://x.com/AndrewYNg/status/2022799922592903263",
+    "source_name": "Andrew Ng",
+    "category": "观点",
+    "sub_category": "行业预测",
+    "country": "global",
+    "importance_score": 3
+  }
+]

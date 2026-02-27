@@ -69,8 +69,8 @@ done
 - Or use `dos2unix` if installed: `brew install dos2unix` then `dos2unix script.sh`
 
 **Scripts that need fixing**:
-- `sync-reports-to-website.sh`
-- `setup-report-sync.sh`
+- `历史同步执行脚本（已删除）`
+- `历史同步设置脚本（已删除）`
 - `sync-setup.sh`
 - `test-sync.sh`
 - Any other `.sh` files
@@ -279,7 +279,7 @@ kill -9 <PID>
 
 **Missing data files**: The `initDataFiles()` function in server-json.js automatically creates all required JSON files with proper structure on first run.
 
-**Daily Report Sync**: The automated daily report sync system (`sync-reports-to-website.sh`) requires the HTML converter regex to match the actual HTML structure. If conversion fails with "未找到任何文章", check that `scripts/html-to-json-converter.js` regex pattern matches the HTML format (`<div class="article">` vs `<section style="margin-bottom: 30px">`).
+**Daily Report Sync**: The automated daily report sync system (`历史同步执行脚本（已删除）`) requires the HTML converter regex to match the actual HTML structure. If conversion fails with "未找到任何文章", check that `scripts/html-to-json-converter.js` regex pattern matches the HTML format (`<div class="article">` vs `<section style="margin-bottom: 30px">`).
 
 ## Architecture Highlights
 

@@ -34,15 +34,6 @@ This document freezes the current API contract for the JSON backend (`server-jso
 - `DELETE /api/news/:id` (auth)
 - `POST /api/news/batch` (auth)
 
-## Weekly News
-
-- `GET /api/weekly-news` (public)
-- `POST /api/weekly-news` (auth)
-- `PUT /api/weekly-news/:id` (auth)
-- `DELETE /api/weekly-news/:id` (auth)
-- `POST /api/weekly-news/batch` (auth)
-- `GET /api/weekly-news/template` (public)
-
 ## Tools
 
 - `GET /api/tools` (public)
@@ -89,3 +80,4 @@ This document freezes the current API contract for the JSON backend (`server-jso
 1. This contract is baseline-only; no behavior changes are allowed before route/service split.
 2. If an endpoint is removed/renamed, update this file and add migration notes.
 3. If auth policy changes, update both this file and `README.md`.
+4. 2026-02-25 modularization update: backend routes were split into `server/routes/*`, but public paths/fields/auth policies remain unchanged.

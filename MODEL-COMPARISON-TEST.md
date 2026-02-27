@@ -16,10 +16,10 @@
 
 ```bash
 # 硅基流动 API (必需)
-SILICONFLOW_API_KEY=sk-uhapvpemupytwpevingikcbjloyayyokgkowjhejnshpoakt
+SILICONFLOW_API_KEY=sk-your_siliconflow_api_key_here
 
 # 阿里云千问 API (可选，如不配置则跳过 Qwen 测试)
-QWEN_API_KEY=sk-d110d2cda10d428a8e0b3551d7fc2105
+QWEN_API_KEY=sk-your_qwen_api_key_here
 ```
 
 #### 获取 API Key：

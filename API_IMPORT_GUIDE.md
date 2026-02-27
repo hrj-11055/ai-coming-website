@@ -573,7 +573,7 @@ jq '.[10:20]' news-2026-01-16.json > batch2.json
 ## 联系支持
 
 如有问题，请查看：
-- 项目架构文档: `PROJECT_ARCHITECTURE.md`
+- 历史架构文档索引: `docs/archive/legacy/README.md`
 - API文档: 服务器启动后的控制台输出
 - 示例文件: `data/news-upload-example.json`
 

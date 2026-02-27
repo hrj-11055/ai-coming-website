@@ -41,7 +41,7 @@
 - Large global-state frontend script.
 - Strong coupling across news/timeline/filter/keyword modules.
 
-3. `server-sync-fixed.sh`
+3. `server-sync.sh`（旧 `fixed` 兼容脚本已删除）
 - Uses `pkill + nohup`; weak process lifecycle and health control.
 
 4. CDN-dependent frontend assets

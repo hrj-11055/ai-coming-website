@@ -44,7 +44,7 @@
 
 ## Day 7 - 同步脚本稳定化
 
-1. 重构 `server-sync-fixed.sh`：参数化目录、严格错误码。
+1. 重构 `server-sync.sh`：参数化目录、严格错误码（旧 `fixed` 兼容脚本已删除）。
 2. 同步后执行健康检查，失败直接退出。
 3. 验收：可重复执行、失败可观测、日志可追溯。
 
@@ -82,4 +82,3 @@ curl -s http://localhost:3000/api/health
 curl -s http://localhost:3000/api/news | head
 curl -s http://localhost:3000/api/news/dates | head
 ```
-

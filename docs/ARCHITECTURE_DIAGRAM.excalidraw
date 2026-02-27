@@ -872,7 +872,7 @@
       "height": 60,
       "seed": 1,
       "groupIds": [],
-      "text": "sync-reports-to-website.sh\n日报同步脚本\n调用转换器+API",
+      "text": "历史同步执行脚本（已删除）\n日报同步脚本\n调用转换器+API",
       "fontSize": 13,
       "fontFamily": 1,
       "textAlign": "center"
@@ -918,7 +918,7 @@
       "height": 60,
       "seed": 1,
       "groupIds": [],
-      "text": "setup-report-sync.sh\n同步设置脚本\n配置cron定时任务",
+      "text": "历史同步设置脚本（已删除）\n同步设置脚本\n配置cron定时任务",
       "fontSize": 13,
       "fontFamily": 1,
       "textAlign": "center"

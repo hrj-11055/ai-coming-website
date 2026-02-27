@@ -26,12 +26,17 @@ class ApiService {
     // 通用请求方法
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
+        const { timeoutMs: timeoutMsRaw, ...requestOptions } = options;
+        const timeoutMs = Number(timeoutMsRaw || 8000);
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
         const config = {
             headers: {
                 'Content-Type': 'application/json',
-                ...options.headers
+                ...requestOptions.headers
             },
-            ...options
+            signal: controller.signal,
+            ...requestOptions
         };
 
         // 添加认证�?
@@ -49,8 +54,13 @@ class ApiService {
 
             return data;
         } catch (error) {
+            if (error.name === 'AbortError') {
+                throw new Error('请求超时，请稍后重试');
+            }
             console.error('API请求失败:', error);
             throw error;
+        } finally {
+            clearTimeout(timer);
         }
     }
 
@@ -166,51 +176,9 @@ class ApiService {
         });
     }
 
-    // 每周资讯管理
-    async getWeeklyNews(category = 'all', country = 'all', limit = null) {
-        let url = '/weekly-news';
-        const params = [];
-        if (category !== 'all') params.push(`category=${category}`);
-        if (country !== 'all') params.push(`country=${country}`);
-        if (limit) params.push(`limit=${limit}`);
-        if (params.length > 0) url += '?' + params.join('&');
-        return await this.request(url);
-    }
-
-    async createWeeklyNews(article) {
-        return await this.request('/weekly-news', {
-            method: 'POST',
-            body: JSON.stringify(article)
-        });
-    }
-
-    async updateWeeklyNews(id, article) {
-        return await this.request(`/weekly-news/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(article)
-        });
-    }
-
-    async deleteWeeklyNews(id) {
-        return await this.request(`/weekly-news/${id}`, {
-            method: 'DELETE'
-        });
-    }
-
-    async importWeeklyNews(articles) {
-        return await this.request('/weekly-news/batch', {
-            method: 'POST',
-            body: JSON.stringify({ articles })
-        });
-    }
-
     // 导出模板
     async downloadDailyNewsTemplate() {
         await this.downloadTemplate('/news/template', 'daily-news-template.json');
-    }
-
-    async downloadWeeklyNewsTemplate() {
-        await this.downloadTemplate('/weekly-news/template', 'weekly-news-template.json');
     }
 
     async downloadTemplate(endpoint, filename) {
@@ -266,16 +234,6 @@ window.loadNewsFromAPI = async function(params = {}) {
         return news;
     } catch (error) {
         console.error('加载新闻失败:', error);
-        return [];
-    }
-};
-
-window.loadWeeklyNewsFromAPI = async function(params = {}) {
-    try {
-        const weeklyNews = await window.apiService.getWeeklyNews(params.category || 'all', params.country || 'all', params.limit);
-        return weeklyNews;
-    } catch (error) {
-        console.error('加载每周资讯失败:', error);
         return [];
     }
 };

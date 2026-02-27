@@ -119,8 +119,8 @@ ai-coming-website/
    - server-ubuntu.js (38行，功能已合并)
 
 ❌ 冗余代码
-   - api-cloud.js (27行，功能重复)
-   - admin-accounts-secure.js (26行，已在admins.json)
+   - 旧版 API 适配脚本（功能重复，已删除）
+   - 旧版前端账户脚本（已由服务端鉴权替代，已删除）
 
 ❌ 冗余数据
    - data/news-2026-01-16.json (历史快照)
@@ -153,7 +153,7 @@ ai-coming-website/
 ✗ test-* (删除)
 ✗ *.md (或移至docs/)
 ✗ server.js, server-ubuntu.js (删除)
-✗ api-cloud.js (删除)
+✗ 旧版 API 适配脚本 (已删除)
 
 ==============================================
 快速清理命令
@@ -165,7 +165,7 @@ rm -rf backup/ test-* debug.html *.py qwen-comparison-*.json
 rm -f server.js server-ubuntu.js
 
 # 删除冗余文件
-rm -f api-cloud.js admin-accounts-secure.js requirements.txt
+rm -f requirements.txt
 rm -f data/news-2026-01-16.json data/news-upload-example.json
 
 # 移动文档

@@ -47,8 +47,9 @@
 
 ```bash
 # 直接使用 npm 命令
-npm start              # MySQL 模式
-npm run start:legacy   # JSON 模式
+npm start              # JSON 模式（默认）
+npm run start:legacy   # JSON 模式（兼容别名）
+npm run start:mysql    # MySQL 模式（仅迁移/验证使用）
 npm run start:dev      # 开发模式
 
 # 数据库初始化 (仅 MySQL 模式)
@@ -60,6 +61,19 @@ npm install
 # 测试模型对比
 npm run test:models
 ```
+
+### 前端模块化调试（news.html）
+
+`news.html` 现通过 ES Module 入口加载：
+
+- 入口：`frontend/bootstrap.js`
+- 兼容桥接：`frontend/modules/compat-globals.js`
+- 核心实现：`frontend/modules/core-news.js`
+
+定位问题时优先顺序：
+1. `frontend/modules/core-news.js`（业务逻辑）
+2. `frontend/modules/compat-globals.js`（`window` 兼容导出）
+3. `news.html` 内联事件/初始化脚本
 
 ### 注意事项
 
@@ -89,3 +103,11 @@ npm install
 - 检查 MySQL 服务是否启动
 - 检查 `.env` 中的数据库配置
 - 使用 JSON 模式作为替代方案
+
+### MySQL 迁移建议
+
+- 当前主线固定为 JSON 存储。
+- 仅在需要迁移时使用 MySQL：
+  - `npm run db:init`
+  - `npm run db:migrate`
+  - `npm run start:mysql`

@@ -1,0 +1,13 @@
+{
+  "last_attempt_at": "2026-02-26T12:39:50.087Z",
+  "last_attempt_week": "2026-W09",
+  "last_success_at": "2026-02-26T12:39:50.087Z",
+  "last_success_week": "2026-W09",
+  "source_range_start": "2026-02-19",
+  "source_range_end": "2026-02-25",
+  "source_file_count": 7,
+  "source_title_count": 194,
+  "keyword_count": 30,
+  "model": "deepseek-chat",
+  "last_error": null
+}

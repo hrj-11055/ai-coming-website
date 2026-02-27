@@ -24,8 +24,6 @@ sync:
         - test-*-quickstart.md
         - server.js
         - server-ubuntu.js
-        - api-cloud.js
-        - admin-accounts-secure.js
         - PROJECT_*.md
         - API_*.md
         - *_GUIDE.md

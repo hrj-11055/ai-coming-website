@@ -123,8 +123,6 @@ sync:
         # 旧版文件
         - server.js
         - server-ubuntu.js
-        - api-cloud.js
-        - admin-accounts-secure.js
 
         # 文档（保留重要文档）
         - *.md
