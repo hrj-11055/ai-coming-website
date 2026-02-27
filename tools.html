@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具集 - AIcoming</title>
+
+    <meta name="description" content="AIcoming 工具集：按分类收录实用AI工具，点击图标即可直达官网。">
+    <meta name="keywords" content="AI工具集,AI工具,人工智能工具,效率工具,Agent工具">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
+
+    <script src="/vendor/tailwindcss-cdn.js"></script>
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f7fb;
+            color: #0f172a;
+        }
+
+        .tools-shell {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px 20px 48px;
+        }
+
+        .tools-hero {
+            background: linear-gradient(120deg, #e8efff 0%, #f3ecff 45%, #e8f9ff 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+
+        .tools-hero h1 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+
+        .tools-hero p {
+            font-size: 14px;
+            color: #334155;
+            margin: 0;
+        }
+
+        .tools-grid-wrap {
+            display: grid;
+            gap: 14px;
+        }
+
+        .tool-section {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .section-head h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .section-labels {
+            min-width: 460px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .section-labels .label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 28px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .section-body {
+            display: grid;
+            gap: 10px;
+        }
+
+        .tool-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .tool-group {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .tool-card {
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 120px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 10px 8px;
+            transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-2px);
+            border-color: #93c5fd;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.12);
+        }
+
+        .tool-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.75;
+            background: #f8fafc;
+            border-style: dashed;
+        }
+
+        .tool-card.placeholder {
+            border-style: dashed;
+            background: #f8fafc;
+            min-height: 120px;
+        }
+
+        .logo-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+
+        .logo-wrap img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .tool-name {
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.35;
+            font-weight: 600;
+            color: #1e293b;
+            word-break: break-word;
+        }
+
+        .tool-status {
+            font-size: 10px;
+            color: #dc2626;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-radius: 999px;
+            padding: 2px 8px;
+        }
+
+        .tools-footer {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        @media (max-width: 1024px) {
+            .section-labels {
+                min-width: 0;
+                width: 220px;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .section-head {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .section-labels {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .tool-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .tools-shell {
+                padding: 16px 12px 28px;
+            }
+
+            .tool-group {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .tool-card,
+            .tool-card.placeholder {
+                min-height: 108px;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <a href="index.html">
+                        <img src="./pic/AIcoming_zixunye.png" alt="AIcoming" class="h-12 w-auto" style="max-height: 48px;" />
+                    </a>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-2 modern-nav">
+                    <a href="index.html" class="nav-link">首页</a>
+                    <a href="news.html" class="nav-link">AI资讯</a>
+                    <a href="tools.html" class="nav-link active">AI工具集</a>
+                </div>
+
+                <div class="md:hidden text-sm font-semibold text-slate-700">AI工具集</div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="tools-shell">
+        <section class="tools-hero">
+            <h1>AI工具集</h1>
+            <p>按分类整理，点击图标直接进入官网。每行左侧为国际工具，右侧为国内工具。</p>
+        </section>
+
+        <div id="toolsSections" class="tools-grid-wrap">
+            <section class="tool-section">
+                <div class="text-sm text-slate-500">正在加载工具列表...</div>
+            </section>
+        </div>
+
+        <footer class="tools-footer">
+            © <span id="footerYear"></span> AIcoming · AI工具集
+        </footer>
+    </main>
+
+    <script type="module" src="frontend/tools-page.js"></script>
+</body>
+</html>
