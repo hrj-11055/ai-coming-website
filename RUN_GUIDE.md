@@ -117,3 +117,25 @@ npm install
   - `npm run db:init`
   - `npm run db:migrate`
   - `npm run start:mysql`
+
+### 服务器日报目录监控复制（可选）
+
+- 脚本：`scripts/watch-report-to-data.sh`
+- 默认监控：`/var/www/json/report`
+- 默认复制到：`/var/www/ai-coming-website/data`
+- 复制后命名统一为：`news-YYYY-MM-DD.json`
+
+运行方式：
+
+```bash
+# 一次性扫描并复制
+bash scripts/watch-report-to-data.sh --once
+
+# 持续监控（优先 inotify，无则轮询）
+bash scripts/watch-report-to-data.sh
+```
+
+命名兼容性说明（后端接口可识别）：
+- `GET /api/news` 回退读取：`news-YYYY-MM-DD.json` 或 `YYYY-MM-DD.json`
+- `GET /api/news/date/:date` 读取：`news-YYYY-MM-DD.json`，其次 `YYYY-MM-DD.json`
+- `GET /api/news/dates` 统计两种命名格式

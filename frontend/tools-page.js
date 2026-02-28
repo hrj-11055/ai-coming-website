@@ -41,6 +41,7 @@ const TOOL_TAG_MAP = {
     'HeyGen': '营销级数字人',
     'IndexTTS-2': '开源中文语音克隆',
     'Kimi': '超长上下文阅读',
+    'LangChain': 'LLM应用编排框架',
     'LM Studio': '本地大模型调试',
     'Luma': '电影感视频生成',
     'Manus': '自主执行型Agent',
@@ -201,7 +202,7 @@ function renderCategoryList() {
     container.innerHTML = TOOL_SECTIONS.map((section, index) => {
         const iconClass = CATEGORY_ICON_MAP[section.id] || 'fas fa-cube';
         return `
-            <a class="category-link ${index === 0 ? 'active' : ''}" href="#${section.id}" data-section="${section.id}">
+            <a class="category-link ${index === 0 ? 'active' : ''}" href="#${section.id}" data-section="${section.id}" title="${section.title}" aria-label="${section.title}">
                 <i class="${iconClass}"></i>
                 <span>${section.title}</span>
             </a>

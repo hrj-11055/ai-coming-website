@@ -13,6 +13,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
 
     <script src="/vendor/tailwindcss-cdn.js"></script>
+    <script src="/vendor/alpinejs-cdn.min.js" defer></script>
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 
@@ -24,6 +25,7 @@
             --text: var(--ai-text-primary, #111827);
             --muted: var(--ai-text-muted, #6b7280);
             --font-ui: var(--ai-font-ui, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif);
+            --tools-nav-height: 64px;
         }
 
         body {
@@ -36,7 +38,7 @@
         .tools-page {
             max-width: 1580px;
             margin: 0 auto;
-            padding: 14px;
+            padding: calc(var(--tools-nav-height) + 14px) 14px 14px;
         }
 
         .tools-layout {
@@ -52,7 +54,7 @@
             border-radius: 12px;
             padding: 10px;
             position: sticky;
-            top: 78px;
+            top: calc(var(--tools-nav-height) + 12px);
             max-height: calc(100vh - 92px);
             overflow: auto;
         }
@@ -168,7 +170,7 @@
 
         .section-head h2 {
             margin: 0;
-            font-size: 24px;
+            font-size: clamp(18px, 2vw, 22px);
             font-weight: 700;
             color: #1f2937;
             letter-spacing: -0.2px;
@@ -322,12 +324,57 @@
 
         @media (max-width: 1240px) {
             .tools-layout {
-                grid-template-columns: 1fr;
+                grid-template-columns: 190px minmax(0, 1fr);
             }
 
             .sidebar {
-                position: static;
-                max-height: none;
+                max-height: calc(100vh - 92px);
+            }
+
+            .tool-group {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 980px) {
+            .tools-page {
+                padding-top: calc(var(--tools-nav-height) + 10px);
+            }
+
+            .tools-layout {
+                grid-template-columns: 68px minmax(0, 1fr);
+                gap: 10px;
+            }
+
+            .sidebar {
+                padding: 8px 6px;
+                top: calc(var(--tools-nav-height) + 8px);
+                max-height: calc(100vh - 82px);
+                overflow: auto;
+            }
+
+            .sidebar-title {
+                display: none;
+            }
+
+            .category-list {
+                display: grid;
+                gap: 8px;
+            }
+
+            .category-link {
+                justify-content: center;
+                padding: 10px 0;
+                min-height: 44px;
+            }
+
+            .category-link span {
+                display: none;
+            }
+
+            .category-link i {
+                font-size: 18px;
+                line-height: 1;
             }
         }
 
@@ -347,31 +394,65 @@
             }
 
             .section-head h2 {
-                font-size: 20px;
+                font-size: 18px;
+            }
+
+            .section-meta {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+
+            .tool-card {
+                min-height: 70px;
+                padding: 9px 10px;
             }
         }
     </style>
 </head>
-<body>
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0">
-                    <a href="index.html">
-                        <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
-                    </a>
-                </div>
+<body x-data="{ mobileMenuOpen: false }">
+    <div class="nav-container" id="navContainer">
+        <nav class="bg-white shadow-lg" id="fullNav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex-shrink-0">
+                        <a href="index.html">
+                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                        </a>
+                    </div>
 
-                <div class="hidden md:flex items-center space-x-2 modern-nav">
-                    <a href="index.html" class="nav-link">首页</a>
-                    <a href="news.html" class="nav-link">AI资讯</a>
-                    <a href="tools.html" class="nav-link active">AI工具集</a>
-                </div>
+                    <div class="hidden lg:block flex-1 flex justify-center">
+                        <div class="flex items-center space-x-2 modern-nav ml-16">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link active">AI工具集</a>
+                        </div>
+                    </div>
 
-                <div class="md:hidden text-sm font-semibold text-slate-700">AI工具集</div>
+                    <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                        <div class="flex items-center space-x-1 modern-nav ml-8">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link active">AI工具集</a>
+                        </div>
+                    </div>
+
+                    <div class="md:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </nav>
+
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="mobile-nav-link">首页</a>
+                    <a href="news.html" class="mobile-nav-link">AI资讯</a>
+                    <a href="tools.html" class="mobile-nav-link active">AI工具集</a>
+                </div>
+            </div>
+        </nav>
+    </div>
 
     <main class="tools-page">
         <div class="tools-layout">

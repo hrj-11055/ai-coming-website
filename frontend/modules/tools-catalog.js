@@ -120,8 +120,8 @@ export const TOOL_SECTIONS = [
       { name: 'LM Studio', logo: '/logos/tool-collection-2026-02-26/8-知识库/lmstudio.svg', url: 'https://lmstudio.ai' }
     ],
     china: [
-      { name: 'ima', logo: '/logos/tool-collection-2026-02-26/8-知识库/ima.svg', url: 'https://ima.qq.com/' },
-      { name: 'Get笔记', logo: '/logos/tool-collection-2026-02-26/8-知识库/get-note.svg', url: 'https://www.biji.com/' },
+      { name: 'ima', logo: '/logos/tool-collection-2026-02-26/8-知识库/ima.png', url: 'https://ima.qq.com/' },
+      { name: 'Get笔记', logo: '/logos/tool-collection-2026-02-26/8-知识库/get-note.png', url: 'https://www.biji.com/' },
       { name: '飞书', logo: '/logos/tool-collection-2026-02-26/8-知识库/feishu.svg', url: 'https://www.feishu.cn/' }
     ]
   },
@@ -177,7 +177,7 @@ export const TOOL_SECTIONS = [
     ],
     china: [
       { name: 'Coze', logo: '/logos/tool-collection-2026-02-26/11-Agent流/coze.svg', url: 'https://www.coze.cn' },
-      { name: '豆包', logo: '/logos/tool-collection-2026-02-26/11-Agent流/doubao.png', url: 'https://www.doubao.com' },
+      { name: 'LangChain', logo: '/logos/tool-collection-2026-02-26/11-Agent流/langchain.png', url: 'https://www.langchain.com/' },
       { name: 'Manus', logo: '/logos/tool-collection-2026-02-26/11-Agent流/manus.svg', url: 'https://manus.im/' }
     ]
   },
