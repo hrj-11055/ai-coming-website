@@ -34,36 +34,39 @@ if [ ! -d "$REPORT_SOURCE_DIR" ]; then
     exit 1
 fi
 
-# 查找最新的JSON文件（按修改时间排序，取最新的一个）
-LATEST_JSON=$(find "$REPORT_SOURCE_DIR" -name "*.json" -type f -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
+today=$(date +%F)
+yesterday=$(date -d "yesterday" +%F)
 
-if [ -z "$LATEST_JSON" ]; then
-    log "📭 没有找到JSON文件"
+# 在 [昨天, 今天] 窗口内挑选最新日期文件，避免被异常mtime旧文件误导
+candidate_rows=""
+while IFS= read -r file; do
+    [ -f "$file" ] || continue
+    filename=$(basename "$file")
+    name_date=$(echo "$filename" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
+    [ -n "$name_date" ] || continue
+    if [[ "$name_date" < "$yesterday" || "$name_date" > "$today" ]]; then
+        continue
+    fi
+    mtime=$(stat -c %Y "$file")
+    candidate_rows+="${name_date}|${mtime}|${file}"$'\n'
+done < <(find "$REPORT_SOURCE_DIR" -name "*.json" -type f 2>/dev/null)
+
+if [ -z "$candidate_rows" ]; then
+    log "📭 未找到可导入日报（允许区间: $yesterday ~ $today）"
     exit 0
 fi
 
+selected=$(printf "%s" "$candidate_rows" | sed '/^$/d' | sort -t'|' -k1,1r -k2,2nr | head -1)
+name_date=$(echo "$selected" | cut -d'|' -f1)
+LATEST_JSON=$(echo "$selected" | cut -d'|' -f3-)
+
 if [ ! -f "$LATEST_JSON" ]; then
-    log "❌ 文件不存在: $LATEST_JSON"
+    log "❌ 候选文件不存在: $LATEST_JSON"
     exit 1
 fi
 
 filename=$(basename "$LATEST_JSON")
 file_date=$(stat -c %y "$LATEST_JSON" | cut -d' ' -f1)
-name_date=$(echo "$filename" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
-today=$(date +%F)
-yesterday=$(date -d "yesterday" +%F)
-
-# 防呆：避免目录残留旧文件导致误导入历史数据
-# 仅允许导入文件名日期在 [昨天, 今天] 区间内的数据
-if [ -z "$name_date" ]; then
-    log "⚠️  文件名不符合日期格式，跳过导入: $filename"
-    exit 0
-fi
-
-if [[ "$name_date" < "$yesterday" || "$name_date" > "$today" ]]; then
-    log "⚠️  检测到过期/异常日期文件，跳过导入: $filename (允许区间: $yesterday ~ $today)"
-    exit 0
-fi
 
 log ""
 log "📄 发现最新新闻: $filename"
@@ -114,11 +117,19 @@ response=$(curl -s -X POST "$API_URL" \
 if echo "$response" | grep -q "success\|成功导入\|导入完成\|今日资讯\|todayCount"; then
     log "✅ 成功导入 $article_count 篇文章"
 
-    # 归档已处理的文件
+    # 归档副本（保留源目录原文件）
     archive_dir="$PROJECT_DIR/reports-archive"
     mkdir -p "$archive_dir"
-    mv "$LATEST_JSON" "$archive_dir/"
-    log "📁 已归档: $filename"
+    cp -f "$LATEST_JSON" "$archive_dir/"
+    log "📁 已归档副本: $filename"
+
+    # 同步到 data 目录，供网站接口直接读取
+    daily_data_file="$PROJECT_DIR/data/news-$name_date.json"
+    compatibility_data_file="$PROJECT_DIR/data/$name_date.json"
+    cp -f "$LATEST_JSON" "$daily_data_file"
+    cp -f "$LATEST_JSON" "$compatibility_data_file"
+    chmod 644 "$daily_data_file" "$compatibility_data_file" 2>/dev/null || true
+    log "🗂️  已写入 data: $(basename "$daily_data_file"), $(basename "$compatibility_data_file")"
 
     # 清理临时文件
     rm -f "$wrapped_json"
