@@ -87,24 +87,29 @@
             }
         }
 
-        .search-container {
+        .main-column {
             position: relative;
             z-index: 10;
-            flex: 1;
+            width: 100%;
+            padding-left: 348px;
+        }
+
+        .search-container {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            margin-top: -100px;
-            min-height: calc(100vh - 200px);
+            justify-content: flex-start;
+            padding: 96px 20px 28px;
+            margin-top: 0;
+            min-height: auto;
             transition: all 0.5s ease;
         }
 
         /* 生成状态：输入框移动到顶部 */
         .search-container.generating {
             margin-top: 0;
-            padding-top: 20px;
+            padding-top: 96px;
             justify-content: flex-start;
             min-height: auto;
         }
@@ -139,6 +144,26 @@
             height: 50px;
             width: auto;
             display: block;
+            opacity: 1;
+        }
+
+        .prompt-icon-row {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            max-width: 800px;
+            margin: -10px auto 14px;
+        }
+
+        .prompt-icon {
+            width: 112px;
+            height: 112px;
+            object-fit: contain;
+            opacity: 0.86;
+            transition: opacity 0.3s;
+        }
+
+        .prompt-icon:hover {
             opacity: 1;
         }
 
@@ -721,221 +746,217 @@
             .result-content { font-size: 0.95rem; }
         }
 
-        /* ==================== 演示系统样式 ==================== */
+        /* 新手引导（左侧固定） */
+        .onboarding-panel {
+            position: fixed;
+            top: 108px;
+            left: 24px;
+            width: 296px;
+            z-index: 30;
+            padding: 20px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(191, 219, 254, 0.9);
+            background:
+                radial-gradient(140% 120% at 0% 0%, rgba(96, 165, 250, 0.2) 0%, rgba(255, 255, 255, 0) 58%),
+                linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(245, 250, 255, 0.95) 100%);
+            box-shadow: 0 16px 40px rgba(30, 64, 175, 0.1);
+            backdrop-filter: blur(8px);
+        }
 
-        /* 演示触发按钮 */
-        .demo-trigger-btn {
-            background: var(--ai-gradient-brand, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: var(--ai-radius-pill, 20px);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
+        .onboarding-kicker {
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #4f46e5;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .onboarding-title {
+            font-size: 1.48rem;
+            line-height: 1.25;
+            color: #0f172a;
+            margin-bottom: 14px;
+            font-weight: 700;
+        }
+
+        .onboarding-steps {
+            display: grid;
+            gap: 11px;
+            padding-left: 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .onboarding-steps li {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: start;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .step-index {
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
-            animation: fadeInDown 0.5s ease-out;
+            justify-content: center;
+            min-width: 54px;
+            height: 24px;
+            border-radius: 999px;
+            background: #e0e7ff;
+            color: #1e40af;
+            font-size: 0.73rem;
+            font-weight: 700;
         }
 
-        .demo-trigger-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        .step-copy {
+            color: #334155;
+            font-size: 0.9rem;
+            line-height: 1.48;
         }
 
-        .demo-trigger-btn i {
-            font-size: 16px;
+        .onboarding-note {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+            color: #64748b;
+            font-size: 0.82rem;
+            line-height: 1.45;
         }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Tooltip样式 */
-        .demo-tooltip {
-            position: fixed;
-            z-index: 10000;
-            background: #1a1a1a;
-            color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            max-width: 280px;
-            animation: tooltipFadeIn 0.3s ease-out;
-            pointer-events: none;
-        }
-
-        .demo-tooltip .tooltip-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .demo-tooltip .tooltip-arrow {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-        }
-
-        @keyframes tooltipFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* 演示高光效果 */
-        .demo-highlight {
-            position: relative;
-            z-index: 9999 !important;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.8),
-                        0 0 0 8px rgba(102, 126, 234, 0.3),
-                        0 8px 32px rgba(102, 126, 234, 0.4) !important;
-            animation: highlightPulse 1.5s ease-in-out infinite;
-            border-radius: 12px;
-        }
-
-        @keyframes highlightPulse {
-            0%, 100% {
-                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.8),
-                            0 0 0 8px rgba(102, 126, 234, 0.3),
-                            0 8px 32px rgba(102, 126, 234, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 0 6px rgba(102, 126, 234, 1),
-                            0 0 0 12px rgba(102, 126, 234, 0.4),
-                            0 12px 48px rgba(102, 126, 234, 0.6);
-            }
-        }
-
-        /* 演示遮罩层 */
-        .demo-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* 示例案例（对话框下方） */
+        .cases-panel {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 9998;
-            animation: fadeIn 0.3s ease;
+            max-width: 800px;
+            margin: 18px auto 0;
+            border-radius: 18px;
+            border: 1px solid rgba(203, 213, 225, 0.8);
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            padding: 16px;
+            animation: fadeInUp 0.45s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* 演示完成提示 */
-        .demo-complete-toast {
-            position: fixed;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            padding: 16px 28px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
-            z-index: 10001;
+        .cases-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            animation: slideDownFade 0.5s ease-out;
+            justify-content: space-between;
+            margin-bottom: 12px;
         }
 
-        .demo-complete-toast i {
-            font-size: 20px;
+        .cases-title {
+            font-size: 0.98rem;
+            font-weight: 700;
+            color: #0f172a;
         }
 
-        @keyframes slideDownFade {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -20px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
+        .cases-subtitle {
+            font-size: 0.78rem;
+            color: #64748b;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            padding: 5px 10px;
         }
 
-        /* 打字机光标效果 */
-        .typing-cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.2em;
-            background: var(--ai-brand-500, #667eea);
-            margin-left: 2px;
-            animation: blink 0.8s infinite;
-            vertical-align: text-bottom;
+        .case-list {
+            display: grid;
+            gap: 10px;
         }
 
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-
-        /* 复制按钮特殊高光 */
-        .copy-btn-highlight {
-            position: relative;
-            animation: copyButtonGlow 1s ease-in-out infinite;
-        }
-
-        .copy-btn-highlight::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
+        .case-item {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #dbeafe;
             border-radius: 12px;
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            z-index: -1;
-            animation: copyButtonPulse 1.5s ease-in-out infinite;
+            padding: 12px 14px;
         }
 
-        @keyframes copyButtonGlow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .case-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 7px;
         }
 
-        @keyframes copyButtonPulse {
-            0%, 100% {
-                opacity: 0.6;
-                transform: scale(1);
+        .case-demand {
+            font-size: 0.9rem;
+            color: #0f172a;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .case-usage {
+            font-size: 0.82rem;
+            color: #475569;
+            line-height: 1.52;
+        }
+
+        @media (max-width: 1280px) {
+            .main-column {
+                padding-left: 0;
             }
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
+
+            .onboarding-panel {
+                position: relative;
+                top: auto;
+                left: auto;
+                width: min(860px, calc(100% - 32px));
+                margin: 88px auto 10px;
+            }
+
+            .search-container {
+                padding-top: 24px;
+            }
+
+            .search-container.generating {
+                padding-top: 24px;
             }
         }
 
-        /* 响应式适配 */
         @media (max-width: 768px) {
-            .demo-tooltip {
-                font-size: 12px;
-                padding: 10px 14px;
-                max-width: 200px;
+            .onboarding-panel {
+                width: auto;
+                margin: 84px 12px 10px;
+                padding: 16px 14px;
+                border-radius: 16px;
             }
-            .demo-complete-toast {
-                font-size: 14px;
-                padding: 12px 20px;
-                top: 80px;
+
+            .onboarding-title {
+                font-size: 1.25rem;
+            }
+
+            .step-index {
+                min-width: 48px;
+                height: 22px;
+                font-size: 0.7rem;
+            }
+
+            .search-container {
+                padding: 14px 12px 18px;
+            }
+
+            .search-container.generating {
+                padding-top: 14px;
+            }
+
+            .prompt-icon-row {
+                margin: -2px auto 10px;
+            }
+
+            .prompt-icon {
+                width: 88px;
+                height: 88px;
+            }
+
+            .cases-panel {
+                padding: 12px;
+                border-radius: 14px;
+            }
+
+            .cases-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
             }
         }
     </style>
@@ -955,12 +976,26 @@
         <span></span>
     </div>
 
-    <!-- 演示触发按钮 - 左侧 -->
-    <div style="position: absolute; top: 24px; left: 24px; z-index: 100;">
-        <button id="demoTriggerBtn" class="demo-trigger-btn" style="display: none;">
-            <i class="fas fa-play-circle"></i> 查看演示
-        </button>
-    </div>
+    <!-- 新手引导 -->
+    <aside class="onboarding-panel" aria-label="首页新手引导">
+        <p class="onboarding-kicker">新手引导</p>
+        <h2 class="onboarding-title">使用方法</h2>
+        <ol class="onboarding-steps">
+            <li>
+                <span class="step-index">步骤 1</span>
+                <span class="step-copy">在对话框中输入您的需求。</span>
+            </li>
+            <li>
+                <span class="step-index">步骤 2</span>
+                <span class="step-copy">AIcoming 将根据您的需求拆解为专家级提示词。</span>
+            </li>
+            <li>
+                <span class="step-index">步骤 3</span>
+                <span class="step-copy">一键复制提示词，打开您最熟悉的 AI 大模型使用。</span>
+            </li>
+        </ol>
+        <p class="onboarding-note">先写需求，再生成提示词，最后复制到目标大模型运行。</p>
+    </aside>
 
     <!-- 顶部导航 - 右侧 -->
     <div style="position: absolute; top: 24px; right: 24px; z-index: 100; display: flex; align-items: center; gap: 12px;">
@@ -975,41 +1010,68 @@
         </a>
     </div>
 
-    <!-- 主搜索区域 -->
-    <div class="search-container">
-        <!-- Logo -->
-        <div class="logo-container" style="margin-top: -100px;">
-            <div class="logo-wrapper">
-                <img src="./pic/AIcoming_logo_new.png" alt="AIcoming - 让一部分人先用起来">
-            </div>
-        </div>
-
-        <!-- 提示词图标 -->
-        <div style="display: flex; justify-content: center; margin-bottom: 20px; padding-left: 600px; margin-top: -100px;">
-            <img src="./pic/tishici.png" alt="提示词" style="width: 120px; height: 120px; object-fit: contain; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'" title="AI 提示词生成器">
-        </div>
-
-        <!-- 搜索框 -->
-        <div class="search-box-wrapper">
-            <div class="search-box">
-                <textarea
-                    class="search-input"
-                    id="searchInput"
-                    placeholder="把您的需求告诉我，我帮您拆解为专家提示词"
-                    rows="1"
-                    autocomplete="off"
-                ></textarea>
-                <div class="search-actions">
-                    <button class="search-btn" id="searchBtn" onclick="performSearch()">
-                        <i class="fas fa-arrow-up"></i>
-                    </button>
+    <div class="main-column">
+        <!-- 主搜索区域 -->
+        <div class="search-container">
+            <!-- Logo -->
+            <div class="logo-container">
+                <div class="logo-wrapper">
+                    <img src="./pic/AIcoming_logo_new.png" alt="AIcoming - 让一部分人先用起来">
                 </div>
             </div>
-        </div>
 
-        <!-- 搜索结果区域 -->
-        <div class="results-container hidden" id="resultsContainer">
-            <!-- 搜索结果将动态插入这里 -->
+            <!-- 提示词图标 -->
+            <div class="prompt-icon-row">
+                <img src="./pic/tishici.png" alt="提示词生成专家" class="prompt-icon" title="提示词生成专家">
+            </div>
+
+            <!-- 搜索框 -->
+            <div class="search-box-wrapper">
+                <div class="search-box">
+                    <textarea
+                        class="search-input"
+                        id="searchInput"
+                        placeholder="把您的需求告诉我，我帮您拆解为专家提示词"
+                        rows="1"
+                        autocomplete="off"
+                    ></textarea>
+                    <div class="search-actions">
+                        <button class="search-btn" id="searchBtn" onclick="performSearch()">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 搜索结果区域 -->
+            <div class="results-container hidden" id="resultsContainer">
+                <!-- 搜索结果将动态插入这里 -->
+            </div>
+
+            <!-- 示例案例 -->
+            <section class="cases-panel" aria-label="示例案例">
+                <div class="cases-header">
+                    <h3 class="cases-title">示例案例</h3>
+                    <span class="cases-subtitle">复制后在豆包/DeepSeek/秘塔/千问使用</span>
+                </div>
+                <div class="case-list">
+                    <article class="case-item">
+                        <p class="case-title">示例 1 · 专家身份生成</p>
+                        <p class="case-demand">我需要生成一个互联网顶级产品经理身份的提示词。</p>
+                        <p class="case-usage"><strong>使用方法：</strong>将生成的提示词一键复制，打开 DeepSeek 或豆包，直接使用。</p>
+                    </article>
+                    <article class="case-item">
+                        <p class="case-title">示例 2 · 研究类提示词</p>
+                        <p class="case-demand">我需要研究中国新能源汽车产业链，尤其是整车厂。</p>
+                        <p class="case-usage"><strong>使用方法：</strong>将生成的提示词一键复制，打开具备深度研究的 AI（豆包、秘塔、千问等），粘贴后选择“深度研究/深入研究”运行，5-10 分钟查看结果。</p>
+                    </article>
+                    <article class="case-item">
+                        <p class="case-title">示例 3 · 成长类提示词</p>
+                        <p class="case-demand">我毕业 2 年，是初级产品经理，想成为资深产品经理进入大厂工作。</p>
+                        <p class="case-usage"><strong>使用方法：</strong>将生成的提示词一键复制，打开具备深度研究的 AI（豆包、秘塔、千问等），粘贴后选择“深度研究/深入研究”运行，5-10 分钟查看结果。</p>
+                    </article>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -1022,21 +1084,5 @@
 
     <!-- JavaScript -->
     <script type="module" src="frontend/index-page.js"></script>
-
-    <!-- 演示系统HTML结构 -->
-    <!-- Tooltip容器 -->
-    <div id="demoTooltip" class="demo-tooltip" style="display: none;">
-        <div class="tooltip-content"></div>
-        <div class="tooltip-arrow"></div>
-    </div>
-
-    <!-- 演示遮罩层 -->
-    <div id="demoOverlay" class="demo-overlay" style="display: none;"></div>
-
-    <!-- 演示完成提示 -->
-    <div id="demoCompleteToast" class="demo-complete-toast" style="display: none;">
-        <i class="fas fa-check-circle"></i>
-        <span>演示完成！现在，轮到你试试了...</span>
-    </div>
 </body>
 </html>

@@ -12,7 +12,7 @@ function createAiRouter({ systemPrompt, aiConfig }) {
             if (!isApiKeyConfigured(apiKey)) {
                 return res.status(500).json({
                     error: 'API_KEY未配置',
-                    message: '请在 .env 文件中配置 QWEN_API_KEY'
+                    message: '请在 .env 文件中配置 QWEN_API_KEY 或 DASHSCOPE_API_KEY'
                 });
             }
 

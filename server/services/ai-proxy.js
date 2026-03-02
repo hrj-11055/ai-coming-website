@@ -23,9 +23,9 @@ function loadSystemPrompt(rootDir) {
 
 function createAiConfigFromEnv(env) {
     return {
-        apiKey: env.QWEN_API_KEY,
-        apiUrl: env.QWEN_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-        model: env.QWEN_MODEL || 'qwen-plus'
+        apiKey: env.QWEN_API_KEY || env.DASHSCOPE_API_KEY,
+        apiUrl: env.QWEN_API_URL || env.DASHSCOPE_API_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+        model: env.QWEN_MODEL || env.DASHSCOPE_MODEL || 'qwen3.5-plus'
     };
 }
 
@@ -44,14 +44,20 @@ function createWeeklyKeywordsAiConfigFromEnv(env) {
     );
 
     return {
-        apiKey: env.DEEPSEEK_API_KEY || env.QWEN_API_KEY,
+        apiKey: env.DEEPSEEK_API_KEY || env.QWEN_API_KEY || env.DASHSCOPE_API_KEY,
         apiUrl: deepseekApiUrl,
         model: env.DEEPSEEK_MODEL || 'deepseek-chat'
     };
 }
 
 function isApiKeyConfigured(apiKey) {
-    return Boolean(apiKey && apiKey !== 'sk-your-qwen-api-key-here');
+    const placeholders = new Set([
+        'sk-your-qwen-api-key-here',
+        'sk-your-api-key-here',
+        'sk-your_api_key_here',
+        'your_api_key_here'
+    ]);
+    return Boolean(apiKey && !placeholders.has(apiKey));
 }
 
 module.exports = {
