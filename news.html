@@ -184,6 +184,131 @@
             border-left-color: #8b5cf6;
         }
 
+        .podcast-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(239, 246, 255, 0.96) 100%);
+            border: 1px solid rgba(191, 219, 254, 0.9);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .podcast-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .podcast-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .podcast-meta {
+            font-size: 0.85rem;
+            color: var(--ai-text-muted, #6b7280);
+            margin-top: 4px;
+        }
+
+        .podcast-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 6px 10px;
+            white-space: nowrap;
+        }
+
+        .podcast-status.ready {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .podcast-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .podcast-status.unavailable {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .podcast-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .podcast-summary {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #334155;
+            margin-bottom: 16px;
+        }
+
+        .podcast-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .podcast-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            background: var(--ai-gradient-brand, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            box-shadow: var(--ai-shadow-brand, 0 8px 24px rgba(102, 126, 234, 0.22));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .podcast-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.25);
+        }
+
+        .podcast-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .podcast-audio {
+            width: 100%;
+            margin-top: 14px;
+        }
+
+        .podcast-transcript {
+            margin-top: 14px;
+            border-top: 1px dashed rgba(148, 163, 184, 0.8);
+            padding-top: 12px;
+        }
+
+        .podcast-transcript summary {
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .podcast-transcript p {
+            white-space: pre-wrap;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #475569;
+            margin-top: 10px;
+        }
+
         /* 大纲链接样式 */
         .outline-link {
             display: block;
@@ -352,6 +477,19 @@
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-4">
                                 <h2 class="text-2xl font-bold text-gray-900" id="sectionTitle">今日快讯</h2>
+                            </div>
+                        </div>
+
+                        <div id="podcastContainer">
+                            <div class="podcast-card">
+                                <div class="podcast-header">
+                                    <div>
+                                        <div class="podcast-title">今日播客</div>
+                                        <div class="podcast-meta">正在准备播客信息...</div>
+                                    </div>
+                                    <span class="podcast-status pending">加载中</span>
+                                </div>
+                                <p class="podcast-summary">系统会把当前日期的 AI 快讯整理成一段可点播的音频，并从阿里云 OSS 直接分发播放。</p>
                             </div>
                         </div>
 

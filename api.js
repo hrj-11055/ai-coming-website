@@ -176,6 +176,19 @@ class ApiService {
         });
     }
 
+    async getNewsPodcast(date) {
+        return await this.request(`/podcast/news/${date}`, {
+            timeoutMs: 12000
+        });
+    }
+
+    async generateNewsPodcast(date) {
+        return await this.request(`/podcast/news/${date}/generate`, {
+            method: 'POST',
+            timeoutMs: 15000
+        });
+    }
+
     // 导出模板
     async downloadDailyNewsTemplate() {
         await this.downloadTemplate('/news/template', 'daily-news-template.json');
@@ -255,6 +268,24 @@ window.saveNewsToAPI = async function(articles) {
     } catch (error) {
         console.error('保存新闻失败:', error);
         return false;
+    }
+};
+
+window.loadNewsPodcastFromAPI = async function(date) {
+    try {
+        return await window.apiService.getNewsPodcast(date);
+    } catch (error) {
+        console.error('加载播客失败:', error);
+        throw error;
+    }
+};
+
+window.generateNewsPodcastFromAPI = async function(date) {
+    try {
+        return await window.apiService.generateNewsPodcast(date);
+    } catch (error) {
+        console.error('生成播客失败:', error);
+        throw error;
     }
 };
 

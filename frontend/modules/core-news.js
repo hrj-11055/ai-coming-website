@@ -32,6 +32,12 @@ let cachedTimelineDates = null;
 let isTimelineLoading = false;
 const NEWS_REQUEST_TIMEOUT_MS = 3000;
 const TIMELINE_REQUEST_TIMEOUT_MS = 2500;
+const PODCAST_REQUEST_TIMEOUT_MS = 12000;
+const PODCAST_POLL_INTERVAL_MS = 5000;
+const PODCAST_POLL_MAX_ATTEMPTS = 12;
+let currentPodcastDate = null;
+let podcastPollHandle = null;
+const podcastGenerationRequests = new Set();
 
 function withTimeout(promise, timeoutMs, errorMessage) {
     return Promise.race([
@@ -40,6 +46,223 @@ function withTimeout(promise, timeoutMs, errorMessage) {
             setTimeout(() => reject(new Error(errorMessage)), timeoutMs);
         })
     ]);
+}
+
+function getTodayDateKey() {
+    return new Date().toISOString().split('T')[0];
+}
+
+function clearPodcastPoll() {
+    if (podcastPollHandle) {
+        clearTimeout(podcastPollHandle);
+        podcastPollHandle = null;
+    }
+}
+
+function escapeHtml(text) {
+    return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function formatDurationLabel(seconds) {
+    if (!seconds || Number.isNaN(Number(seconds))) {
+        return '时长生成后可见';
+    }
+
+    const totalSeconds = Math.max(0, Number(seconds));
+    const minutes = Math.floor(totalSeconds / 60);
+    const restSeconds = totalSeconds % 60;
+    if (minutes <= 0) {
+        return `${restSeconds} 秒`;
+    }
+
+    return `${minutes} 分 ${String(restSeconds).padStart(2, '0')} 秒`;
+}
+
+function getPodcastStatusLabel(status) {
+    const labels = {
+        ready: '已生成',
+        pending: '生成中',
+        unavailable: '未生成',
+        error: '生成失败'
+    };
+
+    return labels[status] || '状态未知';
+}
+
+function createPodcastActionLabel(status) {
+    if (status === 'error') {
+        return '重新生成播客';
+    }
+    return '生成今日播客';
+}
+
+function renderPodcastCard(metadata) {
+    const container = document.getElementById('podcastContainer');
+    if (!container) {
+        return;
+    }
+
+    const safeMetadata = metadata || {
+        status: 'unavailable',
+        title: '今日播客',
+        summary: '暂未找到播客信息。',
+        duration_seconds: null,
+        audio_url: null,
+        transcript: null,
+        date: currentPodcastDate || getTodayDateKey(),
+        can_generate: false
+    };
+    const statusClass = escapeHtml(safeMetadata.status || 'unavailable');
+    const statusLabel = escapeHtml(getPodcastStatusLabel(safeMetadata.status));
+    const title = escapeHtml(safeMetadata.title || '今日播客');
+    const dateText = escapeHtml(safeMetadata.date || currentPodcastDate || getTodayDateKey());
+    const durationText = escapeHtml(formatDurationLabel(safeMetadata.duration_seconds));
+    const summary = escapeHtml(safeMetadata.summary || '暂无播客摘要。');
+    const audioUrl = safeMetadata.audio_url ? escapeHtml(safeMetadata.audio_url) : '';
+    const transcript = safeMetadata.transcript ? escapeHtml(safeMetadata.transcript) : '';
+    const shouldShowGenerate = Boolean(safeMetadata.can_generate) && (safeMetadata.status === 'unavailable' || safeMetadata.status === 'error');
+    const isPending = safeMetadata.status === 'pending';
+
+    container.innerHTML = `
+        <div class="podcast-card">
+            <div class="podcast-header">
+                <div>
+                    <div class="podcast-title">${title}</div>
+                    <div class="podcast-meta">${dateText} · ${durationText}</div>
+                </div>
+                <span class="podcast-status ${statusClass}">${statusLabel}</span>
+            </div>
+            <p class="podcast-summary">${summary}</p>
+            <div class="podcast-actions">
+                ${shouldShowGenerate ? `<button type="button" class="podcast-btn" id="generatePodcastBtn">${escapeHtml(createPodcastActionLabel(safeMetadata.status))}</button>` : ''}
+                ${isPending ? '<button type="button" class="podcast-btn" disabled>播客生成中...</button>' : ''}
+            </div>
+            ${audioUrl ? `<audio class="podcast-audio" controls preload="none" src="${audioUrl}"></audio>` : ''}
+            ${transcript ? `
+                <details class="podcast-transcript">
+                    <summary>查看口播稿</summary>
+                    <p>${transcript}</p>
+                </details>
+            ` : ''}
+        </div>
+    `;
+
+    const generateButton = document.getElementById('generatePodcastBtn');
+    if (generateButton && currentPodcastDate) {
+        generateButton.addEventListener('click', () => {
+            void startPodcastGeneration(currentPodcastDate);
+        });
+    }
+}
+
+async function loadPodcastForDate(date, { triggerGenerate = true, pollAttempt = 0 } = {}) {
+    const normalizedDate = date || getTodayDateKey();
+    currentPodcastDate = normalizedDate;
+    clearPodcastPoll();
+
+    try {
+        const metadata = await withTimeout(
+            window.loadNewsPodcastFromAPI(normalizedDate),
+            PODCAST_REQUEST_TIMEOUT_MS,
+            '加载播客信息超时'
+        );
+
+        if (currentPodcastDate !== normalizedDate) {
+            return;
+        }
+
+        renderPodcastCard(metadata);
+
+        if ((metadata.status === 'unavailable' || metadata.status === 'error') && triggerGenerate && metadata.can_generate && !podcastGenerationRequests.has(normalizedDate)) {
+            await startPodcastGeneration(normalizedDate);
+            return;
+        }
+
+        if (metadata.status === 'pending' && pollAttempt < PODCAST_POLL_MAX_ATTEMPTS) {
+            podcastPollHandle = setTimeout(() => {
+                void loadPodcastForDate(normalizedDate, { triggerGenerate: false, pollAttempt: pollAttempt + 1 });
+            }, PODCAST_POLL_INTERVAL_MS);
+        } else if (metadata.status === 'ready') {
+            podcastGenerationRequests.delete(normalizedDate);
+        }
+    } catch (error) {
+        console.error('加载播客失败:', error);
+        if (currentPodcastDate !== normalizedDate) {
+            return;
+        }
+
+        renderPodcastCard({
+            date: normalizedDate,
+            status: 'error',
+            title: '今日播客',
+            summary: error.message || '播客信息加载失败，请稍后重试。',
+            duration_seconds: null,
+            audio_url: null,
+            transcript: null,
+            can_generate: true
+        });
+    }
+}
+
+async function startPodcastGeneration(date) {
+    const normalizedDate = date || getTodayDateKey();
+    currentPodcastDate = normalizedDate;
+    podcastGenerationRequests.add(normalizedDate);
+    clearPodcastPoll();
+
+    renderPodcastCard({
+        date: normalizedDate,
+        status: 'pending',
+        title: '今日播客',
+        summary: '正在生成播客音频，稍后会自动刷新状态。',
+        duration_seconds: null,
+        audio_url: null,
+        transcript: null,
+        can_generate: true
+    });
+
+    try {
+        const metadata = await withTimeout(
+            window.generateNewsPodcastFromAPI(normalizedDate),
+            PODCAST_REQUEST_TIMEOUT_MS,
+            '播客生成请求超时'
+        );
+
+        if (currentPodcastDate !== normalizedDate) {
+            return;
+        }
+
+        renderPodcastCard(metadata);
+        if (metadata.status === 'pending') {
+            podcastPollHandle = setTimeout(() => {
+                void loadPodcastForDate(normalizedDate, { triggerGenerate: false, pollAttempt: 1 });
+            }, PODCAST_POLL_INTERVAL_MS);
+            return;
+        }
+    } catch (error) {
+        console.error('生成播客失败:', error);
+        if (currentPodcastDate !== normalizedDate) {
+            return;
+        }
+
+        renderPodcastCard({
+            date: normalizedDate,
+            status: 'error',
+            title: '今日播客',
+            summary: error.message || '播客生成失败，请稍后重试。',
+            duration_seconds: null,
+            audio_url: null,
+            transcript: null,
+            can_generate: true
+        });
+    } finally {
+        podcastGenerationRequests.delete(normalizedDate);
+    }
 }
 
 function renderNewsSkeleton() {
@@ -970,9 +1193,11 @@ async function loadNewsData() {
             '加载今日快讯超时，请稍后重试'
         );
         renderNewsArticles(articles);
+        await loadPodcastForDate(getTodayDateKey(), { triggerGenerate: true });
     } catch (error) {
         console.error('加载新闻数据失败:', error);
         renderNewsArticles([]);
+        await loadPodcastForDate(getTodayDateKey(), { triggerGenerate: false });
     }
 }
 
@@ -1222,6 +1447,7 @@ async function loadNewsByDate(date) {
 
         // 更新统计信息
         renderStats(articles);
+        await loadPodcastForDate(date, { triggerGenerate: true });
     } catch (error) {
         console.error('加载历史新闻失败:', error);
         const container = document.getElementById('articlesContainer');
@@ -1236,6 +1462,7 @@ async function loadNewsByDate(date) {
                 </div>
             `;
         }
+        await loadPodcastForDate(date, { triggerGenerate: false });
     }
 }
 

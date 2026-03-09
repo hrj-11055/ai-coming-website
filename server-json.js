@@ -24,7 +24,9 @@ const { createArchiveRouter } = require('./server/routes/archive');
 const { createTemplateRouter } = require('./server/routes/template');
 const { createAiRouter } = require('./server/routes/ai');
 const { createReportsRouter } = require('./server/routes/reports');
+const { createPodcastRouter } = require('./server/routes/podcast');
 const { normalizeEnumParam } = require('./server/utils/validation');
+const { createNewsPodcastService, createPodcastConfigFromEnv } = require('./server/services/news-podcast');
 
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -47,13 +49,15 @@ const BANNED_IPS_FILE = path.join(DATA_DIR, 'banned-ips.json');
 const KEYWORDS_WEEKLY_JOB_STATE_FILE = path.join(DATA_DIR, 'keywords-weekly-job.json');
 const ARCHIVE_DIR = path.join(DATA_DIR, 'archive');
 const DAILY_ARCHIVE_DIR = path.join(ARCHIVE_DIR, 'daily');
+const PODCAST_DIR = path.join(DATA_DIR, 'podcasts');
+const PODCAST_NEWS_DIR = path.join(PODCAST_DIR, 'news');
 const LOGO_DIR = path.join(ROOT_DIR, 'logos');
 
 const staticRoot = process.env.STATIC_ROOT;
 const app = createApp({ rootDir: ROOT_DIR, staticRoot });
 const fileStore = createJsonFileStore();
 
-for (const dir of [DATA_DIR, ARCHIVE_DIR, DAILY_ARCHIVE_DIR, LOGO_DIR]) {
+for (const dir of [DATA_DIR, ARCHIVE_DIR, DAILY_ARCHIVE_DIR, PODCAST_DIR, PODCAST_NEWS_DIR, LOGO_DIR]) {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
@@ -199,6 +203,7 @@ const securityRuntime = createSecurityRuntime({
 const systemPrompt = loadSystemPrompt(ROOT_DIR);
 const aiConfig = createAiConfigFromEnv(process.env);
 const weeklyKeywordsAiConfig = createWeeklyKeywordsAiConfigFromEnv(process.env);
+const podcastConfig = createPodcastConfigFromEnv(process.env);
 const weeklyKeywordsJob = createWeeklyKeywordsJob({
     readData,
     writeData,
@@ -213,6 +218,14 @@ const weeklyKeywordsJob = createWeeklyKeywordsJob({
     runHour: Number(process.env.WEEKLY_KEYWORDS_RUN_HOUR || 8),
     runMinute: Number(process.env.WEEKLY_KEYWORDS_RUN_MINUTE || 0),
     modelTimeoutMs: Number(process.env.WEEKLY_KEYWORDS_MODEL_TIMEOUT_MS || 25000)
+});
+const podcastService = createNewsPodcastService({
+    readData,
+    newsFile: NEWS_FILE,
+    dataDir: DATA_DIR,
+    dailyArchiveDir: DAILY_ARCHIVE_DIR,
+    metadataDir: PODCAST_NEWS_DIR,
+    config: podcastConfig
 });
 
 app.use(securityRuntime.checkIPBan);
@@ -293,6 +306,7 @@ app.use('/api', createAiRouter({
     aiConfig
 }));
 app.use('/api', createReportsRouter({ rootDir: ROOT_DIR }));
+app.use('/api', createPodcastRouter({ podcastService }));
 
 setInterval(() => {
     securityRuntime.cleanupExpiredData();
@@ -344,6 +358,8 @@ app.listen(PORT, HOST, () => {
     console.log('  DELETE /api/tools/:id - 删除工具（管理员）');
     console.log('  POST /api/tools/batch - 批量导入工具（管理员）');
     console.log('  POST /api/tools/upload-logo - 上传工具Logo（管理员）');
+    console.log('  GET  /api/podcast/news/:date - 获取指定日期播客状态');
+    console.log('  POST /api/podcast/news/:date/generate - 生成指定日期播客');
     console.log('');
     console.log('默认管理员账户:');
     console.log('  用户名: admin');
