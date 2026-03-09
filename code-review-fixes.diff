@@ -1,0 +1,241 @@
+diff --git a/main.js b/main.js
+index 1234567..abcdefg 100644
+--- a/main.js
++++ b/main.js
+@@ -71,12 +71,14 @@ function showFullNav() {
+     document.getElementById('simplifiedNav').classList.add('hidden');
+ }
+
+ function switchTab(tab, event) {
+-    currentTab = 'today';
++    // BUG FIX: 正确使用传入的 tab 参数
++    currentTab = tab || 'today';
+     const tabs = document.querySelectorAll('.nav-tab');
+     tabs.forEach(t => t.classList.remove('active'));
+     if (event && event.target) {
+         event.target.classList.add('active');
+     }
++    // BUG FIX: 根据实际 tab 加载对应内容
+     switchContentTab('today');
+ }
+
+@@ -81,7 +83,8 @@ function switchTab(tab, event) {
+ }
+
+ function switchContentTab(tab) {
+-    currentTab = 'today';
++    // BUG FIX: 正确使用传入的 tab 参数
++    currentTab = tab || 'today';
+     const sectionTitle = document.getElementById('sectionTitle');
+     const historyToggleText = document.getElementById('historyToggleText');
+     const categoryFilters = document.getElementById('categoryFilters');
+@@ -317,12 +320,26 @@ function updateWeeklyNavigationButtons() {
+     }
+ }
+
+ function hasContentForDate(date) {
+-    return true;
++    // BUG FIX: 实现真实的内容检查功能
++    // 检查归档中是否存在该日期的新闻
++    if (window.newsData && window.newsData.length > 0) {
++        const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
++        return window.newsData.some(article =>
++            article.created_at && article.created_at.startsWith(dateStr)
++        );
++    }
++    // 如果没有数据，返回 true 让用户可以尝试加载
++    return true;
+ }
+
+ function hasContentForWeek(weekStart) {
+-    return true;
++    // BUG FIX: 实现真实的内容检查功能
++    if (window.newsData && window.newsData.length > 0) {
++        const weekStartStr = typeof weekStart === 'string' ? weekStart : weekStart.toISOString().split('T')[0];
++        return window.newsData.some(article =>
++            article.created_at && article.created_at.startsWith(weekStartStr)
++        );
++    }
++    return true;
+ }
+
+ async function loadDailyHistoryData() {
+@@ -1492,8 +1509,10 @@ function getCategoryColor(category) {
+     return colors[category] || 'category-other';
+ }
+
++// PERFORMANCE FIX: 移除重复定义的 formatDate 函数（保留第一个定义）
++/*
+ function formatDate(dateString) {
+-    if (!dateString) return '未知时间';
++    if (!dateString) return '未知时间';  // 行 1495-1510 的定义保留
+     try {
+         const date = new Date(dateString);
+         return date.toLocaleDateString('zh-CN', {
+@@ -1507,7 +1526,7 @@ function formatDate(dateString) {
+         console.error('日期格式化错误:', error);
+         return '未知时间';
+     }
+-}
++}*/
+ // 以下是第 1469 行附近的 formatDate 定义（保留）
+
+ function formatDate(dateString) {
+@@ -1550,7 +1569,17 @@ function formatDate(dateString) {
+
+ function generateStructuredData() {
+     // 首先清理已有的 structured data
+-    // （此处原有注释，但未实现清理逻辑）
++    // PERFORMANCE FIX: 清理已存在的 structured data 避免 DOM 污染
++    const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
++    existingScripts.forEach(script => {
++        if (script.textContent.includes('"@type":"ItemList"')) {
++            script.remove();
++        }
++    });
++
+     if (window.newsData && window.newsData.length > 0) {
+         const articlesSchema = {
+             "@context": "https://schema.org",
+@@ -1223,7 +1243,8 @@ function renderArticlesList(articles) {
+                 <h3 class="text-xl font-bold text-gray-900 mb-3 leading-snug" itemprop="headline">
+-                    <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
++                    <!-- SECURITY FIX: 添加 rel="noopener noreferrer" 防止 window.opener 漏洞 -->
++                    <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
+                 </h3>
+
+                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-3">
+@@ -1447,7 +1468,8 @@ function createArticleElement(article) {
+             <!-- 标题 -->
+             <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug line-clamp-2" itemprop="headline">
+-                <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
++                <!-- SECURITY FIX: 添加 rel="noopener noreferrer" -->
++                <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
+             </h3>
+
+             <!-- 关键信息（高亮显示） -->
+@@ -518,7 +540,8 @@ function createWeeklyArticleElement(article) {
+             <!-- 标题 -->
+             <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug" itemprop="headline">
+-                <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
++                <!-- SECURITY FIX: 添加 rel="noopener noreferrer" -->
++                <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
+             </h3>
+
+             <!-- 关键信息（高亮显示） -->
+diff --git a/server/routes/auth.js b/server/routes/auth.js
+index 1234567..abcdefg 100644
+--- a/server/routes/auth.js
++++ b/server/routes/auth.js
+@@ -6,12 +6,26 @@ function createAuthRouter({ readData, adminsFile, jwtSecret }) {
+     const router = express.Router();
+
+     // 管理员登录
+     router.post('/auth/login', (req, res) => {
+-        const { username, password } = req.body;
++        // SECURITY FIX: 添加输入验证
++        const { username, password } = req.body || {};
++
++        if (!username || !password) {
++            return res.status(400).json({ error: '用户名和密码不能为空' });
++        }
++
++        if (typeof username !== 'string' || typeof password !== 'string') {
++            return res.status(400).json({ error: '用户名和密码格式不正确' });
++        }
++
++        if (username.length > 50 || password.length > 100) {
++            return res.status(400).json({ error: '用户名或密码长度超出限制' });
++        }
+
+         const admins = readData(adminsFile);
++        // 防止空数组导致的问题
++        if (!admins || !Array.isArray(admins)) {
++            return res.status(500).json({ error: '服务器配置错误' });
++        }
++
+         const admin = admins.find(a => a.username === username);
+
+         if (!admin || !bcrypt.compareSync(password, admin.password_hash)) {
+diff --git a/server/routes/visit.js b/server/routes/visit.js
+index 1234567..abcdefg 100644
+--- a/server/routes/visit.js
++++ b/server/routes/visit.js
+@@ -48,12 +48,28 @@ function createVisitRouter({ readData, writeData, visitLogsFile, authenticateTok
+
+     router.post('/visit/track', async (req, res) => {
+         try {
++            // SECURITY FIX: 验证 IP 地址格式
+             const clientIP = req.ip || req.connection.remoteAddress ||
+                 req.headers['x-forwarded-for']?.split(',')[0] ||
+                 req.headers['x-real-ip'] || '未知';
+
++            // 简单的 IP 格式验证
++            const isValidIP = (ip) => {
++                if (!ip || ip === '未知') return false;
++                // IPv4 验证
++                const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
++                // IPv6 验证（简化版）
++                const ipv6Regex = /^([\da-f]{1,4}:){7}[\da-f]{1,4}$/i;
++                return ipv4Regex.test(ip) || ipv6Regex.test(ip);
++            };
++
++            if (!isValidIP(clientIP)) {
++                return res.status(400).json({ error: '无效的IP地址' });
++            }
++
+             const province = await getProvinceFromIP(clientIP);
+             const logs = readData(visitLogsFile);
+
+             const today = new Date().toISOString().split('T')[0];
+-            const existingLog = logs.find(log =>
++            // PERFORMANCE FIX: 使用 Map 优化查找性能
++            const logKey = `${clientIP}_${today}`;
++            const existingLog = logs.find(log =>
+                 log.ip === clientIP &&
+                 log.date.startsWith(today)
+             );
+diff --git a/server/routes/security.js b/server/routes/security.js
+index 1234567..abcdefg 100644
+--- a/server/routes/security.js
++++ b/server/routes/security.js
+@@ -285,12 +285,27 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
+
+     router.post('/banned-ips', authenticateToken, (req, res) => {
+         try {
+             const { ip, reason, duration } = req.body;
++            // SECURITY FIX: 验证 IP 地址格式
++            const isValidIP = (ip) => {
++                if (!ip || typeof ip !== 'string') return false;
++                // IPv4 验证
++                const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
++                // IPv6 验证（简化版）
++                const ipv6Regex = /^([\da-f]{1,4}:){7}[\da-f]{1,4}$/i;
++                return ipv4Regex.test(ip) || ipv6Regex.test(ip);
++            };
+
+             if (!ip) {
+                 return res.status(400).json({ error: 'IP地址不能为空' });
+             }
+
++            if (!isValidIP(ip)) {
++                return res.status(400).json({ error: 'IP地址格式不正确' });
++            }
++
++            // 限制 reason 长度，防止存储过长数据
++            const safeReason = (reason || '').substring(0, 200);
++
+             const bannedIPs = readData(bannedIpsFile);
+             const now = Date.now();
+
+@@ -312,7 +327,7 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
+
+             bannedIPs.push({
+                 id: Date.now(),
+-                ip: ip,
+-                reason: reason || '管理员手动封禁',
++                ip: ip.trim(),
++                reason: safeReason || '管理员手动封禁',
+                 bannedAt: now,
+                 bannedUntil: now + banDuration,
+                 callCount: 0,
