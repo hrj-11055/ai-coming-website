@@ -187,7 +187,7 @@ function createPodcastConfigFromEnv(env) {
         yunTts: {
             apiUrl: env.YUNTTS_API_URL || 'https://www.yuntts.com/api/v1/indextts2_generate',
             apiKey: env.YUNTTS_API_KEY || '',
-            speakerId: env.YUNTTS_SPEAKER_ID || 'jack_cheng',
+            voice: env.YUNTTS_VOICE || env.YUNTTS_SPEAKER_ID || 'jack_cheng',
             speed: Number(env.YUNTTS_SPEED || 1.0),
             responseFormat: env.YUNTTS_RESPONSE_FORMAT || 'mp3',
             intervalSilence: Number(env.YUNTTS_INTERVAL_SILENCE || 100),
@@ -324,10 +324,9 @@ function createNewsPodcastService({
 
     async function synthesizeWithYunTts(script) {
         const body = {
-            app_key: config.yunTts.apiKey,
             text: script,
-            speaker_id: config.yunTts.speakerId,
-            audio_type: config.yunTts.responseFormat,
+            voice: config.yunTts.voice,
+            response_format: config.yunTts.responseFormat,
             interval_silence: config.yunTts.intervalSilence,
             speed: config.yunTts.speed,
             seed: config.yunTts.seed
@@ -336,6 +335,7 @@ function createNewsPodcastService({
         const response = await fetch(config.yunTts.apiUrl, {
             method: 'POST',
             headers: {
+                Authorization: `Bearer ${config.yunTts.apiKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(body)
@@ -346,11 +346,17 @@ function createNewsPodcastService({
             throw new Error(data.msg || data.message || `YunTTS 请求失败: HTTP ${response.status}`);
         }
 
-        if (!data.audio_url) {
+        const audioUrl = data.audio_url || (data.data && data.data.audio_url) || null;
+        const duration = data.duration || (data.data && data.data.duration) || null;
+        if (!audioUrl) {
             throw new Error(data.msg || data.message || 'YunTTS 未返回 audio_url');
         }
 
-        return data;
+        return {
+            ...data,
+            audio_url: audioUrl,
+            duration
+        };
     }
 
     async function downloadAudioBuffer(audioUrl) {
