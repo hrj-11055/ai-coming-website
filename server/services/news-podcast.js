@@ -48,7 +48,9 @@ function pickArticleSummary(article) {
 function dedupeArticles(articles) {
     const seen = new Set();
     return articles.filter((article) => {
-        const key = article.id || article.source_url || `${article.title || ''}-${article.published_at || ''}`;
+        const normalizedTitle = sanitizeSpeechText(article.title || '');
+        const fallbackKey = normalizedTitle || article.id || 'untitled';
+        const key = article.source_url || `${fallbackKey}-${article.published_at || ''}`;
         if (seen.has(key)) {
             return false;
         }
