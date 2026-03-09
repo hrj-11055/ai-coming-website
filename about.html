@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公司介绍 - AIcoming</title>
+    <meta name="description" content="AIcoming 公司介绍页：了解我们的定位、核心业务与合作方式，并通过邮箱或电话快速联系。">
+    <meta name="keywords" content="公司介绍,AIcoming,AI服务,企业合作,人工智能解决方案">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
+
+    <script src="/vendor/tailwindcss-cdn.js"></script>
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --about-nav-height: 64px;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--ai-font-ui, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif);
+            background: radial-gradient(circle at top right, rgba(118, 75, 162, 0.08) 0%, transparent 45%),
+                        radial-gradient(circle at 5% 20%, rgba(102, 126, 234, 0.12) 0%, transparent 35%),
+                        var(--ai-bg-muted, #f3f4f6);
+            color: var(--ai-text-primary, #111827);
+        }
+
+        .nav-shell {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--ai-border, #e5e7eb);
+            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+        }
+
+        .nav-inner {
+            max-width: 1120px;
+            height: var(--about-nav-height);
+            margin: 0 auto;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .brand img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-links {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-chip {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ai-text-secondary, #374151);
+            text-decoration: none;
+            border: 1px solid transparent;
+            border-radius: var(--ai-radius-pill, 999px);
+            padding: 8px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-chip:hover {
+            background: #eef2ff;
+            color: var(--ai-brand-700, #4c63cf);
+            border-color: #dbeafe;
+        }
+
+        .nav-chip.active {
+            background: var(--ai-gradient-brand, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            color: #ffffff;
+            box-shadow: var(--ai-shadow-brand, 0 8px 24px rgba(102, 126, 234, 0.22));
+        }
+
+        .about-wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px 16px 96px;
+            display: grid;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--ai-bg-surface, #ffffff);
+            border: 1px solid var(--ai-border, #e5e7eb);
+            border-radius: var(--ai-radius-lg, 16px);
+            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+            overflow: hidden;
+            animation: fadeInUp 0.45s ease both;
+        }
+
+        .hero {
+            position: relative;
+            padding: 36px 28px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.14) 0%, rgba(118, 75, 162, 0.12) 45%, rgba(255, 255, 255, 1) 100%);
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(30px, 5vw, 42px);
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: #111827;
+        }
+
+        .hero p {
+            margin: 14px 0 0;
+            max-width: 720px;
+            font-size: clamp(16px, 2vw, 19px);
+            line-height: 1.65;
+            color: var(--ai-text-secondary, #374151);
+        }
+
+        .todo-note {
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: var(--ai-radius-pill, 999px);
+            color: #92400e;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-row {
+            margin-top: 22px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            border: none;
+            border-radius: var(--ai-radius-md, 12px);
+            padding: 11px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        .cta-btn.primary {
+            color: #fff;
+            background: var(--ai-gradient-brand, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
+            box-shadow: var(--ai-shadow-brand, 0 8px 24px rgba(102, 126, 234, 0.22));
+        }
+
+        .cta-btn.secondary {
+            color: #1f2937;
+            background: #ffffff;
+            border: 1px solid var(--ai-border, #e5e7eb);
+            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .content {
+            padding: 22px 20px;
+        }
+
+        .content h2 {
+            margin: 0 0 10px;
+            font-size: clamp(22px, 3vw, 28px);
+            letter-spacing: -0.01em;
+            color: #111827;
+        }
+
+        .content p {
+            margin: 0;
+            color: var(--ai-text-secondary, #374151);
+            line-height: 1.78;
+            font-size: 16px;
+        }
+
+        .content p + p {
+            margin-top: 12px;
+        }
+
+        .biz-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .biz-card {
+            border: 1px solid var(--ai-border, #e5e7eb);
+            border-radius: var(--ai-radius-md, 12px);
+            padding: 14px;
+            background: #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .biz-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+        }
+
+        .biz-card i {
+            color: var(--ai-brand-700, #4c63cf);
+            font-size: 18px;
+        }
+
+        .biz-card h3 {
+            margin: 8px 0 6px;
+            font-size: 18px;
+            color: #111827;
+        }
+
+        .biz-card p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.65;
+            color: var(--ai-text-secondary, #374151);
+        }
+
+        .flow {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .flow-step {
+            border-radius: var(--ai-radius-md, 12px);
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            padding: 14px;
+            position: relative;
+        }
+
+        .flow-step .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            background: var(--ai-brand-700, #4c63cf);
+        }
+
+        .flow-step h3 {
+            margin: 10px 0 6px;
+            font-size: 17px;
+            color: #111827;
+        }
+
+        .flow-step p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--ai-text-secondary, #374151);
+            line-height: 1.65;
+        }
+
+        .contact-grid {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .contact-item {
+            border: 1px solid var(--ai-border, #e5e7eb);
+            border-radius: var(--ai-radius-md, 12px);
+            padding: 14px;
+            background: #ffffff;
+        }
+
+        .contact-item .label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--ai-text-muted, #6b7280);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .contact-item .value {
+            margin-top: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .contact-item .value a {
+            color: var(--ai-brand-700, #4c63cf);
+            text-decoration: none;
+        }
+
+        .contact-item .value a:hover {
+            text-decoration: underline;
+        }
+
+        .mobile-cta {
+            display: none;
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 45;
+            background: rgba(255, 255, 255, 0.97);
+            border-top: 1px solid var(--ai-border, #e5e7eb);
+            padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+            gap: 8px;
+        }
+
+        .mobile-cta .cta-btn {
+            flex: 1;
+            justify-content: center;
+            padding: 12px 10px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 960px) {
+            .biz-grid,
+            .flow,
+            .contact-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 720px) {
+            .nav-inner {
+                height: 60px;
+                padding: 0 12px;
+            }
+
+            .brand img {
+                height: 34px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 26px 18px;
+            }
+
+            .content {
+                padding: 18px 14px;
+            }
+
+            .biz-grid,
+            .flow,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-cta {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="nav-shell">
+        <div class="nav-inner">
+            <a class="brand" href="index.html" aria-label="返回首页">
+                <img src="/pic/AIcoming_zixunye.png" alt="AIcoming">
+            </a>
+            <nav class="nav-links" aria-label="主导航">
+                <a class="nav-chip" href="index.html">首页</a>
+                <a class="nav-chip" href="news.html">AI资讯</a>
+                <a class="nav-chip" href="tools.html">AI工具集</a>
+                <a class="nav-chip active" href="about.html">公司介绍</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="about-wrap">
+        <section class="panel hero" aria-labelledby="hero-title">
+            <h1 id="hero-title">让一部分企业先把 AI 用起来</h1>
+            <p>我们专注于将 AI 能力转化为可落地的业务方案，帮助团队更快完成从信息获取、内容生产到工具选型的关键流程，缩短“看见机会”到“形成产出”的路径。</p>
+            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式公司定位与服务对象描述</div>
+            <div class="cta-row">
+                <a class="cta-btn primary" href="mailto:contact@aicoming.com" aria-label="发送邮件咨询">
+                    <i class="fa-regular fa-envelope"></i>
+                    邮件咨询
+                </a>
+                <a class="cta-btn secondary" href="tel:+86-000-0000-0000" aria-label="拨打电话咨询">
+                    <i class="fa-solid fa-phone"></i>
+                    电话咨询
+                </a>
+            </div>
+        </section>
+
+        <section class="panel content" aria-labelledby="intro-title">
+            <h2 id="intro-title">公司简介</h2>
+            <p>AIcoming 致力于为组织提供面向业务结果的 AI 应用支持。我们关注真实工作场景，强调工具能力、流程设计与团队协作的协同推进，确保技术投入可以稳定转化为可衡量的效率收益。</p>
+            <p>目前我们围绕 AI 资讯追踪、工具目录建设与应用咨询，持续打磨一套“可理解、可执行、可复用”的实践方法，帮助团队降低试错成本，加速形成内部 AI 能力。</p>
+            <p>我们坚持长期主义和交付导向，以专业、透明的方式与客户协作，保障每一步推进都清晰可追踪。</p>
+            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式公司背景、成立时间与团队信息</div>
+        </section>
+
+        <section class="panel content" aria-labelledby="business-title">
+            <h2 id="business-title">核心业务</h2>
+            <div class="biz-grid">
+                <article class="biz-card">
+                    <i class="fa-regular fa-newspaper"></i>
+                    <h3>资讯与洞察</h3>
+                    <p>围绕重点 AI 方向提供结构化信息整理与趋势解读，帮助管理者更快做出判断。</p>
+                </article>
+                <article class="biz-card">
+                    <i class="fa-solid fa-toolbox"></i>
+                    <h3>工具与方案</h3>
+                    <p>基于不同业务场景进行工具筛选、组合与落地建议，减少重复选型和接入成本。</p>
+                </article>
+                <article class="biz-card">
+                    <i class="fa-solid fa-users-gear"></i>
+                    <h3>陪跑与支持</h3>
+                    <p>提供阶段性实践支持，包括流程优化、使用规范与团队协作机制设计。</p>
+                </article>
+            </div>
+            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式业务模块与真实服务边界</div>
+        </section>
+
+        <section class="panel content" aria-labelledby="flow-title">
+            <h2 id="flow-title">合作流程</h2>
+            <div class="flow">
+                <article class="flow-step">
+                    <span class="num">01</span>
+                    <h3>沟通需求</h3>
+                    <p>确认业务目标、现状问题与优先级，形成合作范围初稿。</p>
+                </article>
+                <article class="flow-step">
+                    <span class="num">02</span>
+                    <h3>方案确认</h3>
+                    <p>结合场景输出实施方案，明确周期、资源投入与交付标准。</p>
+                </article>
+                <article class="flow-step">
+                    <span class="num">03</span>
+                    <h3>交付支持</h3>
+                    <p>按阶段推进落地，并提供复盘与迭代建议，保障可持续使用。</p>
+                </article>
+            </div>
+            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式合作机制与 SLA 说明</div>
+        </section>
+
+        <section class="panel content" aria-labelledby="contact-title">
+            <h2 id="contact-title">联系我们</h2>
+            <p>欢迎通过以下方式联系，我们会在工作时间内尽快回复。若你已具备明确需求，也可在邮件中附上场景与目标，便于我们更高效对接。</p>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="label">邮箱</div>
+                    <div class="value"><a href="mailto:contact@aicoming.com">contact@aicoming.com</a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="label">电话</div>
+                    <div class="value"><a href="tel:+86-000-0000-0000">+86 000-0000-0000</a></div>
+                </div>
+                <div class="contact-item">
+                    <div class="label">办公城市</div>
+                    <div class="value">中国深圳（占位）</div>
+                </div>
+            </div>
+            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式联系信息、办公地址与响应承诺</div>
+        </section>
+    </main>
+
+    <div class="mobile-cta" aria-label="移动端快捷联系">
+        <a class="cta-btn primary" href="mailto:contact@aicoming.com">
+            <i class="fa-regular fa-envelope"></i>
+            邮件咨询
+        </a>
+        <a class="cta-btn secondary" href="tel:+86-000-0000-0000">
+            <i class="fa-solid fa-phone"></i>
+            电话咨询
+        </a>
+    </div>
+</body>
+</html>
