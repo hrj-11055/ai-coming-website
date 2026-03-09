@@ -275,6 +275,13 @@ function createNewsPodcastService({
             };
         }
 
+        if (existing && existing.content_hash === contentHash && existing.status === 'pending') {
+            return {
+                ...existing,
+                can_generate: canGenerate
+            };
+        }
+
         if (jobs.has(date)) {
             return createPlaceholderMetadata({
                 date,

@@ -259,7 +259,8 @@ app.use('/api', createNewsRouter({
     newsFile: NEWS_FILE,
     settingsFile: SETTINGS_FILE,
     dataDir: DATA_DIR,
-    dailyArchiveDir: DAILY_ARCHIVE_DIR
+    dailyArchiveDir: DAILY_ARCHIVE_DIR,
+    podcastService
 }));
 app.use('/api', createVisitRouter({
     readData,

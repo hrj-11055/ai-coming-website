@@ -101,9 +101,9 @@ fi
 
 log "✅ Token获取成功"
 
-# 提取articles数组并创建包装JSON（API期望 {articles: [...]} 格式）
+# 提取articles数组并创建包装JSON（API期望 {date, articles: [...]} 格式）
 wrapped_json="$PROJECT_DIR/data/wrapped-import.json"
-jq '{articles: .articles}' "$LATEST_JSON" > "$wrapped_json"
+jq --arg report_date "$name_date" '{date: $report_date, articles: .articles}' "$LATEST_JSON" > "$wrapped_json"
 
 # 导入到网站
 log "📤 导入到网站..."

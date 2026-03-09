@@ -21,7 +21,8 @@ function createNewsRouter({
     newsFile,
     settingsFile,
     dataDir,
-    dailyArchiveDir
+    dailyArchiveDir,
+    podcastService
 }) {
     const router = express.Router();
     const NEWS_DATES_CACHE_TTL_MS = 45000;
@@ -324,11 +325,15 @@ function createNewsRouter({
     });
 
     router.post('/news/batch', authenticateToken, (req, res) => {
-        const { articles } = req.body;
+        const { articles, date } = req.body;
 
         if (!Array.isArray(articles)) {
             return res.status(400).json({ error: '新闻数据格式错误' });
         }
+
+        const targetDate = typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
+            ? date
+            : null;
 
         try {
             const archiveResult = archiveOldNews();
@@ -353,10 +358,32 @@ function createNewsRouter({
 
             if (writeData(newsFile, newNews)) {
                 invalidateDatesCache();
+                const podcastDate = targetDate || importTime.split('T')[0];
+                const shouldTriggerPodcast = Boolean(
+                    podcastService &&
+                    typeof podcastService.generateNewsPodcast === 'function'
+                );
+
+                if (shouldTriggerPodcast) {
+                    setImmediate(() => {
+                        podcastService.generateNewsPodcast(podcastDate)
+                            .then((metadata) => {
+                                console.log(`[podcast] 日报导入后自动触发 ${podcastDate}: ${metadata.status}`);
+                            })
+                            .catch((error) => {
+                                console.error(`[podcast] 日报导入后自动触发失败 ${podcastDate}:`, error.message);
+                            });
+                    });
+                }
+
                 res.json({
                     message: `成功导入 ${articles.length} 篇新闻`,
                     archived: archiveResult.archived,
-                    todayCount: newNews.length
+                    todayCount: newNews.length,
+                    podcast: {
+                        date: podcastDate,
+                        triggered: shouldTriggerPodcast
+                    }
                 });
             } else {
                 res.status(500).json({ error: '批量导入新闻失败' });
