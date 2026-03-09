@@ -771,6 +771,7 @@
 
         .cases-panel {
             right: 24px;
+            width: 272px;
             margin: 0;
         }
 
@@ -909,6 +910,10 @@
                 width: 210px;
                 padding: 16px 14px;
             }
+
+            .cases-panel {
+                width: 248px;
+            }
         }
 
         @media (max-width: 1080px) {
@@ -1001,22 +1006,22 @@
     <!-- 新手引导 -->
     <aside class="onboarding-panel" aria-label="首页新手引导">
         <p class="onboarding-kicker">新手引导</p>
-        <h2 class="onboarding-title">使用方法</h2>
+        <h2 class="onboarding-title">3 步快速使用</h2>
         <ol class="onboarding-steps">
             <li>
                 <span class="step-index">步骤 1</span>
-                <span class="step-copy">在对话框中输入您的需求。</span>
+                <span class="step-copy">输入您的需求、目标或具体场景。</span>
             </li>
             <li>
                 <span class="step-index">步骤 2</span>
-                <span class="step-copy">AIcoming 将根据您的需求拆解为专家级提示词。</span>
+                <span class="step-copy">AIcoming 会自动为您拆解需求并生成更专业的提示词。</span>
             </li>
             <li>
                 <span class="step-index">步骤 3</span>
-                <span class="step-copy">一键复制提示词，打开您最熟悉的 AI 大模型使用。</span>
+                <span class="step-copy">复制生成结果，粘贴到豆包 / 千问等模型中继续使用。</span>
             </li>
         </ol>
-        <p class="onboarding-note">先写需求，再生成提示词，最后复制到目标大模型运行。</p>
+        <p class="onboarding-note">先描述需求，再生成提示词，最后复制到目标模型中使用。</p>
     </aside>
 
     <!-- 顶部导航 - 右侧 -->
@@ -1053,7 +1058,7 @@
                     <textarea
                         class="search-input"
                         id="searchInput"
-                        placeholder="把您的需求告诉我，我帮您拆解为专家提示词"
+                        placeholder="请输入您的需求、目标或场景，我来帮您生成专家提示词"
                         rows="1"
                         autocomplete="off"
                     ></textarea>
@@ -1076,30 +1081,27 @@
     <!-- 示例案例 -->
     <section class="cases-panel" aria-label="示例案例">
         <div class="cases-header">
-            <p class="onboarding-kicker">示例案例</p>
-            <span class="cases-subtitle">复制后在豆包 / DeepSeek / 秘塔 / 千问中使用。</span>
+            <p class="onboarding-kicker">使用案例</p>
+            <span class="cases-subtitle">先将下面的提示词发送到对话框，再将生成结果复制到豆包 / 千问中使用。</span>
         </div>
         <div class="case-list">
             <article class="case-item">
                 <div class="case-heading">
-                    <p class="case-title">专家身份生成</p>
+                    <p class="case-title">专家角色提示词</p>
                 </div>
-                <p class="case-demand">我需要生成一个互联网顶级产品经理身份的提示词。</p>
-                <p class="case-usage">复制后打开 DeepSeek 或豆包，直接使用。</p>
+                <p class="case-demand">请帮我生成一份适用于互联网高级产品经理场景的专家角色提示词。</p>
             </article>
             <article class="case-item">
                 <div class="case-heading">
-                    <p class="case-title">研究类提示词</p>
+                    <p class="case-title">行业研究提示词</p>
                 </div>
-                <p class="case-demand">我需要研究中国新能源汽车产业链，尤其是整车厂。</p>
-                <p class="case-usage">复制后粘贴到具备深度研究能力的 AI，选择“深度研究/深入研究”运行。</p>
+                <p class="case-demand">请帮我研究中国新能源汽车产业链，重点分析整车厂的发展现状与竞争格局。</p>
             </article>
             <article class="case-item">
                 <div class="case-heading">
-                    <p class="case-title">成长类提示词</p>
+                    <p class="case-title">职业成长提示词</p>
                 </div>
-                <p class="case-demand">我毕业 2 年，是初级产品经理，想成为资深产品经理进入大厂工作。</p>
-                <p class="case-usage">复制后粘贴到具备深度研究能力的 AI，5-10 分钟查看结果。</p>
+                <p class="case-demand">我工作 2 年，目前是初级产品经理，希望成长为资深产品经理并进入大厂，请帮我制定成长路径。</p>
             </article>
         </div>
     </section>
