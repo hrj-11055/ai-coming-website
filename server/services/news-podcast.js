@@ -2,6 +2,9 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const OSS = require('ali-oss');
+const DEFAULT_YUNTTS_GENERATE_URL = 'https://www.yuntts.com/api/v1/indextts2_generate';
+const DEFAULT_YUNTTS_CLONE_URL = 'https://www.yuntts.com/api/v1/indextts2_cloning';
+const DEFAULT_YUNTTS_QUERY_URL = 'https://www.yuntts.com/api/v1/indextts_query';
 
 function normalizeNewsPayload(rawData) {
     return Array.isArray(rawData) ? rawData : (rawData && Array.isArray(rawData.articles) ? rawData.articles : []);
@@ -26,6 +29,22 @@ function readMetadataFileSafe(filePath) {
 
 function writeJsonFileSafe(filePath, data) {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
+function hashText(value) {
+    return crypto.createHash('sha1').update(String(value || '')).digest('hex');
+}
+
+function hashFileContent(filePath) {
+    return crypto.createHash('sha1').update(fs.readFileSync(filePath)).digest('hex');
+}
+
+function inferAudioMimeType(filePath) {
+    const ext = path.extname(filePath).toLowerCase();
+    if (ext === '.wav') return 'audio/wav';
+    if (ext === '.m4a') return 'audio/mp4';
+    if (ext === '.flac') return 'audio/flac';
+    return 'audio/mpeg';
 }
 
 function isIsoDate(value) {
@@ -134,7 +153,7 @@ function buildPodcastScript(date, articles) {
     return segments.join('');
 }
 
-function createPlaceholderMetadata({ date, articles, summary, canGenerate, status = 'unavailable', transcript = null, updatedAt = null, audioUrl = null, contentHash = null, title = 'AI资讯日报播客', errorMessage = null }) {
+function createPlaceholderMetadata({ date, articles, summary, canGenerate, status = 'unavailable', transcript = null, updatedAt = null, audioUrl = null, contentHash = null, voiceProfileKey = null, title = 'AI资讯日报播客', errorMessage = null }) {
     return {
         date,
         status,
@@ -148,6 +167,7 @@ function createPlaceholderMetadata({ date, articles, summary, canGenerate, statu
         can_generate: canGenerate,
         article_count: articles.length,
         content_hash: contentHash,
+        voice_profile_key: voiceProfileKey,
         error: errorMessage
     };
 }
@@ -187,9 +207,15 @@ function createPodcastConfigFromEnv(env) {
     return {
         metadataDir: env.PODCAST_METADATA_DIR || '',
         yunTts: {
-            apiUrl: env.YUNTTS_API_URL || 'https://www.yuntts.com/api/v1/indextts2_generate',
+            apiUrl: env.YUNTTS_API_URL || DEFAULT_YUNTTS_GENERATE_URL,
+            cloneApiUrl: env.YUNTTS_CLONE_API_URL || DEFAULT_YUNTTS_CLONE_URL,
+            queryApiUrl: env.YUNTTS_QUERY_API_URL || DEFAULT_YUNTTS_QUERY_URL,
             apiKey: env.YUNTTS_API_KEY || '',
-            voice: env.YUNTTS_VOICE || env.YUNTTS_SPEAKER_ID || 'jack_cheng',
+            voice: env.YUNTTS_VOICE || '',
+            fallbackVoice: env.YUNTTS_SPEAKER_ID || 'jack_cheng',
+            cloneSampleFile: env.YUNTTS_CLONE_SAMPLE_FILE || '',
+            cloneName: env.YUNTTS_CLONE_NAME || 'AIcoming Podcast Voice',
+            cloneDescription: env.YUNTTS_CLONE_DESCRIPTION || 'AIcoming daily podcast voice clone',
             speed: Number(env.YUNTTS_SPEED || 1.0),
             responseFormat: env.YUNTTS_RESPONSE_FORMAT || 'mp3',
             intervalSilence: Number(env.YUNTTS_INTERVAL_SILENCE || 100),
@@ -208,10 +234,11 @@ function createPodcastConfigFromEnv(env) {
 
 function isPodcastGenerationConfigured(config) {
     const { yunTts, oss } = config;
+    const hasVoiceConfig = Boolean(yunTts.voice || yunTts.cloneSampleFile || yunTts.fallbackVoice);
     return Boolean(
         yunTts.apiKey &&
         yunTts.apiUrl &&
-        yunTts.voice &&
+        hasVoiceConfig &&
         oss.region &&
         oss.bucket &&
         oss.accessKeyId &&
@@ -229,6 +256,7 @@ function createNewsPodcastService({
 }) {
     const jobs = new Map();
     const resolvedMetadataDir = metadataDir;
+    const voiceStateFile = path.join(path.dirname(resolvedMetadataDir), 'voice-profile.json');
 
     if (!fs.existsSync(resolvedMetadataDir)) {
         fs.mkdirSync(resolvedMetadataDir, { recursive: true });
@@ -244,6 +272,146 @@ function createNewsPodcastService({
 
     function saveMetadata(date, metadata) {
         writeJsonFileSafe(getMetadataPath(date), metadata);
+    }
+
+    function loadVoiceState() {
+        return readMetadataFileSafe(voiceStateFile);
+    }
+
+    function saveVoiceState(state) {
+        writeJsonFileSafe(voiceStateFile, state);
+    }
+
+    function getVoiceProfileKey() {
+        if (config.yunTts.cloneSampleFile) {
+            if (!fs.existsSync(config.yunTts.cloneSampleFile)) {
+                return `clone-missing-${hashText(config.yunTts.cloneSampleFile).slice(0, 10)}`;
+            }
+            return `clone-${hashFileContent(config.yunTts.cloneSampleFile).slice(0, 12)}`;
+        }
+
+        const rawVoice = config.yunTts.voice || config.yunTts.fallbackVoice || 'default';
+        return `voice-${hashText(rawVoice).slice(0, 12)}`;
+    }
+
+    async function queryAvailableVoices() {
+        const response = await fetch(config.yunTts.queryApiUrl, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${config.yunTts.apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.msg || data.message || `YunTTS 音色查询失败: HTTP ${response.status}`);
+        }
+
+        const voices = Array.isArray(data.data) ? data.data : (Array.isArray(data.voices) ? data.voices : []);
+        return voices;
+    }
+
+    function findVoiceEntry(voices, voiceIdOrName) {
+        if (!voiceIdOrName) {
+            return null;
+        }
+
+        return voices.find((item) => {
+            const voiceId = item.voice_id || item.id || '';
+            const voiceName = item.voice_name || item.name || '';
+            return voiceId === voiceIdOrName || voiceName === voiceIdOrName;
+        }) || null;
+    }
+
+    async function cloneVoiceFromSample(voiceProfileKey) {
+        if (!config.yunTts.cloneSampleFile || !fs.existsSync(config.yunTts.cloneSampleFile)) {
+            throw new Error('未找到可用的声音克隆样本文件');
+        }
+
+        const form = new FormData();
+        const fileBuffer = fs.readFileSync(config.yunTts.cloneSampleFile);
+        const fileName = path.basename(config.yunTts.cloneSampleFile);
+        form.append('voice_name', config.yunTts.cloneName);
+        if (config.yunTts.cloneDescription) {
+            form.append('voice_desc', config.yunTts.cloneDescription);
+        }
+        form.append(
+            'speaker_file',
+            new Blob([fileBuffer], { type: inferAudioMimeType(config.yunTts.cloneSampleFile) }),
+            fileName
+        );
+
+        const response = await fetch(config.yunTts.cloneApiUrl, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${config.yunTts.apiKey}`
+            },
+            body: form
+        });
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            throw new Error(data.msg || data.message || `YunTTS 音色克隆失败: HTTP ${response.status}`);
+        }
+
+        const voiceId = data.voice_id || (data.data && data.data.voice_id) || (data.data && data.data.id) || null;
+        if (!voiceId) {
+            throw new Error(data.msg || data.message || 'YunTTS 未返回 voice_id');
+        }
+
+        const state = {
+            voice_id: voiceId,
+            voice_name: config.yunTts.cloneName,
+            voice_profile_key: voiceProfileKey,
+            sample_file: config.yunTts.cloneSampleFile,
+            created_at: new Date().toISOString()
+        };
+        saveVoiceState(state);
+        return state;
+    }
+
+    async function resolveSynthesisVoice() {
+        const voiceProfileKey = getVoiceProfileKey();
+        const configuredVoice = config.yunTts.voice;
+        const cloneSampleFile = config.yunTts.cloneSampleFile;
+
+        if (!cloneSampleFile) {
+            return {
+                voiceId: configuredVoice || config.yunTts.fallbackVoice,
+                voiceProfileKey
+            };
+        }
+
+        const voices = await queryAvailableVoices();
+        const existingState = loadVoiceState();
+
+        if (configuredVoice) {
+            const matchedConfiguredVoice = findVoiceEntry(voices, configuredVoice);
+            if (matchedConfiguredVoice) {
+                return {
+                    voiceId: matchedConfiguredVoice.voice_id || matchedConfiguredVoice.id || configuredVoice,
+                    voiceProfileKey
+                };
+            }
+        }
+
+        if (existingState && existingState.voice_profile_key === voiceProfileKey) {
+            const matchedStateVoice = findVoiceEntry(voices, existingState.voice_id);
+            if (matchedStateVoice) {
+                return {
+                    voiceId: matchedStateVoice.voice_id || matchedStateVoice.id || existingState.voice_id,
+                    voiceProfileKey
+                };
+            }
+        }
+
+        const clonedVoice = await cloneVoiceFromSample(voiceProfileKey);
+        return {
+            voiceId: clonedVoice.voice_id,
+            voiceProfileKey
+        };
     }
 
     function getArticles(date) {
@@ -267,17 +435,18 @@ function createNewsPodcastService({
         const articles = getArticles(date);
         const summary = buildPodcastSummary(date, articles);
         const contentHash = articles.length ? createContentHash(articles) : null;
+        const voiceProfileKey = getVoiceProfileKey();
         const canGenerate = articles.length > 0 && isPodcastGenerationConfigured(config);
         const existing = loadExistingMetadata(date);
 
-        if (existing && existing.content_hash === contentHash && existing.audio_url) {
+        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && existing.audio_url) {
             return {
                 ...existing,
                 can_generate: canGenerate
             };
         }
 
-        if (existing && existing.content_hash === contentHash && existing.status === 'pending') {
+        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && existing.status === 'pending') {
             return {
                 ...existing,
                 can_generate: canGenerate
@@ -291,7 +460,8 @@ function createNewsPodcastService({
                 summary,
                 canGenerate,
                 status: 'pending',
-                contentHash
+                contentHash,
+                voiceProfileKey
             });
         }
 
@@ -301,11 +471,12 @@ function createNewsPodcastService({
                 articles,
                 summary: '当前日期暂无可用于生成播客的新闻内容。',
                 canGenerate: false,
-                contentHash
+                contentHash,
+                voiceProfileKey
             });
         }
 
-        if (existing && existing.content_hash === contentHash && existing.status === 'error') {
+        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && existing.status === 'error') {
             return {
                 ...existing,
                 can_generate: canGenerate
@@ -318,7 +489,8 @@ function createNewsPodcastService({
                 articles,
                 summary: '播客生成能力尚未配置完成，暂时无法生成音频。',
                 canGenerate: false,
-                contentHash
+                contentHash,
+                voiceProfileKey
             });
         }
 
@@ -327,14 +499,15 @@ function createNewsPodcastService({
             articles,
             summary,
             canGenerate,
-            contentHash
+            contentHash,
+            voiceProfileKey
         });
     }
 
-    async function synthesizeWithYunTts(script) {
+    async function synthesizeWithYunTts(script, voiceId) {
         const body = {
             text: script,
-            voice: config.yunTts.voice,
+            voice: voiceId,
             response_format: config.yunTts.responseFormat,
             interval_silence: config.yunTts.intervalSilence,
             speed: config.yunTts.speed,
@@ -378,7 +551,7 @@ function createNewsPodcastService({
         return Buffer.from(arrayBuffer);
     }
 
-    async function uploadAudioToOss(buffer, date, contentHash) {
+    async function uploadAudioToOss(buffer, date, contentHash, voiceProfileKey) {
         const client = new OSS({
             region: config.oss.region,
             bucket: config.oss.bucket,
@@ -388,7 +561,8 @@ function createNewsPodcastService({
         });
 
         const [year, month, day] = date.split('-');
-        const objectKey = `podcast/news/${year}/${month}/${day}/daily-news-${contentHash.slice(0, 10)}.mp3`;
+        const voiceHash = hashText(voiceProfileKey).slice(0, 8);
+        const objectKey = `podcast/news/${year}/${month}/${day}/daily-news-${contentHash.slice(0, 10)}-${voiceHash}.mp3`;
 
         await client.put(objectKey, buffer, {
             headers: {
@@ -420,6 +594,7 @@ function createNewsPodcastService({
 
         const articles = getArticles(date);
         const contentHash = createContentHash(articles);
+        const voiceProfileKey = getVoiceProfileKey();
         const script = buildPodcastScript(date, articles);
         const summary = buildPodcastSummary(date, articles);
         const pendingMetadata = createPlaceholderMetadata({
@@ -430,15 +605,17 @@ function createNewsPodcastService({
             status: 'pending',
             transcript: script,
             updatedAt: new Date().toISOString(),
-            contentHash
+            contentHash,
+            voiceProfileKey
         });
         saveMetadata(date, pendingMetadata);
 
         const job = (async () => {
             try {
-                const ttsResult = await synthesizeWithYunTts(script);
+                const { voiceId } = await resolveSynthesisVoice();
+                const ttsResult = await synthesizeWithYunTts(script, voiceId);
                 const audioBuffer = await downloadAudioBuffer(ttsResult.audio_url);
-                const ossUrl = await uploadAudioToOss(audioBuffer, date, contentHash);
+                const ossUrl = await uploadAudioToOss(audioBuffer, date, contentHash, voiceProfileKey);
                 const readyMetadata = createPlaceholderMetadata({
                     date,
                     articles,
@@ -448,7 +625,8 @@ function createNewsPodcastService({
                     transcript: script,
                     updatedAt: new Date().toISOString(),
                     audioUrl: ossUrl,
-                    contentHash
+                    contentHash,
+                    voiceProfileKey
                 });
                 readyMetadata.duration_seconds = ttsResult.duration
                     ? Math.round(Number(ttsResult.duration))
@@ -464,6 +642,7 @@ function createNewsPodcastService({
                     transcript: script,
                     updatedAt: new Date().toISOString(),
                     contentHash,
+                    voiceProfileKey,
                     errorMessage: error.message
                 });
                 saveMetadata(date, failedMetadata);
