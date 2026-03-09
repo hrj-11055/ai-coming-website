@@ -72,17 +72,19 @@ function showFullNav() {
 }
 
 function switchTab(tab, event) {
-    currentTab = 'today';
+    // BUG FIX: 正确使用传入的 tab 参数
+    currentTab = tab || 'today';
     const tabs = document.querySelectorAll('.nav-tab');
     tabs.forEach(t => t.classList.remove('active'));
     if (event && event.target) {
         event.target.classList.add('active');
     }
-    switchContentTab('today');
+    switchContentTab(currentTab);
 }
 
 function switchContentTab(tab) {
-    currentTab = 'today';
+    // BUG FIX: 正确使用传入的 tab 参数
+    currentTab = tab || 'today';
     const sectionTitle = document.getElementById('sectionTitle');
     const historyToggleText = document.getElementById('historyToggleText');
     const categoryFilters = document.getElementById('categoryFilters');
@@ -318,10 +320,24 @@ function updateWeeklyNavigationButtons() {
 }
 
 function hasContentForDate(date) {
+    // BUG FIX: 实现真实的内容检查功能
+    if (window.newsData && window.newsData.length > 0) {
+        const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
+        return window.newsData.some(article =>
+            article.created_at && article.created_at.startsWith(dateStr)
+        );
+    }
     return true;
 }
 
 function hasContentForWeek(weekStart) {
+    // BUG FIX: 实现真实的内容检查功能
+    if (window.newsData && window.newsData.length > 0) {
+        const weekStartStr = typeof weekStart === 'string' ? weekStart : weekStart.toISOString().split('T')[0];
+        return window.newsData.some(article =>
+            article.created_at && article.created_at.startsWith(weekStartStr)
+        );
+    }
     return true;
 }
 
@@ -515,7 +531,7 @@ function createWeeklyArticleElement(article) {
 
             <!-- 标题 -->
             <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug line-clamp-2" itemprop="headline">
-                <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
+                <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
             </h3>
 
             <!-- 关键信息（高亮显示） -->
@@ -541,7 +557,7 @@ function createWeeklyArticleElement(article) {
                         <i class="fas fa-star text-yellow-400 mr-1"></i>${article.importance_score || 5}
                     </span> -->
                 </div>
-                <a href="${articleUrl}" target="_blank" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
                     阅读原文 <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
@@ -1223,7 +1239,7 @@ function renderArticlesList(articles) {
                 </div>
 
                 <h3 class="text-xl font-bold text-gray-900 mb-3 leading-snug" itemprop="headline">
-                    <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
+                    <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
                 </h3>
 
                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-3">
@@ -1243,7 +1259,7 @@ function renderArticlesList(articles) {
                         <i class="far fa-calendar mr-1"></i>
                         ${article.published_at ? new Date(article.published_at).toLocaleDateString('zh-CN') : '刚刚'}
                     </div> -->
-                    <a href="${articleUrl}" target="_blank" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                    <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
                         阅读原文 <i class="fas fa-external-link-alt ml-1"></i>
                     </a>
                 </div>
@@ -1405,7 +1421,7 @@ function createArticleElement(article) {
 
             <!-- 标题 -->
             <h3 class="text-lg font-bold text-gray-900 mb-3 leading-snug line-clamp-2" itemprop="headline">
-                <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
+                <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
             </h3>
 
             <!-- 关键信息（高亮显示） -->
@@ -1431,7 +1447,7 @@ function createArticleElement(article) {
                         <i class="far fa-eye mr-1"></i>${article.importance_score || 5}
                     </span> -->
                 </div>
-                <a href="${articleUrl}" target="_blank" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
                     阅读原文 <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
@@ -1492,22 +1508,7 @@ function getCategoryColor(category) {
     return colors[category] || 'category-other';
 }
 
-function formatDate(dateString) {
-    if (!dateString) return '未知时间';
-    try {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('zh-CN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    } catch (error) {
-        console.error('日期格式化错误:', error);
-        return '未知时间';
-    }
-}
+// 移除重复的 formatDate 定义（保留 1485 行附近的定义）
 
 function getSubCategory(category) {
     const subCategories = {

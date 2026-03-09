@@ -10,7 +10,7 @@ function isLocalIP(ip) {
     return ip === '127.0.0.1' || ip === '::1' || ip.startsWith('192.168.') || ip.startsWith('10.');
 }
 
-function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFile, apiRateLimit = DEFAULT_API_RATE_LIMIT }) {
+function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFile, apiRateLimit = DEFAULT_API_RATE_LIMIT, bannedIpsCacheKey = 'banned-ips', apiCallsCacheKey = 'api-calls' }) {
     function getClientIP(req) {
         return req.ip ||
             req.connection?.remoteAddress ||
@@ -19,8 +19,14 @@ function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFil
             'unknown';
     }
 
+    // 使用缓存键读写数据
+    const readBannedIPs = () => readData(bannedIpsFile, [], bannedIpsCacheKey);
+    const writeBannedIPs = (data) => writeData(bannedIpsFile, data, bannedIpsCacheKey);
+    const readApiCalls = () => readData(apiCallsFile, [], apiCallsCacheKey);
+    const writeApiCalls = (data) => writeData(apiCallsFile, data, apiCallsCacheKey);
+
     function isIPBanned(ip) {
-        const bannedIPs = readData(bannedIpsFile);
+        const bannedIPs = readBannedIPs();
         const now = Date.now();
 
         const banRecord = bannedIPs.find(record => {
@@ -39,30 +45,30 @@ function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFil
     }
 
     function cleanupExpiredBans() {
-        const bannedIPs = readData(bannedIpsFile);
+        const bannedIPs = readBannedIPs();
         const now = Date.now();
 
         const activeBans = bannedIPs.filter(record => record.bannedUntil > now);
 
         if (activeBans.length !== bannedIPs.length) {
-            writeData(bannedIpsFile, activeBans);
+            writeBannedIPs(activeBans);
             console.log(`清理了 ${bannedIPs.length - activeBans.length} 条过期封禁记录`);
         }
     }
 
     function cleanupExpiredApiCalls() {
-        const apiCalls = readData(apiCallsFile);
+        const apiCalls = readApiCalls();
         const now = Date.now();
         const validCalls = apiCalls.filter(call => now - call.timestamp < apiRateLimit.TIME_WINDOW);
 
         if (validCalls.length !== apiCalls.length) {
-            writeData(apiCallsFile, validCalls);
+            writeApiCalls(validCalls);
             console.log(`清理了 ${apiCalls.length - validCalls.length} 条过期API调用记录`);
         }
     }
 
     function recordAPICall(ip) {
-        const apiCalls = readData(apiCallsFile);
+        const apiCalls = readApiCalls();
         const now = Date.now();
 
         const validCalls = apiCalls.filter(call => now - call.timestamp < apiRateLimit.TIME_WINDOW);
@@ -73,7 +79,7 @@ function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFil
             id: Date.now()
         });
 
-        writeData(apiCallsFile, validCalls);
+        writeApiCalls(validCalls);
 
         const callsFromIP = validCalls.filter(call => call.ip === ip);
 
@@ -84,7 +90,7 @@ function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFil
     }
 
     function banIP(ip, reason = 'API调用频率超限') {
-        const bannedIPs = readData(bannedIpsFile);
+        const bannedIPs = readBannedIPs();
         const now = Date.now();
 
         const existingBan = bannedIPs.find(record =>
@@ -105,7 +111,7 @@ function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFil
             callCount: apiRateLimit.MAX_CALLS + 1
         });
 
-        writeData(bannedIpsFile, bannedIPs);
+        writeBannedIPs(bannedIPs);
         console.log(`IP ${ip} 已被封禁，原因: ${reason}，解封时间: ${new Date(now + apiRateLimit.BAN_DURATION).toLocaleString('zh-CN')}`);
 
         return true;
@@ -122,13 +128,15 @@ function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFil
     };
 }
 
-function createSecurityRuntime({ readData, writeData, bannedIpsFile, apiCallsFile, apiRateLimit }) {
+function createSecurityRuntime({ readData, writeData, bannedIpsFile, apiCallsFile, apiRateLimit, bannedIpsCacheKey = 'banned-ips', apiCallsCacheKey = 'api-calls' }) {
     const helpers = createSecurityHelpers({
         readData,
         writeData,
         bannedIpsFile,
         apiCallsFile,
-        apiRateLimit
+        apiRateLimit,
+        bannedIpsCacheKey,
+        apiCallsCacheKey
     });
 
     function checkIPBan(req, res, next) {
@@ -196,19 +204,27 @@ function createSecurityRuntime({ readData, writeData, bannedIpsFile, apiCallsFil
     };
 }
 
-function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile, authenticateToken, apiRateLimit }) {
+function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile, authenticateToken, apiRateLimit, bannedIpsCacheKey = 'banned-ips', apiCallsCacheKey = 'api-calls' }) {
     const router = express.Router();
     const helpers = createSecurityHelpers({
         readData,
         writeData,
         bannedIpsFile,
         apiCallsFile,
-        apiRateLimit
+        apiRateLimit,
+        bannedIpsCacheKey,
+        apiCallsCacheKey
     });
+
+    // 使用缓存键读写数据
+    const readBannedIPs = () => readData(bannedIpsFile, [], bannedIpsCacheKey);
+    const writeBannedIPs = (data) => writeData(bannedIpsFile, data, bannedIpsCacheKey);
+    const readApiCalls = () => readData(apiCallsFile, [], apiCallsCacheKey);
+    const writeApiCalls = (data) => writeData(apiCallsFile, data, apiCallsCacheKey);
 
     router.get('/banned-ips', authenticateToken, (req, res) => {
         try {
-            const bannedIPs = readData(bannedIpsFile);
+            const bannedIPs = readBannedIPs();
             const now = Date.now();
 
             const activeBans = bannedIPs
@@ -244,7 +260,7 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
 
     router.get('/api-calls/stats', authenticateToken, (req, res) => {
         try {
-            const apiCalls = readData(apiCallsFile);
+            const apiCalls = readApiCalls();
             const now = Date.now();
             const validCalls = apiCalls.filter(call => now - call.timestamp < helpers.apiRateLimit.TIME_WINDOW);
 
@@ -289,11 +305,28 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
         try {
             const { ip, reason, duration } = req.body;
 
+            // SECURITY FIX: 验证 IP 地址格式
+            const isValidIP = (ip) => {
+                if (!ip || typeof ip !== 'string') return false;
+                // IPv4 验证
+                const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+                // IPv6 验证（简化版）
+                const ipv6Regex = /^([\da-f]{1,4}:){7}[\da-f]{1,4}$/i;
+                return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+            };
+
             if (!ip) {
                 return res.status(400).json({ error: 'IP地址不能为空' });
             }
 
-            const bannedIPs = readData(bannedIpsFile);
+            if (!isValidIP(ip)) {
+                return res.status(400).json({ error: 'IP地址格式不正确' });
+            }
+
+            // 限制 reason 长度，防止存储过长数据
+            const safeReason = (reason || '').substring(0, 200);
+
+            const bannedIPs = readBannedIPs();
             const now = Date.now();
 
             const existingBan = bannedIPs.find(record =>
@@ -311,15 +344,15 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
 
             bannedIPs.push({
                 id: Date.now(),
-                ip: ip,
-                reason: reason || '管理员手动封禁',
+                ip: ip.trim(),
+                reason: safeReason || '管理员手动封禁',
                 bannedAt: now,
                 bannedUntil: now + banDuration,
                 callCount: 0,
                 manualBan: true
             });
 
-            writeData(bannedIpsFile, bannedIPs);
+            writeBannedIPs(bannedIPs);
 
             res.json({
                 success: true,
@@ -336,7 +369,7 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
     router.delete('/banned-ips/:ip', authenticateToken, (req, res) => {
         try {
             const targetIP = req.params.ip;
-            const bannedIPs = readData(bannedIpsFile);
+            const bannedIPs = readBannedIPs();
 
             const originalLength = bannedIPs.length;
             const filteredIPs = bannedIPs.filter(record => {
@@ -347,7 +380,7 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
                 return res.status(404).json({ error: '未找到该IP的封禁记录' });
             }
 
-            writeData(bannedIpsFile, filteredIPs);
+            writeBannedIPs(filteredIPs);
 
             res.json({
                 success: true,
@@ -365,7 +398,7 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
         try {
             helpers.cleanupExpiredBans();
 
-            const bannedIPs = readData(bannedIpsFile);
+            const bannedIPs = readBannedIPs();
             const now = Date.now();
             const activeBans = bannedIPs.filter(record => record.bannedUntil > now);
 

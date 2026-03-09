@@ -8,7 +8,7 @@ const { createApp } = require('./server/app');
 const { createAuthMiddleware } = require('./server/middleware/auth');
 const { notFoundHandler, errorHandler } = require('./server/middleware/error');
 const { generateId } = require('./server/utils/ids');
-const { createJsonFileStore } = require('./server/services/file-store');
+const { createJsonFileStore, startCacheScheduler } = require('./server/services/file-store');
 const { loadSystemPrompt, createAiConfigFromEnv, createWeeklyKeywordsAiConfigFromEnv } = require('./server/services/ai-proxy');
 const { createWeeklyKeywordsJob } = require('./server/services/weekly-keywords');
 const { createAuthRouter } = require('./server/routes/auth');
@@ -309,6 +309,9 @@ if (process.env.WEEKLY_KEYWORDS_RUN_ON_STARTUP === 'true') {
         console.error('[weekly-keywords] 启动时执行失败:', error.message);
     });
 }
+
+// 启动内存缓存调度器
+startCacheScheduler();
 
 const HOST = process.env.HOST || '0.0.0.0';
 app.listen(PORT, HOST, () => {

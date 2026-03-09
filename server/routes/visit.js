@@ -45,17 +45,36 @@ async function getProvinceFromIP(ip) {
     }
 }
 
-function createVisitRouter({ readData, writeData, visitLogsFile, authenticateToken }) {
+function createVisitRouter({ readData, writeData, visitLogsFile, authenticateToken, cacheKey = 'visit-logs' }) {
     const router = express.Router();
+
+    // 使用缓存键读写数据
+    const readCachedData = () => readData(visitLogsFile, [], cacheKey);
+    const writeCachedData = (data) => writeData(visitLogsFile, data, cacheKey);
 
     router.post('/visit/track', async (req, res) => {
         try {
+            // SECURITY FIX: 验证 IP 地址格式
             const clientIP = req.ip || req.connection.remoteAddress ||
                 req.headers['x-forwarded-for']?.split(',')[0] ||
                 req.headers['x-real-ip'] || '未知';
 
+            // 简单的 IP 格式验证
+            const isValidIP = (ip) => {
+                if (!ip || ip === '未知') return false;
+                // IPv4 验证
+                const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+                // IPv6 验证（简化版）
+                const ipv6Regex = /^([\da-f]{1,4}:){7}[\da-f]{1,4}$/i;
+                return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+            };
+
+            if (!isValidIP(clientIP)) {
+                return res.status(400).json({ error: '无效的IP地址' });
+            }
+
             const province = await getProvinceFromIP(clientIP);
-            const logs = readData(visitLogsFile);
+            const logs = readCachedData();
 
             const today = new Date().toISOString().split('T')[0];
             const existingLog = logs.find(log =>
@@ -74,7 +93,7 @@ function createVisitRouter({ readData, writeData, visitLogsFile, authenticateTok
                 };
 
                 logs.push(newLog);
-                writeData(visitLogsFile, logs);
+                writeCachedData(logs);
             }
 
             res.json({ success: true, province });
@@ -86,7 +105,7 @@ function createVisitRouter({ readData, writeData, visitLogsFile, authenticateTok
 
     router.get('/visit/province-stats', authenticateToken, (req, res) => {
         try {
-            const logs = readData(visitLogsFile);
+            const logs = readCachedData();
 
             const provinceStats = {};
             logs.forEach(log => {
@@ -118,7 +137,7 @@ function createVisitRouter({ readData, writeData, visitLogsFile, authenticateTok
             const limit = parseIntParam(req.query.limit, { defaultValue: 50, min: 1, max: 200 });
             const province = req.query.province;
 
-            let logs = readData(visitLogsFile);
+            let logs = readCachedData();
 
             if (province && province !== 'all') {
                 logs = logs.filter(log => log.province === province);
@@ -151,11 +170,11 @@ function createVisitRouter({ readData, writeData, visitLogsFile, authenticateTok
             const cutoffDate = new Date();
             cutoffDate.setDate(cutoffDate.getDate() - days);
 
-            let logs = readData(visitLogsFile);
+            let logs = readCachedData();
             const originalCount = logs.length;
             logs = logs.filter(log => new Date(log.date) > cutoffDate);
 
-            writeData(visitLogsFile, logs);
+            writeCachedData(logs);
 
             res.json({
                 success: true,
