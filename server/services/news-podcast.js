@@ -333,9 +333,9 @@ function createNewsPodcastService({
         const form = new FormData();
         const fileBuffer = fs.readFileSync(config.yunTts.cloneSampleFile);
         const fileName = path.basename(config.yunTts.cloneSampleFile);
-        form.append('voice_name', config.yunTts.cloneName);
+        form.append('speaker_name', config.yunTts.cloneName);
         if (config.yunTts.cloneDescription) {
-            form.append('voice_desc', config.yunTts.cloneDescription);
+            form.append('speaker_desc', config.yunTts.cloneDescription);
         }
         form.append(
             'speaker_file',
