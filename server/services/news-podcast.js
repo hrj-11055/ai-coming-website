@@ -209,7 +209,7 @@ function isPodcastGenerationConfigured(config) {
     return Boolean(
         yunTts.apiKey &&
         yunTts.apiUrl &&
-        yunTts.speakerId &&
+        yunTts.voice &&
         oss.region &&
         oss.bucket &&
         oss.accessKeyId &&
