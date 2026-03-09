@@ -90,8 +90,9 @@
         .main-column {
             position: relative;
             z-index: 10;
-            width: 100%;
-            padding-left: 348px;
+            width: min(100%, 700px);
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .search-container {
@@ -100,7 +101,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 96px 20px 28px;
+            padding: 110px 0 28px;
             margin-top: 0;
             min-height: auto;
             transition: all 0.5s ease;
@@ -151,7 +152,7 @@
             display: flex;
             justify-content: flex-end;
             width: 100%;
-            max-width: 800px;
+            max-width: 700px;
             margin: -10px auto 14px;
         }
 
@@ -169,7 +170,7 @@
 
         .search-box-wrapper {
             width: 100%;
-            max-width: 800px;
+            max-width: 700px;
             animation: fadeInUp 1s ease-out 0.2s both;
         }
 
@@ -254,7 +255,7 @@
         /* 结果容器 */
         .results-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 700px;
             margin: 20px auto 0;
             animation: fadeInUp 0.5s ease-out;
         }
@@ -687,6 +688,7 @@
         .footer {
             position: relative;
             z-index: 10;
+            margin-top: auto;
             text-align: center;
             padding: 24px;
             color: rgba(0,0,0,0.4);
@@ -746,14 +748,14 @@
             .result-content { font-size: 0.95rem; }
         }
 
-        /* 新手引导（左侧固定） */
-        .onboarding-panel {
+        /* 左右侧说明卡片 */
+        .onboarding-panel,
+        .cases-panel {
             position: fixed;
-            top: 108px;
-            left: 24px;
-            width: 296px;
+            top: 168px;
             z-index: 30;
-            padding: 20px 18px;
+            width: 228px;
+            padding: 18px 16px;
             border-radius: 20px;
             border: 1px solid rgba(191, 219, 254, 0.9);
             background:
@@ -761,6 +763,15 @@
                 linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(245, 250, 255, 0.95) 100%);
             box-shadow: 0 16px 40px rgba(30, 64, 175, 0.1);
             backdrop-filter: blur(8px);
+        }
+
+        .onboarding-panel {
+            left: 24px;
+        }
+
+        .cases-panel {
+            right: 24px;
+            margin: 0;
         }
 
         .onboarding-kicker {
@@ -773,16 +784,16 @@
         }
 
         .onboarding-title {
-            font-size: 1.48rem;
+            font-size: 1.3rem;
             line-height: 1.25;
             color: #0f172a;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             font-weight: 700;
         }
 
         .onboarding-steps {
             display: grid;
-            gap: 11px;
+            gap: 10px;
             padding-left: 0;
             list-style: none;
             margin: 0;
@@ -800,63 +811,58 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 54px;
-            height: 24px;
+            min-width: 50px;
+            height: 22px;
             border-radius: 999px;
             background: #e0e7ff;
             color: #1e40af;
-            font-size: 0.73rem;
+            font-size: 0.68rem;
             font-weight: 700;
         }
 
         .step-copy {
             color: #334155;
-            font-size: 0.9rem;
-            line-height: 1.48;
-        }
-
-        .onboarding-note {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px dashed #cbd5e1;
-            color: #64748b;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             line-height: 1.45;
         }
 
-        /* 示例案例（对话框下方） */
+        .onboarding-note {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+            color: #64748b;
+            font-size: 0.76rem;
+            line-height: 1.42;
+        }
+
         .cases-panel {
-            width: 100%;
-            max-width: 800px;
-            margin: 18px auto 0;
-            border-radius: 18px;
-            border: 1px solid rgba(203, 213, 225, 0.8);
-            background: rgba(255, 255, 255, 0.86);
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
-            padding: 16px;
-            animation: fadeInUp 0.45s ease-out;
+            animation: fadeInUp 0.45s ease-out both;
         }
 
         .cases-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: block;
             margin-bottom: 12px;
         }
 
         .cases-title {
-            font-size: 0.98rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #0f172a;
         }
 
         .cases-subtitle {
-            font-size: 0.78rem;
+            display: block;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+            background: transparent;
+            border-radius: 0;
+            padding-left: 0;
+            padding-right: 0;
+            padding-bottom: 0;
+            font-size: 0.76rem;
             color: #64748b;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            border-radius: 999px;
-            padding: 5px 10px;
+            line-height: 1.42;
         }
 
         .case-list {
@@ -865,37 +871,47 @@
         }
 
         .case-item {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid #dbeafe;
-            border-radius: 12px;
-            padding: 12px 14px;
+            border: 1px solid rgba(191, 219, 254, 0.9);
+            border-radius: 14px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.74);
+        }
+
+        .case-heading {
+            display: grid;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
         .case-title {
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: #1e3a8a;
-            margin-bottom: 7px;
+            margin: 0;
         }
 
         .case-demand {
-            font-size: 0.9rem;
+            font-size: 0.84rem;
             color: #0f172a;
-            line-height: 1.5;
+            line-height: 1.45;
             margin-bottom: 6px;
         }
 
         .case-usage {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: #475569;
-            line-height: 1.52;
+            line-height: 1.42;
         }
 
-        @media (max-width: 1280px) {
-            .main-column {
-                padding-left: 0;
+        @media (max-width: 1200px) {
+            .onboarding-panel,
+            .cases-panel {
+                width: 210px;
+                padding: 16px 14px;
             }
+        }
 
+        @media (max-width: 1080px) {
             .onboarding-panel {
                 position: relative;
                 top: auto;
@@ -904,21 +920,30 @@
                 margin: 88px auto 10px;
             }
 
-            .search-container {
-                padding-top: 24px;
+            .cases-panel {
+                position: relative;
+                top: auto;
+                right: auto;
+                width: min(860px, calc(100% - 32px));
+                margin: 18px auto 0;
             }
 
-            .search-container.generating {
+            .search-container {
                 padding-top: 24px;
             }
         }
 
         @media (max-width: 768px) {
-            .onboarding-panel {
+            .onboarding-panel,
+            .cases-panel {
                 width: auto;
                 margin: 84px 12px 10px;
                 padding: 16px 14px;
                 border-radius: 16px;
+            }
+
+            .cases-panel {
+                margin-top: 18px;
             }
 
             .onboarding-title {
@@ -949,14 +974,11 @@
             }
 
             .cases-panel {
-                padding: 12px;
-                border-radius: 14px;
+                padding: 14px 12px;
             }
 
             .cases-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
+                margin-bottom: 10px;
             }
         }
     </style>
@@ -1048,32 +1070,39 @@
                 <!-- 搜索结果将动态插入这里 -->
             </div>
 
-            <!-- 示例案例 -->
-            <section class="cases-panel" aria-label="示例案例">
-                <div class="cases-header">
-                    <h3 class="cases-title">示例案例</h3>
-                    <span class="cases-subtitle">复制后在豆包/DeepSeek/秘塔/千问使用</span>
-                </div>
-                <div class="case-list">
-                    <article class="case-item">
-                        <p class="case-title">示例 1 · 专家身份生成</p>
-                        <p class="case-demand">我需要生成一个互联网顶级产品经理身份的提示词。</p>
-                        <p class="case-usage"><strong>使用方法：</strong>将生成的提示词一键复制，打开 DeepSeek 或豆包，直接使用。</p>
-                    </article>
-                    <article class="case-item">
-                        <p class="case-title">示例 2 · 研究类提示词</p>
-                        <p class="case-demand">我需要研究中国新能源汽车产业链，尤其是整车厂。</p>
-                        <p class="case-usage"><strong>使用方法：</strong>将生成的提示词一键复制，打开具备深度研究的 AI（豆包、秘塔、千问等），粘贴后选择“深度研究/深入研究”运行，5-10 分钟查看结果。</p>
-                    </article>
-                    <article class="case-item">
-                        <p class="case-title">示例 3 · 成长类提示词</p>
-                        <p class="case-demand">我毕业 2 年，是初级产品经理，想成为资深产品经理进入大厂工作。</p>
-                        <p class="case-usage"><strong>使用方法：</strong>将生成的提示词一键复制，打开具备深度研究的 AI（豆包、秘塔、千问等），粘贴后选择“深度研究/深入研究”运行，5-10 分钟查看结果。</p>
-                    </article>
-                </div>
-            </section>
         </div>
     </div>
+
+    <!-- 示例案例 -->
+    <section class="cases-panel" aria-label="示例案例">
+        <div class="cases-header">
+            <p class="onboarding-kicker">示例案例</p>
+            <span class="cases-subtitle">复制后在豆包 / DeepSeek / 秘塔 / 千问中使用。</span>
+        </div>
+        <div class="case-list">
+            <article class="case-item">
+                <div class="case-heading">
+                    <p class="case-title">专家身份生成</p>
+                </div>
+                <p class="case-demand">我需要生成一个互联网顶级产品经理身份的提示词。</p>
+                <p class="case-usage">复制后打开 DeepSeek 或豆包，直接使用。</p>
+            </article>
+            <article class="case-item">
+                <div class="case-heading">
+                    <p class="case-title">研究类提示词</p>
+                </div>
+                <p class="case-demand">我需要研究中国新能源汽车产业链，尤其是整车厂。</p>
+                <p class="case-usage">复制后粘贴到具备深度研究能力的 AI，选择“深度研究/深入研究”运行。</p>
+            </article>
+            <article class="case-item">
+                <div class="case-heading">
+                    <p class="case-title">成长类提示词</p>
+                </div>
+                <p class="case-demand">我毕业 2 年，是初级产品经理，想成为资深产品经理进入大厂工作。</p>
+                <p class="case-usage">复制后粘贴到具备深度研究能力的 AI，5-10 分钟查看结果。</p>
+            </article>
+        </div>
+    </section>
 
     <!-- 页脚 -->
     <div class="footer">
