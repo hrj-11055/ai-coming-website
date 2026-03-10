@@ -4,7 +4,9 @@ node_modules/
 .env.*
 !.env.example
 database/
-reports-archive/
+reports-archive/*
+!reports-archive/
+!reports-archive/*.html
 qwen-comparison-*.json
 *.backup
 .DS_Store

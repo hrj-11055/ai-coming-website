@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex 工作日报 | 2026-03-10</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #18202a;
+      --muted: #5b6472;
+      --line: #dbe1ea;
+      --blue: #2563eb;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+    }
+    .hero, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+    .hero {
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 32px;
+      line-height: 1.2;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      background: #eef4ff;
+      color: var(--blue);
+    }
+    .grid {
+      display: grid;
+      gap: 20px;
+    }
+    .card {
+      padding: 24px;
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: 20px;
+    }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    li + li {
+      margin-top: 10px;
+    }
+    .ok { color: var(--green); font-weight: 600; }
+    .warn { color: var(--amber); font-weight: 600; }
+    .bad { color: var(--red); font-weight: 600; }
+    .code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 13px;
+    }
+    .commits {
+      display: grid;
+      gap: 10px;
+    }
+    .commit {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+    }
+    .footer {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Codex 工作日报</h1>
+      <p>日期：2026-03-10（覆盖 2026-03-09 晚间至 2026-03-10 凌晨的连续开发与服务器运维工作）</p>
+      <div class="meta">
+        <span class="tag">首页布局优化</span>
+        <span class="tag">新闻页音频播报</span>
+        <span class="tag">OSS 播客分发</span>
+        <span class="tag">DeepSeek 周关键词修复</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>今日完成</h2>
+        <ul>
+          <li>完成首页布局多轮调整，去掉首页演示动画，重构新手引导、案例卡片和页脚位置，并已推送到主分支。</li>
+          <li>在 <span class="code">news.html</span> 接入音频播报卡片，前端可按日期加载播客状态、摘要、口播稿和原生音频播放器。</li>
+          <li>完成“新闻播客”后端链路：日报内容生成脚本稿，调用 YunTTS 生成音频，上传阿里云 OSS，前端直接播放 OSS 地址。</li>
+          <li>将播客生成挂到日报同步主链路，现已实现“日报导入成功后自动触发播客生成”，不再依赖用户首次打开新闻页。</li>
+          <li>修复播客去重逻辑，避免同时读取 <span class="code">news.json</span> 与 <span class="code">data/*.json</span> 时把同一批新闻重复统计。</li>
+          <li>修复 weekly-keywords 的模型配置，确认该任务使用 DeepSeek，并在服务器填入 <span class="code">DEEPSEEK_API_KEY</span> 后验证成功。</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>服务器验证结果</h2>
+        <ul>
+          <li><span class="ok">3 月 9 日播客已成功生成</span>，状态为 <span class="code">ready</span>，音频位于阿里云 OSS。</li>
+          <li><span class="ok">日报同步自动触发播客生效</span>，执行 <span class="code">./sync-json-news.sh</span> 后可自动进入播客生成流程。</li>
+          <li><span class="ok">weekly-keywords 手动任务通过</span>，已成功生成 30 个关键词，来源标题 247 条，覆盖时间区间 2026-03-02 至 2026-03-08。</li>
+          <li><span class="ok">服务器代码已同步到最新主分支</span>，包括播客自动生成、播客去重和 DeepSeek 修复等变更。</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>当前阻塞</h2>
+        <ul>
+          <li>“黄兴元声音”样本音频已上传到服务器，且播客服务已新增“按样本自动克隆音色”的能力。</li>
+          <li>YunTTS 克隆接口仍未成功创建新音色，当前第三方返回错误为 <span class="code">请输入音色名称</span>。</li>
+          <li>已确认不是样本文件问题：音频为 MP3、48kHz、29.3 秒，满足一般克隆样本要求。</li>
+          <li><span class="warn">下一步需要继续核实 YunTTS 克隆接口的精确表单字段和调用格式</span>。在问题解决前，播客生成仍会继续使用当前非克隆音色链路。</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>关键提交</h2>
+        <div class="commits">
+          <div class="commit"><span class="code">f5353aa</span> feat: add daily news podcast generation</div>
+          <div class="commit"><span class="code">d9d15c4</span> feat: auto generate podcast after news sync</div>
+          <div class="commit"><span class="code">66669cd</span> fix: dedupe podcast articles across sources</div>
+          <div class="commit"><span class="code">839e605</span> feat: support cloned podcast voices</div>
+          <div class="commit"><span class="code">a11c4cc</span> fix: use correct YunTTS clone field names</div>
+          <div class="commit"><span class="code">f66213b</span> style: refine homepage onboarding and cases copy</div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>后续建议</h2>
+        <ul>
+          <li>优先解决 YunTTS 克隆接口字段问题，拿到稳定的 <span class="code">voice_id</span> 或确认官方要求的 multipart 参数名。</li>
+          <li>克隆音色打通后，重新生成 2026-03-09 播客，确认 OSS 新链接与新音色一致。</li>
+          <li>如后续要长期使用克隆声线，建议继续保留当前“样本音频自动重建音色”的实现，避免第三方音色失效后手工恢复。</li>
+        </ul>
+        <div class="footer">生成方式：基于当日 Git 提交、服务器验证结果与实际排障记录整理。</div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
