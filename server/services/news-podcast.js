@@ -5,6 +5,8 @@ const OSS = require('ali-oss');
 const DEFAULT_YUNTTS_GENERATE_URL = 'https://www.yuntts.com/api/v1/indextts2_generate';
 const DEFAULT_YUNTTS_CLONE_URL = 'https://www.yuntts.com/api/v1/indextts2_cloning';
 const DEFAULT_YUNTTS_QUERY_URL = 'https://www.yuntts.com/api/v1/indextts_query';
+const PODCAST_SCRIPT_ARTICLE_LIMIT = 10;
+const PODCAST_SEGMENT_SUMMARY_LENGTH = 42;
 
 function normalizeNewsPayload(rawData) {
     return Array.isArray(rawData) ? rawData : (rawData && Array.isArray(rawData.articles) ? rawData.articles : []);
@@ -106,7 +108,7 @@ function estimateDurationSeconds(script) {
 }
 
 function getOrdinalLabel(index) {
-    const labels = ['第一条', '第二条', '第三条', '第四条', '第五条', '第六条'];
+    const labels = ['第一条', '第二条', '第三条', '第四条', '第五条', '第六条', '第七条', '第八条', '第九条', '第十条'];
     return labels[index] || `第${index + 1}条`;
 }
 
@@ -137,21 +139,18 @@ function buildPodcastScript(date, articles) {
     const day = dateObj.getDate();
     const intro = `欢迎收听 AIcoming ${month}月${day}日 AI 资讯播客。今天为你梳理 ${articles.length} 条值得关注的 AI 动态。`;
     const outro = '以上就是今天的 AI 资讯重点，感谢收听，我们下期再见。';
-    const maxLength = 580;
     const segments = [intro];
+    const selectedArticles = articles.slice(0, PODCAST_SCRIPT_ARTICLE_LIMIT);
 
-    for (let index = 0; index < articles.length && segments.join('').length < maxLength - outro.length - 20; index++) {
-        const article = articles[index];
+    for (let index = 0; index < selectedArticles.length; index++) {
+        const article = selectedArticles[index];
         const title = sanitizeSpeechText(article.title);
         if (!title) {
             continue;
         }
 
-        const summary = pickArticleSummary(article).slice(0, 88);
+        const summary = pickArticleSummary(article).slice(0, PODCAST_SEGMENT_SUMMARY_LENGTH);
         const segment = `${getOrdinalLabel(index)}，${title}。${summary || '这是一条值得关注的资讯。'}`;
-        if ((segments.join('') + segment + outro).length > maxLength) {
-            break;
-        }
         segments.push(segment);
     }
 
@@ -172,6 +171,7 @@ function createPlaceholderMetadata({
     audioFile = null,
     audioMimeType = null,
     contentHash = null,
+    scriptHash = null,
     voiceProfileKey = null,
     title = 'AI资讯日报播客',
     errorMessage = null
@@ -192,6 +192,7 @@ function createPlaceholderMetadata({
         can_generate: canGenerate,
         article_count: articles.length,
         content_hash: contentHash,
+        script_hash: scriptHash,
         voice_profile_key: voiceProfileKey,
         error: errorMessage
     };
@@ -521,11 +522,13 @@ function createNewsPodcastService({
         const articles = getArticles(date);
         const summary = buildPodcastSummary(date, articles);
         const contentHash = articles.length ? createContentHash(articles) : null;
+        const script = articles.length ? buildPodcastScript(date, articles) : '';
+        const scriptHash = script ? hashText(script) : null;
         const voiceProfileKey = getVoiceProfileKey();
         const canGenerate = articles.length > 0 && isPodcastGenerationConfigured(config);
         const existing = loadExistingMetadata(date);
 
-        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && hasPlayableAudio(date, existing)) {
+        if (existing && existing.content_hash === contentHash && existing.script_hash === scriptHash && existing.voice_profile_key === voiceProfileKey && hasPlayableAudio(date, existing)) {
             const localAudioRecord = resolveLocalAudioRecord(date, existing);
             return {
                 ...existing,
@@ -534,7 +537,7 @@ function createNewsPodcastService({
             };
         }
 
-        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && existing.status === 'pending') {
+        if (existing && existing.content_hash === contentHash && existing.script_hash === scriptHash && existing.voice_profile_key === voiceProfileKey && existing.status === 'pending') {
             return {
                 ...existing,
                 can_generate: canGenerate
@@ -549,6 +552,7 @@ function createNewsPodcastService({
                 canGenerate,
                 status: 'pending',
                 contentHash,
+                scriptHash,
                 voiceProfileKey
             });
         }
@@ -560,11 +564,12 @@ function createNewsPodcastService({
                 summary: '当前日期暂无可用于生成播客的新闻内容。',
                 canGenerate: false,
                 contentHash,
+                scriptHash,
                 voiceProfileKey
             });
         }
 
-        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && existing.status === 'error') {
+        if (existing && existing.content_hash === contentHash && existing.script_hash === scriptHash && existing.voice_profile_key === voiceProfileKey && existing.status === 'error') {
             return {
                 ...existing,
                 can_generate: canGenerate
@@ -578,6 +583,7 @@ function createNewsPodcastService({
                 summary: '播客生成能力尚未配置完成，暂时无法生成音频。',
                 canGenerate: false,
                 contentHash,
+                scriptHash,
                 voiceProfileKey
             });
         }
@@ -588,6 +594,7 @@ function createNewsPodcastService({
             summary,
             canGenerate,
             contentHash,
+            scriptHash,
             voiceProfileKey
         });
     }
@@ -731,6 +738,7 @@ function createNewsPodcastService({
         const contentHash = createContentHash(articles);
         const voiceProfileKey = getVoiceProfileKey();
         const script = buildPodcastScript(date, articles);
+        const scriptHash = hashText(script);
         const summary = buildPodcastSummary(date, articles);
         const pendingMetadata = createPlaceholderMetadata({
             date,
@@ -741,6 +749,7 @@ function createNewsPodcastService({
             transcript: script,
             updatedAt: new Date().toISOString(),
             contentHash,
+            scriptHash,
             voiceProfileKey
         });
         saveMetadata(date, pendingMetadata);
@@ -764,6 +773,7 @@ function createNewsPodcastService({
                     audioFile: audioRecord.audioFile,
                     audioMimeType: audioRecord.audioMimeType,
                     contentHash,
+                    scriptHash,
                     voiceProfileKey
                 });
                 readyMetadata.duration_seconds = ttsResult.duration
@@ -780,6 +790,7 @@ function createNewsPodcastService({
                     transcript: script,
                     updatedAt: new Date().toISOString(),
                     contentHash,
+                    scriptHash,
                     voiceProfileKey,
                     errorMessage: error.message
                 });
