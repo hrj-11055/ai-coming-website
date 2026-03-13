@@ -419,25 +419,22 @@ function createNewsPodcastService({
             throw new Error('未找到可用的声音克隆样本文件');
         }
 
-        const form = new FormData();
         const fileBuffer = fs.readFileSync(config.yunTts.cloneSampleFile);
-        const fileName = path.basename(config.yunTts.cloneSampleFile);
-        form.append('name', config.yunTts.cloneName);
+        const body = {
+            name: config.yunTts.cloneName,
+            speaker_file_base64: fileBuffer.toString('base64')
+        };
         if (config.yunTts.cloneDescription) {
-            form.append('description', config.yunTts.cloneDescription);
+            body.description = config.yunTts.cloneDescription;
         }
-        form.append(
-            'speaker_file',
-            new Blob([fileBuffer], { type: inferAudioMimeType(config.yunTts.cloneSampleFile) }),
-            fileName
-        );
 
         const response = await fetch(config.yunTts.cloneApiUrl, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${config.yunTts.apiKey}`
+                Authorization: `Bearer ${config.yunTts.apiKey}`,
+                'Content-Type': 'application/json'
             },
-            body: form
+            body: JSON.stringify(body)
         });
 
         const data = await response.json().catch(() => ({}));
