@@ -283,9 +283,84 @@
             box-shadow: none;
         }
 
-        .podcast-audio {
-            width: 100%;
+        .podcast-player {
             margin-top: 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(255, 255, 255, 0.78);
+            padding: 14px;
+        }
+
+        .podcast-audio-element {
+            display: none;
+        }
+
+        .podcast-player-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .podcast-play-toggle {
+            min-width: 76px;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+        }
+
+        .podcast-progress-group {
+            flex: 1 1 240px;
+            min-width: 220px;
+        }
+
+        .podcast-progress-range,
+        .podcast-volume-range {
+            width: 100%;
+            accent-color: #2563eb;
+        }
+
+        .podcast-time-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .podcast-volume-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
+            font-size: 0.85rem;
+            color: #334155;
+        }
+
+        .podcast-volume-label {
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .podcast-audio-link {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .podcast-audio-link:hover {
+            text-decoration: underline;
         }
 
         .podcast-transcript {
@@ -307,6 +382,20 @@
             line-height: 1.7;
             color: #475569;
             margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .podcast-player-row {
+                align-items: stretch;
+            }
+
+            .podcast-play-toggle {
+                width: 100%;
+            }
+
+            .podcast-volume-group {
+                width: 100%;
+            }
         }
 
         /* 大纲链接样式 */

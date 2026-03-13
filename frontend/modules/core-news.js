@@ -35,6 +35,7 @@ const TIMELINE_REQUEST_TIMEOUT_MS = 2500;
 const PODCAST_REQUEST_TIMEOUT_MS = 12000;
 const PODCAST_POLL_INTERVAL_MS = 5000;
 const PODCAST_POLL_MAX_ATTEMPTS = 12;
+const PODCAST_DEFAULT_VOLUME = 0.85;
 let currentPodcastDate = null;
 let podcastPollHandle = null;
 const podcastGenerationRequests = new Set();
@@ -83,6 +84,79 @@ function formatDurationLabel(seconds) {
     return `${minutes} 分 ${String(restSeconds).padStart(2, '0')} 秒`;
 }
 
+function formatPlayerTime(seconds) {
+    if (!Number.isFinite(Number(seconds)) || Number(seconds) < 0) {
+        return '00:00';
+    }
+
+    const totalSeconds = Math.floor(Number(seconds));
+    const minutes = Math.floor(totalSeconds / 60);
+    const restSeconds = totalSeconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(restSeconds).padStart(2, '0')}`;
+}
+
+function getFallbackApiBaseUrl() {
+    const isCloudServer = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    return isCloudServer ? '/api' : 'http://localhost:3000/api';
+}
+
+async function requestPodcastApi(endpoint, options = {}) {
+    const controller = new AbortController();
+    const timeoutMs = Number(options.timeoutMs || PODCAST_REQUEST_TIMEOUT_MS);
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+        const response = await fetch(`${getFallbackApiBaseUrl()}${endpoint}`, {
+            method: options.method || 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(options.headers || {})
+            },
+            body: options.body,
+            signal: controller.signal
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || data.error || '播客请求失败');
+        }
+        return data;
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            throw new Error('播客请求超时，请稍后重试');
+        }
+        throw error;
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+async function fetchNewsPodcast(date) {
+    if (typeof window.loadNewsPodcastFromAPI === 'function') {
+        return window.loadNewsPodcastFromAPI(date);
+    }
+    if (window.apiService && typeof window.apiService.getNewsPodcast === 'function') {
+        return window.apiService.getNewsPodcast(date);
+    }
+
+    return requestPodcastApi(`/podcast/news/${date}`, {
+        timeoutMs: PODCAST_REQUEST_TIMEOUT_MS
+    });
+}
+
+async function requestNewsPodcastGeneration(date) {
+    if (typeof window.generateNewsPodcastFromAPI === 'function') {
+        return window.generateNewsPodcastFromAPI(date);
+    }
+    if (window.apiService && typeof window.apiService.generateNewsPodcast === 'function') {
+        return window.apiService.generateNewsPodcast(date);
+    }
+
+    return requestPodcastApi(`/podcast/news/${date}/generate`, {
+        method: 'POST',
+        timeoutMs: PODCAST_REQUEST_TIMEOUT_MS
+    });
+}
+
 function getPodcastStatusLabel(status) {
     const labels = {
         ready: '已生成',
@@ -99,6 +173,116 @@ function createPodcastActionLabel(status) {
         return '重新生成播客';
     }
     return '生成今日播客';
+}
+
+function createPodcastPlayerMarkup(audioUrl, durationSeconds) {
+    const safeAudioUrl = escapeHtml(audioUrl);
+    const totalTime = formatPlayerTime(durationSeconds);
+    return `
+        <div class="podcast-player" data-duration="${Number(durationSeconds || 0)}">
+            <audio class="podcast-audio-element" preload="metadata" src="${safeAudioUrl}"></audio>
+            <div class="podcast-player-row">
+                <button type="button" class="podcast-play-toggle" aria-label="播放播客">播放</button>
+                <div class="podcast-progress-group">
+                    <input type="range" class="podcast-progress-range" min="0" max="100" value="0" step="0.1" aria-label="播客播放进度">
+                    <div class="podcast-time-group">
+                        <span class="podcast-current-time">00:00</span>
+                        <span class="podcast-time-divider">/</span>
+                        <span class="podcast-total-time">${totalTime}</span>
+                    </div>
+                </div>
+                <label class="podcast-volume-group" aria-label="调节播客音量">
+                    <span class="podcast-volume-label">音量</span>
+                    <input type="range" class="podcast-volume-range" min="0" max="100" value="${Math.round(PODCAST_DEFAULT_VOLUME * 100)}" step="1">
+                </label>
+            </div>
+            <a class="podcast-audio-link" href="${safeAudioUrl}" target="_blank" rel="noopener noreferrer">在新窗口打开音频</a>
+        </div>
+    `;
+}
+
+function initializePodcastPlayer(container, metadata) {
+    if (!container) {
+        return;
+    }
+
+    const player = container.querySelector('.podcast-player');
+    if (!player) {
+        return;
+    }
+
+    const audio = player.querySelector('.podcast-audio-element');
+    const playToggle = player.querySelector('.podcast-play-toggle');
+    const progressRange = player.querySelector('.podcast-progress-range');
+    const volumeRange = player.querySelector('.podcast-volume-range');
+    const currentTimeLabel = player.querySelector('.podcast-current-time');
+    const totalTimeLabel = player.querySelector('.podcast-total-time');
+
+    if (!audio || !playToggle || !progressRange || !volumeRange || !currentTimeLabel || !totalTimeLabel) {
+        return;
+    }
+
+    let isSeeking = false;
+    audio.volume = PODCAST_DEFAULT_VOLUME;
+
+    const syncToggleLabel = () => {
+        playToggle.textContent = audio.paused ? '播放' : '暂停';
+        playToggle.setAttribute('aria-label', audio.paused ? '播放播客' : '暂停播客');
+    };
+
+    const syncProgress = () => {
+        const duration = audio.duration || Number(metadata?.duration_seconds || 0);
+        const current = audio.currentTime || 0;
+        currentTimeLabel.textContent = formatPlayerTime(current);
+        totalTimeLabel.textContent = formatPlayerTime(duration);
+        if (!isSeeking && duration > 0) {
+            progressRange.value = String((current / duration) * 100);
+        }
+    };
+
+    playToggle.addEventListener('click', async () => {
+        try {
+            if (audio.paused) {
+                await audio.play();
+            } else {
+                audio.pause();
+            }
+        } catch (error) {
+            console.error('播客播放失败:', error);
+        }
+        syncToggleLabel();
+    });
+
+    audio.addEventListener('play', syncToggleLabel);
+    audio.addEventListener('pause', syncToggleLabel);
+    audio.addEventListener('ended', () => {
+        syncToggleLabel();
+        progressRange.value = '0';
+        currentTimeLabel.textContent = '00:00';
+    });
+    audio.addEventListener('loadedmetadata', syncProgress);
+    audio.addEventListener('timeupdate', syncProgress);
+
+    volumeRange.addEventListener('input', () => {
+        audio.volume = Number(volumeRange.value) / 100;
+    });
+
+    progressRange.addEventListener('input', () => {
+        isSeeking = true;
+        const duration = audio.duration || Number(metadata?.duration_seconds || 0);
+        const nextTime = duration > 0 ? (Number(progressRange.value) / 100) * duration : 0;
+        currentTimeLabel.textContent = formatPlayerTime(nextTime);
+    });
+
+    progressRange.addEventListener('change', () => {
+        const duration = audio.duration || Number(metadata?.duration_seconds || 0);
+        audio.currentTime = duration > 0 ? (Number(progressRange.value) / 100) * duration : 0;
+        isSeeking = false;
+        syncProgress();
+    });
+
+    syncToggleLabel();
+    syncProgress();
 }
 
 function renderPodcastCard(metadata) {
@@ -142,7 +326,7 @@ function renderPodcastCard(metadata) {
                 ${shouldShowGenerate ? `<button type="button" class="podcast-btn" id="generatePodcastBtn">${escapeHtml(createPodcastActionLabel(safeMetadata.status))}</button>` : ''}
                 ${isPending ? '<button type="button" class="podcast-btn" disabled>播客生成中...</button>' : ''}
             </div>
-            ${audioUrl ? `<audio class="podcast-audio" controls preload="none" src="${audioUrl}"></audio>` : ''}
+            ${audioUrl ? createPodcastPlayerMarkup(audioUrl, safeMetadata.duration_seconds) : ''}
             ${transcript ? `
                 <details class="podcast-transcript">
                     <summary>查看口播稿</summary>
@@ -158,6 +342,8 @@ function renderPodcastCard(metadata) {
             void startPodcastGeneration(currentPodcastDate);
         });
     }
+
+    initializePodcastPlayer(container, safeMetadata);
 }
 
 async function loadPodcastForDate(date, { triggerGenerate = true, pollAttempt = 0 } = {}) {
@@ -167,7 +353,7 @@ async function loadPodcastForDate(date, { triggerGenerate = true, pollAttempt = 
 
     try {
         const metadata = await withTimeout(
-            window.loadNewsPodcastFromAPI(normalizedDate),
+            fetchNewsPodcast(normalizedDate),
             PODCAST_REQUEST_TIMEOUT_MS,
             '加载播客信息超时'
         );
@@ -228,7 +414,7 @@ async function startPodcastGeneration(date) {
 
     try {
         const metadata = await withTimeout(
-            window.generateNewsPodcastFromAPI(normalizedDate),
+            requestNewsPodcastGeneration(normalizedDate),
             PODCAST_REQUEST_TIMEOUT_MS,
             '播客生成请求超时'
         );
