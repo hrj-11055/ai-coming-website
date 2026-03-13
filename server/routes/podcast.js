@@ -26,6 +26,34 @@ function createPodcastRouter({ podcastService }) {
         }
     });
 
+    router.get('/podcast/news/:date/audio', async (req, res) => {
+        const { date } = req.params;
+
+        if (!isIsoDate(date)) {
+            return res.status(400).json({ error: 'invalid_date', message: 'date 必须是 YYYY-MM-DD 格式' });
+        }
+
+        try {
+            const audioRecord = podcastService.getAudioFileForDate(date);
+            if (!audioRecord) {
+                return res.status(404).json({
+                    error: 'podcast_audio_not_found',
+                    message: '未找到可播放的本地播客音频'
+                });
+            }
+
+            res.setHeader('Cache-Control', 'public, max-age=3600');
+            res.type(audioRecord.mimeType || 'audio/mpeg');
+            return res.sendFile(audioRecord.filePath);
+        } catch (error) {
+            console.error('获取播客音频失败:', error);
+            return res.status(500).json({
+                error: 'podcast_audio_failed',
+                message: error.message
+            });
+        }
+    });
+
     router.post('/podcast/news/:date/generate', async (req, res) => {
         const { date } = req.params;
 

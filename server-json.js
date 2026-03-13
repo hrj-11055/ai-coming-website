@@ -360,6 +360,7 @@ app.listen(PORT, HOST, () => {
     console.log('  POST /api/tools/batch - 批量导入工具（管理员）');
     console.log('  POST /api/tools/upload-logo - 上传工具Logo（管理员）');
     console.log('  GET  /api/podcast/news/:date - 获取指定日期播客状态');
+    console.log('  GET  /api/podcast/news/:date/audio - 播放本地日报播客音频');
     console.log('  POST /api/podcast/news/:date/generate - 生成指定日期播客');
     console.log('');
     console.log('默认管理员账户:');

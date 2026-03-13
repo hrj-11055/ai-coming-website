@@ -47,6 +47,12 @@ function inferAudioMimeType(filePath) {
     return 'audio/mpeg';
 }
 
+function normalizeAudioExtension(value) {
+    const normalized = String(value || 'mp3').trim().toLowerCase().replace(/^\./, '');
+    if (normalized === 'mpeg') return 'mp3';
+    return normalized || 'mp3';
+}
+
 function isIsoDate(value) {
     return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
@@ -153,7 +159,23 @@ function buildPodcastScript(date, articles) {
     return segments.join('');
 }
 
-function createPlaceholderMetadata({ date, articles, summary, canGenerate, status = 'unavailable', transcript = null, updatedAt = null, audioUrl = null, contentHash = null, voiceProfileKey = null, title = 'AI资讯日报播客', errorMessage = null }) {
+function createPlaceholderMetadata({
+    date,
+    articles,
+    summary,
+    canGenerate,
+    status = 'unavailable',
+    transcript = null,
+    updatedAt = null,
+    audioUrl = null,
+    audioStorage = null,
+    audioFile = null,
+    audioMimeType = null,
+    contentHash = null,
+    voiceProfileKey = null,
+    title = 'AI资讯日报播客',
+    errorMessage = null
+}) {
     return {
         date,
         status,
@@ -161,6 +183,9 @@ function createPlaceholderMetadata({ date, articles, summary, canGenerate, statu
         summary,
         duration_seconds: transcript ? estimateDurationSeconds(transcript) : null,
         audio_url: audioUrl,
+        audio_storage: audioStorage,
+        audio_file: audioFile,
+        audio_mime_type: audioMimeType,
         transcript,
         script_mode: 'scripted',
         updated_at: updatedAt,
@@ -218,6 +243,7 @@ function createPodcastConfigFromEnv(env) {
             cloneDescription: env.YUNTTS_CLONE_DESCRIPTION || 'AIcoming daily podcast voice clone',
             speed: Number(env.YUNTTS_SPEED || 1.0),
             responseFormat: env.YUNTTS_RESPONSE_FORMAT || 'mp3',
+            sampleRate: Number(env.YUNTTS_SAMPLE_RATE || 24000),
             intervalSilence: Number(env.YUNTTS_INTERVAL_SILENCE || 100),
             seed: Number(env.YUNTTS_SEED || 42)
         },
@@ -232,17 +258,23 @@ function createPodcastConfigFromEnv(env) {
     };
 }
 
-function isPodcastGenerationConfigured(config) {
-    const { yunTts, oss } = config;
-    const hasVoiceConfig = Boolean(yunTts.voice || yunTts.cloneSampleFile || yunTts.fallbackVoice);
+function isOssConfigured(config) {
+    const { oss } = config;
     return Boolean(
-        yunTts.apiKey &&
-        yunTts.apiUrl &&
-        hasVoiceConfig &&
         oss.region &&
         oss.bucket &&
         oss.accessKeyId &&
         oss.accessKeySecret
+    );
+}
+
+function isPodcastGenerationConfigured(config) {
+    const { yunTts } = config;
+    const hasVoiceConfig = Boolean(yunTts.voice || yunTts.cloneSampleFile || yunTts.fallbackVoice);
+    return Boolean(
+        yunTts.apiKey &&
+        yunTts.apiUrl &&
+        hasVoiceConfig
     );
 }
 
@@ -256,10 +288,14 @@ function createNewsPodcastService({
 }) {
     const jobs = new Map();
     const resolvedMetadataDir = metadataDir;
+    const resolvedAudioDir = path.join(resolvedMetadataDir, 'audio');
     const voiceStateFile = path.join(path.dirname(resolvedMetadataDir), 'voice-profile.json');
 
     if (!fs.existsSync(resolvedMetadataDir)) {
         fs.mkdirSync(resolvedMetadataDir, { recursive: true });
+    }
+    if (!fs.existsSync(resolvedAudioDir)) {
+        fs.mkdirSync(resolvedAudioDir, { recursive: true });
     }
 
     function getMetadataPath(date) {
@@ -272,6 +308,59 @@ function createNewsPodcastService({
 
     function saveMetadata(date, metadata) {
         writeJsonFileSafe(getMetadataPath(date), metadata);
+    }
+
+    function resolveAudioUrl(date) {
+        return `/api/podcast/news/${date}/audio`;
+    }
+
+    function buildLocalAudioFileName(date, contentHash, voiceProfileKey, extension) {
+        const safeExtension = normalizeAudioExtension(extension);
+        const voiceHash = hashText(voiceProfileKey).slice(0, 8);
+        return `${date}-daily-news-${contentHash.slice(0, 10)}-${voiceHash}.${safeExtension}`;
+    }
+
+    function getLocalAudioAbsolutePath(fileName) {
+        if (!fileName) {
+            return null;
+        }
+
+        const resolvedPath = path.resolve(resolvedAudioDir, fileName);
+        const relativePath = path.relative(resolvedAudioDir, resolvedPath);
+        if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+            return null;
+        }
+
+        return resolvedPath;
+    }
+
+    function resolveLocalAudioRecord(date, metadata) {
+        if (!metadata || metadata.audio_storage !== 'local' || !metadata.audio_file) {
+            return null;
+        }
+
+        const filePath = getLocalAudioAbsolutePath(metadata.audio_file);
+        if (!filePath || !fs.existsSync(filePath)) {
+            return null;
+        }
+
+        return {
+            filePath,
+            mimeType: metadata.audio_mime_type || inferAudioMimeType(filePath),
+            url: resolveAudioUrl(date)
+        };
+    }
+
+    function hasPlayableAudio(date, metadata) {
+        if (!metadata || !metadata.audio_url) {
+            return false;
+        }
+
+        if (metadata.audio_storage === 'local') {
+            return Boolean(resolveLocalAudioRecord(date, metadata));
+        }
+
+        return true;
     }
 
     function loadVoiceState() {
@@ -333,9 +422,9 @@ function createNewsPodcastService({
         const form = new FormData();
         const fileBuffer = fs.readFileSync(config.yunTts.cloneSampleFile);
         const fileName = path.basename(config.yunTts.cloneSampleFile);
-        form.append('speaker_name', config.yunTts.cloneName);
+        form.append('name', config.yunTts.cloneName);
         if (config.yunTts.cloneDescription) {
-            form.append('speaker_desc', config.yunTts.cloneDescription);
+            form.append('description', config.yunTts.cloneDescription);
         }
         form.append(
             'speaker_file',
@@ -439,9 +528,11 @@ function createNewsPodcastService({
         const canGenerate = articles.length > 0 && isPodcastGenerationConfigured(config);
         const existing = loadExistingMetadata(date);
 
-        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && existing.audio_url) {
+        if (existing && existing.content_hash === contentHash && existing.voice_profile_key === voiceProfileKey && hasPlayableAudio(date, existing)) {
+            const localAudioRecord = resolveLocalAudioRecord(date, existing);
             return {
                 ...existing,
+                audio_url: localAudioRecord ? localAudioRecord.url : existing.audio_url,
                 can_generate: canGenerate
             };
         }
@@ -509,6 +600,7 @@ function createNewsPodcastService({
             text: script,
             voice: voiceId,
             response_format: config.yunTts.responseFormat,
+            sample_rate: config.yunTts.sampleRate,
             interval_silence: config.yunTts.intervalSilence,
             speed: config.yunTts.speed,
             seed: config.yunTts.seed
@@ -562,16 +654,62 @@ function createNewsPodcastService({
 
         const [year, month, day] = date.split('-');
         const voiceHash = hashText(voiceProfileKey).slice(0, 8);
-        const objectKey = `podcast/news/${year}/${month}/${day}/daily-news-${contentHash.slice(0, 10)}-${voiceHash}.mp3`;
+        const extension = normalizeAudioExtension(config.yunTts.responseFormat);
+        const objectKey = `podcast/news/${year}/${month}/${day}/daily-news-${contentHash.slice(0, 10)}-${voiceHash}.${extension}`;
 
         await client.put(objectKey, buffer, {
             headers: {
-                'Content-Type': 'audio/mpeg',
+                'Content-Type': inferAudioMimeType(objectKey),
                 'Cache-Control': 'public, max-age=31536000'
             }
         });
 
         return buildPublicOssUrl(objectKey, config.oss);
+    }
+
+    function pruneLocalAudioFiles({ date, keepFileName }) {
+        const prefix = `${date}-`;
+        const files = fs.readdirSync(resolvedAudioDir);
+        for (const fileName of files) {
+            if (!fileName.startsWith(prefix) || fileName === keepFileName) {
+                continue;
+            }
+
+            try {
+                fs.unlinkSync(path.join(resolvedAudioDir, fileName));
+            } catch (error) {
+                console.warn(`[podcast] 删除旧本地音频失败 ${fileName}:`, error.message);
+            }
+        }
+    }
+
+    function saveAudioLocally(buffer, date, contentHash, voiceProfileKey) {
+        const extension = normalizeAudioExtension(config.yunTts.responseFormat);
+        const fileName = buildLocalAudioFileName(date, contentHash, voiceProfileKey, extension);
+        const filePath = path.join(resolvedAudioDir, fileName);
+        fs.writeFileSync(filePath, buffer);
+        pruneLocalAudioFiles({ date, keepFileName: fileName });
+
+        return {
+            audioUrl: resolveAudioUrl(date),
+            audioStorage: 'local',
+            audioFile: fileName,
+            audioMimeType: inferAudioMimeType(filePath)
+        };
+    }
+
+    async function persistAudio(buffer, date, contentHash, voiceProfileKey) {
+        if (isOssConfigured(config)) {
+            const audioUrl = await uploadAudioToOss(buffer, date, contentHash, voiceProfileKey);
+            return {
+                audioUrl,
+                audioStorage: 'oss',
+                audioFile: null,
+                audioMimeType: inferAudioMimeType(`audio.${normalizeAudioExtension(config.yunTts.responseFormat)}`)
+            };
+        }
+
+        return saveAudioLocally(buffer, date, contentHash, voiceProfileKey);
     }
 
     async function generateNewsPodcast(date) {
@@ -615,7 +753,7 @@ function createNewsPodcastService({
                 const { voiceId } = await resolveSynthesisVoice();
                 const ttsResult = await synthesizeWithYunTts(script, voiceId);
                 const audioBuffer = await downloadAudioBuffer(ttsResult.audio_url);
-                const ossUrl = await uploadAudioToOss(audioBuffer, date, contentHash, voiceProfileKey);
+                const audioRecord = await persistAudio(audioBuffer, date, contentHash, voiceProfileKey);
                 const readyMetadata = createPlaceholderMetadata({
                     date,
                     articles,
@@ -624,7 +762,10 @@ function createNewsPodcastService({
                     status: 'ready',
                     transcript: script,
                     updatedAt: new Date().toISOString(),
-                    audioUrl: ossUrl,
+                    audioUrl: audioRecord.audioUrl,
+                    audioStorage: audioRecord.audioStorage,
+                    audioFile: audioRecord.audioFile,
+                    audioMimeType: audioRecord.audioMimeType,
                     contentHash,
                     voiceProfileKey
                 });
@@ -658,7 +799,15 @@ function createNewsPodcastService({
 
     return {
         getCurrentMetadata,
-        generateNewsPodcast
+        generateNewsPodcast,
+        getAudioFileForDate(date) {
+            if (!isIsoDate(date)) {
+                return null;
+            }
+
+            const metadata = loadExistingMetadata(date);
+            return resolveLocalAudioRecord(date, metadata);
+        }
     };
 }
 

@@ -11,3 +11,4 @@ qwen-comparison-*.json
 *.backup
 .DS_Store
 logs/
+data/podcasts/
