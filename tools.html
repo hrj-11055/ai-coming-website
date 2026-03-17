@@ -105,7 +105,7 @@
         }
 
         .lane-guide {
-            background: linear-gradient(90deg, #f8fbff 0%, #f8fbff 49.3%, #fffbf4 50.7%, #fffbf4 100%);
+            background: linear-gradient(90deg, #fffbf4 0%, #fffbf4 49.3%, #f8fbff 50.7%, #f8fbff 100%);
             border: 1px solid var(--line);
             border-radius: 12px;
             display: grid;
@@ -124,11 +124,11 @@
             letter-spacing: 0.2px;
         }
 
-        .lane-label:first-child {
+        .lane-label--intl {
             color: #1e40af;
         }
 
-        .lane-label:last-child {
+        .lane-label--cn {
             color: #9a3412;
         }
 
@@ -200,14 +200,14 @@
             align-items: stretch;
         }
 
-        .tool-row > .tool-group:first-child {
+        .tool-group--intl {
             background: #f8fbff;
             border: 1px solid #e2eefd;
             border-radius: 12px;
             padding: 8px;
         }
 
-        .tool-row > .tool-group:last-child {
+        .tool-group--cn {
             background: #fffbf4;
             border: 1px solid #f5e9cf;
             border-radius: 12px;
@@ -465,9 +465,9 @@
 
             <section class="main-area">
                 <div class="lane-guide" aria-hidden="true">
-                    <div class="lane-label">国际工具区</div>
+                    <div class="lane-label lane-label--cn">国内工具区</div>
                     <div class="lane-divider"></div>
-                    <div class="lane-label">国内工具区</div>
+                    <div class="lane-label lane-label--intl">国际工具区</div>
                 </div>
 
                 <div id="toolsSections" class="content-panel">

@@ -171,12 +171,12 @@ function renderSection(section) {
     for (let i = 0; i < rowCount; i += 1) {
         rowsHtml += `
             <div class="tool-row">
-                <div class="tool-group">
-                    ${buildRowCards(intlRows[i] || [])}
+                <div class="tool-group tool-group--cn">
+                    ${buildRowCards(cnRows[i] || [])}
                 </div>
                 <div class="tool-divider" aria-hidden="true"></div>
-                <div class="tool-group">
-                    ${buildRowCards(cnRows[i] || [])}
+                <div class="tool-group tool-group--intl">
+                    ${buildRowCards(intlRows[i] || [])}
                 </div>
             </div>
         `;
