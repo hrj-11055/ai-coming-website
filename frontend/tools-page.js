@@ -17,6 +17,22 @@ const CATEGORY_ICON_MAP = {
     vibecoding: 'fas fa-code'
 };
 
+const CATEGORY_TONE_MAP = {
+    'ai-ppt': 'violet',
+    'ai-writing': 'amber',
+    'ai-image': 'rose',
+    'ai-video': 'sky',
+    vibecoding: 'emerald',
+    'ai-data-analysis': 'cyan',
+    'ai-search': 'indigo',
+    'meeting-notes': 'teal',
+    'knowledge-base': 'fuchsia',
+    'ai-collab': 'orange',
+    'digital-human': 'lime',
+    tts: 'slate',
+    'agent-workflow': 'violet'
+};
+
 const TOOL_TAG_MAP = {
     'AiPPT': '中文PPT智能生成',
     'Beautiful.ai': '自动排版美学PPT',
@@ -201,8 +217,9 @@ function renderCategoryList() {
 
     container.innerHTML = TOOL_SECTIONS.map((section, index) => {
         const iconClass = CATEGORY_ICON_MAP[section.id] || 'fas fa-cube';
+        const tone = CATEGORY_TONE_MAP[section.id] || 'slate';
         return `
-            <a class="category-link ${index === 0 ? 'active' : ''}" href="#${section.id}" data-section="${section.id}" title="${section.title}" aria-label="${section.title}">
+            <a class="category-link ${index === 0 ? 'active' : ''}" href="#${section.id}" data-section="${section.id}" data-tone="${tone}" title="${section.title}" aria-label="${section.title}">
                 <i class="${iconClass}"></i>
                 <span>${section.title}</span>
             </a>
