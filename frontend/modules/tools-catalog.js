@@ -173,12 +173,12 @@ export const TOOL_SECTIONS = [
     international: [
       { name: 'n8n', logo: '/logos/tool-collection-2026-02-26/11-Agent流/n8n.svg', url: 'https://n8n.io' },
       { name: 'Zapier', logo: '/logos/tool-collection-2026-02-26/11-Agent流/zapier.svg', url: 'https://zapier.com' },
-      { name: 'Dify', logo: '/logos/tool-collection-2026-02-26/11-Agent流/dify.svg', url: 'https://dify.ai' }
+      { name: 'Manus', logo: '/logos/tool-collection-2026-02-26/11-Agent流/manus.svg', url: 'https://manus.im/' }
     ],
     china: [
       { name: 'Coze', logo: '/logos/tool-collection-2026-02-26/11-Agent流/coze.svg', url: 'https://www.coze.cn' },
       { name: 'LangChain', logo: '/logos/tool-collection-2026-02-26/11-Agent流/langchain.png', url: 'https://www.langchain.com/' },
-      { name: 'Manus', logo: '/logos/tool-collection-2026-02-26/11-Agent流/manus.svg', url: 'https://manus.im/' }
+      { name: 'Dify', logo: '/logos/tool-collection-2026-02-26/11-Agent流/dify.svg', url: 'https://dify.ai' }
     ]
   },
 ];
