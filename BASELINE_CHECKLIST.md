@@ -2,7 +2,7 @@
 
 ## 1) Baseline freeze
 
-- Backend mainline fixed to `server-json.js`.
+- Backend mainline fixed to `server-json.js` (thin entrypoint) + `server/runtime.js` (runtime assembly).
 - Frontend baseline pages:
   - `index.html`
   - `news.html`
@@ -33,13 +33,12 @@
 
 ## 3) High-risk module list
 
-1. `server-json.js`
-- Single large file with many responsibilities and endpoints.
-- High regression risk during refactor.
+1. `server/runtime.js`
+- JSON mainline runtime assembly lives here.
+- High regression risk during startup, route mounting, and scheduler changes.
 
-2. `main.js`
-- Large global-state frontend script.
-- Strong coupling across news/timeline/filter/keyword modules.
+2. `admin-analytics.html` / `admin-ipban.html`
+- Inline scripts and page-local state still carry legacy maintenance risk.
 
 3. `server-sync.sh`（旧 `fixed` 兼容脚本已删除）
 - Uses `pkill + nohup`; weak process lifecycle and health control.
@@ -55,7 +54,7 @@
 Run locally before each refactor day:
 
 ```bash
-npm run start:legacy
+npm start
 curl -s http://127.0.0.1:3000/api/news | head
 curl -s http://127.0.0.1:3000/api/news/dates | head
 curl -s http://127.0.0.1:3000/api/keywords | head
@@ -73,6 +72,6 @@ curl -I http://127.0.0.1:3000/news.html
   - `GET /news.html`: PASS (`HTTP/1.1 200 OK`)
 
 Note:
-- `npm run start:legacy` must be executed in project root:
+- `npm start` must be executed in project root:
   - `/Users/MarkHuang/ai-coming-website`
 - Running `npm` in `~` will fail with `ENOENT` (`package.json` not found), but this does not affect API runtime if server is already running.

@@ -72,7 +72,7 @@
 
 ## 配置参数
 
-在 `server-json.js` 中可调整以下参数：
+在 `server/routes/security.js` 中可调整以下参数：
 
 ```javascript
 const API_RATE_LIMIT = {
@@ -471,7 +471,8 @@ CREATE TABLE banned_ips (
 - `IP_BAN_GUIDE.md` - 本文档
 
 ### 修改文件
-- `server-json.js` - 添加IP监控和封禁功能
+- `server/routes/security.js` - IP监控和封禁功能实现
+- `server/runtime.js` - 将安全路由和运行时中间件挂载到主线应用
 - `admin-analytics.html` - 添加IP封禁管理入口
 
 ## 技术实现细节

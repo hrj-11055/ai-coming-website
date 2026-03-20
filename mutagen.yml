@@ -23,7 +23,6 @@ sync:
         - qwen-comparison-*.json
         - test-*-quickstart.md
         - server.js
-        - server-ubuntu.js
         - PROJECT_*.md
         - API_*.md
         - *_GUIDE.md

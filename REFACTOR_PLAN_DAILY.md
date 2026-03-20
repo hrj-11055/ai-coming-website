@@ -1,6 +1,6 @@
 # JSON 主线重构计划（按天）
 
-本计划仅针对 `server-json.js` 主线，不包含 MySQL 迁移。
+本计划仅针对 `server-json.js`（薄入口）+ `server/runtime.js`（运行时装配）主线，不包含 MySQL 迁移。
 
 ## Day 1 - 基线冻结与风险清单
 
@@ -50,9 +50,9 @@
 
 ## Day 8 - 前端主文件拆分
 
-1. 按功能拆分 `main.js`：关键词、新闻、筛选、时间轴、工具搜索。
+1. 将新闻页主逻辑迁移到 `frontend/modules/*`。
 2. 保持全局函数兼容（避免页面内联事件失效）。
-3. 验收：页面功能不回退，主文件体积下降。
+3. 验收：页面功能不回退，新闻页仅通过模块入口运行。
 
 ## Day 9 - UI 稳定性与样式兜底
 
@@ -77,7 +77,7 @@
 ## 每日最小验收命令（建议）
 
 ```bash
-npm run start:legacy
+npm start
 curl -s http://localhost:3000/api/health
 curl -s http://localhost:3000/api/news | head
 curl -s http://localhost:3000/api/news/dates | head

@@ -32,7 +32,7 @@
 
 ## 技术实现
 
-### 前端自动上报 (main.js)
+### 前端自动上报 (`frontend/modules/news-page-init.js` + `frontend/modules/core-news.js`)
 
 ```javascript
 // 页面加载时自动执行追踪
@@ -44,7 +44,7 @@ async function trackVisit() {
 }
 ```
 
-### 后端IP解析 (server-json.js)
+### 后端IP解析 (`server/routes/visit.js`)
 
 使用淘宝IP接口(免费)实现IP地址到省份的转换:
 
@@ -165,7 +165,7 @@ Authorization: Bearer {token}
 
 ### 修改IP定位服务
 
-当前使用淘宝IP接口,如需更换其他服务,修改 `server-json.js` 中的 `getProvinceFromIP` 函数:
+当前使用淘宝IP接口,如需更换其他服务,修改 `server/routes/visit.js` 中的 `getProvinceFromIP` 函数:
 
 ```javascript
 // 示例: 使用其他IP定位服务
@@ -196,7 +196,7 @@ async function getProvinceFromIP(ip) {
 
 ### 调整统计策略
 
-修改 `server-json.js` 中的去重逻辑:
+修改 `server/routes/visit.js` 中的去重逻辑:
 
 ```javascript
 // 当前: 每天去重
@@ -302,8 +302,9 @@ IP解析可以使用消息队列异步处理,提高响应速度
 - `data/visit-logs.json` - 访问日志数据文件(自动创建)
 
 ### 修改文件
-- `server-json.js` - 添加地理位置追踪API
-- `main.js` - 添加前端自动上报代码
+- `server/routes/visit.js` - 地理位置追踪 API
+- `frontend/modules/core-news.js` - 前端自动上报实现
+- `frontend/modules/news-page-init.js` - 页面初始化时触发上报
 - `index.html` - 添加管理后台入口
 
 ## 技术栈

@@ -225,7 +225,7 @@ SILICONFLOW_MODEL=meta-llama/Llama-3.1-8B-Instruct
 ## 📚 相关文档
 
 - **API-SETUP-GUIDE.md** - 硅基流动 API 完整配置指南
-- **SEARCH-PAGE-UPDATE.md** - 搜索页面更新说明
+- **docs/archive/legacy/SEARCH-PAGE-UPDATE.md** - 搜索页面历史更新说明
 - **FRONTEND-MODIFICATIONS.md** - 前端功能修改说明
 
 ---

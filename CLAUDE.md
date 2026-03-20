@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an AI News Management System (AI资讯管理系统) - an enterprise-level content management platform for AI news, tools, and keyword clouds. The system supports both JSON file storage (development) and MySQL database (production) modes.
+This is an AI News Management System (AI资讯管理系统) - an enterprise-level content management platform for AI news, tools, and keyword clouds. The current active mainline is the JSON runtime; MySQL remains an optional migration path, not the default runtime.
 
 **Current Version**: 2.0.0
 
@@ -36,6 +36,40 @@ This is an AI News Management System (AI资讯管理系统) - an enterprise-leve
 - When ready to sync: `mutagen project start`
 - Check sync status: `mutagen sync list`
 - Pause sync before major changes: `mutagen project pause`
+
+### Podcast Operations: Server First
+
+For podcast-related work, the source of truth is the Linux server at `/var/www/ai-coming-website`, not the local macOS workspace.
+
+- Canonical server files: `.env`, `server/services/news-podcast.js`, `server/services/podcast-script.js`, `config/podcast-script-system-prompt.md`, `scripts/smoke-json.js`
+- Local copies are derived artifacts and may drift
+- Verification priority:
+  1. Server-side probes
+  2. Live `GET /api/podcast/news/:date`
+  3. Live `POST /api/podcast/news/:date/generate`
+  4. Local tests and smoke
+
+Run `npm run podcast:audit:server` before claiming the local workspace matches podcast production state.
+
+### Podcast Long-Term Memory
+
+The production podcast pipeline is now considered stable and should be preserved unless the user explicitly changes the architecture.
+
+- Official daily input path: `/var/www/json/report/YYYY-MM-DD.json`
+- Script generation model: `deepseek-chat`
+- TTS model: `speech-2.8-turbo`
+- TTS voice: `male-qn-jingying`
+- Official TTS mode: MiniMax async `t2a_async_v2` with direct `text` input
+- Podcast auto-generation is handled by a separate cron-driven scanner, not by embedding file watching inside the web process
+- The scanner starts only after 09:05 Asia/Shanghai, checks `/var/www/json/report/YYYY-MM-DD.json`, skips `ready` and `pending`, and only auto-triggers once per unchanged daily report file
+- The server must persist `tts_task_id`, `tts_file_id`, and `tts_status` in metadata
+- Successful podcast output must be downloaded by the server, uploaded to OSS, and served to the website via `audio_url`
+- Do not assume MiniMax returns a bare mp3; the download flow may require resolving a download URL and extracting audio from an archive
+- `deepseek-reasoner` is not the default podcast script model for this project
+- Token Plan is not the recommended long-podcast TTS path for this project because it previously hit 1000-character and rolling-quota limits
+- Current safe timeout baseline for MiniMax async TTS is `600000ms`
+
+Reference doc: `docs/PODCAST_GENERATION_PIPELINE.md`
 
 ### Line Ending Issues (Linux Deployment)
 
@@ -79,12 +113,13 @@ done
 
 ```bash
 # Primary development mode (JSON storage - no database required)
-npm run start:legacy        # or ./run.sh
+npm start                   # or ./run.sh
 npm run start:dev           # Development with nodemon auto-reload
+npm run start:legacy        # Compatibility alias for npm start
 
-# Production mode (MySQL required)
-npm start                   # Uses server-mysql.js
-npm run start:prod          # Production environment
+# Optional MySQL mode
+npm run start:mysql
+npm run start:mysql:dev
 
 # Database operations
 npm run db:init            # Initialize MySQL database from schema
@@ -99,20 +134,21 @@ npm run test:models        # Run model comparison tests
 
 ## Architecture Overview
 
-### Dual-Mode Backend System
+### Backend Layout
 
-The system supports two backend implementations:
+The repository contains two backend implementations, but only one is the active mainline:
 
-1. **server-json.js** (2022 lines) - Primary development server
-   - Uses JSON files in `data/` directory for storage
-   - No database setup required
-   - Auto-initializes all data files on first run
-   - Primary server for development and quick testing
+1. **server-json.js** - Thin JSON entrypoint
+   - Loads env and delegates startup to `server/runtime.js`
+   - This is the default target for `npm start`
 
-2. **server-mysql.js** (538 lines) - Production server
+2. **server/runtime.js** - Active JSON runtime assembly
+   - Builds the Express app, mounts routes, initializes JSON-backed data files
+   - Starts schedulers, cache maintenance, and the HTTP listener
+
+3. **server-mysql.js** - Optional migration/runtime branch
    - Uses MySQL database with connection pooling
-   - Better performance for production
-   - Requires database initialization via `database/schema.sql`
+   - Not the default runtime in the current repo state
 
 ### Frontend Architecture
 
@@ -120,7 +156,8 @@ The system supports two backend implementations:
 - **news.html** (16KB) - News detail page
 - **admin-login.html** (11KB) - Admin authentication
 - **admin-analytics.html** (20KB) - Geographic analytics dashboard
-- **main.js** (1500 lines) - Core frontend logic
+- **frontend/bootstrap.js** - News page module entrypoint
+- **frontend/modules/** - Current news-page module set
 - **styles.css** (12KB) - Global styles
 - **api.js** (309 lines) - API client wrapper
 
@@ -157,21 +194,21 @@ The system supports two backend implementations:
 ### Admin APIs (JWT Required)
 All POST/PUT/DELETE operations require `Authorization: Bearer <token>` header
 
-## Core Frontend Modules (main.js)
+## Core Frontend Modules
 
-1. **Visit Tracking** (lines 1-25): Auto-tracks visitors on page load via `trackVisit()`
-2. **Keyword Management** (lines 50-200): Initializes and renders dynamic word cloud
-3. **News Loading** (lines 250-450): Loads and filters daily/weekly news
-4. **Tool Search** (lines 750-950): AI tools search and filtering
+1. `frontend/modules/news-page-init.js` handles news-page bootstrap.
+2. `frontend/modules/core-news.js` contains the core news-page behavior.
+3. `frontend/modules/compat-globals.js` exposes legacy `window` handlers still needed by existing HTML.
+4. `frontend/index-page.js` and `frontend/tools-page.js` own their respective pages.
 
 ## Important Development Patterns
 
 ### Adding New API Endpoints
 
-In `server-json.js`:
-1. Add route: `app.get('/api/new-endpoint', (req, res) => { ... })`
-2. For protected routes, add `authenticateToken` middleware before the handler
-3. Use `readData(filename)` and `writeData(filename, data)` helpers for JSON operations
+In the current JSON mainline:
+1. Add route files under `server/routes/`
+2. Add business logic under `server/services/` when needed
+3. Wire new runtime dependencies in `server/runtime.js`
 
 ### Data File Operations
 
@@ -275,9 +312,9 @@ lsof -i :3000
 kill -9 <PID>
 ```
 
-**MySQL connection failed**: System will automatically fall back to JSON mode if MySQL is unavailable, or explicitly use `npm run start:legacy`
+**MySQL connection failed**: Use the JSON mainline explicitly with `npm start`
 
-**Missing data files**: The `initDataFiles()` function in server-json.js automatically creates all required JSON files with proper structure on first run.
+**Missing data files**: The JSON runtime in `server/runtime.js` automatically creates required JSON files on first run.
 
 **Daily Report Sync**: The automated daily report sync system (`历史同步执行脚本（已删除）`) requires the HTML converter regex to match the actual HTML structure. If conversion fails with "未找到任何文章", check that `scripts/html-to-json-converter.js` regex pattern matches the HTML format (`<div class="article">` vs `<section style="margin-bottom: 30px">`).
 

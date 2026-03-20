@@ -1,6 +1,6 @@
 # Code Refactor ToDo List (JSON Mainline)
 
-目标：以 `server-json.js` 为唯一主线完成可维护性重构，确保行为兼容、可回滚、可验证。
+目标：以 `server-json.js`（薄入口）+ `server/runtime.js`（运行时装配）为唯一主线完成可维护性重构，确保行为兼容、可回滚、可验证。
 
 ## P0 - 先做（安全与基线）
 
@@ -28,9 +28,10 @@
 
 ## P2 - 前端重构
 
-- [ ] 拆分 `main.js`：timeline/news/keywords/archive/ui-state 模块化。
+- [x] 新闻页主逻辑已迁移到 `frontend/modules/*`。
 - [ ] 统一 API 调用方式（避免 `window.apiService` 与裸 `fetch` 混用）。
-- [ ] 保留旧全局函数兼容层（过渡期），避免页面事件失效。
+- [x] 保留旧全局函数兼容层（过渡期），避免页面事件失效。
+- [x] 已删除 `main.js` 兼容壳。
 - [ ] 增加页面级 smoke 测试（`news.html` 时间轴/筛选/详情）。
 
 ## P2 - 脚本与运维清理
@@ -42,7 +43,7 @@
 
 ## P2 - 文档收敛
 
-- [ ] 维护唯一入口文档：`README.md` + `RUN_GUIDE.md` + `API_CONTRACT.md`。
+- [x] 收敛高频入口文档：`README.md` + `RUN_GUIDE.md` + `API_CONTRACT.md`。
 - [ ] 将历史文档索引固定到 `docs/archive/legacy/README.md`。
 - [ ] 新增“JSON 主线开发约定”文档（目录规范、命名规则、测试要求）。
 - [ ] 每次接口变更同步更新 `API_CONTRACT.md` 与迁移说明。

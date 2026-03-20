@@ -128,7 +128,7 @@ mutagen sync flush ai-website
 ❌ .env（环境变量，需在服务器单独配置）
 ❌ backup/（备份文件）
 ❌ test-*.html, debug.html（测试文件）
-❌ server.js, server-ubuntu.js（旧版服务器）
+❌ server.js（旧版服务器）
 ❌ .git/（版本控制）
 ❌ *.log（日志文件）
 
@@ -181,12 +181,12 @@ DEFAULT_ADMIN_PASSWORD=admin123456
 ```bash
 # 使用PM2（推荐）
 npm install -g pm2
-pm2 start server-json.js --name "ai-news-system"
+pm2 start npm --name "ai-news-system" -- start
 pm2 save
 pm2 startup
 
 # 或直接运行
-node server-json.js
+npm start
 ```
 
 ---
@@ -252,13 +252,13 @@ watch:
 
 ```bash
 # 1. 在 Mac 上修改代码
-vim main.js
+vim frontend/bootstrap.js
 
 # 2. 自动同步到服务器（无需手动操作）
 # Mutagen 会自动检测并同步
 
 # 3. 在服务器上查看（可选）
-ssh user@server "cat /var/www/ai-coming-website/main.js"
+ssh user@server "cat /var/www/ai-coming-website/frontend/bootstrap.js"
 
 # 4. 重启服务（如果需要）
 pm2 restart ai-news-system
