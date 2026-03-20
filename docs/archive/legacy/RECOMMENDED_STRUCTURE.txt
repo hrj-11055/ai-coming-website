@@ -14,7 +14,8 @@ ai-coming-website/
 │   └── cleanup.sh                ⭐ 项目清理脚本（新增）
 │
 ├── 🖥️ 服务器
-│   ├── server-json.js            ⭐⭐⭐ 主服务器 (唯一服务器文件)
+│   ├── server-json.js            ⭐⭐⭐ 主入口（薄入口）
+│   ├── server/runtime.js         ⭐⭐⭐ JSON 主线运行时装配
 │   └── server-mysql.js           (可选，MySQL模式)
 │
 ├── 🌐 前端页面
@@ -26,7 +27,8 @@ ai-coming-website/
 │   └── footer.html               页脚组件 (376B)
 │
 ├── 💻 前端脚本和样式
-│   ├── main.js                   ⭐⭐ 前端主逻辑 (54KB)
+│   ├── frontend/bootstrap.js     ⭐⭐ 新闻页模块入口
+│   ├── frontend/modules/         ⭐⭐ 新闻页主逻辑
 │   ├── api.js                    API客户端 (8KB)
 │   └── styles.css                全局样式 (12KB)
 │
@@ -82,8 +84,9 @@ ai-coming-website/
 ==============================================
 ⭐⭐⭐ 必需 - 系统运行的核心
   - server-json.js
+  - server/runtime.js
   - package.json
-  - main.js
+  - frontend/bootstrap.js
   - index.html
   - data/ 目录
   - logos/ 目录
@@ -116,7 +119,7 @@ ai-coming-website/
 
 ❌ 弃用服务器
    - server.js (16KB)
-   - server-ubuntu.js (38行，功能已合并)
+   - server-ubuntu.js（已删除）
 
 ❌ 冗余代码
    - 旧版 API 适配脚本（功能重复，已删除）
@@ -152,7 +155,7 @@ ai-coming-website/
 ✗ backup/ (删除)
 ✗ test-* (删除)
 ✗ *.md (或移至docs/)
-✗ server.js, server-ubuntu.js (删除)
+✗ server.js (删除)
 ✗ 旧版 API 适配脚本 (已删除)
 
 ==============================================
@@ -162,7 +165,7 @@ ai-coming-website/
 rm -rf backup/ test-* debug.html *.py qwen-comparison-*.json
 
 # 删除弃用服务器
-rm -f server.js server-ubuntu.js
+rm -f server.js
 
 # 删除冗余文件
 rm -f requirements.txt
