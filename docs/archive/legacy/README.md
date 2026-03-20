@@ -25,6 +25,12 @@ This directory contains outdated or superseded documentation that is kept for hi
 - `RECOMMENDED_STRUCTURE.txt`
 - `REFACTOR_P0_BASELINE.md`
 
+## Archived on 2026-03-20
+
+- `superpowers/plans/2026-03-16-homepage-right-rail-and-nav.md`
+- `superpowers/plans/2026-03-17-homepage-footer-and-hero-offset.md`
+- `superpowers/specs/2026-03-17-homepage-footer-and-hero-offset-design.md`
+
 ## Why archived
 
 - Content no longer matches the current JSON-mainline runtime setup.
