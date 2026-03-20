@@ -1,123 +1,153 @@
 # AIcoming Website
 
-AIcoming 是一个 AI 资讯聚合与管理系统，包含前台展示页面和后台管理 API。
+当前版本：`0.2.0`
 
-当前阶段目标是：
-1. 以 `JSON 文件存储` 为唯一运行主线，优先保证稳定和交付速度。
-2. 完成前后端重构与模块化，降低维护成本。
-3. 在数据规模增大后，再切换到 MySQL。
-4. MySQL 切换时使用 `npm run start:mysql`，并通过 `npm run db:migrate` 迁移数据。
+AIcoming 是一个面向真实工作流的 AI 内容与工具门户，当前稳定提供四类能力：
 
-## 当前技术策略（重要）
+1. 首页 AI 搜索与提示词辅助体验
+2. AI 资讯页、热点关键词与每日播客
+3. AI 工具集目录页
+4. 管理后台 API、数据导入与运维脚本
 
-1. 当前开发与部署主线：`server-json.js`
-2. MySQL 暂不进入本轮重构，仅保留迁移可能性。
-3. 所有新功能优先在 JSON 主线落地。
+## 当前产品范围
 
-## 项目目标
+### 用户侧页面
 
-1. 展示每日 AI 快讯、热点关键词和工具目录。
-2. 提供管理员登录、内容管理、统计、数据导入/归档能力。
-3. 支持从外部 JSON 报告自动同步并上线展示。
+- `/index.html`
+  - AI 搜索入口与提示词辅助页面
+- `/news.html`
+  - 每日 AI 资讯、关键词、今日播客
+- `/tools.html`
+  - 按分类展示的 AI 工具集
+- `/about.html`
+  - 公司与合作介绍页
 
-## 当前架构
+### 管理与运维能力
 
-### 前端
+- 管理登录：`/admin-login.html`
+- 统计页：`/admin-analytics.html`
+- IP 封禁页：`/admin-ipban.html`
+- JSON 主线运行时：`server-json.js` + `server/runtime.js`
+- 播客链路：DeepSeek 口播稿 + MiniMax 异步 TTS + OSS/本地音频回退
 
-- 页面：`index.html`, `news.html`, `admin-login.html`, `admin-analytics.html`, `admin-ipban.html`
-- 样式：`styles.css`
-- 前端逻辑（模块入口）：`frontend/bootstrap.js`
-- 前端核心模块：`frontend/modules/*`（含 `state/api-client/news-service/*-controller/*-view`）
-- 兼容旧逻辑：`main.js`（历史文件，逐步迁移）
-- API 客户端：`api.js`
+## 当前运行主线
 
-### 后端
+项目当前以 `JSON 文件存储` 为唯一稳定主线。
 
-- 主后端（当前唯一主线）：`server-json.js`
-- 备选后端（本轮不改主线）：`server-mysql.js`
-- 数据文件：`data/*.json`
+- 默认启动入口：`server-json.js`
+- 运行时装配：`server/runtime.js`
+- MySQL 入口 `server-mysql.js` 仍保留，但不是当前发布主线
+- 运行时数据目录：`data/`
 
-### 数据与脚本
+## 关键产品能力
 
-- 数据目录：`data/`
-- 常用脚本：
-  - 启动：`run.sh`, `start.sh`
-  - 每日同步：`sync-json-news.sh`（服务器 cron 调用）
-  - 每周关键词：`scripts/run-weekly-keywords-once.sh`, `scripts/setup-weekly-keywords-cron.sh`
+### 1. AI 资讯与关键词
 
-## 启动方式（JSON-only）
+- 日报内容通过 JSON 文件落盘并对外展示
+- 新闻页展示资讯卡片、热点关键词与播客状态
+- 支持导入、归档、统计与后台维护
 
-### 1) 安装依赖
+### 2. AI 工具集
+
+- 工具页当前由前端静态目录驱动：
+  - `frontend/modules/tools-catalog.js`
+  - `frontend/tools-page.js`
+  - `tools.html`
+- `/api/tools*` 仍保留，主要用于后台与后续数据化扩展
+- 当前线上展示以静态目录为准，不以 `data/tools.json` 作为工具页直接数据源
+
+### 3. 每日播客
+
+- 正式输入源：`/var/www/json/report/YYYY-MM-DD.json`
+- 生成链路：
+  1. DeepSeek 生成口播稿
+  2. MiniMax 异步生成音频
+  3. 服务器下载并上传 OSS
+  4. 前端通过 `audio_url` 播放
+- 播客链路遵循“服务器优先”原则
+
+## 启动方式
+
+### 安装依赖
 
 ```bash
 npm install
 ```
 
-### 2) 配置环境变量
+### 配置环境变量
 
 ```bash
 cp .env.example .env
 ```
 
 至少配置：
-- `JWT_SECRET`
-- 模型 API Key（如 `SILICONFLOW_API_KEY`, `QWEN_API_KEY`）
 
-### 3) 启动服务
+- `JWT_SECRET`
+- 模型 API Key
+- 如启用播客，补齐 DeepSeek、MiniMax、OSS 相关环境变量
+
+### 启动服务
 
 ```bash
 npm start
 ```
 
-或：
+默认地址：
 
-```bash
-./run.sh
+```text
+http://localhost:3000
 ```
 
-服务默认地址：`http://localhost:3000`
-
-## API 能力概览（当前以 JSON 主线为准）
+## API 能力概览
 
 - 认证：`/api/auth/login`
 - 关键词：`/api/keywords*`
-- 新闻：`/api/news*`, `/api/news/dates`, `/api/news/date/:date`
+- 新闻：`/api/news*`
 - 工具：`/api/tools*`, `/api/tools/categories`
 - 统计与设置：`/api/stats`, `/api/settings`
-- 访问追踪与 IP 管理：`/api/visit/*`, `/api/banned-ips*`, `/api/api-calls/stats`
+- 访问追踪与安全：`/api/visit/*`, `/api/banned-ips*`, `/api/api-calls/stats`
 - 归档与模板：`/api/archive/*`, `/api/news/template`
-- 报告与 AI 调用：`/api/reports*`, `/api/ai/chat`
+- AI 与报告：`/api/ai/chat`, `/api/reports*`
+- 播客：
+  - `GET /api/podcast/news/:date`
+  - `GET /api/podcast/news/:date/audio`
+  - `POST /api/podcast/news/:date/generate`
+  - `GET /api/podcast/minimax/tasks/:taskId`
 
-## 当前主要技术债（重构重点）
+## 活跃文档入口
 
-1. `main.js` 体量过大（单文件多职责）。
-2. `server-json.js` 体量过大（单文件过多路由/逻辑）。
-3. 前端页面依赖 CDN（Tailwind/Alpine/FA），网络波动会引发样式退化。
-4. 自动化链路以 `cron + sync-json-news.sh + pm2` 为主，需持续关注日志告警与失败重试。
-5. 文档多且分散，存在历史信息。
+以下文档是当前维护中的可信入口：
 
-## 重构方向（本轮）
+1. `README.md`
+   当前项目总入口与产品范围说明
+2. `docs/PRODUCT.md`
+   当前产品文档与能力边界
+3. `CHANGELOG.md`
+   发布记录与版本说明
+4. `RUN_GUIDE.md`
+   本地运行与常用操作
+5. `API_CONTRACT.md`
+   API 契约说明
+6. `docs/PODCAST_SERVER_ALIGNMENT.md`
+   播客“服务器优先”规则
+7. `docs/PODCAST_GENERATION_PIPELINE.md`
+   播客正式生成链路
+8. `docs/archive/legacy/README.md`
+   历史文档索引，不作为当前实现依据
 
-1. 先重构 JSON 主线，不做 MySQL 能力补齐。
-2. 后端拆分 `routes/services/middleware`，保持 API 行为兼容。
-3. 前端拆分 `main.js` 为模块，减少全局变量耦合。
-4. 固化样式 fallback 策略，降低外部 CDN 依赖风险。
-5. 同步链路增加失败退出码、健康检查和日志规范。
+## 文档治理规则
 
-## 推荐文档
+- 活跃入口文档只记录当前可验证状态
+- 历史方案、已下线结构和旧版说明统一收敛到 `docs/archive/legacy/`
+- 如果代码、服务器行为与文档冲突：
+  - 播客链路以服务器为准
+  - 其余模块以当前 `main` 分支已验证实现为准
 
-1. `RUN_GUIDE.md`
-2. `API_CONTRACT.md`
-3. `BASELINE_CHECKLIST.md`
-4. `REFACTOR_PLAN_DAILY.md`
-5. `docs/archive/legacy/README.md`（历史文档索引）
+## 发布说明
 
-## 维护说明
-
-- `data/` 包含运行时数据，提交前确认是否应纳入版本控制。
-- `.env` 含敏感配置，不要上传到公开仓库。
-- 如果本地页面样式异常，优先检查 CDN 与代理连通性。
-
----
-
-本轮重构以“快速交付 + 稳定可用”为优先，不引入新的基础设施复杂度。
+- 当前发布版本：`0.2.0`
+- 当前版本聚焦：
+  - 收敛活跃文档入口，降低文档漂移
+  - 明确 AI 工具集的静态目录实现
+  - 固化播客链路与服务器优先规则
+  - 同步本地、GitHub 与服务器代码面状态
