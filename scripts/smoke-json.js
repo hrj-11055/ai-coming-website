@@ -104,7 +104,14 @@ async function run() {
         const invalidDate = await request('/api/archive/%2e%2e%2fsettings?type=daily', { headers: authHeader });
         assert(invalidDate.status === 400, `GET /api/archive/:date traversal expected 400 got ${invalidDate.status}`);
 
-        console.log('Smoke test passed: auth/news/settings/archive');
+        const podcastDate = new Date().toISOString().split('T')[0];
+        const podcast = await request(`/api/podcast/news/${podcastDate}`);
+        assert(podcast.status === 200, `GET /api/podcast/news/:date expected 200 got ${podcast.status}`);
+        assert(podcast.data && typeof podcast.data === 'object', 'GET /api/podcast/news/:date expected object');
+        assert(typeof podcast.data.status === 'string', 'GET /api/podcast/news/:date expected status field');
+        assert(typeof podcast.data.can_generate === 'boolean', 'GET /api/podcast/news/:date expected can_generate field');
+
+        console.log('Smoke test passed: auth/news/settings/archive/podcast');
     } finally {
         if (child) {
             child.kill('SIGTERM');

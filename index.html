@@ -18,6 +18,7 @@
 
     <!-- Tailwind CSS -->
     <script src="/vendor/tailwindcss-cdn.js"></script>
+    <script src="/vendor/alpinejs-cdn.min.js" defer></script>
 
     <!-- Font Awesome -->
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
@@ -41,6 +42,7 @@
             background: var(--ai-bg-page, #FFFFFF);
             color: var(--ai-text-primary, #1a1a1a);
             overflow-x: hidden;
+            padding-bottom: 52px;
         }
 
         /* 背景动画 */
@@ -101,7 +103,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            padding: 110px 0 28px;
+            padding: 80px 0 28px;
             margin-top: 0;
             min-height: auto;
             transition: all 0.5s ease;
@@ -117,6 +119,8 @@
 
         /* Logo样式 */
         .logo-container {
+            position: relative;
+            top: 20px;
             text-align: center;
             margin-bottom: 28px;
             animation: fadeInUp 1s ease-out both;
@@ -149,6 +153,8 @@
         }
 
         .prompt-icon-row {
+            position: relative;
+            left: -40px;
             display: flex;
             justify-content: flex-end;
             width: 100%;
@@ -658,30 +664,9 @@
             75% { transform: translateX(10px); }
         }
 
-        /* 导航 */
-        .nav-link {
-            color: var(--ai-text-primary, #1a1a1a);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: var(--ai-radius-md, 12px);
-            background: var(--ai-bg-soft, #f9fafb);
-            border: 1px solid var(--ai-border, #e5e7eb);
-        }
-
-        .nav-link:hover {
-            color: white;
-            background: var(--ai-brand-500, #667eea);
-            border-color: var(--ai-brand-500, #667eea);
-            transform: translateY(-2px);
-        }
-
-        .nav-link i {
-            font-size: 1rem;
+        .nav-shell {
+            position: relative;
+            z-index: 1000;
         }
 
         /* 页脚 */
@@ -694,6 +679,22 @@
             color: rgba(0,0,0,0.4);
             font-size: 0.85rem;
             font-weight: 300;
+        }
+
+        .footer.footer-minimal {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            background: transparent;
+            box-shadow: none;
+            margin-top: 0;
+            padding: 12px 24px 14px;
+            color: rgba(15, 23, 42, 0.35);
+            background-color: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(6px);
+            pointer-events: none;
         }
 
         .footer a {
@@ -748,13 +749,21 @@
             .result-content { font-size: 0.95rem; }
         }
 
-        /* 左右侧说明卡片 */
+        /* 右侧说明栏 */
+        .right-rail {
+            position: fixed;
+            top: 92px;
+            right: 24px;
+            z-index: 30;
+            width: 300px;
+            display: grid;
+            gap: 18px;
+        }
+
         .onboarding-panel,
         .cases-panel {
-            position: fixed;
-            top: 168px;
-            z-index: 30;
-            width: 228px;
+            position: relative;
+            width: 100%;
             padding: 18px 16px;
             border-radius: 20px;
             border: 1px solid rgba(191, 219, 254, 0.9);
@@ -765,13 +774,7 @@
             backdrop-filter: blur(8px);
         }
 
-        .onboarding-panel {
-            left: 24px;
-        }
-
         .cases-panel {
-            right: 24px;
-            width: 272px;
             margin: 0;
         }
 
@@ -905,31 +908,22 @@
         }
 
         @media (max-width: 1200px) {
-            .onboarding-panel,
-            .cases-panel {
-                width: 210px;
-                padding: 16px 14px;
+            .right-rail {
+                width: 340px;
             }
 
+            .onboarding-panel,
             .cases-panel {
-                width: 248px;
+                padding: 16px 14px;
             }
         }
 
         @media (max-width: 1080px) {
-            .onboarding-panel {
+            .right-rail {
                 position: relative;
                 top: auto;
-                left: auto;
                 width: min(860px, calc(100% - 32px));
-                margin: 88px auto 10px;
-            }
-
-            .cases-panel {
-                position: relative;
-                top: auto;
                 right: auto;
-                width: min(860px, calc(100% - 32px));
                 margin: 18px auto 0;
             }
 
@@ -939,16 +933,20 @@
         }
 
         @media (max-width: 768px) {
+            .right-rail {
+                width: auto;
+                margin: 18px 12px 0;
+                gap: 18px;
+            }
+
             .onboarding-panel,
             .cases-panel {
-                width: auto;
-                margin: 84px 12px 10px;
                 padding: 16px 14px;
                 border-radius: 16px;
             }
 
             .cases-panel {
-                margin-top: 18px;
+                margin-top: 0;
             }
 
             .onboarding-title {
@@ -988,7 +986,7 @@
         }
     </style>
 </head>
-<body>
+<body x-data="{ mobileMenuOpen: false }">
     <!-- 背景动画 -->
     <div class="bg-animation">
         <span></span>
@@ -1003,38 +1001,50 @@
         <span></span>
     </div>
 
-    <!-- 新手引导 -->
-    <aside class="onboarding-panel" aria-label="首页新手引导">
-        <p class="onboarding-kicker">新手引导</p>
-        <h2 class="onboarding-title">3 步快速使用</h2>
-        <ol class="onboarding-steps">
-            <li>
-                <span class="step-index">步骤 1</span>
-                <span class="step-copy">输入您的需求、目标或具体场景。</span>
-            </li>
-            <li>
-                <span class="step-index">步骤 2</span>
-                <span class="step-copy">AIcoming 会自动为您拆解需求并生成更专业的提示词。</span>
-            </li>
-            <li>
-                <span class="step-index">步骤 3</span>
-                <span class="step-copy">复制生成结果，粘贴到豆包 / 千问等模型中继续使用。</span>
-            </li>
-        </ol>
-        <p class="onboarding-note">先描述需求，再生成提示词，最后复制到目标模型中使用。</p>
-    </aside>
+    <div class="nav-shell">
+        <div class="nav-container" id="navContainer">
+            <nav class="bg-white shadow-lg" id="fullNav">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex-shrink-0">
+                            <a href="index.html">
+                                <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                            </a>
+                        </div>
 
-    <!-- 顶部导航 - 右侧 -->
-    <div style="position: absolute; top: 24px; right: 24px; z-index: 100; display: flex; align-items: center; gap: 12px;">
-        <a href="index.html" class="nav-link">
-            <i class="fas fa-home"></i> 首页
-        </a>
-        <a href="news.html" class="nav-link">
-            <i class="fas fa-newspaper"></i> AI资讯
-        </a>
-        <a href="tools.html" class="nav-link">
-            <i class="fas fa-layer-group"></i> AI工具集
-        </a>
+                        <div class="hidden lg:block flex-1 flex justify-center">
+                            <div class="flex items-center space-x-2 modern-nav ml-16">
+                                <a href="index.html" class="nav-link active">首页</a>
+                                <a href="news.html" class="nav-link">AI资讯</a>
+                                <a href="tools.html" class="nav-link">AI工具集</a>
+                            </div>
+                        </div>
+
+                        <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                            <div class="flex items-center space-x-1 modern-nav ml-8">
+                                <a href="index.html" class="nav-link active">首页</a>
+                                <a href="news.html" class="nav-link">AI资讯</a>
+                                <a href="tools.html" class="nav-link">AI工具集</a>
+                            </div>
+                        </div>
+
+                        <div class="md:hidden">
+                            <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600" aria-label="切换导航菜单" :aria-expanded="mobileMenuOpen.toString()">
+                                <i class="fas fa-bars text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                    <div class="px-4 pt-2 pb-3 space-y-1">
+                        <a href="index.html" class="mobile-nav-link active">首页</a>
+                        <a href="news.html" class="mobile-nav-link">AI资讯</a>
+                        <a href="tools.html" class="mobile-nav-link">AI工具集</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
     </div>
 
     <div class="main-column">
@@ -1078,36 +1088,58 @@
         </div>
     </div>
 
-    <!-- 示例案例 -->
-    <section class="cases-panel" aria-label="示例案例">
-        <div class="cases-header">
-            <p class="onboarding-kicker">使用案例</p>
-            <span class="cases-subtitle">先将下面的提示词发送到对话框，再将生成结果复制到豆包 / 千问中使用。</span>
-        </div>
-        <div class="case-list">
-            <article class="case-item">
-                <div class="case-heading">
-                    <p class="case-title">专家角色提示词</p>
-                </div>
-                <p class="case-demand">请帮我生成一份适用于互联网高级产品经理场景的专家角色提示词。</p>
-            </article>
-            <article class="case-item">
-                <div class="case-heading">
-                    <p class="case-title">行业研究提示词</p>
-                </div>
-                <p class="case-demand">请帮我研究中国新能源汽车产业链，重点分析整车厂的发展现状与竞争格局。</p>
-            </article>
-            <article class="case-item">
-                <div class="case-heading">
-                    <p class="case-title">职业成长提示词</p>
-                </div>
-                <p class="case-demand">我工作 2 年，目前是初级产品经理，希望成长为资深产品经理并进入大厂，请帮我制定成长路径。</p>
-            </article>
-        </div>
-    </section>
+    <div class="right-rail">
+        <!-- 新手引导 -->
+        <aside class="onboarding-panel" aria-label="首页新手引导">
+            <p class="onboarding-kicker">新手引导</p>
+            <ol class="onboarding-steps">
+                <li>
+                    <span class="step-index">步骤 1</span>
+                    <span class="step-copy">输入您的需求、目标或具体场景。</span>
+                </li>
+                <li>
+                    <span class="step-index">步骤 2</span>
+                    <span class="step-copy">AIcoming 会自动为您拆解需求并生成更专业的提示词。</span>
+                </li>
+                <li>
+                    <span class="step-index">步骤 3</span>
+                    <span class="step-copy">复制生成结果，粘贴到豆包 / 千问等模型中继续使用。</span>
+                </li>
+            </ol>
+            <p class="onboarding-note">先描述需求，再生成提示词，最后复制到目标模型中使用。</p>
+        </aside>
+
+        <!-- 示例案例 -->
+        <section class="cases-panel" aria-label="示例案例">
+            <div class="cases-header">
+                <p class="onboarding-kicker">使用案例</p>
+                <span class="cases-subtitle">先将下面的提示词发送到对话框，再将生成结果复制到豆包 / 千问中使用。</span>
+            </div>
+            <div class="case-list">
+                <article class="case-item">
+                    <div class="case-heading">
+                        <p class="case-title">专家角色提示词</p>
+                    </div>
+                    <p class="case-demand">请帮我生成一份适用于互联网高级产品经理场景的专家角色提示词。</p>
+                </article>
+                <article class="case-item">
+                    <div class="case-heading">
+                        <p class="case-title">行业研究提示词</p>
+                    </div>
+                    <p class="case-demand">请帮我研究中国新能源汽车产业链，重点分析整车厂的发展现状与竞争格局。</p>
+                </article>
+                <article class="case-item">
+                    <div class="case-heading">
+                        <p class="case-title">职业成长提示词</p>
+                    </div>
+                    <p class="case-demand">我工作 2 年，目前是初级产品经理，希望成长为资深产品经理并进入大厂，请帮我制定成长路径。</p>
+                </article>
+            </div>
+        </section>
+    </div>
 
     <!-- 页脚 -->
-    <div class="footer">
+    <div class="footer footer-minimal">
         <p>
             ©深圳元说科技有限公司 版权所有 粤ICP备2026015462号-1
         </p>

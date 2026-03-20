@@ -7,6 +7,28 @@ function isIsoDate(value) {
 function createPodcastRouter({ podcastService }) {
     const router = express.Router();
 
+    router.get('/podcast/minimax/tasks/:taskId', async (req, res) => {
+        const { taskId } = req.params;
+        const normalizedTaskId = String(taskId || '').trim();
+
+        if (!normalizedTaskId) {
+            return res.status(400).json({ error: 'invalid_task_id', message: 'task_id 不能为空' });
+        }
+
+        try {
+            const status = await podcastService.queryMinimaxTaskStatus(normalizedTaskId);
+            return res.json(status);
+        } catch (error) {
+            console.error('查询 MiniMax 语音任务失败:', error);
+            const message = error.message || '查询 MiniMax 语音任务失败';
+            const statusCode = /尚未配置完成|缺少 task_id/.test(message) ? 400 : 500;
+            return res.status(statusCode).json({
+                error: 'podcast_minimax_task_query_failed',
+                message
+            });
+        }
+    });
+
     router.get('/podcast/news/:date', async (req, res) => {
         const { date } = req.params;
 
