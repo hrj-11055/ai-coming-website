@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP 详情 - Agent Skills - AIcoming</title>
+    <meta id="mcpDetailDescription" name="description" content="MCP 详情页：查看 MCP 的适用场景、配置方式与相关推荐。">
+    <meta name="keywords" content="MCP详情,MCP配置,Model Context Protocol,AIcoming">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
+
+    <script src="/vendor/tailwindcss-cdn.js"></script>
+    <script src="/vendor/alpinejs-cdn.min.js" defer></script>
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --detail-nav-height: 64px;
+        }
+
+        body {
+            margin: 0;
+            background:
+                radial-gradient(circle at top left, rgba(59, 130, 246, 0.09) 0%, transparent 28%),
+                radial-gradient(circle at 100% 0%, rgba(14, 165, 233, 0.08) 0%, transparent 24%),
+                var(--ai-bg-muted, #f3f4f6);
+            color: var(--ai-text-primary, #111827);
+            font-family: var(--ai-font-ui, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif);
+        }
+
+        .mcp-detail-page {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: calc(var(--detail-nav-height) + 18px) 16px 44px;
+        }
+
+        .detail-hero-card,
+        .detail-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--ai-border, #e5e7eb);
+            border-radius: 24px;
+            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
+        }
+
+        .detail-hero-card {
+            padding: 26px;
+            margin-bottom: 16px;
+        }
+
+        .detail-hero-card--empty {
+            text-align: left;
+        }
+
+        .detail-breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--ai-text-muted, #6b7280);
+        }
+
+        .detail-breadcrumb a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .detail-breadcrumb a:hover {
+            color: var(--ai-brand-700, #4c63cf);
+        }
+
+        .detail-hero-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-top: 18px;
+        }
+
+        .detail-module-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #0369a1;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .detail-hero-head h1 {
+            margin: 12px 0 10px;
+            font-size: clamp(32px, 5vw, 48px);
+            line-height: 1.04;
+            letter-spacing: -0.04em;
+        }
+
+        .detail-hero-head p {
+            margin: 0;
+            max-width: 700px;
+            color: var(--ai-text-secondary, #374151);
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .detail-panel {
+            padding: 22px;
+        }
+
+        .detail-panel h2 {
+            margin: 0 0 12px;
+            font-size: 22px;
+            letter-spacing: -0.02em;
+        }
+
+        .detail-panel p,
+        .detail-panel li {
+            color: var(--ai-text-secondary, #374151);
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .detail-code-block {
+            margin: 14px 0 0;
+            padding: 16px;
+            border-radius: 16px;
+            background: #0f172a;
+            color: #f8fafc;
+            overflow-x: auto;
+            font-family: var(--ai-font-mono, "JetBrains Mono", monospace);
+            font-size: 13px;
+            line-height: 1.7;
+            flex: 1;
+        }
+
+        .detail-code-block code {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .detail-code-wrap {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .detail-copy-btn {
+            margin-top: 14px;
+            border: 1px solid #dbe3f0;
+            background: #ffffff;
+            color: #1f2937;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 13px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+            flex-shrink: 0;
+        }
+
+        .detail-copy-btn:hover {
+            transform: translateY(-1px);
+            border-color: #bae6fd;
+            color: #0369a1;
+        }
+
+        .detail-copy-btn.is-copied {
+            border-color: #bbf7d0;
+            color: #047857;
+            background: #f0fdf4;
+        }
+
+        .detail-panel ul,
+        .detail-panel ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .detail-panel-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .detail-panel-head p {
+            margin: 8px 0 0;
+        }
+
+        .detail-back-link {
+            color: #0369a1;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .related-skill-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .related-skill-card {
+            display: grid;
+            gap: 8px;
+            padding: 16px;
+            text-decoration: none;
+            color: #111827;
+            border-radius: 18px;
+            border: 1px solid #e8edf3;
+            background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+        }
+
+        .related-skill-card span {
+            color: var(--ai-text-secondary, #374151);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .detail-empty {
+            margin: 0;
+        }
+
+        @media (max-width: 900px) {
+            .detail-grid,
+            .related-skill-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-hero-head,
+            .detail-panel-head,
+            .detail-code-wrap {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body x-data="{ mobileMenuOpen: false }">
+    <div class="nav-container" id="navContainer">
+        <nav class="bg-white shadow-lg" id="fullNav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex-shrink-0">
+                        <a href="index.html">
+                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                        </a>
+                    </div>
+
+                    <div class="hidden lg:block flex-1 flex justify-center">
+                        <div class="flex items-center space-x-2 modern-nav ml-16">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link">AI工具集</a>
+                            <a href="skills.html" class="nav-link active">Agent Skills</a>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                        <div class="flex items-center space-x-1 modern-nav ml-8">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link">AI工具集</a>
+                            <a href="skills.html" class="nav-link active">Agent Skills</a>
+                        </div>
+                    </div>
+
+                    <div class="md:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600" aria-label="切换导航菜单" :aria-expanded="mobileMenuOpen.toString()">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="mobile-nav-link">首页</a>
+                    <a href="news.html" class="mobile-nav-link">AI资讯</a>
+                    <a href="tools.html" class="mobile-nav-link">AI工具集</a>
+                    <a href="skills.html" class="mobile-nav-link active">Agent Skills</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <main class="mcp-detail-page" id="mcpDetailPage">
+        <div id="mcpDetailContent">
+            <section class="detail-hero-card">
+                <span class="detail-module-chip">加载中</span>
+                <h1 id="mcpDetailTitle" style="margin: 14px 0 0;">正在准备 MCP 详情页...</h1>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="frontend/mcp-detail-page.js"></script>
+</body>
+</html>
