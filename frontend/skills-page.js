@@ -1,4 +1,5 @@
 import { SKILL_MODULES } from './modules/skills-catalog.js';
+import { trackPageView } from './modules/visit-tracker.js';
 
 function createNavItem(module, index) {
     const itemLabel = module.itemLabel || 'Skill';
@@ -38,9 +39,7 @@ function createSection(module) {
                 <div>
                     <div class="skill-section-kicker">${module.title}</div>
                     <h2>${module.title}</h2>
-                    <p>${module.description}</p>
                 </div>
-                <div class="skill-section-meta">${module.skills.length} / 统一格式</div>
             </div>
             <div class="skill-card-grid">
                 ${module.skills.map(createSkillCard).join('')}
@@ -112,6 +111,7 @@ function renderStats() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    trackPageView();
     renderStats();
     renderNav();
     renderSections();
