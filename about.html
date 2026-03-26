@@ -1,514 +1,548 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>公司介绍 - AIcoming</title>
-    <meta name="description" content="AIcoming 公司介绍页：了解我们的定位、核心业务与合作方式，并通过邮箱或电话快速联系。">
-    <meta name="keywords" content="公司介绍,AIcoming,AI服务,企业合作,人工智能解决方案">
-
+    <title>关于我们 - 深圳元说科技 | AI + 业务增长</title>
+    <meta name="description" content="深圳元说科技是一家聚焦 AI+业务增长 的咨询与科技公司，以咨询、科技与培训三位一体的方法论，帮助企业把 AI 真正接入经营场景与增长路径。">
+    <meta name="keywords" content="元说科技,关于我们,AI业务增长,AI咨询,企业培训,智能化升级,深圳">
     <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
 
     <script src="/vendor/tailwindcss-cdn.js"></script>
+    <script src="/vendor/alpinejs-cdn.min.js" defer></script>
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,900;1,8..60,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --about-nav-height: 64px;
+            --bg-warm: #ece8e1;
+            --text-primary: #1a1a1a;
+            --text-body: #2e2e2e;
+            --text-muted: #6b6560;
+            --rule-color: #c8c3bc;
+            --font-serif: 'Source Serif 4', 'Noto Serif SC', 'Georgia', serif;
+            --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
+
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            margin: 0;
-            font-family: var(--ai-font-ui, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif);
-            background: radial-gradient(circle at top right, rgba(118, 75, 162, 0.08) 0%, transparent 45%),
-                        radial-gradient(circle at 5% 20%, rgba(102, 126, 234, 0.12) 0%, transparent 35%),
-                        var(--ai-bg-muted, #f3f4f6);
-            color: var(--ai-text-primary, #111827);
+            background-color: var(--bg-warm);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .nav-shell {
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid var(--ai-border, #e5e7eb);
-            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
-        }
-
-        .nav-inner {
-            max-width: 1120px;
-            height: var(--about-nav-height);
-            margin: 0 auto;
-            padding: 0 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .brand img {
-            height: 40px;
-            width: auto;
-            display: block;
-        }
-
-        .nav-links {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-chip {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--ai-text-secondary, #374151);
-            text-decoration: none;
-            border: 1px solid transparent;
-            border-radius: var(--ai-radius-pill, 999px);
-            padding: 8px 14px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-chip:hover {
-            background: #eef2ff;
-            color: var(--ai-brand-700, #4c63cf);
-            border-color: #dbeafe;
-        }
-
-        .nav-chip.active {
-            background: var(--ai-gradient-brand, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
-            color: #ffffff;
-            box-shadow: var(--ai-shadow-brand, 0 8px 24px rgba(102, 126, 234, 0.22));
-        }
-
-        .about-wrap {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 24px 16px 96px;
-            display: grid;
-            gap: 18px;
-        }
-
-        .panel {
-            background: var(--ai-bg-surface, #ffffff);
-            border: 1px solid var(--ai-border, #e5e7eb);
-            border-radius: var(--ai-radius-lg, 16px);
-            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
-            overflow: hidden;
-            animation: fadeInUp 0.45s ease both;
-        }
-
-        .hero {
-            position: relative;
-            padding: 36px 28px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.14) 0%, rgba(118, 75, 162, 0.12) 45%, rgba(255, 255, 255, 1) 100%);
-        }
-
-        .hero h1 {
-            margin: 0;
-            font-size: clamp(30px, 5vw, 42px);
-            line-height: 1.15;
+        /* ===== TYPOGRAPHY ===== */
+        .heading-hero {
+            font-family: var(--font-serif);
+            font-weight: 900;
+            font-size: clamp(40px, 6vw, 76px);
+            line-height: 1.08;
             letter-spacing: -0.02em;
-            color: #111827;
+            color: var(--text-primary);
         }
 
-        .hero p {
-            margin: 14px 0 0;
-            max-width: 720px;
-            font-size: clamp(16px, 2vw, 19px);
+        .heading-section {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: clamp(24px, 3vw, 34px);
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+
+        .heading-card {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: clamp(20px, 2.2vw, 26px);
+            line-height: 1.25;
+            color: var(--text-primary);
+        }
+
+        .body-large {
+            font-family: var(--font-serif);
+            font-size: clamp(17px, 1.8vw, 22px);
+            line-height: 1.6;
+            color: var(--text-body);
+        }
+
+        .body-regular {
+            font-family: var(--font-serif);
+            font-size: clamp(15px, 1.4vw, 18px);
             line-height: 1.65;
-            color: var(--ai-text-secondary, #374151);
+            color: var(--text-body);
         }
 
-        .todo-note {
-            margin-top: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            background: #fffbeb;
-            border: 1px solid #fde68a;
-            border-radius: var(--ai-radius-pill, 999px);
-            color: #92400e;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.01em;
+        .label-section {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
         }
 
-        .cta-row {
-            margin-top: 22px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+        .number-index {
+            font-family: var(--font-serif);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-muted);
         }
 
-        .cta-btn {
+        /* ===== LAYOUT ===== */
+        .container-main {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding-left: clamp(24px, 5vw, 80px);
+            padding-right: clamp(24px, 5vw, 80px);
+        }
+
+        .rule {
             border: none;
-            border-radius: var(--ai-radius-md, 12px);
-            padding: 11px 16px;
-            font-size: 14px;
-            font-weight: 700;
-            text-decoration: none;
+            border-top: 1px solid var(--rule-color);
+            margin: 0;
+        }
+
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: clamp(32px, 4vw, 80px);
+            align-items: start;
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(32px, 4vw, 64px);
+        }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.65s ease, transform 0.65s ease;
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== BUTTON ===== */
+        .btn-primary {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            padding: 14px 32px;
+            background: var(--text-primary);
+            color: var(--bg-warm);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
         }
 
-        .cta-btn.primary {
-            color: #fff;
-            background: var(--ai-gradient-brand, linear-gradient(135deg, #667eea 0%, #764ba2 100%));
-            box-shadow: var(--ai-shadow-brand, 0 8px 24px rgba(102, 126, 234, 0.22));
-        }
-
-        .cta-btn.secondary {
-            color: #1f2937;
-            background: #ffffff;
-            border: 1px solid var(--ai-border, #e5e7eb);
-            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
-        }
-
-        .cta-btn:hover {
+        .btn-primary:hover {
+            background: #333;
             transform: translateY(-1px);
         }
 
-        .content {
-            padding: 22px 20px;
-        }
-
-        .content h2 {
-            margin: 0 0 10px;
-            font-size: clamp(22px, 3vw, 28px);
-            letter-spacing: -0.01em;
-            color: #111827;
-        }
-
-        .content p {
-            margin: 0;
-            color: var(--ai-text-secondary, #374151);
-            line-height: 1.78;
-            font-size: 16px;
-        }
-
-        .content p + p {
-            margin-top: 12px;
-        }
-
-        .biz-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .biz-card {
-            border: 1px solid var(--ai-border, #e5e7eb);
-            border-radius: var(--ai-radius-md, 12px);
-            padding: 14px;
-            background: #fff;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .biz-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--ai-shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.08));
-        }
-
-        .biz-card i {
-            color: var(--ai-brand-700, #4c63cf);
-            font-size: 18px;
-        }
-
-        .biz-card h3 {
-            margin: 8px 0 6px;
-            font-size: 18px;
-            color: #111827;
-        }
-
-        .biz-card p {
-            margin: 0;
-            font-size: 14px;
-            line-height: 1.65;
-            color: var(--ai-text-secondary, #374151);
-        }
-
-        .flow {
-            margin-top: 12px;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 12px;
-        }
-
-        .flow-step {
-            border-radius: var(--ai-radius-md, 12px);
-            border: 1px solid #dbeafe;
-            background: #f8fbff;
-            padding: 14px;
-            position: relative;
-        }
-
-        .flow-step .num {
-            display: inline-flex;
+        /* ===== TEAM ICON ===== */
+        .team-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: 700;
-            color: #ffffff;
-            background: var(--ai-brand-700, #4c63cf);
+            font-size: 22px;
+            margin-bottom: 20px;
         }
 
-        .flow-step h3 {
-            margin: 10px 0 6px;
-            font-size: 17px;
-            color: #111827;
-        }
-
-        .flow-step p {
-            margin: 0;
-            font-size: 14px;
-            color: var(--ai-text-secondary, #374151);
-            line-height: 1.65;
-        }
-
-        .contact-grid {
-            margin-top: 12px;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .contact-item {
-            border: 1px solid var(--ai-border, #e5e7eb);
-            border-radius: var(--ai-radius-md, 12px);
-            padding: 14px;
-            background: #ffffff;
-        }
-
-        .contact-item .label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--ai-text-muted, #6b7280);
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .contact-item .value {
-            margin-top: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            color: #111827;
-            line-height: 1.5;
-            word-break: break-all;
-        }
-
-        .contact-item .value a {
-            color: var(--ai-brand-700, #4c63cf);
-            text-decoration: none;
-        }
-
-        .contact-item .value a:hover {
-            text-decoration: underline;
-        }
-
-        .mobile-cta {
-            display: none;
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 45;
-            background: rgba(255, 255, 255, 0.97);
-            border-top: 1px solid var(--ai-border, #e5e7eb);
-            padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-            gap: 8px;
-        }
-
-        .mobile-cta .cta-btn {
-            flex: 1;
-            justify-content: center;
-            padding: 12px 10px;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 960px) {
-            .biz-grid,
-            .flow,
-            .contact-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 720px) {
-            .nav-inner {
-                height: 60px;
-                padding: 0 12px;
-            }
-
-            .brand img {
-                height: 34px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero {
-                padding: 26px 18px;
-            }
-
-            .content {
-                padding: 18px 14px;
-            }
-
-            .biz-grid,
-            .flow,
-            .contact-grid {
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .split-layout {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
-            .mobile-cta {
-                display: flex;
+            .grid-2col {
+                grid-template-columns: 1fr;
+                gap: 40px;
             }
         }
     </style>
 </head>
-<body>
-    <header class="nav-shell">
-        <div class="nav-inner">
-            <a class="brand" href="index.html" aria-label="返回首页">
-                <img src="/pic/AIcoming_zixunye.png" alt="AIcoming">
-            </a>
-            <nav class="nav-links" aria-label="主导航">
-                <a class="nav-chip" href="index.html">首页</a>
-                <a class="nav-chip" href="news.html">AI资讯</a>
-                <a class="nav-chip" href="tools.html">AI工具集</a>
-                <a class="nav-chip" href="skills.html">Agent Skills</a>
-                <a class="nav-chip active" href="about.html">公司介绍</a>
-            </nav>
-        </div>
-    </header>
 
-    <main class="about-wrap">
-        <section class="panel hero" aria-labelledby="hero-title">
-            <h1 id="hero-title">让一部分企业先把 AI 用起来</h1>
-            <p>我们专注于将 AI 能力转化为可落地的业务方案，帮助团队更快完成从信息获取、内容生产到工具选型的关键流程，缩短“看见机会”到“形成产出”的路径。</p>
-            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式公司定位与服务对象描述</div>
-            <div class="cta-row">
-                <a class="cta-btn primary" href="mailto:contact@aicoming.com" aria-label="发送邮件咨询">
-                    <i class="fa-regular fa-envelope"></i>
-                    邮件咨询
-                </a>
-                <a class="cta-btn secondary" href="tel:+86-000-0000-0000" aria-label="拨打电话咨询">
-                    <i class="fa-solid fa-phone"></i>
-                    电话咨询
-                </a>
-            </div>
-        </section>
+<body x-data="{ mobileMenuOpen: false, contactModalOpen: false }" :class="contactModalOpen ? 'overflow-hidden' : ''">
 
-        <section class="panel content" aria-labelledby="intro-title">
-            <h2 id="intro-title">公司简介</h2>
-            <p>AIcoming 致力于为组织提供面向业务结果的 AI 应用支持。我们关注真实工作场景，强调工具能力、流程设计与团队协作的协同推进，确保技术投入可以稳定转化为可衡量的效率收益。</p>
-            <p>目前我们围绕 AI 资讯追踪、工具目录建设与应用咨询，持续打磨一套“可理解、可执行、可复用”的实践方法，帮助团队降低试错成本，加速形成内部 AI 能力。</p>
-            <p>我们坚持长期主义和交付导向，以专业、透明的方式与客户协作，保障每一步推进都清晰可追踪。</p>
-            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式公司背景、成立时间与团队信息</div>
-        </section>
+    <!-- ===== NAVIGATION (unified with site) ===== -->
+    <div class="nav-container" id="navContainer">
+        <nav class="bg-white shadow-lg" id="fullNav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex-shrink-0">
+                        <a href="index.html">
+                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                        </a>
+                    </div>
 
-        <section class="panel content" aria-labelledby="business-title">
-            <h2 id="business-title">核心业务</h2>
-            <div class="biz-grid">
-                <article class="biz-card">
-                    <i class="fa-regular fa-newspaper"></i>
-                    <h3>资讯与洞察</h3>
-                    <p>围绕重点 AI 方向提供结构化信息整理与趋势解读，帮助管理者更快做出判断。</p>
-                </article>
-                <article class="biz-card">
-                    <i class="fa-solid fa-toolbox"></i>
-                    <h3>工具与方案</h3>
-                    <p>基于不同业务场景进行工具筛选、组合与落地建议，减少重复选型和接入成本。</p>
-                </article>
-                <article class="biz-card">
-                    <i class="fa-solid fa-users-gear"></i>
-                    <h3>陪跑与支持</h3>
-                    <p>提供阶段性实践支持，包括流程优化、使用规范与团队协作机制设计。</p>
-                </article>
-            </div>
-            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式业务模块与真实服务边界</div>
-        </section>
+                    <div class="hidden lg:block flex-1 flex justify-center">
+                        <div class="flex items-center space-x-2 modern-nav ml-16">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link">AI工具集</a>
+                            <a href="skills.html" class="nav-link">AI能力库</a>
+                            <a href="about.html" class="nav-link active">关于我们</a>
+                        </div>
+                    </div>
 
-        <section class="panel content" aria-labelledby="flow-title">
-            <h2 id="flow-title">合作流程</h2>
-            <div class="flow">
-                <article class="flow-step">
-                    <span class="num">01</span>
-                    <h3>沟通需求</h3>
-                    <p>确认业务目标、现状问题与优先级，形成合作范围初稿。</p>
-                </article>
-                <article class="flow-step">
-                    <span class="num">02</span>
-                    <h3>方案确认</h3>
-                    <p>结合场景输出实施方案，明确周期、资源投入与交付标准。</p>
-                </article>
-                <article class="flow-step">
-                    <span class="num">03</span>
-                    <h3>交付支持</h3>
-                    <p>按阶段推进落地，并提供复盘与迭代建议，保障可持续使用。</p>
-                </article>
-            </div>
-            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式合作机制与 SLA 说明</div>
-        </section>
+                    <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                        <div class="flex items-center space-x-1 modern-nav ml-8">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link">AI工具集</a>
+                            <a href="skills.html" class="nav-link">AI能力库</a>
+                            <a href="about.html" class="nav-link active">关于我们</a>
+                        </div>
+                    </div>
 
-        <section class="panel content" aria-labelledby="contact-title">
-            <h2 id="contact-title">联系我们</h2>
-            <p>欢迎通过以下方式联系，我们会在工作时间内尽快回复。若你已具备明确需求，也可在邮件中附上场景与目标，便于我们更高效对接。</p>
-            <div class="contact-grid">
-                <div class="contact-item">
-                    <div class="label">邮箱</div>
-                    <div class="value"><a href="mailto:contact@aicoming.com">contact@aicoming.com</a></div>
-                </div>
-                <div class="contact-item">
-                    <div class="label">电话</div>
-                    <div class="value"><a href="tel:+86-000-0000-0000">+86 000-0000-0000</a></div>
-                </div>
-                <div class="contact-item">
-                    <div class="label">办公城市</div>
-                    <div class="value">中国深圳（占位）</div>
+                    <div class="md:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="todo-note"><i class="fa-solid fa-pen-to-square"></i> TODO: 替换为正式联系信息、办公地址与响应承诺</div>
-        </section>
-    </main>
 
-    <div class="mobile-cta" aria-label="移动端快捷联系">
-        <a class="cta-btn primary" href="mailto:contact@aicoming.com">
-            <i class="fa-regular fa-envelope"></i>
-            邮件咨询
-        </a>
-        <a class="cta-btn secondary" href="tel:+86-000-0000-0000">
-            <i class="fa-solid fa-phone"></i>
-            电话咨询
-        </a>
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="mobile-nav-link">首页</a>
+                    <a href="news.html" class="mobile-nav-link">AI资讯</a>
+                    <a href="tools.html" class="mobile-nav-link">AI工具集</a>
+                    <a href="skills.html" class="mobile-nav-link">AI能力库</a>
+                    <a href="about.html" class="mobile-nav-link active">关于我们</a>
+                </div>
+            </div>
+        </nav>
     </div>
+
+
+    <!-- ===== HERO ===== -->
+    <section style="padding: clamp(100px, 14vh, 180px) 0 clamp(80px, 10vh, 140px);">
+        <div class="container-main">
+            <p class="label-section reveal" style="margin-bottom: 28px;">关于元说科技</p>
+            <h1 class="heading-hero reveal" style="max-width: 900px;">
+                把 AI 能力，<br>转化为可验证的<br>业务增长
+            </h1>
+            <p class="body-large reveal" style="max-width: 680px; margin-top: clamp(28px, 4vh, 48px);">
+                我们聚焦"AI + 业务增长"，以咨询、科技与培训三位一体的方法论，帮助企业把 AI 真正接入经营场景、组织流程与增长路径。
+            </p>
+            <div class="reveal" style="margin-top: clamp(36px, 5vh, 56px);">
+                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" class="btn-primary">联系我们</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== OUR PURPOSE ===== -->
+    <section style="padding: clamp(60px, 8vh, 100px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(48px, 6vh, 80px);">
+                <div>
+                    <h2 class="heading-section">我们的使命</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        深圳元说科技面向企业经营场景，而非停留在技术概念层面。我们从战略判断、业务诊断、场景设计到工具落地与组织训练，帮助客户把 AI 真正接入增长链路。
+                    </p>
+                    <p class="body-large" style="margin-top: 28px;">
+                        我们关注的不是"是否用上了 AI"，而是它是否缩短了决策周期、提升了人效、优化了流程，并形成可持续的经营改进。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== CORE BELIEFS (2×2 grid) ===== -->
+    <section style="padding: clamp(40px, 6vh, 80px) 0 clamp(60px, 8vh, 100px);">
+        <div class="container-main">
+            <div class="grid-2col reveal">
+                <!-- Belief 1 -->
+                <div>
+                    <h3 class="heading-card">进入经营链路</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        不停留在概念层面，直接接入真实业务流程。我们从一线识别痛点、搭建 AI 应用路径，让技术与业务目标深度耦合。
+                    </p>
+                </div>
+                <!-- Belief 2 -->
+                <div>
+                    <h3 class="heading-card">形成可验证改进</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        关注效率提升与增长数据，而非功能堆叠。每一次交付都以可量化的业务结果为衡量标准，确保 AI 投入产出的透明性。
+                    </p>
+                </div>
+                <!-- Belief 3 -->
+                <div>
+                    <h3 class="heading-card">建立长期机制</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        可复制、可管理、可持续迭代的 AI 运营体系。我们帮助企业构建自主演进的 AI 能力，而非依赖一次性项目交付。
+                    </p>
+                </div>
+                <!-- Belief 4 -->
+                <div>
+                    <h3 class="heading-card">咨询 + 科技 + 培训</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        三位一体的方法论。既深入一线识别痛点，也通过产品化工具与实战训练推动团队上手，完成从数字化协同到智能化运营的升级。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== THE TEAM ===== -->
+    <section style="padding: clamp(60px, 8vh, 100px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(48px, 6vh, 80px);">
+                <div>
+                    <h2 class="heading-section">团队</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        我们是一支由战略顾问、AI 工程师、产品经理与行业专家组成的复合型团队，硕博学历占比超过 65%，成员来自头部咨询公司、科技企业与学术机构。
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-2col reveal" style="margin-top: clamp(56px, 7vh, 96px);">
+                <!-- Team: 咨询 -->
+                <div>
+                    <div class="team-icon-wrap" style="background: #e8ddd0; color: #8b6f47;">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3 class="heading-card">战略咨询</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        从业务战略与组织流程出发，定义 AI 应用的优先级与落地路径。我们不做技术方案堆砌，而是找到 AI 真正能解决的业务问题。
+                    </p>
+                </div>
+                <!-- Team: 科技 -->
+                <div>
+                    <div class="team-icon-wrap" style="background: #d5dce8; color: #4a5d80;">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="heading-card">技术研发</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        围绕大模型应用、Agent 架构与企业级 AI 工具链，构建可落地的技术方案。团队持续跟踪前沿研究，确保技术选型的领先性与实用性。
+                    </p>
+                </div>
+                <!-- Team: 培训 -->
+                <div>
+                    <div class="team-icon-wrap" style="background: #dce8d5; color: #5a7a4a;">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="heading-card">组织培训</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        面向管理层与一线团队的 AI 认知升级与实战训练。我们不只讲概念，更帮助团队在真实工作场景中学会使用 AI 工具、形成 AI 工作习惯。
+                    </p>
+                </div>
+                <!-- Team: 运营 -->
+                <div>
+                    <div class="team-icon-wrap" style="background: #e5d5e0; color: #7a4a6a;">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="heading-card">产品运营</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        从项目交付到持续运营，确保 AI 方案在企业内部真正跑起来。我们关注落地效果的持续优化，而非一次性的技术部署。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== VALUES ===== -->
+    <section style="padding: clamp(60px, 8vh, 100px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(48px, 6vh, 80px);">
+                <div>
+                    <h2 class="heading-section">我们相信什么</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        我们每天都在做影响客户业务走向的决策。以下是指导我们行动的原则——它决定了我们如何选择项目、如何交付、如何与客户建立长期信任。
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-2col reveal" style="margin-top: clamp(56px, 7vh, 96px);">
+                <!-- Value 01 -->
+                <div style="padding-bottom: clamp(32px, 4vh, 56px);">
+                    <span class="number-index">01</span>
+                    <h3 class="heading-card" style="margin-top: 8px;">以业务结果说话。</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        不看 AI 用了多少工具，只看它是否让业务变好——决策更快、效率更高、增长更可持续。每一个方案的价值都必须可衡量、可追踪。
+                    </p>
+                </div>
+                <!-- Value 02 -->
+                <div style="padding-bottom: clamp(32px, 4vh, 56px);">
+                    <span class="number-index">02</span>
+                    <h3 class="heading-card" style="margin-top: 8px;">做简单有效的事。</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        我们信奉实用主义。不追求技术的复杂度，追求方案的有效性。如果一个简单的规则引擎就能解决问题，我们不会去搭建一个大模型系统。
+                    </p>
+                </div>
+                <!-- Value 03 -->
+                <div style="padding-bottom: clamp(32px, 4vh, 56px);">
+                    <span class="number-index">03</span>
+                    <h3 class="heading-card" style="margin-top: 8px;">与客户共建能力。</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        我们的目标不是让客户依赖我们，而是帮助他们建立自主的 AI 运营能力。每一次培训和交付都在向"客户可以自己跑"这个终局靠近。
+                    </p>
+                </div>
+                <!-- Value 04 -->
+                <div style="padding-bottom: clamp(32px, 4vh, 56px);">
+                    <span class="number-index">04</span>
+                    <h3 class="heading-card" style="margin-top: 8px;">保持诚实和克制。</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        AI 不是万能的。我们会告诉客户什么场景适合 AI、什么不适合，会拒绝不合理的项目需求。诚实是长期关系的基础。
+                    </p>
+                </div>
+                <!-- Value 05 -->
+                <div style="padding-bottom: clamp(32px, 4vh, 56px);">
+                    <span class="number-index">05</span>
+                    <h3 class="heading-card" style="margin-top: 8px;">使命优先于扩张。</h3>
+                    <p class="body-regular" style="margin-top: 14px;">
+                        我们的使命是帮助企业真正用好 AI，而不是追求规模和估值。每一个决定都围绕"这是否真的为客户创造了价值"来做判断。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== CLIENTS ===== -->
+    <section style="padding: clamp(60px, 8vh, 100px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(48px, 6vh, 80px);">
+                <div>
+                    <h2 class="heading-section">客户实践</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        我们已为 30+ 家头部企业与政府机构提供 AI 增长咨询与落地服务，覆盖金融、零售、制造、政务等多个领域。从战略规划到工具部署、从团队培训到运营陪跑，我们用实际交付验证方法论的有效性。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== CTA / FOOTER ===== -->
+    <section style="background: var(--text-primary); padding: clamp(80px, 12vh, 160px) 0;">
+        <div class="container-main" style="text-align: center;">
+            <h2 class="heading-hero reveal" style="color: var(--bg-warm); font-size: clamp(32px, 5vw, 60px);">
+                让我们一起<br>重新定义增长
+            </h2>
+            <p class="body-large reveal" style="color: #a09a93; max-width: 520px; margin: clamp(20px, 3vh, 36px) auto 0;">
+                如果您正在思考如何让 AI 真正服务于业务增长，欢迎与我们交流。
+            </p>
+            <div class="reveal" style="margin-top: clamp(32px, 4vh, 48px);">
+                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 14px 32px;
+                    background: var(--bg-warm);
+                    color: var(--text-primary);
+                    font-family: var(--font-sans);
+                    font-size: 15px;
+                    font-weight: 600;
+                    border: none;
+                    border-radius: 999px;
+                    text-decoration: none;
+                    transition: all 0.2s ease;
+                ">联系我们</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== CONTACT MODAL ===== -->
+    <div x-show="contactModalOpen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm transition-opacity" x-transition.opacity style="display: none;">
+        <div @click.away="contactModalOpen = false" class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform transition-transform" x-transition>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="heading-card" style="font-size: 22px;">联系我们</h3>
+                <button @click="contactModalOpen = false" class="text-gray-400 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-5">
+                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                    <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1" style="font-family: var(--font-sans);">联系人</p>
+                        <p class="font-semibold text-lg text-gray-900" style="font-family: var(--font-sans);">黄总</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                    <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1" style="font-family: var(--font-sans);">手机号码</p>
+                        <p class="font-semibold text-lg text-gray-900 select-all" style="font-family: var(--font-sans);">15800565566</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8">
+                <a href="tel:15800565566" class="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-black text-white hover:bg-gray-800 transition-colors" style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; text-decoration: none;">
+                    <i class="fas fa-phone"></i> 拨打电话
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCROLL REVEAL SCRIPT ===== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, i) => {
+                    if (entry.isIntersecting) {
+                        // stagger siblings slightly
+                        setTimeout(() => {
+                            entry.target.classList.add('is-visible');
+                        }, i * 60);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+
 </body>
 </html>
