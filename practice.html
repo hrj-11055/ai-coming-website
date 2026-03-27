@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 产品与企业转型咨询 - 深圳元说科技</title>
+    <meta name="description" content="元说科技一边打造真实可用的 AI 产品，一边进入传统企业转型现场，围绕数字化与 AI 化路径设计、场景梳理与组织承接开展咨询与共创。">
+    <meta name="keywords" content="元说科技,AI产品,AI转型咨询,企业转型,数字化转型,AI化转型,业务增长">
+    <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
+
+    <script src="/vendor/tailwindcss-cdn.js"></script>
+    <script src="/vendor/alpinejs-cdn.min.js" defer></script>
+    <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,900;1,8..60,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-warm: #ede8df;
+            --bg-panel: #f7f3ec;
+            --bg-dark: #151515;
+            --text-primary: #161616;
+            --text-body: #2f2e2a;
+            --text-muted: #67615a;
+            --rule-color: #cbc2b6;
+            --accent-copper: #946a3a;
+            --accent-forest: #435d52;
+            --font-serif: 'Source Serif 4', 'Noto Serif SC', 'Georgia', serif;
+            --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            --shadow-soft: 0 20px 60px rgba(28, 23, 18, 0.08);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(148, 106, 58, 0.08), transparent 32%),
+                linear-gradient(180deg, #efe9e1 0%, #ece8df 42%, #e7e1d7 100%);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .heading-hero {
+            font-family: var(--font-serif);
+            font-weight: 900;
+            font-size: clamp(42px, 6vw, 82px);
+            line-height: 1.03;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+        }
+
+        .heading-section {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: clamp(28px, 3.2vw, 40px);
+            line-height: 1.15;
+            color: var(--text-primary);
+        }
+
+        .heading-card {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: clamp(20px, 2.2vw, 28px);
+            line-height: 1.22;
+            color: var(--text-primary);
+        }
+
+        .body-large {
+            font-family: var(--font-serif);
+            font-size: clamp(17px, 1.8vw, 22px);
+            line-height: 1.64;
+            color: var(--text-body);
+        }
+
+        .body-regular {
+            font-family: var(--font-serif);
+            font-size: clamp(15px, 1.45vw, 18px);
+            line-height: 1.7;
+            color: var(--text-body);
+        }
+
+        .body-small {
+            font-family: var(--font-sans);
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .label-section {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-copper);
+        }
+
+        .container-main {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding-left: clamp(24px, 5vw, 80px);
+            padding-right: clamp(24px, 5vw, 80px);
+        }
+
+        .rule {
+            border: none;
+            border-top: 1px solid var(--rule-color);
+        }
+
+        .hero-grid,
+        .split-layout,
+        .summary-grid,
+        .method-grid,
+        .scenario-grid,
+        .highlight-grid,
+        .case-grid,
+        .trust-grid,
+        .collab-grid {
+            display: grid;
+        }
+
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
+            gap: clamp(28px, 4vw, 72px);
+            align-items: end;
+        }
+
+        .split-layout {
+            grid-template-columns: 0.9fr 1.5fr;
+            gap: clamp(28px, 4vw, 72px);
+            align-items: start;
+        }
+
+        .summary-grid,
+        .method-grid,
+        .scenario-grid,
+        .highlight-grid,
+        .collab-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .case-grid {
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.95fr);
+            gap: 26px;
+            align-items: start;
+        }
+
+        .trust-grid {
+            grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+            gap: 24px;
+            align-items: stretch;
+        }
+
+        .panel-soft,
+        .panel-dark,
+        .quote-band,
+        .case-card,
+        .summary-card,
+        .method-card,
+        .scenario-card,
+        .highlight-card,
+        .collab-card,
+        .trust-card {
+            border-radius: 28px;
+        }
+
+        .panel-soft {
+            background: rgba(247, 243, 236, 0.82);
+            border: 1px solid rgba(203, 194, 182, 0.72);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(14px);
+        }
+
+        .panel-dark {
+            background: linear-gradient(180deg, #1e1c19 0%, #131312 100%);
+            color: #f4eee5;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+        }
+
+        .summary-card,
+        .method-card,
+        .scenario-card,
+        .highlight-card,
+        .collab-card,
+        .trust-card,
+        .case-card {
+            padding: 28px;
+            background: rgba(247, 243, 236, 0.9);
+            border: 1px solid rgba(203, 194, 182, 0.74);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .summary-card .heading-card,
+        .method-card .heading-card,
+        .scenario-card .heading-card,
+        .highlight-card .heading-card,
+        .collab-card .heading-card,
+        .trust-card .heading-card,
+        .case-card .heading-card {
+            font-size: clamp(18px, 2vw, 24px);
+        }
+
+        .eyebrow-chip,
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .eyebrow-chip {
+            color: var(--accent-copper);
+            background: rgba(148, 106, 58, 0.09);
+            border: 1px solid rgba(148, 106, 58, 0.18);
+        }
+
+        .tag-chip {
+            color: var(--accent-forest);
+            background: rgba(67, 93, 82, 0.09);
+            border: 1px solid rgba(67, 93, 82, 0.16);
+        }
+
+        .hero-badge-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .hero-badge {
+            padding: 18px 18px 20px;
+            background: rgba(255, 255, 255, 0.58);
+            border: 1px solid rgba(203, 194, 182, 0.82);
+            border-radius: 22px;
+        }
+
+        .hero-badge strong {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: 28px;
+            line-height: 1;
+            color: var(--text-primary);
+        }
+
+        .hero-badge span {
+            display: block;
+            margin-top: 10px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 15px;
+            font-weight: 600;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-warm);
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid rgba(22, 22, 22, 0.18);
+        }
+
+        .product-ribbon {
+            padding: 26px;
+            background: linear-gradient(135deg, rgba(148, 106, 58, 0.09) 0%, rgba(67, 93, 82, 0.08) 100%);
+            border: 1px solid rgba(148, 106, 58, 0.12);
+            border-radius: 26px;
+        }
+
+        .quote-band {
+            padding: clamp(30px, 4vw, 42px);
+            background: linear-gradient(120deg, rgba(67, 93, 82, 0.12) 0%, rgba(148, 106, 58, 0.08) 100%);
+            border: 1px solid rgba(67, 93, 82, 0.16);
+        }
+
+        .quote-band p {
+            font-family: var(--font-serif);
+            font-size: clamp(22px, 3vw, 34px);
+            line-height: 1.45;
+            color: var(--text-primary);
+        }
+
+        .case-hero-image,
+        .case-side-image,
+        .trust-image {
+            width: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 24px;
+        }
+
+        .case-hero-image {
+            height: 100%;
+            min-height: 420px;
+        }
+
+        .case-side-image,
+        .trust-image {
+            height: 240px;
+        }
+
+        .case-stack {
+            display: grid;
+            gap: 22px;
+        }
+
+        .bullet-list,
+        .check-list {
+            list-style: none;
+            display: grid;
+            gap: 14px;
+        }
+
+        .bullet-list li,
+        .check-list li {
+            position: relative;
+            padding-left: 22px;
+            font-family: var(--font-serif);
+            font-size: 16px;
+            line-height: 1.72;
+            color: var(--text-body);
+        }
+
+        .bullet-list li::before,
+        .check-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent-copper);
+        }
+
+        .check-list li::before {
+            background: var(--accent-forest);
+        }
+
+        .dark-copy {
+            color: #efe7db;
+        }
+
+        .dark-copy-muted {
+            color: #b7b0a6;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1080px) {
+            .hero-grid,
+            .split-layout,
+            .case-grid,
+            .trust-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid,
+            .method-grid,
+            .scenario-grid,
+            .highlight-grid,
+            .collab-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .summary-grid,
+            .method-grid,
+            .scenario-grid,
+            .highlight-grid,
+            .collab-grid,
+            .hero-badge-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .case-hero-image,
+            .case-side-image,
+            .trust-image {
+                min-height: 0;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body x-data="{ mobileMenuOpen: false, contactModalOpen: false }" :class="contactModalOpen ? 'overflow-hidden' : ''">
+    <div class="nav-container" id="navContainer">
+        <nav class="bg-white shadow-lg" id="fullNav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex-shrink-0">
+                        <a href="index.html">
+                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;">
+                        </a>
+                    </div>
+
+                    <div class="hidden lg:block flex-1 flex justify-center">
+                        <div class="flex items-center space-x-2 modern-nav ml-16">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link">AI工具集</a>
+                            <a href="skills.html" class="nav-link">AI 能力库</a>
+                            <a href="practice.html" class="nav-link active">转型实践</a>
+                            <a href="about.html" class="nav-link">关于我们</a>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                        <div class="flex items-center space-x-1 modern-nav ml-8">
+                            <a href="index.html" class="nav-link">首页</a>
+                            <a href="news.html" class="nav-link">AI资讯</a>
+                            <a href="tools.html" class="nav-link">AI工具集</a>
+                            <a href="skills.html" class="nav-link">AI 能力库</a>
+                            <a href="practice.html" class="nav-link active">转型实践</a>
+                            <a href="about.html" class="nav-link">关于我们</a>
+                        </div>
+                    </div>
+
+                    <div class="md:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="mobile-nav-link">首页</a>
+                    <a href="news.html" class="mobile-nav-link">AI资讯</a>
+                    <a href="tools.html" class="mobile-nav-link">AI工具集</a>
+                    <a href="skills.html" class="mobile-nav-link">AI 能力库</a>
+                    <a href="practice.html" class="mobile-nav-link active">转型实践</a>
+                    <a href="about.html" class="mobile-nav-link">关于我们</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <section style="padding: clamp(96px, 14vh, 180px) 0 clamp(72px, 10vh, 128px);">
+        <div class="container-main">
+            <div class="hero-grid">
+                <div>
+                    <p class="label-section reveal" style="margin-bottom: 24px;">AI 产品与企业转型咨询</p>
+                    <h1 class="heading-hero reveal" style="max-width: 820px;">
+                        把 AI 做成产品，
+                        <br>也把 AI 带进
+                        <br>企业转型现场
+                    </h1>
+                    <p class="body-large reveal" style="max-width: 720px; margin-top: clamp(24px, 4vh, 42px);">
+                        元说科技一边打造真实可用的 AI 产品，一边进入传统企业转型现场，围绕数字化与 AI 化路径设计、场景梳理与组织承接开展咨询与共创。
+                    </p>
+                    <p class="body-small reveal" style="margin-top: 22px; max-width: 620px;">
+                        从产品实践中沉淀方法，在企业场景中完成转型设计。我们关注的不只是“要不要做 AI”，而是企业该如何切入、如何推进、如何把结果真正落到组织里。
+                    </p>
+                    <div class="reveal" style="margin-top: clamp(32px, 4vh, 50px); display: flex; flex-wrap: wrap; gap: 14px;">
+                        <a href="#practice-sections" class="btn-primary">查看实践</a>
+                        <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" class="btn-secondary">交流转型咨询方案</a>
+                    </div>
+                </div>
+
+                <div class="panel-soft reveal" style="padding: clamp(24px, 3vw, 34px);">
+                    <div class="eyebrow-chip">业务增长导向</div>
+                    <div class="hero-badge-grid">
+                        <div class="hero-badge">
+                            <strong>双主线</strong>
+                            <span>真实产品实践 + 企业转型咨询实践</span>
+                        </div>
+                        <div class="hero-badge">
+                            <strong>6+</strong>
+                            <span>覆盖央国企、大型民营、金融保险、通信运营商、地产物业、政府公共部门等场景</span>
+                        </div>
+                        <div class="hero-badge">
+                            <strong>30+</strong>
+                            <span>头部企业与政府机构 AI 转型咨询、组织共创与项目落地实践</span>
+                        </div>
+                        <div class="hero-badge">
+                            <strong>从判断到落地</strong>
+                            <span>帮助企业从“为什么做”走向“先做什么、如何推进、如何承接”</span>
+                        </div>
+                    </div>
+                    <div class="product-ribbon" style="margin-top: 18px;">
+                        <p class="body-regular">
+                            我们不是把咨询做成一份空泛方案，也不是把产品做成一个演示。我们的重点始终是：让 AI 回到真实经营问题，留下可推进的路径与结果。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="practice-sections" style="padding: 0 0 clamp(56px, 7vh, 92px);">
+        <div class="container-main">
+            <div class="summary-grid reveal">
+                <div class="summary-card">
+                    <div class="eyebrow-chip">01</div>
+                    <h2 class="heading-card" style="margin-top: 20px;">真实产品实践</h2>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        我们持续打造 AI 产品，在真实内容与用户场景中验证 AI 的产品价值，而不是停留在概念层面。
+                    </p>
+                </div>
+                <div class="summary-card">
+                    <div class="eyebrow-chip">02</div>
+                    <h2 class="heading-card" style="margin-top: 20px;">企业转型咨询</h2>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        我们进入传统企业经营现场，围绕数字化基础、AI 化路径、关键场景与组织承接开展咨询与共创。
+                    </p>
+                </div>
+                <div class="summary-card">
+                    <div class="eyebrow-chip">03</div>
+                    <h2 class="heading-card" style="margin-top: 20px;">面向经营结果</h2>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        无论做产品还是做咨询，我们更关注的是流程是否更顺、管理是否更清晰、组织是否更有能力推进下一步。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: clamp(56px, 8vh, 112px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(42px, 6vh, 80px);">
+                <div>
+                    <p class="label-section">第一主线</p>
+                    <h2 class="heading-section" style="margin-top: 10px;">从真实产品中沉淀方法</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        我们一直认为，只有真正做过产品，才更理解 AI 如何从一个能力，变成一个被持续使用的业务工具。产品实践不仅验证了技术能力，也让我们更理解用户价值、工作流设计与持续迭代。
+                    </p>
+                </div>
+            </div>
+
+            <div class="case-grid reveal" style="margin-top: clamp(34px, 5vh, 54px);">
+                <div class="panel-soft" style="padding: clamp(28px, 3vw, 40px);">
+                    <div class="eyebrow-chip">AI 资讯日报产品</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">我们关注的不是“做一个 AI 功能”，而是打造一个持续可用的产品。</h3>
+                    <p class="body-regular" style="margin-top: 18px;">
+                        以 AI 资讯日报产品为例，我们思考的不是模型本身有多新，而是用户为什么需要它、它要帮用户节省哪部分时间、它如何持续产出有价值的信息，以及它能否形成稳定的使用路径。
+                    </p>
+                    <p class="body-regular" style="margin-top: 16px;">
+                        从信息获取到内容整理、从每日更新到用户消费体验，这个产品背后体现的是一整套“从业务价值到产品交付”的思考方式。我们不是为了 AI 而做 AI，而是从真实需求出发，把技术转化为产品体验。
+                    </p>
+                    <ul class="bullet-list" style="margin-top: 22px;">
+                        <li>围绕真实的信息获取、内容整理与日常消费习惯来设计产品价值</li>
+                        <li>把复杂能力收束成用户真正会使用、会依赖的产品体验</li>
+                        <li>让内容生成、信息更新、产品交付形成持续运转的链路</li>
+                    </ul>
+                </div>
+
+                <div class="panel-dark reveal" style="padding: clamp(26px, 3vw, 34px);">
+                    <div class="eyebrow-chip" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); color: #e8d9c5;">产品方法</div>
+                    <h3 class="heading-card dark-copy" style="margin-top: 18px;">我们如何把 AI 做成一个产品</h3>
+                    <div class="case-stack" style="margin-top: 22px;">
+                        <div>
+                            <p class="body-small dark-copy-muted">01</p>
+                            <p class="body-regular dark-copy" style="margin-top: 6px;">发现业务机会</p>
+                            <p class="body-small dark-copy-muted" style="margin-top: 6px;">从真实工作中的信息获取、内容整理和效率问题出发，找到 AI 最值得介入的环节。</p>
+                        </div>
+                        <div>
+                            <p class="body-small dark-copy-muted">02</p>
+                            <p class="body-regular dark-copy" style="margin-top: 6px;">定义可用场景</p>
+                            <p class="body-small dark-copy-muted" style="margin-top: 6px;">把复杂能力收束成用户真正会使用、会依赖的体验，而不是停留在演示层。</p>
+                        </div>
+                        <div>
+                            <p class="body-small dark-copy-muted">03</p>
+                            <p class="body-regular dark-copy" style="margin-top: 6px;">搭建内容与工作流</p>
+                            <p class="body-small dark-copy-muted" style="margin-top: 6px;">让内容生成、信息更新、分发与沉淀形成稳定链路，而不是一次性的功能组合。</p>
+                        </div>
+                        <div>
+                            <p class="body-small dark-copy-muted">04</p>
+                            <p class="body-regular dark-copy" style="margin-top: 6px;">持续迭代优化</p>
+                            <p class="body-small dark-copy-muted" style="margin-top: 6px;">在真实使用中不断调整表达方式、工作流和价值承接，让产品更贴近用户与业务场景。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-band reveal" style="margin-top: clamp(34px, 5vh, 56px);">
+                <p>做过产品，才更懂企业里的 AI 落地。企业真正缺的往往不是知道多少工具，而是如何把 AI 接入工作、沉淀方法、形成稳定产出。</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: clamp(48px, 7vh, 104px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(42px, 6vh, 80px);">
+                <div>
+                    <p class="label-section">第二主线</p>
+                    <h2 class="heading-section" style="margin-top: 10px;">进入传统企业转型现场，而不是停留在通用培训</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        我们服务传统企业做 AI 转型，本质上不是一门公开课，也不是一套标准化培训包，而是一个需要深入业务现场、参与战略判断和组织共创的咨询项目。真正难的往往不是“知道 AI 很重要”，而是企业该从哪里切入、哪些环节优先、组织如何配合、能力如何落地。
+                    </p>
+                    <p class="body-regular" style="margin-top: 18px;">
+                        我们会进入企业的真实经营场景，从战略诊断、场景梳理、流程数字化到 AI 化路径设计，再到试点验证与组织赋能，帮助客户把 AI 从“概念重要”变成“项目可推进、组织能承接、结果可验证”。
+                    </p>
+                </div>
+            </div>
+
+            <div class="panel-soft reveal" style="padding: clamp(28px, 3vw, 38px); margin-top: clamp(30px, 4vh, 46px);">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <span class="tag-chip">代表案例</span>
+                    <span class="tag-chip">驻点咨询</span>
+                    <span class="tag-chip">物业数字化与 AI 化转型</span>
+                </div>
+                <h3 class="heading-card" style="margin-top: 18px;">驻点粤海集团旗下粤海物业，参与 AI 战略咨询与转型路径设计</h3>
+                <p class="body-regular" style="margin-top: 14px;">
+                    在这一案例中，我们不是只做一场分享，而是深入企业经营现场，围绕物业业务如何做数字化、如何进一步走向 AI 化转型，与管理层和业务团队共同梳理现状、识别关键场景、评估组织能力，并设计更可执行的推进路径。
+                </p>
+                <p class="body-regular" style="margin-top: 14px;">
+                    这类项目的重点，不在于讲多少工具，而在于帮助企业回答几个真正关键的问题：哪些业务流程最值得先做、哪些环节具备数据与组织基础、什么样的试点更容易形成示范效应，以及管理层如何把 AI 转型放进真实经营逻辑里。
+                </p>
+            </div>
+
+            <div class="scenario-grid reveal" style="margin-top: clamp(34px, 5vh, 56px);">
+                <div class="scenario-card">
+                    <div class="tag-chip">战略诊断</div>
+                    <h3 class="heading-card" style="margin-top: 16px;">先判断企业为什么要做 AI，而不是先选工具</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        从经营目标、组织约束、数据基础与数字化现状出发，明确 AI 转型要解决的真实问题，而不是追逐概念热点。
+                    </p>
+                </div>
+                <div class="scenario-card">
+                    <div class="tag-chip">场景梳理</div>
+                    <h3 class="heading-card" style="margin-top: 16px;">找到最值得优先落地的业务环节</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        围绕业务流程、运营协同、客户服务与管理决策等环节，识别哪些场景具备价值、基础与可推进性。
+                    </p>
+                </div>
+                <div class="scenario-card">
+                    <div class="tag-chip">数字化到 AI 化</div>
+                    <h3 class="heading-card" style="margin-top: 16px;">不是跳跃式升级，而是分阶段推进转型</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        很多传统企业首先要补的是流程标准化、数据沉淀与协同机制，再进一步把 AI 接入更关键的业务动作。
+                    </p>
+                </div>
+                <div class="scenario-card">
+                    <div class="tag-chip">试点设计</div>
+                    <h3 class="heading-card" style="margin-top: 16px;">把转型拆成能验证、能复制的小步试点</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        我们帮助企业设计更容易取得内部共识和业务结果的试点路径，让 AI 转型从“可以讨论”走向“可以启动”。
+                    </p>
+                </div>
+                <div class="scenario-card">
+                    <div class="tag-chip">组织承接</div>
+                    <h3 class="heading-card" style="margin-top: 16px;">让管理层、业务团队与执行层看到同一张转型地图</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        转型不是技术部门单独推动的事。我们会帮助企业建立跨角色的认知共识、职责边界与推进节奏。
+                    </p>
+                </div>
+                <div class="scenario-card">
+                    <div class="tag-chip">结果导向</div>
+                    <h3 class="heading-card" style="margin-top: 16px;">始终回到经营改善与组织能力升级</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        我们关心的不是做了多少 AI 动作，而是效率是否提升、流程是否更顺、管理是否更清晰、后续是否能持续演进。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: clamp(24px, 5vh, 72px) 0 clamp(56px, 7vh, 108px);">
+        <div class="container-main">
+            <div class="highlight-grid reveal">
+                <div class="highlight-card">
+                    <div class="eyebrow-chip">咨询先行</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">先做判断，再做动作</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        我们先帮助企业判断优先级、场景价值与推进节奏，再决定共识构建、试点设计或工具方案应该怎么组合。
+                    </p>
+                </div>
+                <div class="highlight-card">
+                    <div class="eyebrow-chip">驻点共创</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">进入现场，与企业一起做转型设计</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        传统企业的 AI 转型不能隔空判断，很多关键问题只有进入现场、理解流程与组织关系后才能真正做对。
+                    </p>
+                </div>
+                <div class="highlight-card">
+                    <div class="eyebrow-chip">赋能是手段</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">培训放在转型路径里，而不是单独存在</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        培训和工作坊当然重要，但它们服务的是组织承接与项目落地，而不是替代咨询判断本身。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: clamp(56px, 8vh, 110px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(42px, 6vh, 80px);">
+                <div>
+                    <p class="label-section">转型咨询案例</p>
+                    <h2 class="heading-section" style="margin-top: 10px;">真实场景中的 AI 转型咨询与组织赋能</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        从驻点咨询到高管工作坊、从组织共识构建到业务共创，我们围绕企业真实经营场景开展 AI 转型咨询与组织承接设计，帮助客户形成更可执行的推进路径。
+                    </p>
+                </div>
+            </div>
+
+            <div class="case-grid reveal" style="margin-top: clamp(34px, 5vh, 56px);">
+                <div class="case-card" style="padding: 18px;">
+                    <img src="/pic/practice/executive-workshop.jpg" alt="传统企业 AI 转型咨询工作坊现场" class="case-hero-image">
+                    <div style="padding: 24px 12px 8px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span class="tag-chip">驻点咨询</span>
+                            <span class="tag-chip">传统企业</span>
+                            <span class="tag-chip">转型路径设计</span>
+                        </div>
+                        <h3 class="heading-card" style="margin-top: 16px;">粤海物业 AI 战略咨询：从数字化基础走向 AI 化转型</h3>
+                        <p class="body-regular" style="margin-top: 14px;">
+                            在驻点粤海集团旗下粤海物业的咨询项目中，我们围绕物业业务如何推进数字化与 AI 化转型，与管理层和业务团队共同梳理现状、识别关键场景、讨论组织承接方式，并形成更可执行的战略与路径设计。
+                        </p>
+                        <p class="body-regular" style="margin-top: 14px;">
+                            这类项目真正的价值，不在于课堂里讲了什么，而在于企业能否据此回答“先做什么、谁来推进、试点怎么落地、后续如何复制”这些关键问题。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="case-stack">
+                    <div class="case-card">
+                        <img src="/pic/practice/public-sector-lecture-hall.png" alt="公共部门 AI 赋能礼堂授课现场" class="case-side-image">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                            <span class="tag-chip">公共部门</span>
+                            <span class="tag-chip">组织赋能</span>
+                        </div>
+                        <h3 class="heading-card" style="margin-top: 14px;">面向大型组织场景的 AI 认知升级与方法输入</h3>
+                        <p class="body-regular" style="margin-top: 10px;">
+                            在礼堂和大班场景中开展授课分享，帮助管理者与业务团队建立对 AI 应用趋势、组织理解与落地路径的共同认知。
+                        </p>
+                    </div>
+
+                    <div class="case-card">
+                        <img src="/pic/practice/government-lecture-stage.jpg" alt="正式讲台授课与组织共识构建现场" class="case-side-image">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px;">
+                            <span class="tag-chip">正式授课</span>
+                            <span class="tag-chip">组织共识</span>
+                        </div>
+                        <h3 class="heading-card" style="margin-top: 14px;">通过授课与共识构建，为咨询项目创造组织土壤</h3>
+                        <p class="body-regular" style="margin-top: 10px;">
+                            培训与分享在我们的项目中是重要环节，但它们服务的是组织理解、管理共识和项目推进，而不是替代转型咨询本身。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trust-grid reveal" style="margin-top: 26px;">
+                <div class="case-card" style="padding: 18px;">
+                    <img src="/pic/practice/enterprise-classroom-enablement.jpg" alt="企业课堂式 AI 赋能互动现场" class="trust-image">
+                    <div style="padding: 20px 10px 8px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <span class="tag-chip">组织承接</span>
+                            <span class="tag-chip">现场互动</span>
+                        </div>
+                        <h3 class="heading-card" style="margin-top: 14px;">赋能不是独立产品，而是转型项目中的承接环节</h3>
+                        <p class="body-regular" style="margin-top: 10px;">
+                            相比一次性的分享，我们更重视团队在项目推进过程中是否形成共同语言、理解优先级，并能承接后续试点与落地动作。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="trust-card">
+                    <p class="label-section">实践覆盖多类组织场景</p>
+                    <h3 class="heading-card" style="margin-top: 12px;">从头部企业到公共部门，AI 转型都必须回到真实经营与组织逻辑。</h3>
+                    <ul class="check-list" style="margin-top: 20px;">
+                        <li>服务客户覆盖央国企、大型民营企业、金融保险、通信运营商、地产物业及政府公共部门等多类组织</li>
+                        <li>围绕 AI 战略判断、场景梳理、组织赋能与项目推进开展合作，而不是停留在工具介绍层面</li>
+                        <li>负责人项目曾受央视报道并接受采访，受邀担任河北卫视《冀高一筹》AI 专家评委</li>
+                        <li>曾在深圳福田区政府、广州越秀区政府等正式场景开展授课分享</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: clamp(56px, 8vh, 104px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout reveal" style="padding-top: clamp(42px, 6vh, 80px);">
+                <div>
+                    <p class="label-section">合作方式</p>
+                    <h2 class="heading-section" style="margin-top: 10px;">我们如何与企业合作</h2>
+                </div>
+                <div>
+                    <p class="body-large">
+                        无论企业当前处于“刚开始判断要不要做 AI”，还是“已经启动一些尝试但还没有系统路径”，我们都可以从真实经营场景出发，找到更适合的合作方式。
+                    </p>
+                </div>
+            </div>
+
+            <div class="collab-grid reveal" style="margin-top: clamp(34px, 5vh, 56px);">
+                <div class="collab-card">
+                    <div class="eyebrow-chip">AI 战略咨询</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">帮助企业判断为什么做、先做什么、如何推进</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        围绕转型目标、关键场景、组织能力与试点路径展开咨询，帮助企业建立更清晰的转型判断和路线图。
+                    </p>
+                </div>
+                <div class="collab-card">
+                    <div class="eyebrow-chip">驻点诊断与共创</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">进入企业现场，与管理层和业务团队一起拆问题</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        通过访谈、工作坊、流程梳理与场景评估，帮助企业识别更适合优先推进的转型环节与试点动作。
+                    </p>
+                </div>
+                <div class="collab-card">
+                    <div class="eyebrow-chip">组织赋能与落地陪跑</div>
+                    <h3 class="heading-card" style="margin-top: 18px;">让组织真正承接转型，而不是停留在方案里</h3>
+                    <p class="body-regular" style="margin-top: 12px;">
+                        通过授课、共识构建、场景演练与试点推进，帮助企业把转型设计逐步变成组织可执行的实际动作。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: clamp(80px, 11vh, 150px) 0; background: var(--bg-dark);">
+        <div class="container-main" style="text-align: center;">
+            <p class="label-section reveal" style="color: #c6a57c;">开始一场面向增长的对话</p>
+            <h2 class="heading-hero reveal" style="color: #f3ebdf; font-size: clamp(34px, 5vw, 64px); margin-top: 16px;">
+                如果你也在思考，
+                <br>如何让 AI 真正服务业务增长
+            </h2>
+            <p class="body-large reveal" style="color: #c1b6aa; max-width: 720px; margin: clamp(22px, 3vh, 34px) auto 0;">
+                欢迎和我们交流你所在企业当前最想推进的转型议题。无论是传统企业 AI 转型、关键场景梳理，还是组织承接与试点设计，我们都可以从真实经营场景出发，一起找到更适合的推进方式。
+            </p>
+            <div class="reveal" style="margin-top: clamp(32px, 4vh, 48px); display: flex; flex-wrap: wrap; justify-content: center; gap: 14px;">
+                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" class="btn-primary" style="background: #f3ebdf; color: #151515;">预约交流</a>
+                <a href="about.html" class="btn-secondary" style="color: #f3ebdf; border-color: rgba(243, 235, 223, 0.18);">了解元说科技</a>
+            </div>
+        </div>
+    </section>
+
+    <div x-show="contactModalOpen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm transition-opacity" x-transition.opacity style="display: none;">
+        <div @click.away="contactModalOpen = false" class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform transition-transform" x-transition>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="heading-card" style="font-size: 22px;">联系我们</h3>
+                <button @click="contactModalOpen = false" class="text-gray-400 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-5">
+                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                    <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1" style="font-family: var(--font-sans);">联系人</p>
+                        <p class="font-semibold text-lg text-gray-900" style="font-family: var(--font-sans);">黄总</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                    <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1" style="font-family: var(--font-sans);">手机号码</p>
+                        <p class="font-semibold text-lg text-gray-900 select-all" style="font-family: var(--font-sans);">15800565566</p>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8">
+                <a href="tel:15800565566" class="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-black text-white hover:bg-gray-800 transition-colors" style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; text-decoration: none;">
+                    <i class="fas fa-phone"></i> 拨打电话
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('is-visible');
+                        }, index * 55);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+        });
+    </script>
+</body>
+
+</html>
