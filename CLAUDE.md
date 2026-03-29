@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an AI News Management System (AI资讯管理系统) - an enterprise-level content management platform for AI news, tools, and keyword clouds. The current active mainline is the JSON runtime; MySQL remains an optional migration path, not the default runtime.
 
-**Current Version**: 2.0.0
+**Current Version**: 0.2.0 (package.json)
 
 **Tech Stack**: Node.js + Express + vanilla JavaScript (ES6+) + MySQL/JSON storage
 
@@ -102,31 +102,40 @@ done
 - When creating new scripts on Mac, always run the fix command before syncing
 - Or use `dos2unix` if installed: `brew install dos2unix` then `dos2unix script.sh`
 
-**Scripts that need fixing**:
-- `历史同步执行脚本（已删除）`
-- `历史同步设置脚本（已删除）`
-- `sync-setup.sh`
-- `test-sync.sh`
-- Any other `.sh` files
+**Scripts that need fixing**: Any `.sh` files created on macOS before syncing to server.
 
 ## Quick Start Commands
 
 ```bash
 # Primary development mode (JSON storage - no database required)
-npm start                   # or ./run.sh
-npm run start:dev           # Development with nodemon auto-reload
-npm run start:legacy        # Compatibility alias for npm start
+npm start                        # or ./run.sh
+npm run dev                      # nodemon auto-reload (alias: start:dev)
 
 # Optional MySQL mode
 npm run start:mysql
 npm run start:mysql:dev
 
 # Database operations
-npm run db:init            # Initialize MySQL database from schema
-npm run db:migrate         # Migrate JSON data to MySQL
+npm run db:init                  # Initialize MySQL database from schema
+npm run db:migrate               # Migrate JSON data to MySQL
 
 # Testing
-npm run test:models        # Run model comparison tests
+node --test tests/               # Run all mjs unit tests (Node built-in runner)
+node --test tests/podcast-script.test.mjs  # Run single test file
+npm run test:smoke:json          # Smoke test JSON runtime
+npm run test:models              # Python model comparison tests
+npm run test:prompt              # Prompt comparison test
+
+# Data utilities
+npm run data:backup              # Back up all JSON data files
+npm run data:restore             # Restore from backup
+npm run data:normalize:dry       # Preview daily-file normalization
+npm run data:normalize:apply     # Apply daily-file normalization
+npm run check:assets             # Verify logo paths
+
+# Weekly keywords / podcast one-shot ops
+npm run weekly:keywords:once
+npm run podcast:autogen:once
 ```
 
 **Default Access**: http://localhost:3000
@@ -152,14 +161,25 @@ The repository contains two backend implementations, but only one is the active 
 
 ### Frontend Architecture
 
-- **index.html** (37KB) - Main landing page with keyword cloud, news feeds, and tool search
-- **news.html** (16KB) - News detail page
-- **admin-login.html** (11KB) - Admin authentication
-- **admin-analytics.html** (20KB) - Geographic analytics dashboard
-- **frontend/bootstrap.js** - News page module entrypoint
-- **frontend/modules/** - Current news-page module set
-- **styles.css** (12KB) - Global styles
-- **api.js** (309 lines) - API client wrapper
+HTML pages and their owning JS entrypoints:
+
+| Page | JS entrypoint |
+|------|--------------|
+| `index.html` - landing, keyword cloud, news, tool search | `frontend/index-page.js` |
+| `news.html` - news detail | `frontend/bootstrap.js` + `frontend/modules/` |
+| `tools.html` - AI tools directory | `frontend/tools-page.js` |
+| `skills.html` - AI skills catalog | `frontend/skills-page.js` |
+| `skill-detail.html` - individual skill | `frontend/skill-detail-page.js` |
+| `mcp-detail.html` - MCP server detail | `frontend/mcp-detail-page.js` |
+| `about.html` - about / contact | (inline) |
+| `practice.html` - AI consulting practice | (inline) |
+| `admin-login.html` | (inline) |
+| `admin-analytics.html` - geographic analytics | (inline) |
+| `admin-ipban.html` - IP ban management | (inline) |
+
+- **frontend/modules/visit-tracker.js** - client-side visit tracking (new; loaded by index/news pages)
+- **styles.css** - Global styles
+- **api.js** - API client wrapper
 
 ### Data Storage
 
@@ -171,7 +191,10 @@ The repository contains two backend implementations, but only one is the active 
 - `tools.json` - AI tools directory
 - `tool-categories.json` - Tool categories
 - `visit-logs.json` - Visitor tracking with IP geolocation
+- `api-calls.json` - API call audit log
+- `banned-ips.json` - IP ban list (managed via `admin-ipban.html`)
 - `settings.json` - System configuration
+- `podcasts/news/` - Per-date podcast metadata and audio references
 
 **MySQL Mode**: See `database/schema.sql` for complete table definitions
 
@@ -196,12 +219,36 @@ All POST/PUT/DELETE operations require `Authorization: Bearer <token>` header
 
 ## Core Frontend Modules
 
-1. `frontend/modules/news-page-init.js` handles news-page bootstrap.
-2. `frontend/modules/core-news.js` contains the core news-page behavior.
-3. `frontend/modules/compat-globals.js` exposes legacy `window` handlers still needed by existing HTML.
-4. `frontend/index-page.js` and `frontend/tools-page.js` own their respective pages.
+News-page modules (loaded via `frontend/bootstrap.js`):
+1. `frontend/modules/news-page-init.js` - bootstrap and wiring
+2. `frontend/modules/core-news.js` - core news-page behavior
+3. `frontend/modules/compat-globals.js` - exposes legacy `window` handlers still needed by HTML
+4. `frontend/modules/timeline-view.js`, `articles-view.js`, `outline-view.js`, `stats-view.js` - view renderers
+5. `frontend/modules/history-controller.js`, `filters-controller.js`, `keywords-controller.js` - controllers
+6. `frontend/modules/state.js` - shared state; `api-client.js` - API calls; `news-service.js` - data layer
 
 ## Important Development Patterns
+
+### Backend Routes Overview
+
+All routes are in `server/routes/` and wired in `server/runtime.js`:
+
+| Route file | Mount prefix | Notes |
+|------------|-------------|-------|
+| `auth.js` | `/api/auth` | Login, JWT |
+| `keywords.js` | `/api/keywords` | Keyword cloud CRUD |
+| `news.js` | `/api/news` | Daily news CRUD |
+| `tools.js` | `/api/tools` | AI tools CRUD |
+| `visit.js` | `/api/visit` | Visitor tracking + province stats |
+| `security.js` | `/api/security` | IP ban management |
+| `podcast.js` | `/api/podcast` | Podcast generation pipeline |
+| `reports.js` | `/api/reports` | Daily report ingestion |
+| `ai.js` | `/api/ai` | AI proxy (SiliconFlow) |
+| `stats.js` | `/api/stats` | Site statistics |
+| `archive.js` | `/api/archive` | News archive management |
+| `maintenance.js` | `/api/maintenance` | Admin maintenance ops |
+| `settings.js` | `/api/settings` | Site settings |
+| `template.js` | `/api/template` | Content templates |
 
 ### Adding New API Endpoints
 
@@ -285,7 +332,7 @@ mutagen project terminate
 
 **Server Requirements**:
 - SSH access with key-based authentication
-- Node.js 18+ installed on server
+- Node.js 22.22.0 (pinned in `package.json` `engines` field)
 - Project directory created on server
 
 ## File Naming Conventions
@@ -298,10 +345,23 @@ mutagen project terminate
 
 ## Testing
 
-Python-based model comparison testing:
+**Unit tests** (Node.js built-in runner, ES modules):
 ```bash
-npm run test:models
-# Runs test_model_comparison.py to compare AI model responses
+node --test tests/                                    # run all
+node --test tests/podcast-script.test.mjs            # run single file
+```
+Test files live in `tests/*.mjs` and cover podcast pipeline components (script generation, alignment, routing, autogen).
+
+**Smoke / integration**:
+```bash
+npm run test:smoke:json     # verifies JSON runtime starts and basic routes respond
+npm run podcast:audit:server  # audits server-side podcast state
+```
+
+**Model / prompt comparison**:
+```bash
+npm run test:models         # Python: test_model_comparison.py
+npm run test:prompt         # Node: scripts/prompt-comparison-test.js
 ```
 
 ## Common Issues
