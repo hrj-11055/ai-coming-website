@@ -511,6 +511,16 @@ function createNewsPodcastService({
             };
         }
 
+        // 历史回看优先复用已生成的可播放音频，避免因签名变化误判为未生成并触发重生成。
+        if (existing && existing.status === 'ready' && hasPlayableAudio(date, existing)) {
+            const localAudioRecord = resolveLocalAudioRecord(date, existing);
+            return {
+                ...existing,
+                audio_url: localAudioRecord ? localAudioRecord.url : existing.audio_url,
+                can_generate: canGenerate
+            };
+        }
+
         if (existing && existing.generation_signature === generationSignature && existing.status === 'pending') {
             return {
                 ...existing,

@@ -1,4 +1,5 @@
 import { ALL_SKILLS, getSkillBySlug } from './modules/skills-catalog.js';
+import { trackPageView } from './modules/visit-tracker.js';
 
 function escapeHtml(value) {
     return String(value)
@@ -161,6 +162,7 @@ function renderNotFound(slug) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    trackPageView();
     const content = document.getElementById('skillDetailContent');
     const title = document.getElementById('skillDetailTitle');
     const description = document.getElementById('skillDetailDescription');

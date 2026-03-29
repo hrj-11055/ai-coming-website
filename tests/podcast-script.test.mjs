@@ -90,6 +90,34 @@ test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusi
     assert.doesNotMatch(parsed.script_tts_text, /排除旧闻/);
 });
 
+test('parsePodcastScriptMarkdown removes structural section labels from spoken text and keeps a fixed spoken intro', () => {
+    const markdown = `# 小元说AI · 口播文稿 | 2026.03.28
+
+# 硅基生存指南
+
+**朋友圈文案**：测试文案
+
+## 开场钩子
+大家好，我是小元，欢迎收听3月28号的 AI 早报。今天最值得关注的一件事，是企业级 AI 工具开始从演示场走向真实工作流。
+
+## 十个信号
+**信号1：企业 AI 开始拼落地**
+
+真正的竞争点，开始从模型能力转向谁能进入组织流程。
+
+## 生存智慧
+今天的内容就到这里，欢迎大家订阅小元说AI的视频号，我们明天再见。
+`;
+
+    const parsed = parsePodcastScriptMarkdown(markdown);
+
+    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听3月28号的 AI 早报。/);
+    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)硅基生存指南(\n|$)/);
+    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)开场钩子(\n|$)/);
+    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)十个信号(\n|$)/);
+    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)生存智慧(\n|$)/);
+});
+
 test('buildReportInputFilePath resolves the fixed JSON report input path', () => {
     assert.equal(
         buildReportInputFilePath('2026-03-18', '/var/www/json/report'),

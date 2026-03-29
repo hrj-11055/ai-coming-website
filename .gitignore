@@ -12,3 +12,5 @@ qwen-comparison-*.json
 .DS_Store
 logs/
 data/podcasts/
+backups/
+.podcast-autogen.lock

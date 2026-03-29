@@ -11,6 +11,12 @@ const DEFAULT_SCRIPT_MAX_RETRIES = 3;
 const DEFAULT_SCRIPT_RETRY_BASE_DELAY_MS = 1000;
 const MAX_TTS_TEXT_LENGTH = 100000;
 const RETRYABLE_HTTP_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+const STRUCTURAL_SPOKEN_LABELS = new Set([
+    '硅基生存指南',
+    '开场钩子',
+    '十个信号',
+    '生存智慧'
+]);
 
 function hashText(value) {
     return crypto.createHash('sha1').update(String(value || '')).digest('hex');
@@ -64,7 +70,7 @@ function stripMarkdownForSpeech(markdown) {
     return markdown
         .split('\n')
         .map((line) => normalizeMarkdownLine(line))
-        .filter(Boolean)
+        .filter((line) => line && !STRUCTURAL_SPOKEN_LABELS.has(line))
         .join('\n')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
