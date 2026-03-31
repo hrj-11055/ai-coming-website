@@ -1,6 +1,18 @@
 import { TOOL_SECTIONS } from './modules/tools-catalog.js';
 
 const FALLBACK_LOGO = '/logos/default.png';
+const AI_COLLAB_ICON = `
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="7" cy="8" r="2.5" stroke="currentColor" stroke-width="1.8" />
+        <circle cx="17" cy="8" r="2.5" stroke="currentColor" stroke-width="1.8" />
+        <path d="M9 16.5c.8-1.6 1.84-2.9 3-3.9 1.16 1 2.2 2.3 3 3.9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12 10.2v2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        <path d="M10.95 11.25h2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        <path d="M8.9 10.9 10.6 11.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        <path d="M15.1 10.9 13.4 11.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+    </svg>
+`;
+
 const CATEGORY_ICON_MAP = {
     'ai-writing': 'fas fa-feather-alt',
     'ai-image': 'far fa-image',
@@ -113,6 +125,19 @@ function chunk(array, size) {
     return result;
 }
 
+function renderCategoryIcon(sectionId) {
+    if (sectionId === 'ai-collab') {
+        return `<span class="category-icon">${AI_COLLAB_ICON}</span>`;
+    }
+
+    const iconClass = CATEGORY_ICON_MAP[sectionId] || 'fas fa-cube';
+    return `
+        <span class="category-icon">
+            <i class="${iconClass}" aria-hidden="true"></i>
+        </span>
+    `;
+}
+
 function toSafePath(pathValue) {
     if (!pathValue) return FALLBACK_LOGO;
     return encodeURI(pathValue);
@@ -216,11 +241,10 @@ function renderCategoryList() {
     if (!container) return;
 
     container.innerHTML = TOOL_SECTIONS.map((section, index) => {
-        const iconClass = CATEGORY_ICON_MAP[section.id] || 'fas fa-cube';
         const tone = CATEGORY_TONE_MAP[section.id] || 'slate';
         return `
             <a class="category-link ${index === 0 ? 'active' : ''}" href="#${section.id}" data-section="${section.id}" data-tone="${tone}" title="${section.title}" aria-label="${section.title}">
-                <i class="${iconClass}"></i>
+                ${renderCategoryIcon(section.id)}
                 <span>${section.title}</span>
             </a>
         `;
