@@ -2,30 +2,34 @@ import { SKILL_MODULES } from './modules/skills-catalog.js';
 import { trackPageView } from './modules/visit-tracker.js';
 
 function createNavItem(module, index) {
-    const itemLabel = module.itemLabel || 'Skill';
-
     return `
         <a class="skill-nav-link ${index === 0 ? 'active' : ''}" href="#${module.id}" data-section="${module.id}" data-tone="${module.tone}">
             <span class="skill-nav-icon"><i class="${module.icon}"></i></span>
             <span class="skill-nav-copy">
                 <strong>${module.title}</strong>
-                <small>${module.skills.length} 个 ${itemLabel}</small>
             </span>
+            <span class="skill-nav-arrow" aria-hidden="true"><i class="fa-solid fa-arrow-up-right"></i></span>
         </a>
     `;
 }
 
 function createSkillCard(skill) {
+    const cardHeadline = skill.cardHeadline || skill.headline;
+    const cardScenario = skill.cardScenario || skill.scenario;
+    const cardClass = skill.detailType === 'mcp' ? 'skill-card skill-card-mcp' : 'skill-card';
+
     return `
-        <article class="skill-card">
+        <article class="${cardClass}" data-tone="${skill.moduleTone}">
             <div class="skill-card-top">
                 <span class="skill-module-chip">${skill.moduleTitle}</span>
                 <h3>${skill.name}</h3>
             </div>
-            <p class="skill-headline">${skill.headline}</p>
-            <p class="skill-scenario">${skill.scenario}</p>
+            <div class="skill-card-copy">
+                <p class="skill-headline">${cardHeadline}</p>
+                <p class="skill-scenario">${cardScenario}</p>
+            </div>
             <a class="skill-card-link" href="${skill.detailUrl}">
-                查看使用说明
+                <span>查看使用说明</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </a>
         </article>
@@ -34,11 +38,14 @@ function createSkillCard(skill) {
 
 function createSection(module) {
     return `
-        <section class="skill-section" id="${module.id}">
+        <section class="skill-section" id="${module.id}" data-tone="${module.tone}">
             <div class="skill-section-head">
-                <div>
-                    <div class="skill-section-kicker">${module.title}</div>
-                    <h2>${module.title}</h2>
+                <div class="skill-section-intro">
+                    <span class="skill-section-icon"><i class="${module.icon}"></i></span>
+                    <div class="skill-section-copy">
+                        <h2>${module.title}</h2>
+                        <p>${module.description}</p>
+                    </div>
                 </div>
             </div>
             <div class="skill-card-grid">
@@ -96,23 +103,8 @@ function bindNavHighlight() {
     sections.forEach((section) => observer.observe(section));
 }
 
-function renderStats() {
-    const moduleCount = document.getElementById('skillsModuleCount');
-    const itemCount = document.getElementById('skillsItemCount');
-    const totalItems = SKILL_MODULES.reduce((sum, module) => sum + module.skills.length, 0);
-
-    if (moduleCount) {
-        moduleCount.innerHTML = `<i class="fa-solid fa-layer-group"></i> ${SKILL_MODULES.length} 个模块`;
-    }
-
-    if (itemCount) {
-        itemCount.innerHTML = `<i class="fa-solid fa-grid-2"></i> ${totalItems} 个条目`;
-    }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     trackPageView();
-    renderStats();
     renderNav();
     renderSections();
     bindNavHighlight();

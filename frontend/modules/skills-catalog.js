@@ -1,11 +1,23 @@
 const REFERENCE_SOURCE_URL = 'https://ai.codefather.cn/skills';
 const REFERENCE_SOURCE_LABEL = '参考来源';
+const ANTHROPIC_SKILLS_BASE_URL = 'https://github.com/anthropics/skills/tree/main/skills';
+const ECC_SKILLS_BASE_URL = 'https://github.com/affaan-m/everything-claude-code/tree/main/skills';
+const SUPERPOWERS_SKILLS_BASE_URL = 'https://github.com/obra/superpowers/tree/main/skills';
+const BAOYU_SKILLS_BASE_URL = 'https://github.com/JimLiu/baoyu-skills/tree/main/skills';
+const BAOYU_RELEASE_SKILL_URL = 'https://github.com/JimLiu/baoyu-skills/tree/main/.claude/skills/release-skills';
+const OPENAI_SKILLS_REPO_URL = 'https://github.com/openai/skills';
+const NOTEBOOKLM_REPO_URL = 'https://github.com/teng-lin/notebooklm-py';
+const NUTRIENT_MCP_REPO_URL = 'https://github.com/PSPDFKit/nutrient-dws-mcp-server';
+
+const addSkillCommand = (url) => `npx add-skill ${url}`;
+const addSkillsRepoCommand = (repo) => `npx skills add ${repo}`;
+const multiLineCommand = (...lines) => lines.join('\n');
 
 const BASE_SKILL_MODULES = [
     {
         id: 'claude-official',
         title: 'Claude官方',
-        icon: 'fa-solid fa-sparkles',
+        icon: 'fa-solid fa-robot',
         tone: 'violet',
         description: '直接参考 Anthropic 官方 skills 仓库，优先收录最常用、最适合日常生产的官方 Skill。',
         skills: [
@@ -599,7 +611,7 @@ const BASE_SKILL_MODULES = [
     {
         id: 'mcp',
         title: 'MCP',
-        icon: 'fa-solid fa-plug-circle-bolt',
+        icon: 'fa-solid fa-plug',
         tone: 'sky',
         description: '把常用 MCP Server 集中收纳，适合从仓库、文档、浏览器到自动化流程的一站式扩展。',
         itemLabel: 'MCP',
@@ -608,11 +620,13 @@ const BASE_SKILL_MODULES = [
                 name: 'GitHub MCP Server',
                 slug: 'github-mcp',
                 detailType: 'mcp',
-                headline: '让 AI 直接读仓库、查 Issue、跟 Pull Request，而不是在网页和聊天窗口之间来回切。',
-                scenario: '适合开源维护、团队协作、代码检索、PR 巡检和仓库问答。',
-                overview: 'GitHub MCP Server 的价值在于把 GitHub 从“需要手动打开的网站”变成 AI 工作流里的一个原生数据源。配置好之后，AI 可以读取仓库结构、查找文件、汇总提交记录、浏览 Issue 和 Pull Request，很多原本要切去网页做的动作都能直接在一条对话里完成。',
-                useCases: ['快速查看某个仓库最近一周的改动', '汇总 Issue 和 Pull Request 当前状态', '让 AI 辅助做代码检索和仓库问答', '在研发协作里减少反复切网页的上下文切换'],
-                gettingStarted: ['先准备好 GitHub Token 或兼容的 Copilot 凭证', '把 GitHub MCP 的远程地址和认证头写进客户端配置文件', '第一次建议先用只读场景试跑，比如查 PR、搜代码、汇总提交，再决定是否开放更多写入能力'],
+                headline: '让 AI 直接读取仓库、Issue、PR 和 Actions，把 GitHub 从网页变成可调用工作台。',
+                cardHeadline: '直接读仓库、PR、Issue 和 Actions。',
+                scenario: '适合代码检索、PR 评审、Issue 跟进、发布排查和日常研发协作。',
+                cardScenario: '适合研发协作、代码检索和发布排查。',
+                overview: 'GitHub 官方 MCP Server 是最值得优先接入的一类开发型 MCP。它让 AI 不必在聊天窗口和 GitHub 网页之间来回切，而是能直接查仓库结构、读文件、看提交、追 PR 线程、汇总 CI 状态。对开发者来说，它通常是最容易立刻提升效率的一类接入。',
+                useCases: ['快速汇总某个仓库最近的 PR 和提交', '让 AI 直接回答仓库结构、文件位置和代码上下文问题', '查看 GitHub Actions 失败原因并定位关联改动', '整理 Issue 状态、待办优先级和版本发布情况'],
+                gettingStarted: ['先准备 GitHub Token，并确认权限只覆盖你要访问的仓库范围', '把远程 MCP 地址和鉴权 Header 写进客户端配置文件', '第一轮先用只读场景试跑，比如查 PR、搜代码、看 CI，再决定是否开放更强权限'],
                 installCommand: `{
   "mcpServers": {
     "github": {
@@ -623,217 +637,523 @@ const BASE_SKILL_MODULES = [
     }
   }
 }`,
-                installHint: '这是最常见的 GitHub MCP 接入模板。把它加入 Claude Desktop、Cursor 或其它 MCP 客户端配置后重启即可。',
-                mcpConfigPurpose: '这段配置的作用，是把 GitHub 的远程 MCP Server 注册到你的 AI 客户端里，并通过 Bearer Token 完成认证。配置生效后，AI 才能安全访问仓库、Issue、Pull Request 和代码上下文。',
-                relatedSlugs: ['context7', 'cdm', 'playwright-mcp'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664903822991380'
+                installHint: 'GitHub 官方仓库同时支持远程服务和 Docker 部署。这里保留的是最适合大多数 MCP 客户端的远程接入模板。',
+                mcpConfigPurpose: '这段配置会把 GitHub 官方远程 MCP Server 注册到你的客户端里，并通过 Bearer Token 完成鉴权。生效后，AI 才能读取仓库、PR、Issue、提交记录和工作流状态。',
+                relatedSlugs: ['git-mcp', 'semgrep-mcp', 'playwright-mcp'],
+                sourceUrl: 'https://github.com/github/github-mcp-server'
             },
             {
-                name: 'Context7',
-                slug: 'context7',
+                name: 'Git MCP',
+                slug: 'git-mcp',
                 detailType: 'mcp',
-                headline: '把最新版本的官方文档和代码示例直接补进提示词，减少“AI 讲的是旧写法”。',
-                scenario: '适合查框架新版本 API、补齐库文档上下文和让代码示例更贴近当前版本。',
-                overview: 'Context7 最有价值的地方，是把“模型训练截止导致文档过时”这个问题单独解决掉。它会把最新、尽量接近当前版本的库文档和示例拉进 AI 的上下文，所以你在写代码、迁移版本或查 API 时，不必总担心答案还是旧版本写法。',
-                useCases: ['查 React、Next.js、Vue 等框架最新文档', '在生成代码前先给 AI 补齐当前库版本的背景', '减少因为过时 API 带来的试错成本', '把官方示例直接带进对话里辅助实现'],
-                gettingStarted: ['先申请 Context7 的 API Key', '把远程 MCP 地址和 Header 配置进客户端', '实际使用时可以在需求里明确带上“use context7”，让 AI 优先调用最新文档'],
+                headline: '让 AI 直接读取本地 Git 仓库历史、差异和结构，适合不联网也要做代码分析的场景。',
+                cardHeadline: '直接读本地 Git 历史、diff 和分支。',
+                scenario: '适合本地仓库分析、提交历史梳理、diff 解释、改动回溯和离线协作。',
+                cardScenario: '适合本地仓库分析、改动回溯和离线协作。',
+                overview: '如果 GitHub MCP 更像“云端协作入口”，Git MCP 则是面向本地仓库的基础能力层。它适合你不想把工作流建立在托管平台之上，而是希望 AI 直接在当前机器上读提交历史、比较 diff、理解分支和仓库结构时使用。',
+                useCases: ['解释某段 diff 到底改了什么', '回看某个文件最近几次提交的演变过程', '让 AI 比较两个分支或提交的差别', '离线状态下继续做仓库分析和代码问答'],
+                gettingStarted: ['先确认客户端所在机器能够访问目标仓库路径', '把仓库绝对路径写进 `--repository` 参数', '首次建议从只读问题开始，比如读日志、看 diff、查文件历史，避免一上来就做高风险操作'],
                 installCommand: `{
   "mcpServers": {
-    "context7": {
-      "url": "https://mcp.context7.com/mcp",
-      "headers": {
-        "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY"
-      }
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git", "--repository", "/ABSOLUTE/PATH/TO/REPO"]
     }
   }
 }`,
-                installHint: 'Context7 更像“最新文档补丁层”。配置完成后，和技术文档相关的问题就能更稳定地走最新资料。',
-                mcpConfigPurpose: '这段配置把 Context7 的远程文档服务接入客户端，并通过 API Key 完成鉴权。它的核心作用不是新增动作，而是给 AI 补充最新、版本更准确的文档上下文。',
-                relatedSlugs: ['github-mcp', 'notion-mcp', 'cdm'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664905790119939'
-            },
-            {
-                name: 'cdm（Chrome DevTools MCP）',
-                slug: 'cdm',
-                detailType: 'mcp',
-                headline: '把浏览器运行态直接暴露给 AI，看性能、网络、Console 和 DOM 都更顺手。',
-                scenario: '适合前端调试、性能分析、接口排错、页面诊断和运行态问题复现。',
-                overview: 'cdm 这里对应的是 Chrome DevTools MCP Server。它的优势不是“帮你再开一个浏览器”，而是让 AI 真正读到浏览器开发者工具里的运行数据。这样遇到卡顿、报错、资源阻塞、接口失败时，AI 不再只能猜，而是能基于 Network、Console、Performance 和 DOM 的真实状态来分析问题。',
-                useCases: ['分析页面为什么变慢或卡顿', '检查网络请求、状态码和资源加载情况', '抓取控制台报错并定位前端问题', '让 AI 基于真实页面运行态给出调试建议'],
-                gettingStarted: ['本地先准备好 Chrome 浏览器和 Node 环境', '把 stdio 形式的 MCP 配置写入客户端', '首次上手建议先从只读诊断场景开始，比如读 Console、查 Network、看 DOM，再逐步增加自动化操作'],
-                installCommand: `{
-  "mcpServers": {
-    "chrome-devtools": {
-      "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
-    }
-  }
-}`,
-                installHint: '这是最常见的本地接入方式。重启 MCP 客户端后，AI 就能尝试读取 Chrome DevTools 暴露出的运行态信息。',
-                mcpConfigPurpose: '这段配置会让客户端在本地通过 `npx` 启动 Chrome DevTools MCP Server。它的意义在于把浏览器调试能力接进 AI 工作流里，让 AI 能读 Console、Network、DOM 和性能数据，而不是只根据描述猜问题。',
-                relatedSlugs: ['playwright-mcp', 'github-mcp', 'context7'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664901155414018'
+                installHint: '官方参考实现还支持 Docker 和 pip。这里给的是最轻量的 `uvx` 方式，适合快速把本地仓库接进客户端。',
+                mcpConfigPurpose: '这段配置会通过 `uvx` 启动官方 Git MCP，并把它绑定到指定仓库路径。之后 AI 就能在本地直接读取 Git 历史、差异和仓库上下文。',
+                relatedSlugs: ['github-mcp', 'desktop-commander-mcp', 'semgrep-mcp'],
+                sourceUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/git'
             },
             {
                 name: 'Playwright MCP Server',
                 slug: 'playwright-mcp',
                 detailType: 'mcp',
-                headline: '让 AI 直接控制浏览器、跑交互流程、抓页面状态，适合自动化和回归验证。',
-                scenario: '适合网页自动化、交互测试、表单操作、页面巡检和浏览器级回归验证。',
-                overview: 'Playwright MCP Server 更偏“能动手的浏览器自动化入口”。它让 AI 不只是看页面，而是可以点、填、跳转、等待、截图和执行整段页面流程。对于需要真实浏览器交互的场景，比如登录、表单提交、页面回归检查，它会比纯静态分析更直接。',
-                useCases: ['自动跑一段网页交互流程', '做登录、提交、跳转等前端回归验证', '抓取动态页面内容或截图', '让 AI 协助复现和定位浏览器交互问题'],
-                gettingStarted: ['先准备 Node 环境和 Playwright 运行条件', '把 Playwright MCP Server 注册到客户端配置中', '第一次建议先让 AI 做一段短流程，比如打开页面、点击按钮、检查结果，再逐步增加复杂度'],
+                headline: '让 AI 真正控制浏览器完成点击、输入、跳转、等待和截图，适合网页自动化与回归验证。',
+                cardHeadline: '控制浏览器跑点击、输入和截图流程。',
+                scenario: '适合前端测试、页面巡检、登录流程复现、表单自动化和动态页面抓取。',
+                cardScenario: '适合前端测试、登录复现和页面巡检。',
+                overview: 'Playwright MCP 是浏览器自动化里最稳的一类选择，尤其适合你希望 AI 不只是“看页面”，而是亲自执行一段真实交互流程。它对调试交互 bug、自动跑回归、抓动态页面状态都很有帮助。',
+                useCases: ['执行完整网页交互流程并检查结果', '自动化登录、表单填写和页面跳转', '抓取动态渲染内容和页面截图', '复现线上问题并记录操作步骤'],
+                gettingStarted: ['本地先准备 Node 环境，如果第一次跑 Playwright 记得补装浏览器依赖', '把 MCP Server 注册到客户端配置中并重启客户端', '先从最短流程试跑，例如打开页面、点击按钮、检查文本，再逐步增加复杂度'],
                 installCommand: `{
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"]
+      "args": ["@playwright/mcp@latest"]
     }
   }
 }`,
-                installHint: '如果本机还没装过 Playwright 浏览器，首次运行后通常还需要按提示补装浏览器依赖。',
-                mcpConfigPurpose: '这段配置的作用，是让你的 MCP 客户端在本地启动 Playwright MCP Server。生效后，AI 就可以通过标准 MCP 调用浏览器自动化能力，完成点击、输入、等待、截图和页面状态检查。',
-                relatedSlugs: ['cdm', 'github-mcp', 'n8n-mcp'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664902979936260'
+                installHint: '这是微软官方仓库给出的标准接入方式之一，适合 Claude Desktop、Cursor、Codex 等常见 MCP 客户端。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动 Playwright MCP Server。生效后，AI 就能调用浏览器自动化能力，执行点击、输入、等待、截图和状态检查。',
+                relatedSlugs: ['browserbase-mcp', 'firecrawl-mcp', 'fetch-mcp'],
+                sourceUrl: 'https://github.com/microsoft/playwright-mcp'
+            },
+            {
+                name: 'Browserbase MCP',
+                slug: 'browserbase-mcp',
+                detailType: 'mcp',
+                headline: '把云端浏览器接进 MCP，减少本机环境依赖，适合长流程网页操作和更稳定的远程自动化。',
+                cardHeadline: '用云端浏览器做更稳的网页自动化。',
+                scenario: '适合网页抓取、云端自动化、反复跑流程、无本地浏览器环境的团队或个人。',
+                cardScenario: '适合长流程网页操作和团队共享环境。',
+                overview: 'Browserbase MCP 的优势在于把浏览器执行环境搬到云端，减少你对本机浏览器、驱动和环境差异的依赖。对于需要长期稳定跑网页操作、或者想把浏览器能力接入团队型工作流的人，它比完全本地方案更容易标准化。',
+                useCases: ['在云端执行网页自动化而不是依赖本机浏览器', '跑需要稳定环境的长流程网页操作', '让多人共享同一套浏览器自动化能力', '降低本机环境不一致导致的失败概率'],
+                gettingStarted: ['如果客户端支持 HTTP 型 MCP，优先走官方 hosted URL，接入最轻', '如果客户端不支持 HTTP，可以使用 `mcp-remote` 做桥接', '后续需要自托管或自定义模型时，再切换到 Browserbase 的本地/自托管方案'],
+                installCommand: `{
+  "mcpServers": {
+    "browserbase": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.browserbase.com/mcp"]
+    }
+  }
+}`,
+                installHint: 'Browserbase 官方同时提供 hosted MCP 和自托管模式。这里给的是兼容面更广的 hosted 远程桥接方式。',
+                mcpConfigPurpose: '这段配置会用 `mcp-remote` 把 Browserbase 官方 hosted MCP 服务接进客户端，让 AI 能通过云端浏览器执行网页交互和抓取任务。',
+                relatedSlugs: ['playwright-mcp', 'firecrawl-mcp', 'apify-actors-mcp'],
+                sourceUrl: 'https://github.com/browserbase/mcp-server-browserbase'
+            },
+            {
+                name: 'Firecrawl MCP',
+                slug: 'firecrawl-mcp',
+                detailType: 'mcp',
+                headline: '专注网页抓取与内容提取，适合把复杂网页、动态内容和批量 URL 变成可用文本数据。',
+                cardHeadline: '把网页和 URL 直接提成可用文本数据。',
+                scenario: '适合网页采集、搜索结果落地、文档转 Markdown、内容整理和 RAG 前置抓取。',
+                cardScenario: '适合网页采集、文档转 Markdown 和 RAG 前置抓取。',
+                overview: 'Firecrawl MCP 适合那些“需要网页内容，但不一定需要完整浏览器操作”的场景。它在抓内容、转 Markdown、处理动态渲染页面方面更直接，也更适合做资料整理、知识入库和批量抓取链路。',
+                useCases: ['把网页转成 Markdown 或结构化内容', '抓取动态页面并交给 AI 继续总结', '批量采集文章、产品页和文档站内容', '给知识库、RAG 或研究流程补充网页材料'],
+                gettingStarted: ['先申请 Firecrawl API Key 并确认额度', '把环境变量和命令写进 MCP 客户端配置', '第一轮建议先用一两个 URL 试跑，确认提取质量和输出格式符合你的使用场景'],
+                installCommand: `{
+  "mcpServers": {
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "fc-YOUR_API_KEY"
+      }
+    }
+  }
+}`,
+                installHint: 'Firecrawl 官方同时支持 `npx`、全局安装和不同客户端的一键接入。这里保留的是最容易直接复制的本地模板。',
+                mcpConfigPurpose: '这段配置会在本地通过 `npx` 启动 Firecrawl MCP，并把 API Key 注入环境变量。这样 AI 才能调用抓取、提取和网页转文本的能力。',
+                relatedSlugs: ['fetch-mcp', 'playwright-mcp', 'free-web-search-mcp'],
+                sourceUrl: 'https://github.com/mendableai/firecrawl-mcp-server'
+            },
+            {
+                name: 'Fetch MCP Server',
+                slug: 'fetch-mcp',
+                detailType: 'mcp',
+                headline: '官方参考实现里的轻量网页读取工具，适合先把 URL 内容稳定拿下来，再决定要不要上更重的抓取链路。',
+                cardHeadline: '轻量读取 URL、网页和 JSON 内容。',
+                scenario: '适合读单个网页、抓 API JSON、读取文档页面和做轻量内容采集。',
+                cardScenario: '适合单页抓取、接口读取和轻量采集。',
+                overview: 'Fetch MCP 不是最花哨的抓取工具，但它胜在简单、轻量、通用。很多时候你只是想把一个 URL 的 HTML、文本或 JSON 拿回来给 AI 用，并不需要完整浏览器自动化，这时它会比 Playwright 一类工具更省事。',
+                useCases: ['读取单个网页内容并交给 AI 总结', '直接抓取 API 返回的 JSON', '快速试验某个文档页是否能被稳定获取', '把 URL 内容作为后续整理或分类的输入'],
+                gettingStarted: ['先安装 `uv`，这样可以直接用 `uvx` 运行官方 fetch server', '把基础配置写进客户端后先试一个普通网页和一个 JSON 接口', '如果遇到复杂动态页面，再切换到 Firecrawl 或 Playwright 处理'],
+                installCommand: `{
+  "mcpServers": {
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    }
+  }
+}`,
+                installHint: '官方 fetch server 同时支持 `uvx`、pip 和 Docker。这里优先保留最轻量的 `uvx` 方式。',
+                mcpConfigPurpose: '这段配置会通过 `uvx` 启动官方 fetch MCP，让客户端具备基础 URL 读取能力，适合获取网页内容、JSON 响应和轻量文本上下文。',
+                relatedSlugs: ['firecrawl-mcp', 'free-web-search-mcp', 'notion-mcp'],
+                sourceUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/fetch'
+            },
+            {
+                name: 'Free Web Search Ultimate',
+                slug: 'free-web-search-mcp',
+                detailType: 'mcp',
+                headline: '提供零门槛的网页搜索、浏览和证据核验能力，特别适合实时信息查询和事实型问题。',
+                cardHeadline: '先搜索、再浏览、再做事实核验。',
+                scenario: '适合联网搜索、实时资料查询、事实核验、新闻检索和轻量研究流程。',
+                cardScenario: '适合实时搜索、新闻检索和事实核验。',
+                overview: '这类 MCP 的核心价值是“先搜索、再回答”，比只依赖模型记忆更适合处理时效性强的问题。仓库本身已经把搜索、浏览、验证整合到了一起，所以它不只是拿搜索结果，而是更强调证据链和引用。',
+                useCases: ['给 AI 补实时网页搜索能力', '回答时效性问题前先做证据核验', '搜索新闻、图片、书籍和网页结果', '做轻量研究或信息初筛'],
+                gettingStarted: ['先执行 `pip install cross-validated-search` 安装命令行与 MCP 服务', '把 `cross-validated-search-mcp` 注册到客户端中', '如果你想走更稳定的免费搜索路径，再补一个自托管 SearXNG 配置'],
+                installCommand: `{
+  "mcpServers": {
+    "cross-validated-search": {
+      "command": "cross-validated-search-mcp",
+      "args": []
+    }
+  }
+}`,
+                installHint: '列表里的安装说明明确给出了 `pip install cross-validated-search`。配置前先装好命令行入口，否则客户端无法直接拉起服务。',
+                mcpConfigPurpose: '这段配置会把搜索与证据核验服务注册到客户端里，让 AI 在回答事实型问题前能够先搜索、再浏览、再验证，而不是只凭模型记忆作答。',
+                relatedSlugs: ['fetch-mcp', 'firecrawl-mcp', 'apify-actors-mcp'],
+                sourceUrl: 'https://github.com/wd041216-bit/free-web-search-ultimate'
             },
             {
                 name: 'Notion MCP',
                 slug: 'notion-mcp',
                 detailType: 'mcp',
-                headline: '把 Notion 页面和数据库接进 AI 工作流，查资料、整理内容和更新记录都更顺手。',
-                scenario: '适合知识库查询、项目文档管理、数据库记录整理和团队协作文档流转。',
-                overview: 'Notion MCP 的重点，是把原本只能在 Notion 页面里点来点去的内容，变成 AI 可以直接读取和处理的上下文。这样你在查文档、整理数据库、更新任务记录时，不必一边问 AI 一边手动复制页面内容，整个知识流会更连贯。',
-                useCases: ['读取和搜索 Notion 页面内容', '查询或整理 Notion 数据库记录', '把会议纪要、任务状态和项目文档串进 AI 工作流', '减少文档复制粘贴带来的断点'],
-                gettingStarted: ['先准备 Notion API Key 并把目标页面或数据库共享给集成', '把 Notion MCP Server 配置进客户端', '建议先从只读场景开始，比如搜索页面、读取数据库记录，确认权限没问题后再扩展到写入流程'],
+                headline: '把 Notion 页面和数据库接进 AI 工作流，适合知识库检索、文档管理和任务状态更新。',
+                cardHeadline: '把 Notion 页面和数据库接进 AI。',
+                scenario: '适合团队文档、项目 wiki、数据库记录整理和知识协作场景。',
+                cardScenario: '适合知识库检索、文档管理和任务协作。',
+                overview: 'Notion MCP 的实用价值非常直观: 你不需要再把页面内容复制到聊天窗口，也不需要先手动点开数据库再描述给 AI。配置完成后，AI 可以直接读页面、查数据库、组织信息，让 Notion 真正变成工作流的一部分。',
+                useCases: ['搜索和读取 Notion 页面内容', '查询、整理和更新数据库记录', '围绕项目 wiki、会议纪要和任务状态做问答', '把团队知识库接进写作、总结和执行流程'],
+                gettingStarted: ['先在 Notion 后台创建集成，并把目标页面或数据库授权给它', '推荐优先使用官方 `NOTION_TOKEN` 方案接入客户端', '第一轮先用只读问题试跑，确认权限边界和返回结构都正常'],
                 installCommand: `{
   "mcpServers": {
-    "notion": {
+    "notionApi": {
       "command": "npx",
-      "args": ["-y", "notion-mcp-server"],
+      "args": ["-y", "@notionhq/notion-mcp-server"],
       "env": {
-        "NOTION_API_KEY": "YOUR_NOTION_API_KEY"
+        "NOTION_TOKEN": "ntn_****"
       }
     }
   }
 }`,
-                installHint: '不同 Notion MCP 实现的包名可能略有区别，这里给你的是最常见的本地接入模板；如果你跟着具体仓库安装，优先以仓库 README 为准。',
-                mcpConfigPurpose: '这段配置会在本地启动 Notion MCP Server，并通过环境变量把 API Key 传进去。它的作用是让 AI 获得读取和管理 Notion 页面、数据库的能力，而不需要你反复手动复制内容。',
-                relatedSlugs: ['claudesidian', 'github-mcp', 'context7'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664901205745667'
+                installHint: 'Notion 官方仓库支持 OAuth、Docker 和 npm。这里保留的是最适合 Claude Desktop、Cursor 一类客户端的 npm 模板。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动 Notion 官方 MCP Server，并用 `NOTION_TOKEN` 完成鉴权。之后 AI 就能直接读取和处理授权范围内的页面与数据库。',
+                relatedSlugs: ['mem0-mcp', 'fetch-mcp', 'github-mcp'],
+                sourceUrl: 'https://github.com/makenotion/notion-mcp-server'
             },
             {
-                name: 'Claudesidian',
-                slug: 'claudesidian',
+                name: 'Mem0 MCP',
+                slug: 'mem0-mcp',
                 detailType: 'mcp',
-                headline: '把 Claude 和你的 Obsidian 知识库打通，让本地笔记真正成为可调用上下文。',
-                scenario: '适合个人知识管理、笔记检索、知识复用、写作素材整理和本地私有笔记协作。',
-                overview: 'Claudesidian 这里对应的是 Obsidian 类 MCP 工作流。它的核心价值，不只是“让 AI 读取 Markdown”，而是让 AI 在不上传整库的前提下，安全地访问你本地 Obsidian 笔记。这样做知识查询、关联旧笔记、整理素材时会比手动复制粘贴顺很多，也更适合有隐私顾虑的个人知识库。',
-                useCases: ['让 Claude 读取和搜索本地 Obsidian 笔记', '围绕旧笔记生成文章、总结和知识关联', '自动化创建、修改和整理 Markdown 笔记', '减少个人知识库重复记录和找不到旧内容的问题'],
-                gettingStarted: ['先在 Obsidian 里准备好本地 Vault，并按所用方案启用需要的本地 API 或插件', '安装对应的 Obsidian MCP Server，并把服务脚本接入客户端配置', '首次建议先用“读笔记、搜关键词、汇总某个主题”这些低风险场景试跑'],
+                headline: '给 AI 增加长期记忆层，适合保存偏好、上下文和跨会话知识，而不是每次都重新解释。',
+                cardHeadline: '给 AI 加一层长期记忆和偏好存储。',
+                scenario: '适合长期协作、个性化助手、偏好记忆、知识复用和连续任务工作流。',
+                cardScenario: '适合长期协作、偏好记忆和连续任务。',
+                overview: 'Mem0 MCP 的关键不是“多一个数据库”，而是让 AI 能在多次会话中记住真正重要的事实，例如你的写作偏好、项目规则、常用流程和个体习惯。对于想把 AI 从单次问答升级成长期搭档的人来说，它很有价值。',
+                useCases: ['记住用户偏好、工作习惯和项目约束', '跨会话复用长期上下文', '为助手建立可搜索的记忆层', '减少重复解释背景和规则的成本'],
+                gettingStarted: ['先申请 Mem0 API Key，并决定默认 user id 怎么组织', '把最小配置加进客户端后先试几条低风险记忆', '建立记忆策略，避免把一次性噪音内容也长期存进去'],
                 installCommand: `{
   "mcpServers": {
-    "claudesidian": {
-      "command": "npx",
-      "args": ["-y", "obsidian-mcp-server"],
+    "mem0": {
+      "command": "uvx",
+      "args": ["mem0-mcp-server"],
       "env": {
-        "OBSIDIAN_API_KEY": "YOUR_OBSIDIAN_API_KEY",
-        "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27124"
+        "MEM0_API_KEY": "m0-...",
+        "MEM0_DEFAULT_USER_ID": "your-handle"
       }
     }
   }
 }`,
-                installHint: '这类 Obsidian MCP 通常依赖本地 Vault 和插件能力，第一次接入前先确认 Obsidian 侧的 API 或插件已经开启。',
-                mcpConfigPurpose: '这段配置的作用，是让客户端在本地启动 Obsidian MCP Server，并告诉它该连哪个 Obsidian 接口与端口。这样 AI 才能在你自己的设备上读取、搜索和维护笔记，而不是把知识库手动搬到外部聊天窗口。',
-                relatedSlugs: ['notion-mcp', 'context7', 'n8n-mcp'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664904791875615'
+                installHint: 'Mem0 官方 README 推荐本地客户端用 `uvx` 直接拉起服务，这样接入最轻、维护成本也低。',
+                mcpConfigPurpose: '这段配置会通过 `uvx` 启动 Mem0 MCP，并注入 API Key 和默认用户标识。这样 AI 就能把长期记忆安全地写入和取回，而不是每轮都从零开始。',
+                relatedSlugs: ['notion-mcp', 'sequential-thinking-mcp', 'desktop-commander-mcp'],
+                sourceUrl: 'https://github.com/mem0ai/mem0-mcp'
             },
             {
-                name: 'n8n MCP',
-                slug: 'n8n-mcp',
+                name: 'Desktop Commander MCP',
+                slug: 'desktop-commander-mcp',
                 detailType: 'mcp',
-                headline: '把自动化工作流平台和 MCP 接起来，让 AI 能真正进入你的流程编排链路。',
-                scenario: '适合自动化流程、定时任务、Webhook 编排、搜索抓取链路和多工具联动。',
-                overview: 'n8n MCP 更像一层“把 AI 接进自动化编排平台”的桥。它的价值不在单个工具调用，而在于把搜索、抓取、通知、数据库和外部 API 这些步骤串成自动化流程后，再让 AI 在关键节点参与判断、补全和执行。对需要长期跑的业务流程来说，这比单点调用更有扩展性。',
-                useCases: ['把 MCP 工具接进 n8n 工作流节点', '做搜索、抓取、通知和数据库更新的多步自动化', '让 AI 在自动化流程中读取上下文并决定下一步动作', '把浏览器、地图、内容生成等能力串成一条流水线'],
-                gettingStarted: ['先明确你要编排的是“单点调用”还是“多步流程”', '在 n8n 里先跑通一个最小工作流，再把 MCP Server 接进其中一个节点', '建议先做只读或低风险流程，比如搜索汇总、文档整理、地图查询，再逐步增加写入或外部调用'],
+                headline: '把文件、搜索、文本编辑和程序控制接进 MCP，是非常适合本地生产力场景的万能入口。',
+                cardHeadline: '文件、搜索、编辑和程序控制一把抓。',
+                scenario: '适合本地文件处理、目录搜索、文本修改、程序控制和桌面级协作任务。',
+                cardScenario: '适合本地文件处理和桌面级协作。',
+                overview: 'Desktop Commander MCP 的优势在于“覆盖面大且很接地气”。很多人第一次真正感受到 MCP 的威力，往往就是从它这类文件与桌面工具开始，因为它能把读写文件、查找文本、管理程序这些真实动作直接交给 AI。',
+                useCases: ['让 AI 直接查找和编辑本地文本文件', '跨目录搜索资料、日志和代码片段', '配合本地桌面环境做半自动执行流程', '减少来回复制内容和手动找文件的时间'],
+                gettingStarted: ['如果你只是想快速接入，优先用 README 里的 `npx setup` 自动配置方式', '如果你更想自己控制配置，可直接手动把 MCP JSON 写入 Claude Desktop 或 Cursor', '第一轮先限制在常用工作目录内使用，避免 AI 获得过大的文件访问范围'],
                 installCommand: `{
   "mcpServers": {
-    "n8n": {
+    "desktop-commander": {
       "command": "npx",
-      "args": ["-y", "n8n-mcp"]
+      "args": ["-y", "@wonderwhy-er/desktop-commander@latest"]
     }
   }
 }`,
-                installHint: '这里给的是通用启动模板。实际接入时，你通常还要结合具体工作流节点、Webhook 或外部凭证一起配置。',
-                mcpConfigPurpose: '这段配置会把 n8n 相关的 MCP 能力注册到客户端里，方便你先在本地或工作流节点里试跑。它的意义，在于把 AI 从“单次问答”推进到“可编排、可触发、可串联”的自动化流程中。',
-                relatedSlugs: ['playwright-mcp', 'amap-maps', 'minimax-mcp'],
-                sourceUrl: 'https://ai.codefather.cn/search/mcp?pageSize=40&q=n8n'
+                installHint: '这个项目本身还提供自动安装脚本、Docker 隔离和专门的桌面应用。这里保留的是最适合先快速试起来的手动配置模板。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动 Desktop Commander MCP，让 AI 获得文件读取、搜索、文本编辑和部分桌面级控制能力，适合本地生产力场景。',
+                relatedSlugs: ['git-mcp', 'notion-mcp', 'anyquery-mcp'],
+                sourceUrl: 'https://github.com/wonderwhy-er/DesktopCommanderMCP'
             },
             {
-                name: '高德地图 MCP',
-                slug: 'amap-maps',
+                name: 'Jupyter Notebook MCP',
+                slug: 'jupyter-notebook-mcp',
                 detailType: 'mcp',
-                headline: '让 AI 直接调用高德地图能力，做地点检索、路径规划和位置类服务。',
-                scenario: '适合路线规划、地点查询、本地生活服务、位置推荐和地理信息辅助流程。',
-                overview: '高德地图 MCP 的亮点，是把位置能力从“单独查地图”变成 AI 可以直接调用的服务。无论你是想做附近推荐、出行规划，还是在自动化流程里补一个地理位置节点，它都能让地点、路线和 POI 查询进入统一工作流。',
-                useCases: ['查询地点、POI 和地理坐标', '为出行、到店、配送类流程生成路线建议', '在本地生活服务里做周边推荐', '把位置能力接进自动化或客服工作流'],
-                gettingStarted: ['先准备好高德开放平台的 Key', '把地图 MCP Server 配置进客户端或工作流环境', '第一次建议先从地点搜索和路线规划这种低风险调用开始，确认返回结果结构符合你的使用场景'],
+                headline: '把 Jupyter Notebook 接进 Claude 或其它客户端，适合数据分析、实验和可视化任务。',
+                cardHeadline: '让 AI 直接进入 Jupyter Notebook 工作流。',
+                scenario: '适合数据探索、Python 实验、图表绘制、Notebook 协作和分析报告原型。',
+                cardScenario: '适合数据分析、实验和图表可视化。',
+                overview: '如果你的工作经常落到 Notebook 里，Jupyter Notebook MCP 会非常实用。它让 AI 不只是解释代码，而是直接进入 Notebook 工作流里执行、分析和可视化，特别适合数据分析、研究实验和原型验证。',
+                useCases: ['让 AI 直接驱动 Notebook 做分析', '在数据探索时快速执行代码和画图', '围绕实验过程生成解释和结论', '把 Notebook 变成交互式分析工作台'],
+                gettingStarted: ['先按仓库说明用 `uv` 建好环境，并安装 `jupyter-mcp` 内核', '把配置里的目录替换成你本机真实的 `src` 路径', '首次建议从一个简单 Notebook 开始，例如读取 CSV、做统计和画图，先确认链路跑通'],
                 installCommand: `{
   "mcpServers": {
-    "amap-maps": {
+    "jupyter": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/PARENT/REPO/FOLDER/src",
+        "run",
+        "jupyter_mcp_server.py"
+      ]
+    }
+  }
+}`,
+                installHint: '这个仓库的接入方式和一般 `npx` 型 MCP 不同，核心是先把 `uv` 环境和 Notebook 内核准备好，再把本地脚本接进客户端。',
+                mcpConfigPurpose: '这段配置会让客户端通过 `uv` 在指定目录下运行 Jupyter MCP 服务脚本。配置生效后，AI 就能与本地 Notebook 环境交互并执行分析流程。',
+                relatedSlugs: ['anyquery-mcp', 'fetch-mcp', 'semgrep-mcp'],
+                sourceUrl: 'https://github.com/jjsantos01/jupyter-notebook-mcp'
+            },
+            {
+                name: 'Anyquery MCP',
+                slug: 'anyquery-mcp',
+                detailType: 'mcp',
+                headline: '用 SQL 统一查询数据库和多种应用数据源，适合把分散业务信息集中到一个分析入口里。',
+                cardHeadline: '用 SQL 统一查数据库和多种业务数据。',
+                scenario: '适合数据库查询、跨应用检索、轻量 BI、数据联查和本地优先的数据分析工作流。',
+                cardScenario: '适合跨源查询、轻量 BI 和本地数据分析。',
+                overview: 'Anyquery 的亮点是把很多原本分散在不同工具里的数据查询动作统一成 SQL 体验。对于喜欢结构化分析、又不想每次都切不同后台的人来说，它比只做单点 API 集成更高效。',
+                useCases: ['通过 SQL 查询数据库和第三方应用数据', '把多来源数据统一到一个分析入口', '给 AI 提供结构化业务查询能力', '快速试验某些轻量 BI 或运营分析需求'],
+                gettingStarted: ['先用 Homebrew、APT 或直接下载二进制方式装好 `anyquery`', '在终端先执行一次 `anyquery mcp --stdio` 确认可正常启动', '再把命令写进 MCP 客户端配置，并根据实际需要安装对应插件或连接数据库'],
+                installCommand: `{
+  "mcpServers": {
+    "anyquery": {
+      "command": "anyquery",
+      "args": ["mcp", "--stdio"]
+    }
+  }
+}`,
+                installHint: '这个项目本体是一个独立命令行工具，所以要先把 `anyquery` 安装到系统里，再让客户端去拉起它的 MCP 子命令。',
+                mcpConfigPurpose: '这段配置会调用 `anyquery mcp --stdio` 启动 MCP 服务，让 AI 能通过 Anyquery 的数据连接层访问数据库和插件生态中的结构化数据。',
+                relatedSlugs: ['jupyter-notebook-mcp', 'desktop-commander-mcp', 'fetch-mcp'],
+                sourceUrl: 'https://github.com/julien040/anyquery'
+            },
+            {
+                name: 'Semgrep MCP',
+                slug: 'semgrep-mcp',
+                detailType: 'mcp',
+                headline: '把代码安全扫描和规则匹配能力接进 AI，适合在开发流程中更早发现安全问题。',
+                cardHeadline: '把代码安全扫描直接接进 AI 评审流。',
+                scenario: '适合安全审查、代码扫描、规则匹配、PR 风险排查和工程治理。',
+                cardScenario: '适合安全审查、PR 风险排查和工程治理。',
+                overview: 'Semgrep MCP 的价值在于把“安全扫描”这件事从独立平台变成可直接调用的能力。这样 AI 在评审代码、检查改动或解释风险时，不只是给经验判断，还能借助规则扫描结果做更实在的判断。',
+                useCases: ['在改动前后做安全规则扫描', '让 AI 结合扫描结果解释潜在漏洞', '在 PR 评审中提前发现高风险模式', '把代码治理和安全检查纳入日常工作流'],
+                gettingStarted: ['本地优先可以先用 `uvx semgrep-mcp` 跑起来', '第一次建议先对一个小仓库或单目录试扫，避免输出量过大', '把扫描结果和 GitHub / Git MCP 联动，会更适合做代码评审和修复闭环'],
+                installCommand: `{
+  "mcpServers": {
+    "semgrep": {
+      "command": "uvx",
+      "args": ["semgrep-mcp"]
+    }
+  }
+}`,
+                installHint: 'Semgrep 官方同时提供本地 `uvx`、Docker 和远程 `semgrep.ai` 方式。这里保留的是本地最容易直接接入的写法。',
+                mcpConfigPurpose: '这段配置会通过 `uvx` 启动 Semgrep MCP，让 AI 在对话里直接调用规则扫描和安全检查能力，而不只是根据经验猜测风险。',
+                relatedSlugs: ['github-mcp', 'git-mcp', 'desktop-commander-mcp'],
+                sourceUrl: 'https://github.com/semgrep/mcp'
+            },
+            {
+                name: 'Sequential Thinking MCP',
+                slug: 'sequential-thinking-mcp',
+                detailType: 'mcp',
+                headline: '为复杂问题提供可分步、可回看、可修正的思考链路，适合高复杂度任务。',
+                cardHeadline: '给复杂问题一条可回看的分步思考链。',
+                scenario: '适合复杂推理、方案拆解、调试分析、多阶段规划和需要反思修正的任务。',
+                cardScenario: '适合复杂推理、调试分析和多阶段规划。',
+                overview: 'Sequential Thinking 虽然不是连接外部数据源的 MCP，但它非常实用，因为它强化的是“如何思考复杂问题”。在模型容易跳结论、丢步骤的场景下，它能帮助代理按步骤展开、修正和反思，特别适合复杂工程任务和疑难排查。',
+                useCases: ['拆解复杂问题并形成更稳定的推理过程', '让 AI 按阶段推进调试或分析任务', '为多步骤规划提供可回看的思考轨迹', '减少复杂任务里一步跳太快导致的误判'],
+                gettingStarted: ['先把它当作“高复杂度任务专用工具”，不要所有问题都默认走它', '第一次可以拿一个复杂 bug 或多阶段方案设计来试', '把它和 GitHub、Semgrep、Mem0 等工具搭配，效果通常比单独用更明显'],
+                installCommand: `{
+  "mcpServers": {
+    "sequential-thinking": {
       "command": "npx",
-      "args": ["-y", "@amap/amap-maps-mcp-server"],
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  }
+}`,
+                installHint: '这是官方参考实现 README 里的标准 `npx` 接入方式，适合先快速试起来。',
+                mcpConfigPurpose: '这段配置会启动官方 Sequential Thinking MCP，让客户端在需要时调用分步推理与反思式问题解决能力，适合复杂任务而不是日常简单问答。',
+                relatedSlugs: ['mem0-mcp', 'github-mcp', 'semgrep-mcp'],
+                sourceUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking'
+            },
+            {
+                name: 'Apify Actors MCP Server',
+                slug: 'apify-actors-mcp',
+                detailType: 'mcp',
+                headline: '把 Apify 平台上的抓取与自动化 Actor 接进 AI，适合电商、社媒和大规模网页数据采集。',
+                cardHeadline: '直接复用 Apify Actor 做云端采集。',
+                scenario: '适合批量抓取、云端采集、电商监测、社媒数据收集和现成 Actor 复用。',
+                cardScenario: '适合批量抓取、电商监测和社媒采集。',
+                overview: 'Apify Actors MCP 的优势不是某一个具体工具，而是它背后现成的 Actor 生态。很多抓取、电商、社媒、目录页采集需求，本来就已经有成熟 Actor 可以直接跑，所以你不一定要自己从零写抓取流程。',
+                useCases: ['直接调用 Apify 现成 Actor 跑采集任务', '做电商页面、社媒内容或目录站批量抓取', '把云端抓取结果回流到研究或分析流程里', '减少自己维护爬虫和自动化脚本的成本'],
+                gettingStarted: ['先申请 Apify Token，并在平台上挑一个最小可用的 Actor 试跑', '如果客户端支持远程服务，也可以考虑官方 hosted 端点；本页先保留 stdio 模板', '先从小规模抓取开始，确认返回数据结构适合你的后续流程'],
+                installCommand: `{
+  "mcpServers": {
+    "apify": {
+      "command": "npx",
+      "args": ["@apify/actors-mcp-server"],
       "env": {
-        "AMAP_MAPS_API_KEY": "YOUR_AMAP_API_KEY"
+        "APIFY_TOKEN": "YOUR_APIFY_TOKEN"
       }
     }
   }
 }`,
-                installHint: '地图类 MCP 最关键的是 API Key 和调用额度。接入前先确认高德开放平台凭证已经准备好。',
-                mcpConfigPurpose: '这段配置会在本地启动高德地图 MCP Server，并通过环境变量注入高德 Key。配置完成后，AI 才能把地点查询、路线规划和位置服务当成可调用工具，而不是只能给你文字建议。',
-                relatedSlugs: ['n8n-mcp', 'minimax-mcp', 'notion-mcp'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664904821235717'
-            },
-            {
-                name: 'MiniMax MCP',
-                slug: 'minimax-mcp',
-                detailType: 'mcp',
-                headline: '把图像、视频、TTS 和语音克隆能力接进 AI 工作流，适合多模态内容生产。',
-                scenario: '适合语音合成、图文视频生成、配音、内容自动化和多模态创作链路。',
-                overview: 'MiniMax MCP 适合那些不满足于“只生成文字”的工作流。它把语音、图像、视频等多模态能力统一接进 MCP，所以你可以把一段文案继续往下做成配音、短视频或图文内容。对于内容生产型团队，它比单独切多个工具更顺。',
-                useCases: ['把文案直接转成语音或配音素材', '生成图像、视频和多模态内容资产', '做带克隆音色的内容自动化流程', '把媒体生成环节接进业务型工作流'],
-                gettingStarted: ['先准备 MiniMax 的 API Key 或对应账号凭证', '把 MiniMax MCP Server 安装或接入到客户端', '建议先从单一输出能力开始试跑，比如先做 TTS，再逐步扩展到图像或视频生成'],
-                installCommand: `{
-  "mcpServers": {
-    "minimax": {
-      "command": "npx",
-      "args": ["-y", "minimax-mcp-js"],
-      "env": {
-        "MINIMAX_API_KEY": "YOUR_MINIMAX_API_KEY"
-      }
-    }
-  }
-}`,
-                installHint: 'MiniMax MCP 更适合接到内容流水线里使用。先跑通单个能力，再决定是否扩展到图像、视频或语音克隆。',
-                mcpConfigPurpose: '这段配置的作用，是在本地启动 MiniMax MCP Server 并注入所需的 API Key。这样 AI 就能把文字、语音、图像和视频能力统一当作可调用工具，适合做多模态内容链路。',
-                relatedSlugs: ['n8n-mcp', 'amap-maps', 'playwright-mcp'],
-                sourceUrl: 'https://ai.codefather.cn/mcp/2010664902216572932'
+                installHint: 'Apify 官方 README 同时推荐 hosted 端点和 stdio 两种方式。这里保留的是最通用的本地 `npx` 启动模板。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动 Apify Actors MCP，并注入 `APIFY_TOKEN`。配置完成后，AI 就能调用 Apify 平台上的 Actor 去执行云端抓取和自动化任务。',
+                relatedSlugs: ['firecrawl-mcp', 'browserbase-mcp', 'free-web-search-mcp'],
+                sourceUrl: 'https://github.com/apify/actors-mcp-server'
             }
         ]
     }
 ];
 
+const ECC_SKILL_SLUGS = [
+    'search-first',
+    'continuous-learning-v2',
+    'strategic-compact',
+    'verification-loop',
+    'frontend-patterns',
+    'backend-patterns',
+    'coding-standards',
+    'market-research',
+    'clickhouse-io',
+    'postgres-patterns',
+    'regex-vs-llm-structured-text',
+    'content-hash-cache-pattern',
+    'cost-aware-llm-pipeline',
+    'content-engine',
+    'article-writing',
+    'investor-outreach',
+    'investor-materials',
+    'deployment-patterns',
+    'docker-patterns',
+    'security-scan',
+    'security-review'
+];
+
+const SUPERPOWERS_SKILL_SLUGS = [
+    'brainstorming',
+    'dispatching-parallel-agents',
+    'systematic-debugging',
+    'subagent-driven-development',
+    'requesting-code-review',
+    'verification-before-completion'
+];
+
+const BAOYU_SKILL_SLUGS = [
+    'baoyu-cover-image',
+    'baoyu-image-gen',
+    'baoyu-infographic',
+    'baoyu-slide-deck',
+    'baoyu-post-to-wechat',
+    'baoyu-post-to-x'
+];
+
+const ECC_INSTALL_HINT = '这里给的是按单个 skill 目录安装的 GitHub 命令；如果你已经整仓安装 Everything Claude Code，也可以直接复用同名 skill。';
+const SUPERPOWERS_INSTALL_HINT = '这里给的是只安装当前 superpowers skill 的 GitHub 目录命令；上游 README 同时支持整套 superpowers 工作流安装。';
+const BAOYU_INSTALL_HINT = 'Baoyu 官方 README 推荐先整仓安装 `jimliu/baoyu-skills`，装完后直接调用对应的 `/skill-name` 命令即可。';
+
+const SKILL_DETAIL_OVERRIDES = {
+    ...Object.fromEntries(
+        ECC_SKILL_SLUGS.map((slug) => [
+            slug,
+            {
+                installCommand: addSkillCommand(`${ECC_SKILLS_BASE_URL}/${slug}`),
+                installHint: ECC_INSTALL_HINT,
+                sourceUrl: `${ECC_SKILLS_BASE_URL}/${slug}`
+            }
+        ])
+    ),
+    ...Object.fromEntries(
+        SUPERPOWERS_SKILL_SLUGS.map((slug) => [
+            slug,
+            {
+                installCommand: addSkillCommand(`${SUPERPOWERS_SKILLS_BASE_URL}/${slug}`),
+                installHint: SUPERPOWERS_INSTALL_HINT,
+                sourceUrl: `${SUPERPOWERS_SKILLS_BASE_URL}/${slug}`
+            }
+        ])
+    ),
+    ...Object.fromEntries(
+        BAOYU_SKILL_SLUGS.map((slug) => [
+            slug,
+            {
+                installCommand: addSkillsRepoCommand('jimliu/baoyu-skills'),
+                installHint: BAOYU_INSTALL_HINT,
+                sourceUrl: `${BAOYU_SKILLS_BASE_URL}/${slug}`
+            }
+        ])
+    ),
+    docx: {
+        installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/docx`),
+        installHint: 'Anthropic 官方仓库已经把 docx 放进 document-skills。这里保留的是按单个 skill 目录安装的快捷命令。',
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/docx`
+    },
+    pdf: {
+        installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/pdf`),
+        installHint: 'Anthropic 官方 document-skills 里已经包含这个 PDF skill；如果你只想取 PDF 能力，这条单 skill 命令最直接。',
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pdf`
+    },
+    pptx: {
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pptx`
+    },
+    xlsx: {
+        installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/xlsx`),
+        installHint: 'Anthropic 官方仓库已经提供完整的 xlsx skill；这里保留的是按单目录安装的复制命令。',
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/xlsx`
+    },
+    'notebooklm-py': {
+        overview: '这个页面对应的是 NotebookLM 的官方社区 skill + Python CLI 组合：先把 GitHub 上的 root skill 安装进 Agent，再补上 `notebooklm-py` 和 Chromium 依赖，之后就能把资料库、问答、播客、脑图、信息图和幻灯片生成串成一条本地工作流。',
+        gettingStarted: ['先安装 root skill，再安装 `notebooklm-py` 浏览器依赖和 Chromium', '第一次运行前执行 `notebooklm login` 完成 Google 登录', '先创建 notebook 并导入资料，再决定要生成 audio、mind-map、infographic 还是 slide-deck'],
+        installCommand: multiLineCommand(
+            addSkillsRepoCommand('teng-lin/notebooklm-py'),
+            'python3 -m pip install "notebooklm-py[browser]"',
+            'npx playwright install chromium'
+        ),
+        installHint: '上游 README 推荐先通过 `npx skills add teng-lin/notebooklm-py` 安装 skill，再补齐 Python 包和 Chromium，CLI 与 Agent 工作流才会完整可用。',
+        skillDocPurpose: '这个 Skill 的 SKILL.md 负责把 NotebookLM 的建库、问答和多媒体产物生成流程规范下来，让 Agent 知道什么时候该先登录、什么时候该先建 notebook、什么时候该下载播客、脑图、信息图或 PPTX。',
+        sourceUrl: NOTEBOOKLM_REPO_URL
+    },
+    'release-skills': {
+        installCommand: addSkillsRepoCommand('jimliu/baoyu-skills'),
+        installHint: '这个 skill 在 `JimLiu/baoyu-skills` 的 `.claude/skills` 目录里。上游 README 推荐先安装整个仓库，然后直接运行 `/release-skills`。',
+        sourceUrl: BAOYU_RELEASE_SKILL_URL
+    },
+    'nutrient-document-processing': {
+        sourceUrl: NUTRIENT_MCP_REPO_URL
+    },
+    doc: {
+        overview: '这个页面对应的是偏“版式验收”的文档 skill：重点不是继续写内容，而是在 Word 交付前把分页、表格、图片和整体观感真正渲染出来检查一遍，避免只看文本结果就误判文档已经可交付。',
+        installCommand: multiLineCommand(
+            'npm install -g @openai/codex@latest',
+            'python3 -m pip install python-docx pdf2image'
+        ),
+        installHint: '`doc` 更接近 Codex 自带的文档工作流。安装最新版 Codex 后，再补 `python-docx` 和 `pdf2image`，就能做本地 `.docx` 视觉校验。',
+        skillDocPurpose: '这个 skill 的 SKILL.md 重点是把“先渲染再验收”的流程固定下来，让 Agent 在正式交付前优先检查标题层级、分页、表格宽度和图片位置，而不是只根据文本判断 Word 是否合格。',
+        sourceUrl: OPENAI_SKILLS_REPO_URL
+    },
+    speech: {
+        overview: '这个 skill 聚焦 OpenAI Audio API 的可复用朗读流程：先把文本定稿，再用内置 CLI 统一处理 voice、style、输出格式和批量任务，而不是每次都临时拼一段 TTS 命令。',
+        gettingStarted: ['先安装或升级 Codex，再补上 OpenAI Python SDK', '准备最终定稿文本，避免边生成边改内容', '先用一个短片段试听 voice 和 style，再决定是否批量生成整套音频'],
+        installCommand: multiLineCommand(
+            'npm install -g @openai/codex@latest',
+            'python3 -m pip install openai'
+        ),
+        installHint: '`speech` 属于 Codex 的系统级语音工作流；升级到最新版 Codex 后，再补 OpenAI Python SDK，就能直接调用 bundled CLI 来批量生成音频。',
+        skillDocPurpose: '这个 skill 的 SKILL.md 主要在规范 TTS 的输入收集、单条/批量模式选择、CLI 调用方式和试听校验步骤，避免 Agent 每次都重新组织一遍语音生成流程。',
+        sourceUrl: OPENAI_SKILLS_REPO_URL
+    }
+};
+
 function normalizeSkill(module, skill) {
+    const overrides = SKILL_DETAIL_OVERRIDES[skill.slug] || {};
+
     return {
         ...skill,
+        ...overrides,
         moduleId: module.id,
         moduleTitle: module.title,
+        moduleTone: module.tone,
+        moduleIcon: module.icon,
+        moduleDescription: module.description,
         detailUrl: skill.detailType === 'mcp'
             ? `mcp-detail.html?slug=${skill.slug}`
             : `skill-detail.html?slug=${skill.slug}`,
-        sourceUrl: skill.sourceUrl || REFERENCE_SOURCE_URL,
-        sourceLabel: skill.sourceLabel || REFERENCE_SOURCE_LABEL
+        sourceUrl: overrides.sourceUrl || skill.sourceUrl || REFERENCE_SOURCE_URL,
+        sourceLabel: overrides.sourceLabel || skill.sourceLabel || REFERENCE_SOURCE_LABEL
     };
 }
 

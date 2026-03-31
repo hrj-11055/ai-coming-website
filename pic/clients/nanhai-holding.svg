@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 140" role="img" aria-labelledby="title desc">
+  <title id="title">南控集团</title>
+  <desc id="desc">南控集团标识</desc>
+  <rect width="240" height="140" rx="16" fill="#ffffff"/>
+  <path d="M52 26h24l44 57V26h20v88h-23L72 56v58H52Z" fill="#1d49b5"/>
+  <path d="M137 26h18c18 0 33 15 33 33 0 6-2 12-5 18l18 24h-24l-12-16c-5 2-10 3-15 3h-13Zm18 20v24h4c8 0 14-5 14-12s-6-12-14-12Z" fill="#2b67d8"/>
+  <path d="M155 28c22 4 40 21 48 42-13 8-30 8-42 0 3-15 0-29-6-42Z" fill="#89d8ff" opacity=".75"/>
+  <text x="58" y="122" font-family="'Noto Sans SC', 'PingFang SC', sans-serif" font-size="22" font-weight="700" fill="#222222">南控集团</text>
+  <text x="58" y="136" font-family="Arial, Helvetica, sans-serif" font-size="9" letter-spacing=".5" fill="#666666">NANHAI HOLDING GROUP</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" role="img" aria-labelledby="title desc">
+  <title id="title">粤海集团</title>
+  <desc id="desc">GDH 粤海集团标识</desc>
+  <rect width="360" height="120" rx="16" fill="#ffffff"/>
+  <text x="30" y="68" font-family="Georgia, 'Times New Roman', serif" font-size="54" fill="#25309b">GDH</text>
+  <path d="M170 34 196 46 196 74 170 86 170 76 186 67 186 53 170 44Z" fill="#9bc91f"/>
+  <path d="M198 46 224 34 224 44 208 53 208 67 224 76 224 86 198 74Z" fill="#3fa9f5"/>
+  <path d="M170 88 196 76 206 86 180 98Z" fill="#1ea67a"/>
+  <path d="M224 88 198 76 188 86 214 98Z" fill="#45c0f0"/>
+  <text x="248" y="66" font-family="'Noto Serif SC', 'Songti SC', serif" font-size="44" fill="#25309b">粤海</text>
+</svg>

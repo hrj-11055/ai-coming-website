@@ -80,6 +80,19 @@ function renderDetail(skill) {
                 <h2>MCP 配置主要做什么</h2>
                 <p>${skill.mcpConfigPurpose || '这段配置会把对应 MCP Server 接进你的客户端，并准备好它运行所需的命令、地址或密钥。'}</p>
             </article>
+            ${skill.sourceUrl ? `
+            <article class="detail-panel">
+                <h2>项目主页</h2>
+                <p>想继续看官方 README、更多参数和更新日志，可以直接打开原始项目仓库。</p>
+                <div class="detail-source-actions">
+                    <a class="detail-source-btn" href="${skill.sourceUrl}" target="_blank" rel="noreferrer">
+                        <i class="fa-brands fa-github"></i>
+                        <span>查看 GitHub 仓库</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </article>
+            ` : ''}
         </section>
 
         <section class="detail-panel detail-panel-wide">

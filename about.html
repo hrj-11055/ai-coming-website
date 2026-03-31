@@ -191,6 +191,28 @@
 
         .client-cell:hover { background: rgba(255, 255, 255, 0.78); }
 
+        .client-cell img {
+            max-height: 38px;
+            max-width: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            opacity: 0.78;
+            transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+
+        .client-cell:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .client-cell img[alt="华润医药"] {
+            max-height: 46px;
+        }
+
+        .client-cell img[alt="南控集团"] {
+            max-height: 52px;
+        }
+
         .client-cell .client-name {
             font-family: var(--font-sans);
             font-size: 13px;
@@ -505,7 +527,7 @@
                     <img src="/pic/clients/chow-tai-fook.png" alt="周大福">
                 </div>
                 <div class="client-cell">
-                    <span class="client-name">华润医药</span>
+                    <img src="/pic/clients/cr-pharma.svg" alt="华润医药">
                 </div>
                 <div class="client-cell">
                     <img src="/pic/clients/psbc.png" alt="中国邮政储蓄银行">
@@ -520,7 +542,10 @@
                     <img src="/pic/clients/china-mobile.png" alt="河北移动">
                 </div>
                 <div class="client-cell">
-                    <span class="client-name">粤海集团</span>
+                    <img src="/pic/clients/gdh.svg" alt="粤海集团">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/nanhai-holding.svg" alt="南控集团">
                 </div>
                 <div class="client-cell">
                     <span class="client-name">佛山工信局</span>

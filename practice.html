@@ -184,23 +184,11 @@
             border-radius: 24px;
         }
 
-        .case-photo-small {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 18px;
-        }
-
         .case-grid-featured {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 28px;
             align-items: stretch;
-        }
-
-        .case-photos-side {
-            display: grid;
-            gap: 16px;
         }
 
         /* ===== BRIEF CASES ===== */
@@ -222,6 +210,14 @@
         .brief-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 28px 70px rgba(28, 23, 18, 0.12);
+        }
+
+        .card-evidence-photo {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-top: 18px;
         }
 
         /* ===== MEDIA SECTION ===== */
@@ -460,16 +456,6 @@
                 </div>
             </div>
 
-            <div class="case-photos-side reveal" style="margin-top: 20px; grid-template-columns: 1fr 1fr; display: grid; gap: 20px;">
-                <div class="panel-soft" style="padding: 14px;">
-                    <img src="/pic/practice/enterprise-classroom-enablement.jpg" alt="企业 AI 实战工作坊" class="case-photo-small">
-                    <p class="body-small" style="margin-top: 12px; padding: 0 8px;">工作坊现场：业务团队分组讨论各自部门的 AI 应用优先级</p>
-                </div>
-                <div class="panel-soft" style="padding: 14px;">
-                    <img src="/pic/practice/public-sector-lecture-hall.png" alt="大型组织 AI 专题分享" class="case-photo-small">
-                    <p class="body-small" style="margin-top: 12px; padding: 0 8px;">面向管理层与业务骨干的 AI 趋势认知分享</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -604,13 +590,10 @@
                     <p class="body-regular" style="margin-top: 10px;">
                         多次受邀在深圳福田区政府、广州越秀区政府、佛山工信局等公共部门开展 AI 应用与产业转型专题培训。
                     </p>
-                </div>
-            </div>
-
-            <div style="margin-top: 20px;" class="reveal">
-                <div class="panel-soft" style="padding: 14px;">
-                    <img src="/pic/practice/government-lecture-stage.jpg" alt="政府机构 AI 专题授课现场" class="case-photo-small" style="height: 280px;">
-                    <p class="body-small" style="margin-top: 12px; padding: 0 8px;">正式场景授课：面向政府部门管理干部的 AI 与产业转型专题分享</p>
+                    <img src="/pic/practice/public-sector-lecture-hall.png" alt="政府专题授课现场" class="card-evidence-photo">
+                    <p class="body-small" style="margin-top: 12px;">
+                        政府授课现场：面向管理干部与业务骨干展开 AI 与产业转型专题分享。
+                    </p>
                 </div>
             </div>
         </div>

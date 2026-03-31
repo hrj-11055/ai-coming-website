@@ -13,7 +13,7 @@ test('all primary nav pages include the Agent Skills entry', () => {
         const html = readProjectFile(page);
         assert.match(
             html,
-            /<a href="skills\.html"[^>]*>\s*Agent Skills\s*<\/a>/,
+            /<a href="skills\.html"[^>]*>\s*AI 能力库\s*<\/a>/,
             `Expected ${page} to link to skills.html in the primary navigation`
         );
     }
@@ -44,7 +44,7 @@ test('skills catalog defines the requested modules and keeps MCP at the bottom',
 
     for (const module of SKILL_MODULES) {
         if (module.id === 'mcp') {
-            assert.equal(module.skills.length, 9, 'Expected MCP to expose the requested nine entries');
+            assert.equal(module.skills.length, 15, 'Expected MCP to expose the requested fifteen entries');
             for (const skill of module.skills) {
                 assert.match(
                     skill.detailUrl,
@@ -119,6 +119,25 @@ test('document processing skills all expose install guidance and skills markdown
     }
 });
 
+test('non-MCP skills expose npm or npx installation commands and upstream source URLs', async () => {
+    const { ALL_SKILLS } = await import('../frontend/modules/skills-catalog.js');
+
+    const skills = ALL_SKILLS.filter((skill) => skill.detailType !== 'mcp');
+
+    for (const skill of skills) {
+        assert.match(
+            skill.installCommand || '',
+            /^(npx|npm)\b/,
+            `Expected ${skill.name} to expose an npm/npx-first installation command`
+        );
+        assert.notEqual(
+            skill.sourceUrl,
+            'https://ai.codefather.cn/skills',
+            `Expected ${skill.name} to point to an upstream repository instead of the placeholder source`
+        );
+    }
+});
+
 test('mcp module exposes the requested entries with configuration guidance', async () => {
     const { getModuleById } = await import('../frontend/modules/skills-catalog.js');
     const module = getModuleById('mcp');
@@ -128,14 +147,20 @@ test('mcp module exposes the requested entries with configuration guidance', asy
         module.skills.map((skill) => skill.name),
         [
             'GitHub MCP Server',
-            'Context7',
-            'cdm（Chrome DevTools MCP）',
+            'Git MCP',
             'Playwright MCP Server',
+            'Browserbase MCP',
+            'Firecrawl MCP',
+            'Fetch MCP Server',
+            'Free Web Search Ultimate',
             'Notion MCP',
-            'Claudesidian',
-            'n8n MCP',
-            '高德地图 MCP',
-            'MiniMax MCP'
+            'Mem0 MCP',
+            'Desktop Commander MCP',
+            'Jupyter Notebook MCP',
+            'Anyquery MCP',
+            'Semgrep MCP',
+            'Sequential Thinking MCP',
+            'Apify Actors MCP Server'
         ],
         'Expected MCP cards to follow the requested order'
     );
@@ -144,6 +169,27 @@ test('mcp module exposes the requested entries with configuration guidance', asy
         assert.ok(skill.installCommand, `Expected ${skill.name} to expose an MCP config snippet`);
         assert.ok(skill.mcpConfigPurpose, `Expected ${skill.name} to explain what the MCP config does`);
     }
+});
+
+test('claude official and MCP modules expose valid sidebar icons', async () => {
+    const { getModuleById } = await import('../frontend/modules/skills-catalog.js');
+    const script = readProjectFile('frontend/skills-page.js');
+
+    for (const moduleId of ['claude-official', 'mcp']) {
+        const module = getModuleById(moduleId);
+        assert.ok(module, `Expected ${moduleId} module to exist`);
+        assert.match(
+            module.icon || '',
+            /^fa-/,
+            `Expected ${moduleId} to expose a fontawesome icon class`
+        );
+    }
+
+    assert.match(
+        script,
+        /skill-nav-icon/,
+        'Expected the skills page renderer to output sidebar icon markup'
+    );
 });
 
 test('skill detail page includes a copy button for install commands', () => {
@@ -155,6 +201,62 @@ test('skill detail page includes a copy button for install commands', () => {
         script,
         /class="detail-copy-btn"/,
         'Expected the detail page renderer to output a copy button'
+    );
+});
+
+test('skills page keeps the left navigation scrollable when modules exceed the viewport', () => {
+    const html = readProjectFile('skills.html');
+
+    assert.match(
+        html,
+        /\.skills-sidebar\s*\{[\s\S]*max-height:\s*calc\(100vh - var\(--skills-nav-height\) - 28px\);[\s\S]*overflow:\s*hidden;/,
+        'Expected the skills sidebar to constrain its height on desktop'
+    );
+
+    assert.match(
+        html,
+        /\.skills-nav-list\s*\{[\s\S]*overflow-y:\s*auto;/,
+        'Expected the skills nav list to scroll vertically when it overflows'
+    );
+});
+
+test('skills page sidebar removes aggregate stats and per-module item counts', () => {
+    const html = readProjectFile('skills.html');
+    const script = readProjectFile('frontend/skills-page.js');
+
+    assert.doesNotMatch(
+        html,
+        /skills-sidebar-stats|skillsModuleCount|skillsItemCount/,
+        'Expected the sidebar aggregate stats block to be removed from the skills page shell'
+    );
+
+    assert.doesNotMatch(
+        script,
+        /module\.skills\.length|renderStats|个\s*\$\{itemLabel\}/,
+        'Expected the sidebar renderer to stop outputting per-module counts and aggregate stat updates'
+    );
+});
+
+test('skills page removes redundant sidebar intro copy and duplicate section kickers', () => {
+    const html = readProjectFile('skills.html');
+    const script = readProjectFile('frontend/skills-page.js');
+
+    assert.doesNotMatch(
+        html,
+        /Skill Directory|按模块集中浏览高频实用的 Skill 与 MCP/,
+        'Expected the skills sidebar intro eyebrow and helper copy to be removed'
+    );
+
+    assert.doesNotMatch(
+        html,
+        /\.skill-section-kicker\s*\{/,
+        'Expected the duplicate section kicker styles to be removed from the skills page'
+    );
+
+    assert.doesNotMatch(
+        script,
+        /skill-section-kicker/,
+        'Expected the section renderer to stop outputting duplicate module kickers'
     );
 });
 
@@ -177,6 +279,16 @@ test('skill detail page provides the shared slug-driven shell', () => {
     );
 });
 
+test('skill detail page renders an upstream repository entry when sourceUrl exists', () => {
+    const html = readProjectFile('skill-detail.html');
+    const script = readProjectFile('frontend/skill-detail-page.js');
+
+    assert.match(html, /\.detail-source-btn\s*\{/, 'Expected the skill detail page to style the upstream repository button');
+    assert.match(script, /<h2>上游仓库<\/h2>/, 'Expected the skill detail renderer to include an upstream repository panel');
+    assert.match(script, /查看 GitHub 仓库/, 'Expected the skill detail renderer to expose a GitHub repository link label');
+    assert.match(script, /class="detail-source-btn"/, 'Expected the skill detail renderer to output a source button class');
+});
+
 test('mcp detail page provides the shared slug-driven shell', () => {
     const html = readProjectFile('mcp-detail.html');
     const script = readProjectFile('frontend/mcp-detail-page.js');
@@ -189,4 +301,6 @@ test('mcp detail page provides the shared slug-driven shell', () => {
         'Expected the shared MCP detail page script to be loaded'
     );
     assert.match(script, /class="detail-copy-btn"/, 'Expected the MCP detail renderer to output a copy button');
+    assert.match(html, /\.detail-source-btn\s*\{/, 'Expected the MCP detail page to style the repository button');
+    assert.match(script, /class="detail-source-btn"/, 'Expected the MCP detail renderer to output a source button class');
 });
