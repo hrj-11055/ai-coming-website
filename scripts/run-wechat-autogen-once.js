@@ -230,13 +230,23 @@ async function runWechatAutogenOnce(options = {}) {
         };
     }
 
-    const publisher = options.publisher || createWechatPublisher(options.publisherOptions || {});
+    let publisher = options.publisher || null;
+    function getPublisher() {
+        if (!publisher) {
+            publisher = createWechatPublisher(options.publisherOptions || {});
+        }
+        return publisher;
+    }
     const reportResult = await maybePublishReport({
         date: dateInfo.date,
         reportDir,
         stagingDir,
         state,
-        publisher,
+        publisher: {
+            publishMarkdownDraft(payload) {
+                return getPublisher().publishMarkdownDraft(payload);
+            }
+        },
         enabledTypes
     });
     const podcastResult = await maybePublishPodcast({
@@ -244,7 +254,11 @@ async function runWechatAutogenOnce(options = {}) {
         podcastMetadataDir,
         stagingDir,
         state,
-        publisher,
+        publisher: {
+            publishMarkdownDraft(payload) {
+                return getPublisher().publishMarkdownDraft(payload);
+            }
+        },
         enabledTypes,
         siteBaseUrl
     });

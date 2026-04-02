@@ -36,6 +36,40 @@ test('runWechatAutogenOnce skips report upload when today report json is missing
     assert.equal(result.podcast.action, 'skip');
 });
 
+test('runWechatAutogenOnce does not require wechat credentials when todays content is missing', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-no-creds-'));
+
+    const previousAppId = process.env.WECHAT_APP_ID;
+    const previousAppSecret = process.env.WECHAT_APP_SECRET;
+    delete process.env.WECHAT_APP_ID;
+    delete process.env.WECHAT_APP_SECRET;
+
+    try {
+        const result = await runWechatAutogenOnce({
+            now: new Date('2026-04-02T02:00:00.000Z'),
+            reportDir: path.join(root, 'report'),
+            podcastMetadataDir: path.join(root, 'podcasts'),
+            stagingDir: path.join(root, 'staging'),
+            stateFile: path.join(root, 'state.json')
+        });
+
+        assert.equal(result.report.reason, 'report_missing_today');
+        assert.equal(result.podcast.reason, 'podcast_missing_today');
+    } finally {
+        if (typeof previousAppId === 'string') {
+            process.env.WECHAT_APP_ID = previousAppId;
+        } else {
+            delete process.env.WECHAT_APP_ID;
+        }
+
+        if (typeof previousAppSecret === 'string') {
+            process.env.WECHAT_APP_SECRET = previousAppSecret;
+        } else {
+            delete process.env.WECHAT_APP_SECRET;
+        }
+    }
+});
+
 test('runWechatAutogenOnce uploads only todays ready podcast and never falls back to older metadata', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-podcast-'));
     const reportDir = path.join(root, 'report');
