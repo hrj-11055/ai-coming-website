@@ -23,6 +23,7 @@ test('runWechatAutogenOnce skips report upload when today report json is missing
         podcastMetadataDir: path.join(root, 'podcasts'),
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['markdown', 'podcast'],
         publisher: {
             async publishMarkdownDraft() {
                 throw new Error('should not run');
@@ -50,7 +51,8 @@ test('runWechatAutogenOnce does not require wechat credentials when todays conte
             reportDir: path.join(root, 'report'),
             podcastMetadataDir: path.join(root, 'podcasts'),
             stagingDir: path.join(root, 'staging'),
-            stateFile: path.join(root, 'state.json')
+            stateFile: path.join(root, 'state.json'),
+            enabledTypes: ['markdown', 'podcast']
         });
 
         assert.equal(result.report.reason, 'report_missing_today');
@@ -98,6 +100,7 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         siteBaseUrl: 'https://ai-coming.example.com',
+        enabledTypes: ['markdown', 'podcast'],
         podcastFormatter: {
             async formatForWechat({ title, summary, scriptMarkdown, wechatCopy }) {
                 packagingCalls.push({ title, summary, scriptMarkdown, wechatCopy });
