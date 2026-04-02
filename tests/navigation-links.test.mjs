@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const NAV_PAGES = [
     'index.html',
@@ -26,4 +26,12 @@ test('public navigation no longer exposes the practice page entry', () => {
             `Expected ${page} navigation to stop linking to practice.html`
         );
     }
+});
+
+test('practice page file has been removed from the site root', () => {
+    assert.equal(
+        existsSync(new URL('../practice.html', import.meta.url)),
+        false,
+        'Expected practice.html to be removed from the repository root'
+    );
 });
