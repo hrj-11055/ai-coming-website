@@ -116,6 +116,24 @@ http://localhost:3000
   - `POST /api/podcast/news/:date/generate`
   - `GET /api/podcast/minimax/tasks/:taskId`
 
+## 自动化脚本
+
+- 播客自动生成：
+  - `npm run podcast:autogen:once`
+  - `npm run podcast:autogen:cron:install`
+- 微信公众号草稿自动上传：
+  - `npm run wechat:autogen:once`
+  - `npm run wechat:autogen:cron:install`
+
+微信公众号自动上传任务当前行为：
+
+- 仅处理 `Asia/Shanghai` 当天内容
+- 日报来源固定为 `/var/www/json/report/YYYY-MM-DD.json`
+- 播客来源固定为 `data/podcasts/news/YYYY-MM-DD.json`
+- 自动把日报 JSON 转成 Markdown 中间稿，再发布到公众号草稿箱
+- 同时支持当天播客文章草稿
+- 不会回退使用前一天或更早内容
+
 ## 活跃文档入口
 
 以下文档是当前维护中的可信入口：
