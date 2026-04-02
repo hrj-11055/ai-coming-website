@@ -75,6 +75,7 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
     const reportDir = path.join(root, 'report');
     const podcastMetadataDir = path.join(root, 'podcasts');
     const calls = [];
+    const packagingCalls = [];
 
     writeJson(path.join(podcastMetadataDir, '2026-04-01.json'), {
         status: 'ready',
@@ -97,15 +98,27 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         siteBaseUrl: 'https://ai-coming.example.com',
+        podcastFormatter: {
+            async formatForWechat({ title, summary, scriptMarkdown, wechatCopy }) {
+                packagingCalls.push({ title, summary, scriptMarkdown, wechatCopy });
+                return {
+                    markdown: `# ${title}\n\n播客文字版\n\n${scriptMarkdown}\n\n${wechatCopy}`,
+                    digest: summary
+                };
+            }
+        },
         publisher: {
             async publishMarkdownDraft(payload) {
                 calls.push(payload.kind);
+                assert.doesNotMatch(payload.markdown, /https:\/\/ai-coming\.example\.com\/api\/podcast\/news\/2026-04-02\/audio/);
                 return { media_id: `${payload.kind}-draft` };
             }
         }
     });
 
     assert.deepEqual(calls, ['podcast']);
+    assert.equal(packagingCalls.length, 1);
+    assert.match(packagingCalls[0].scriptMarkdown, /今播播客正文/);
     assert.equal(result.podcast.action, 'uploaded');
     assert.equal(result.podcast.reason, 'podcast_ready_today');
     assert.equal(result.report.action, 'skip');

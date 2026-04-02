@@ -12,6 +12,7 @@ const {
     formatWechatTitle,
     hashText
 } = require('../server/services/wechat-content');
+const { createWechatPodcastFormatter } = require('../server/services/wechat-podcast-formatter');
 const { createWechatPublisher } = require('../server/services/wechat-publisher');
 
 const ROOT_DIR = path.join(__dirname, '..');
@@ -160,6 +161,7 @@ async function maybePublishPodcast({
     stagingDir,
     state,
     publisher,
+    podcastFormatter,
     enabledTypes,
     siteBaseUrl
 }) {
@@ -182,8 +184,15 @@ async function maybePublishPodcast({
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
 
-    const markdown = buildPodcastMarkdown({ date, metadata, siteBaseUrl });
-    const digest = buildWechatDigest(metadata.summary || markdown);
+    const sourceMarkdown = buildPodcastMarkdown({ date, metadata, siteBaseUrl });
+    const formatted = await podcastFormatter.formatForWechat({
+        title: formatWechatTitle(date),
+        summary: metadata.summary || '',
+        scriptMarkdown: sourceMarkdown,
+        wechatCopy: metadata.wechat_copy || ''
+    });
+    const markdown = formatted.markdown;
+    const digest = formatted.digest || buildWechatDigest(metadata.summary || markdown);
     const stagingPath = path.join(stagingDir, `${date}-podcast.md`);
     writeTextFile(stagingPath, markdown);
 
@@ -231,11 +240,18 @@ async function runWechatAutogenOnce(options = {}) {
     }
 
     let publisher = options.publisher || null;
+    let podcastFormatter = options.podcastFormatter || null;
     function getPublisher() {
         if (!publisher) {
             publisher = createWechatPublisher(options.publisherOptions || {});
         }
         return publisher;
+    }
+    function getPodcastFormatter() {
+        if (!podcastFormatter) {
+            podcastFormatter = createWechatPodcastFormatter(options.podcastFormatterOptions || {});
+        }
+        return podcastFormatter;
     }
     const reportResult = await maybePublishReport({
         date: dateInfo.date,
@@ -257,6 +273,11 @@ async function runWechatAutogenOnce(options = {}) {
         publisher: {
             publishMarkdownDraft(payload) {
                 return getPublisher().publishMarkdownDraft(payload);
+            }
+        },
+        podcastFormatter: {
+            formatForWechat(payload) {
+                return getPodcastFormatter().formatForWechat(payload);
             }
         },
         enabledTypes,

@@ -142,9 +142,8 @@ function trimPodcastScriptMarkdown(markdown) {
     return lines.join('\n').trim();
 }
 
-function buildPodcastMarkdown({ date, metadata, siteBaseUrl }) {
+function buildPodcastMarkdown({ date, metadata }) {
     const title = formatWechatTitle(date);
-    const audioUrl = joinAbsoluteUrl(siteBaseUrl, metadata?.audio_url || '');
     const scriptMarkdown = trimPodcastScriptMarkdown(metadata?.script_markdown || '');
     const lines = [
         `# ${title}`,
@@ -155,13 +154,6 @@ function buildPodcastMarkdown({ date, metadata, siteBaseUrl }) {
 
     if (metadata?.summary) {
         lines.push(metadata.summary.trim());
-        lines.push('');
-    }
-
-    if (audioUrl) {
-        lines.push('## 收听入口');
-        lines.push('');
-        lines.push(`[点击收听今日播客](${audioUrl})`);
         lines.push('');
     }
 

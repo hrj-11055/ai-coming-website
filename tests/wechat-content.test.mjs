@@ -54,7 +54,7 @@ test('buildPodcastMarkdown renders fixed title, podcast marker, summary, wechat 
     assert.match(markdown, /播客版/);
     assert.match(markdown, /今天整理 12 条 AI 快讯。/);
     assert.match(markdown, /转发文案/);
-    assert.match(markdown, /https:\/\/ai-coming\.example\.com\/api\/podcast\/news\/2026-04-02\/audio/);
+    assert.doesNotMatch(markdown, /https:\/\/ai-coming\.example\.com\/api\/podcast\/news\/2026-04-02\/audio/);
 });
 
 test('buildWechatDigest truncates long text and formatWechatTitle keeps mm月dd日 format', () => {
