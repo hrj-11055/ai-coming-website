@@ -1,9 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const TOKEN_URL = 'https://api.weixin.qq.com/cgi-bin/token';
 const UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/material/add_material';
+const TEMP_MEDIA_UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload';
 const DRAFT_URL = 'https://api.weixin.qq.com/cgi-bin/draft/add';
+const PREVIEW_URL = 'https://api.weixin.qq.com/cgi-bin/message/mass/preview';
+const SENDALL_URL = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall';
 
 function escapeHtml(value) {
     return String(value || '')
@@ -104,6 +108,14 @@ async function fetchAccessToken({ appId, appSecret, fetchImpl = fetch }) {
 function getMimeType(filePath) {
     const extension = path.extname(filePath).toLowerCase();
     switch (extension) {
+        case '.mp3':
+            return 'audio/mpeg';
+        case '.amr':
+            return 'audio/amr';
+        case '.wav':
+            return 'audio/wav';
+        case '.m4a':
+            return 'audio/mp4';
         case '.jpg':
         case '.jpeg':
             return 'image/jpeg';
@@ -118,35 +130,67 @@ function getMimeType(filePath) {
     }
 }
 
-async function uploadImage({ accessToken, imagePath, fetchImpl = fetch }) {
-    const resolvedPath = path.resolve(imagePath);
-    if (!fs.existsSync(resolvedPath)) {
-        throw new Error(`封面图不存在: ${resolvedPath}`);
-    }
-
-    const fileBuffer = fs.readFileSync(resolvedPath);
-    const fileName = path.basename(resolvedPath);
-    const boundary = `----wechat-boundary-${Date.now().toString(16)}`;
+function buildMultipartBody({ fieldName, fileName, mimeType, fileBuffer }) {
+    const boundary = `----wechat-boundary-${Date.now().toString(16)}-${crypto.randomBytes(4).toString('hex')}`;
     const header = [
         `--${boundary}`,
-        `Content-Disposition: form-data; name="media"; filename="${fileName}"`,
-        `Content-Type: ${getMimeType(resolvedPath)}`,
+        `Content-Disposition: form-data; name="${fieldName}"; filename="${fileName}"`,
+        `Content-Type: ${mimeType}`,
         '',
         ''
     ].join('\r\n');
     const footer = `\r\n--${boundary}--\r\n`;
-    const body = Buffer.concat([
-        Buffer.from(header, 'utf8'),
-        fileBuffer,
-        Buffer.from(footer, 'utf8')
-    ]);
 
-    const response = await fetchImpl(`${UPLOAD_URL}?access_token=${encodeURIComponent(accessToken)}&type=image`, {
+    return {
+        boundary,
+        body: Buffer.concat([
+            Buffer.from(header, 'utf8'),
+            fileBuffer,
+            Buffer.from(footer, 'utf8')
+        ])
+    };
+}
+
+async function uploadMultipartMedia({ url, fileName, mimeType, fileBuffer, fetchImpl = fetch }) {
+    const { boundary, body } = buildMultipartBody({
+        fieldName: 'media',
+        fileName,
+        mimeType,
+        fileBuffer
+    });
+
+    const response = await fetchImpl(url, {
         method: 'POST',
         headers: {
             'Content-Type': `multipart/form-data; boundary=${boundary}`
         },
         body
+    });
+
+    return response;
+}
+
+function readLocalFileBuffer(filePath, missingMessagePrefix) {
+    const resolvedPath = path.resolve(filePath);
+    if (!fs.existsSync(resolvedPath)) {
+        throw new Error(`${missingMessagePrefix}: ${resolvedPath}`);
+    }
+
+    return {
+        resolvedPath,
+        fileBuffer: fs.readFileSync(resolvedPath)
+    };
+}
+
+async function uploadImage({ accessToken, imagePath, fetchImpl = fetch }) {
+    const { resolvedPath, fileBuffer } = readLocalFileBuffer(imagePath, '封面图不存在');
+    const fileName = path.basename(resolvedPath);
+    const response = await uploadMultipartMedia({
+        url: `${UPLOAD_URL}?access_token=${encodeURIComponent(accessToken)}&type=image`,
+        fileName,
+        mimeType: getMimeType(resolvedPath),
+        fileBuffer,
+        fetchImpl
     });
 
     if (!response.ok) {
@@ -160,6 +204,62 @@ async function uploadImage({ accessToken, imagePath, fetchImpl = fetch }) {
 
     if (!data.media_id) {
         throw new Error('上传图片成功但缺少 media_id');
+    }
+
+    return data;
+}
+
+async function uploadVoice({
+    accessToken,
+    audioPath,
+    audioUrl,
+    audioBuffer,
+    fileBuffer,
+    fileName,
+    fetchImpl = fetch
+}) {
+    let resolvedFileName = fileName || 'podcast.mp3';
+    let resolvedMimeType = getMimeType(resolvedFileName);
+    let resolvedBuffer = audioBuffer || fileBuffer;
+
+    if (!resolvedBuffer) {
+        if (audioPath) {
+            const local = readLocalFileBuffer(audioPath, '音频文件不存在');
+            resolvedFileName = fileName || path.basename(local.resolvedPath);
+            resolvedMimeType = getMimeType(local.resolvedPath);
+            resolvedBuffer = local.fileBuffer;
+        } else if (audioUrl) {
+            const response = await fetchImpl(audioUrl);
+            if (!response.ok) {
+                throw new Error(`下载音频失败: HTTP ${response.status}`);
+            }
+            resolvedBuffer = Buffer.from(await response.arrayBuffer());
+            resolvedFileName = fileName || path.basename(new URL(audioUrl).pathname || 'podcast.mp3');
+            resolvedMimeType = getMimeType(resolvedFileName);
+        } else {
+            throw new Error('缺少音频文件或音频地址');
+        }
+    }
+
+    const response = await uploadMultipartMedia({
+        url: `${TEMP_MEDIA_UPLOAD_URL}?access_token=${encodeURIComponent(accessToken)}&type=voice`,
+        fileName: resolvedFileName,
+        mimeType: resolvedMimeType,
+        fileBuffer: resolvedBuffer,
+        fetchImpl
+    });
+
+    if (!response.ok) {
+        throw new Error(`上传语音素材失败: HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.errcode) {
+        throw new Error(`上传语音素材失败: ${data.errmsg || data.errcode}`);
+    }
+
+    if (!data.media_id) {
+        throw new Error('上传语音素材成功但缺少 media_id');
     }
 
     return data;
@@ -198,11 +298,99 @@ async function publishDraft({ accessToken, article, fetchImpl = fetch }) {
     return data;
 }
 
+async function publishPreviewVoice({
+    accessToken,
+    mediaId,
+    openId,
+    wxName,
+    fetchImpl = fetch
+}) {
+    const body = {
+        msgtype: 'voice',
+        voice: {
+            media_id: mediaId
+        }
+    };
+
+    if (openId) {
+        body.touser = openId;
+    } else if (wxName) {
+        body.towxname = wxName;
+    } else {
+        throw new Error('语音预览缺少 openId 或 wxName');
+    }
+
+    const response = await fetchImpl(`${PREVIEW_URL}?access_token=${encodeURIComponent(accessToken)}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!response.ok) {
+        throw new Error(`预览语音消息失败: HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.errcode) {
+        throw new Error(`预览语音消息失败: ${data.errmsg || data.errcode}`);
+    }
+
+    return data;
+}
+
+async function publishSendAllVoice({
+    accessToken,
+    mediaId,
+    tagId,
+    sendToAll = true,
+    fetchImpl = fetch
+}) {
+    if (!sendToAll && (tagId === '' || tagId === null || tagId === undefined)) {
+        throw new Error('定向群发语音消息缺少 tagId');
+    }
+
+    const filter = sendToAll
+        ? { is_to_all: true }
+        : { is_to_all: false, tag_id: Number(tagId) };
+
+    const response = await fetchImpl(`${SENDALL_URL}?access_token=${encodeURIComponent(accessToken)}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            filter,
+            voice: {
+                media_id: mediaId
+            },
+            msgtype: 'voice'
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`群发语音消息失败: HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.errcode) {
+        throw new Error(`群发语音消息失败: ${data.errmsg || data.errcode}`);
+    }
+
+    return data;
+}
+
 function createWechatPublisher(options = {}) {
     const appId = options.appId || process.env.WECHAT_APP_ID || '';
     const appSecret = options.appSecret || process.env.WECHAT_APP_SECRET || '';
     const defaultAuthor = options.defaultAuthor || process.env.WECHAT_AUTOGEN_DEFAULT_AUTHOR || 'AIcoming';
     const defaultCoverImage = options.defaultCoverImage || process.env.WECHAT_AUTOGEN_DEFAULT_COVER_IMAGE || '';
+    const audioSendMode = String(options.audioSendMode || process.env.WECHAT_AUTOGEN_AUDIO_SEND_MODE || 'sendall').toLowerCase();
+    const audioTagId = options.audioTagId ?? process.env.WECHAT_AUTOGEN_AUDIO_TAG_ID ?? '';
+    const audioSendToAll = String(options.audioSendToAll ?? process.env.WECHAT_AUTOGEN_AUDIO_SEND_TO_ALL ?? 'true').toLowerCase() !== 'false';
+    const audioPreviewOpenId = options.audioPreviewOpenId || process.env.WECHAT_AUTOGEN_AUDIO_PREVIEW_OPENID || '';
+    const audioPreviewWxName = options.audioPreviewWxName || process.env.WECHAT_AUTOGEN_AUDIO_PREVIEW_WXNAME || '';
     const fetchImpl = options.fetchImpl || fetch;
 
     if (!appId || !appSecret) {
@@ -210,6 +398,15 @@ function createWechatPublisher(options = {}) {
     }
 
     return {
+        getAudioDeliveryFingerprint() {
+            return crypto.createHash('sha1').update(JSON.stringify({
+                audioSendMode,
+                audioTagId,
+                audioSendToAll,
+                audioPreviewOpenId,
+                audioPreviewWxName
+            })).digest('hex');
+        },
         async publishMarkdownDraft(payload) {
             const accessToken = await fetchAccessToken({ appId, appSecret, fetchImpl });
             const coverImagePath = payload.coverImagePath || defaultCoverImage;
@@ -234,6 +431,42 @@ function createWechatPublisher(options = {}) {
                 },
                 fetchImpl
             });
+        },
+        async publishPodcastAudio(payload) {
+            const accessToken = await fetchAccessToken({ appId, appSecret, fetchImpl });
+            const voiceUpload = await uploadVoice({
+                accessToken,
+                audioPath: payload.audioPath,
+                audioUrl: payload.audioUrl,
+                audioBuffer: payload.audioBuffer,
+                fileName: payload.fileName,
+                fetchImpl
+            });
+
+            let deliveryResult;
+            if (audioSendMode === 'preview') {
+                deliveryResult = await publishPreviewVoice({
+                    accessToken,
+                    mediaId: voiceUpload.media_id,
+                    openId: audioPreviewOpenId,
+                    wxName: audioPreviewWxName,
+                    fetchImpl
+                });
+            } else {
+                deliveryResult = await publishSendAllVoice({
+                    accessToken,
+                    mediaId: voiceUpload.media_id,
+                    tagId: audioTagId,
+                    sendToAll: audioSendToAll,
+                    fetchImpl
+                });
+            }
+
+            return {
+                ...deliveryResult,
+                voice_media_id: voiceUpload.media_id,
+                delivery_mode: audioSendMode
+            };
         }
     };
 }
@@ -242,6 +475,9 @@ module.exports = {
     createWechatPublisher,
     fetchAccessToken,
     publishDraft,
+    publishPreviewVoice,
+    publishSendAllVoice,
     renderMarkdownToHtml,
-    uploadImage
+    uploadImage,
+    uploadVoice
 };

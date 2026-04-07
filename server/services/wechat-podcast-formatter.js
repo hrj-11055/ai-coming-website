@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 const { buildWechatDigest } = require('./wechat-content');
 
 const DEFAULT_API_URL = 'https://api.deepseek.com/chat/completions';
@@ -48,6 +50,17 @@ function normalizeChatCompletionsUrl(baseOrFullUrl, fallbackUrl) {
     return `${raw.replace(/\/+$/, '')}/chat/completions`;
 }
 
+function buildFormatterFingerprint({ model, prompt, version }) {
+    return crypto
+        .createHash('sha1')
+        .update(JSON.stringify({
+            version: version || '',
+            model: model || '',
+            prompt: prompt || ''
+        }))
+        .digest('hex');
+}
+
 function createWechatPodcastFormatter({
     config = {},
     fetchImpl = fetch
@@ -59,18 +72,27 @@ function createWechatPodcastFormatter({
     );
     const model = config.model || process.env.DEEPSEEK_MODEL || DEFAULT_MODEL;
     const timeoutMs = Math.max(1000, Number(config.timeoutMs || process.env.WECHAT_PODCAST_FORMATTER_TIMEOUT_MS || DEFAULT_TIMEOUT_MS));
-
-    if (!apiKey) {
-        throw new Error('缺少 DeepSeek API Key，无法生成播客公众号轻包装文稿');
-    }
+    const prompt = buildWechatPodcastFormattingPrompt();
+    const fingerprint = buildFormatterFingerprint({
+        model,
+        prompt,
+        version: config.version || process.env.WECHAT_PODCAST_FORMATTER_VERSION || ''
+    });
 
     return {
+        getFingerprint() {
+            return fingerprint;
+        },
         async formatForWechat({
             title,
             summary,
             scriptMarkdown,
             wechatCopy
         }) {
+            if (!apiKey) {
+                throw new Error('缺少 DeepSeek API Key，无法生成播客公众号轻包装文稿');
+            }
+
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -86,7 +108,7 @@ function createWechatPodcastFormatter({
                         messages: [
                             {
                                 role: 'system',
-                                content: buildWechatPodcastFormattingPrompt()
+                                content: prompt
                             },
                             {
                                 role: 'user',

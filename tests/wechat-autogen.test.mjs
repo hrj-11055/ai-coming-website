@@ -126,3 +126,226 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
     assert.equal(result.podcast.reason, 'podcast_ready_today');
     assert.equal(result.report.action, 'skip');
 });
+
+test('runWechatAutogenOnce republishes podcast when formatter fingerprint changes', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-fingerprint-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const stateFile = path.join(root, 'state.json');
+    const uploads = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        summary: '今播播客摘要',
+        script_markdown: '今播播客正文'
+    });
+    writeJson(stateFile, {
+        podcast: {
+            last_uploaded_fingerprint: 'legacy-fingerprint'
+        }
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile,
+        stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['podcast'],
+        podcastFormatter: {
+            getFingerprint() {
+                return 'formatter-v2';
+            },
+            async formatForWechat({ title, scriptMarkdown }) {
+                return {
+                    markdown: `# ${title}\n\n${scriptMarkdown}`,
+                    digest: '今播播客摘要'
+                };
+            }
+        },
+        publisher: {
+            async publishMarkdownDraft(payload) {
+                uploads.push(payload);
+                return { media_id: 'podcast-draft' };
+            }
+        }
+    });
+
+    assert.equal(uploads.length, 1);
+    assert.equal(result.podcast.action, 'uploaded');
+});
+
+test('runWechatAutogenOnce falls back to source markdown when formatter fails', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-fallback-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const uploads = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        summary: '今播播客摘要',
+        script_markdown: '今播播客正文',
+        wechat_copy: '今日转发文案',
+        audio_url: '/api/podcast/news/2026-04-02/audio'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['podcast'],
+        podcastFormatter: {
+            getFingerprint() {
+                return 'formatter-v2';
+            },
+            async formatForWechat() {
+                throw new Error('formatter unavailable');
+            }
+        },
+        publisher: {
+            async publishMarkdownDraft(payload) {
+                uploads.push(payload);
+                return { media_id: 'podcast-draft' };
+            }
+        }
+    });
+
+    assert.equal(uploads.length, 1);
+    assert.match(uploads[0].markdown, /今日播客正文/);
+    assert.match(uploads[0].markdown, /今播播客正文/);
+    assert.doesNotMatch(uploads[0].markdown, /点击收听今日播客/);
+    assert.equal(result.podcast.action, 'uploaded');
+    assert.match(result.podcast.formatterFallbackReason, /formatter unavailable/);
+});
+
+test('runWechatAutogenOnce sends only todays ready podcast audio and skips older files', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-audio-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const audioDir = path.join(podcastMetadataDir, 'audio');
+    const calls = [];
+
+    fs.mkdirSync(audioDir, { recursive: true });
+    fs.writeFileSync(path.join(audioDir, '2026-04-02.mp3'), 'fake-mp3');
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-01.json'), {
+        status: 'ready',
+        audio_storage: 'local',
+        audio_file: '2026-04-01.mp3',
+        audio_url: '/api/podcast/news/2026-04-01/audio'
+    });
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        audio_storage: 'local',
+        audio_file: '2026-04-02.mp3',
+        audio_url: '/api/podcast/news/2026-04-02/audio'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['podcast_audio'],
+        publisher: {
+            getAudioDeliveryFingerprint() {
+                return 'sendall-all';
+            },
+            async publishPodcastAudio(payload) {
+                calls.push(payload);
+                return { msg_id: 2001, voice_media_id: 'voice-1', delivery_mode: 'sendall' };
+            }
+        }
+    });
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].date, '2026-04-02');
+    assert.match(calls[0].audioPath, /2026-04-02\.mp3$/);
+    assert.equal(result.podcastAudio.action, 'sent');
+    assert.equal(result.podcastAudio.reason, 'podcast_audio_ready_today');
+});
+
+test('runWechatAutogenOnce falls back to remote audio url for podcast audio sending', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-audio-url-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const calls = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        audio_storage: 'oss',
+        audio_url: 'https://cdn.example.com/podcast.mp3'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['podcast_audio'],
+        publisher: {
+            getAudioDeliveryFingerprint() {
+                return 'sendall-all';
+            },
+            async publishPodcastAudio(payload) {
+                calls.push(payload);
+                return { msg_id: 2002, voice_media_id: 'voice-2', delivery_mode: 'sendall' };
+            }
+        }
+    });
+
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].audioUrl, 'https://cdn.example.com/podcast.mp3');
+    assert.equal(calls[0].audioPath, null);
+    assert.equal(calls[0].audioBuffer, null);
+    assert.equal(result.podcastAudio.action, 'sent');
+});
+
+test('runWechatAutogenOnce falls back to minimax file download when podcast audio url is missing', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-audio-fileid-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const calls = [];
+    const downloaderCalls = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        audio_storage: 'oss',
+        audio_url: '',
+        tts_file_id: 7788
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['podcast_audio'],
+        podcastAudioDownloader: {
+            async downloadAudioBufferFromFileId(fileId) {
+                downloaderCalls.push(fileId);
+                return {
+                    audioBuffer: Buffer.from('fake-mp3'),
+                    fileName: 'downloaded.mp3'
+                };
+            }
+        },
+        publisher: {
+            getAudioDeliveryFingerprint() {
+                return 'sendall-all';
+            },
+            async publishPodcastAudio(payload) {
+                calls.push(payload);
+                return { msg_id: 2003, voice_media_id: 'voice-3', delivery_mode: 'sendall' };
+            }
+        }
+    });
+
+    assert.deepEqual(downloaderCalls, [7788]);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].audioUrl, '');
+    assert.equal(calls[0].audioPath, null);
+    assert.equal(String(calls[0].audioBuffer), 'fake-mp3');
+    assert.equal(calls[0].fileName, 'downloaded.mp3');
+    assert.equal(result.podcastAudio.action, 'sent');
+});

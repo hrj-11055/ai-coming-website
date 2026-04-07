@@ -12,6 +12,7 @@ const {
     formatWechatTitle,
     hashText
 } = require('../server/services/wechat-content');
+const { createMinimaxAudioClient } = require('../server/services/minimax-audio');
 const { createWechatPodcastFormatter } = require('../server/services/wechat-podcast-formatter');
 const { createWechatPublisher } = require('../server/services/wechat-publisher');
 
@@ -90,13 +91,61 @@ function createFileFingerprint(filePath) {
     return [filePath, stats.size, stats.mtimeMs].join(':');
 }
 
-function createPodcastFingerprint(metadata) {
+function createPodcastFingerprint(metadata, formatterFingerprint = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
         script_markdown: metadata?.script_markdown || '',
-        audio_url: metadata?.audio_url || ''
+        audio_url: metadata?.audio_url || '',
+        formatter_fingerprint: formatterFingerprint || ''
     }));
+}
+
+function createPodcastAudioFingerprint(metadata, deliveryFingerprint = '') {
+    return hashText(JSON.stringify({
+        status: metadata?.status || '',
+        audio_url: metadata?.audio_url || '',
+        audio_file: metadata?.audio_file || '',
+        audio_storage: metadata?.audio_storage || '',
+        audio_mime_type: metadata?.audio_mime_type || '',
+        tts_file_id: metadata?.tts_file_id || '',
+        content_hash: metadata?.content_hash || '',
+        generation_signature: metadata?.generation_signature || '',
+        delivery_fingerprint: deliveryFingerprint || ''
+    }));
+}
+
+function normalizeBaseUrl(value) {
+    return String(value || '').trim().replace(/\/+$/, '');
+}
+
+function toAbsoluteUrl(siteBaseUrl, maybeRelativeUrl) {
+    const input = String(maybeRelativeUrl || '').trim();
+    if (!input) {
+        return '';
+    }
+
+    if (/^https?:\/\//i.test(input)) {
+        return input;
+    }
+
+    const baseUrl = normalizeBaseUrl(siteBaseUrl);
+    return baseUrl ? `${baseUrl}${input.startsWith('/') ? '' : '/'}${input}` : '';
+}
+
+function resolveLocalPodcastAudioPath(podcastMetadataDir, metadata) {
+    if (!metadata || metadata.audio_storage !== 'local' || !metadata.audio_file) {
+        return null;
+    }
+
+    const audioDir = path.join(podcastMetadataDir, 'audio');
+    const resolvedPath = path.resolve(audioDir, metadata.audio_file);
+    const relativePath = path.relative(audioDir, resolvedPath);
+    if (relativePath.startsWith('..') || path.isAbsolute(relativePath) || !fs.existsSync(resolvedPath)) {
+        return null;
+    }
+
+    return resolvedPath;
 }
 
 function normalizeResult(action, reason, extra = {}) {
@@ -179,20 +228,33 @@ async function maybePublishPodcast({
         return normalizeResult('skip', 'podcast_not_ready', { metadataPath });
     }
 
-    const fingerprint = createPodcastFingerprint(metadata);
+    const formatterFingerprint = typeof podcastFormatter.getFingerprint === 'function'
+        ? (podcastFormatter.getFingerprint() || '')
+        : '';
+    const fingerprint = createPodcastFingerprint(metadata, formatterFingerprint);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
 
     const sourceMarkdown = buildPodcastMarkdown({ date, metadata, siteBaseUrl });
-    const formatted = await podcastFormatter.formatForWechat({
-        title: formatWechatTitle(date),
-        summary: metadata.summary || '',
-        scriptMarkdown: sourceMarkdown,
-        wechatCopy: metadata.wechat_copy || ''
-    });
-    const markdown = formatted.markdown;
-    const digest = formatted.digest || buildWechatDigest(metadata.summary || markdown);
+    let markdown = sourceMarkdown;
+    let digest = buildWechatDigest(metadata.summary || markdown);
+    let formatterFallbackReason = null;
+
+    try {
+        const formatted = await podcastFormatter.formatForWechat({
+            title: formatWechatTitle(date),
+            summary: metadata.summary || '',
+            scriptMarkdown: sourceMarkdown,
+            wechatCopy: metadata.wechat_copy || ''
+        });
+
+        markdown = formatted.markdown;
+        digest = formatted.digest || buildWechatDigest(metadata.summary || markdown);
+    } catch (error) {
+        formatterFallbackReason = error?.message || 'unknown_formatter_error';
+        console.warn(`[wechat-autogen] podcast formatter failed, fallback to source markdown: ${formatterFallbackReason}`);
+    }
     const stagingPath = path.join(stagingDir, `${date}-podcast.md`);
     writeTextFile(stagingPath, markdown);
 
@@ -207,7 +269,75 @@ async function maybePublishPodcast({
         metadataPath,
         fingerprint,
         stagingPath,
-        mediaId: publishResult.media_id || null
+        mediaId: publishResult.media_id || null,
+        formatterFallbackReason
+    });
+}
+
+async function maybePublishPodcastAudio({
+    date,
+    podcastMetadataDir,
+    state,
+    publisher,
+    podcastAudioDownloader,
+    enabledTypes,
+    siteBaseUrl
+}) {
+    if (!enabledTypes.has('podcast_audio')) {
+        return normalizeResult('skip', 'podcast_audio_disabled');
+    }
+
+    const metadataPath = path.join(podcastMetadataDir, `${date}.json`);
+    if (!fs.existsSync(metadataPath)) {
+        return normalizeResult('skip', 'podcast_missing_today');
+    }
+
+    const metadata = readJsonFileSafe(metadataPath, null);
+    if (!metadata || metadata.status !== 'ready') {
+        return normalizeResult('skip', 'podcast_not_ready', { metadataPath });
+    }
+
+    const preferRemoteAudio = metadata.audio_storage !== 'local';
+    const audioPath = preferRemoteAudio ? null : resolveLocalPodcastAudioPath(podcastMetadataDir, metadata);
+    const audioUrl = preferRemoteAudio ? toAbsoluteUrl(siteBaseUrl, metadata.audio_url || '') : '';
+    let audioBuffer = null;
+    let fileName = audioPath ? path.basename(audioPath) : '';
+
+    if (!audioPath && !audioUrl && metadata?.tts_file_id) {
+        const downloaded = await podcastAudioDownloader.downloadAudioBufferFromFileId(metadata.tts_file_id);
+        audioBuffer = downloaded.audioBuffer;
+        fileName = downloaded.fileName || `podcast-${date}.mp3`;
+    }
+
+    if (!audioPath && !audioUrl && !audioBuffer) {
+        return normalizeResult('skip', 'podcast_audio_missing', { metadataPath });
+    }
+
+    const deliveryFingerprint = typeof publisher.getAudioDeliveryFingerprint === 'function'
+        ? (publisher.getAudioDeliveryFingerprint() || '')
+        : '';
+    const fingerprint = createPodcastAudioFingerprint(metadata, deliveryFingerprint);
+    if (state?.podcast_audio?.last_uploaded_fingerprint === fingerprint) {
+        return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
+    }
+
+    const publishResult = await publisher.publishPodcastAudio({
+        date,
+        title: formatWechatTitle(date),
+        audioPath,
+        audioUrl,
+        audioBuffer,
+        fileName: fileName || (audioUrl ? path.basename(new URL(audioUrl).pathname || 'podcast.mp3') : `podcast-${date}.mp3`)
+    });
+
+    return normalizeResult('sent', 'podcast_audio_ready_today', {
+        metadataPath,
+        fingerprint,
+        audioPath,
+        audioUrl: audioUrl || null,
+        mediaId: publishResult.voice_media_id || null,
+        messageId: publishResult.msg_id || null,
+        deliveryMode: publishResult.delivery_mode || null
     });
 }
 
@@ -241,6 +371,7 @@ async function runWechatAutogenOnce(options = {}) {
 
     let publisher = options.publisher || null;
     let podcastFormatter = options.podcastFormatter || null;
+    let podcastAudioDownloader = options.podcastAudioDownloader || null;
     function getPublisher() {
         if (!publisher) {
             publisher = createWechatPublisher(options.publisherOptions || {});
@@ -252,6 +383,12 @@ async function runWechatAutogenOnce(options = {}) {
             podcastFormatter = createWechatPodcastFormatter(options.podcastFormatterOptions || {});
         }
         return podcastFormatter;
+    }
+    function getPodcastAudioDownloader() {
+        if (!podcastAudioDownloader) {
+            podcastAudioDownloader = createMinimaxAudioClient(options.podcastAudioDownloaderOptions || {});
+        }
+        return podcastAudioDownloader;
     }
     const reportResult = await maybePublishReport({
         date: dateInfo.date,
@@ -276,8 +413,35 @@ async function runWechatAutogenOnce(options = {}) {
             }
         },
         podcastFormatter: {
+            getFingerprint() {
+                return typeof getPodcastFormatter().getFingerprint === 'function'
+                    ? getPodcastFormatter().getFingerprint()
+                    : '';
+            },
             formatForWechat(payload) {
                 return getPodcastFormatter().formatForWechat(payload);
+            }
+        },
+        enabledTypes,
+        siteBaseUrl
+    });
+    const podcastAudioResult = await maybePublishPodcastAudio({
+        date: dateInfo.date,
+        podcastMetadataDir,
+        state,
+        publisher: {
+            getAudioDeliveryFingerprint() {
+                return typeof getPublisher().getAudioDeliveryFingerprint === 'function'
+                    ? getPublisher().getAudioDeliveryFingerprint()
+                    : '';
+            },
+            publishPodcastAudio(payload) {
+                return getPublisher().publishPodcastAudio(payload);
+            }
+        },
+        podcastAudioDownloader: {
+            downloadAudioBufferFromFileId(fileId) {
+                return getPodcastAudioDownloader().downloadAudioBufferFromFileId(fileId);
             }
         },
         enabledTypes,
@@ -301,13 +465,24 @@ async function runWechatAutogenOnce(options = {}) {
         last_media_id: podcastResult.mediaId || null,
         last_error: null
     };
+    state.podcast_audio = {
+        last_attempted_date: dateInfo.date,
+        last_uploaded_fingerprint: podcastAudioResult.action === 'sent' ? podcastAudioResult.fingerprint : (state.podcast_audio?.last_uploaded_fingerprint || null),
+        last_result: podcastAudioResult.action,
+        last_reason: podcastAudioResult.reason,
+        last_media_id: podcastAudioResult.mediaId || null,
+        last_message_id: podcastAudioResult.messageId || null,
+        last_delivery_mode: podcastAudioResult.deliveryMode || null,
+        last_error: null
+    };
     writeJsonFile(stateFile, state);
 
     return {
         ok: true,
         date: dateInfo.date,
         report: reportResult,
-        podcast: podcastResult
+        podcast: podcastResult,
+        podcastAudio: podcastAudioResult
     };
 }
 
@@ -327,6 +502,7 @@ if (require.main === module) {
 
 module.exports = {
     createFileFingerprint,
+    createPodcastAudioFingerprint,
     createPodcastFingerprint,
     getCurrentDateInfo,
     isWithinScanWindow,

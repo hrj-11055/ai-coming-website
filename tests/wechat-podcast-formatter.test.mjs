@@ -55,4 +55,19 @@ test('createWechatPodcastFormatter calls deepseek and returns packaged markdown 
     assert.equal(calls[0].body.model, 'deepseek-chat');
     assert.match(result.markdown, /这是轻包装后的播客文字版/);
     assert.ok(result.digest.length <= 120);
+    assert.match(formatter.getFingerprint(), /^[a-f0-9]{40}$/);
+});
+
+test('createWechatPodcastFormatter exposes fingerprint even when api key is missing', () => {
+    const formatter = createWechatPodcastFormatter({
+        config: {
+            apiKey: '',
+            model: 'deepseek-chat'
+        },
+        fetchImpl: async () => {
+            throw new Error('should not run');
+        }
+    });
+
+    assert.match(formatter.getFingerprint(), /^[a-f0-9]{40}$/);
 });
