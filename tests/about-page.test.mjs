@@ -33,3 +33,27 @@ test('about page includes the AI资讯日报 product case section between method
     assert.match(html, /热点关键词/, 'Expected the case section to mention hot keywords');
     assert.match(html, /今日播客/, 'Expected the case section to mention the podcast capability');
 });
+
+test('about page contact entries show the phone number directly without modal triggers', () => {
+    const html = readProjectFile('about.html');
+    const directContactMatches = html.match(/黄老师[\s\S]*?电话：15800565566/g) ?? [];
+    const telLinks = html.match(/href="tel:15800565566"/g) ?? [];
+
+    assert.equal(
+        directContactMatches.length,
+        2,
+        'Expected both contact entry points to show 黄老师 电话：15800565566 directly'
+    );
+
+    assert.equal(
+        telLinks.length,
+        2,
+        'Expected both visible contact entry points to remain tap-to-call links'
+    );
+
+    assert.doesNotMatch(
+        html,
+        /contactModalOpen/,
+        'Expected the about page to remove the contact modal state and triggers'
+    );
+});
