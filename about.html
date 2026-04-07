@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>关于我们 - 深圳元说科技</title>
-    <meta name="description" content="深圳元说科技是一家聚焦 AI+业务增长 的咨询与科技公司，用驻场陪跑的方式帮助企业把 AI 真正接入经营场景。">
+    <meta name="description" content="深圳元说科技是一家聚焦 AI+业务增长 的咨询与产品公司，用驻场陪跑的方式帮助企业把 AI 真正接入经营场景。">
     <meta name="keywords" content="元说科技,关于我们,AI业务增长,AI咨询,企业培训,深圳">
     <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
@@ -18,7 +18,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,900;1,8..60,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -30,7 +30,7 @@
             --rule-color: #c8c3bc;
             --accent-copper: #946a3a;
             --accent-forest: #435d52;
-            --font-serif: 'Source Serif 4', 'Noto Serif SC', 'Georgia', serif;
+            --font-serif: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
             --shadow-soft: 0 20px 60px rgba(28, 23, 18, 0.08);
         }
@@ -41,6 +41,7 @@
         body {
             background-color: var(--bg-warm);
             color: var(--text-primary);
+            font-family: var(--font-sans);
             -webkit-font-smoothing: antialiased;
         }
 
@@ -137,6 +138,8 @@
             border: 1px solid rgba(203, 194, 182, 0.65);
             border-radius: 22px;
             box-shadow: var(--shadow-soft);
+            height: 100%;
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
         }
 
         .method-icon {
@@ -148,6 +151,428 @@
             justify-content: center;
             font-size: 22px;
             margin-bottom: 20px;
+        }
+
+        .method-link {
+            display: block;
+            height: 100%;
+            color: inherit;
+            text-decoration: none;
+            border-radius: 22px;
+        }
+
+        .method-link:hover .method-card,
+        .method-link:focus-visible .method-card {
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 26px 64px rgba(28, 23, 18, 0.14);
+            border-color: rgba(148, 106, 58, 0.42);
+            background: rgba(255, 250, 243, 0.96);
+        }
+
+        .method-link:focus-visible {
+            outline: none;
+        }
+
+        .section-anchor {
+            scroll-margin-top: 108px;
+        }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(16px, 2vw, 22px);
+        }
+
+        .journey-card {
+            padding: 22px 22px 20px;
+            border: 1px solid rgba(203, 194, 182, 0.7);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.38);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .journey-title {
+            font-family: var(--font-serif);
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.25;
+            color: var(--text-primary);
+        }
+
+        .journey-text {
+            margin-top: 10px;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            line-height: 1.75;
+            color: var(--text-muted);
+        }
+
+        .consulting-panel {
+            display: grid;
+            grid-template-columns: 0.85fr 1.45fr;
+            gap: clamp(24px, 4vw, 48px);
+            padding: clamp(28px, 3.2vw, 42px);
+            border: 1px solid rgba(203, 194, 182, 0.75);
+            border-radius: 24px;
+            background: linear-gradient(180deg, rgba(251, 249, 245, 0.96), rgba(244, 239, 231, 0.9));
+            box-shadow: var(--shadow-soft);
+        }
+
+        .consulting-subtitle {
+            margin-top: 10px;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .consulting-lead {
+            font-family: var(--font-serif);
+            font-size: clamp(16px, 1.5vw, 18px);
+            line-height: 1.85;
+            color: var(--text-body);
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .flow-item {
+            padding: 16px 16px 14px;
+            border: 1px solid rgba(203, 194, 182, 0.65);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .flow-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent-copper);
+        }
+
+        .flow-title {
+            margin-top: 8px;
+            font-family: var(--font-serif);
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text-primary);
+        }
+
+        .flow-text {
+            margin-top: 8px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: clamp(18px, 2.5vw, 28px);
+            margin-top: 24px;
+        }
+
+        .detail-box {
+            padding: 18px 18px 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.56);
+            border: 1px solid rgba(203, 194, 182, 0.55);
+        }
+
+        .detail-title {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .detail-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .detail-list li {
+            position: relative;
+            padding-left: 16px;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-body);
+        }
+
+        .detail-list li + li {
+            margin-top: 8px;
+        }
+
+        .detail-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.82em;
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent-copper);
+            transform: translateY(-50%);
+        }
+
+        .deliverable-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .deliverable-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 106, 58, 0.22);
+            background: rgba(148, 106, 58, 0.08);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: var(--accent-copper);
+        }
+
+        .consulting-figure {
+            margin-top: clamp(28px, 4vh, 42px);
+            padding: clamp(16px, 2vw, 20px);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.54);
+            border: 1px solid rgba(203, 194, 182, 0.62);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .consulting-figure img {
+            width: 100%;
+            display: block;
+            border-radius: 20px;
+        }
+
+        .consulting-figure-caption {
+            margin-top: 14px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .feature-figure {
+            margin-top: clamp(24px, 3vh, 34px);
+            padding: clamp(14px, 1.8vw, 18px);
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.56);
+            border: 1px solid rgba(203, 194, 182, 0.62);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .feature-figure img {
+            width: 100%;
+            display: block;
+            border-radius: 18px;
+        }
+
+        .feature-figure-caption {
+            margin-top: 12px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .product-showcase {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: clamp(24px, 4vw, 44px);
+            align-items: start;
+        }
+
+        .product-fact-card {
+            padding: clamp(24px, 3vw, 34px);
+            border-radius: 24px;
+            border: 1px solid rgba(203, 194, 182, 0.72);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(243, 238, 229, 0.88));
+            box-shadow: var(--shadow-soft);
+        }
+
+        .product-kicker {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-copper);
+        }
+
+        .product-fact-list {
+            list-style: none;
+            margin-top: 18px;
+            border-top: 1px solid rgba(200, 195, 188, 0.7);
+        }
+
+        .product-fact-list li {
+            display: grid;
+            grid-template-columns: 90px 1fr;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(200, 195, 188, 0.45);
+        }
+
+        .product-fact-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .product-fact-value {
+            font-family: var(--font-serif);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-body);
+        }
+
+        .product-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .product-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(67, 93, 82, 0.1);
+            border: 1px solid rgba(67, 93, 82, 0.18);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-forest);
+        }
+
+        .positioning-box {
+            margin-top: 22px;
+            padding: 20px 22px;
+            border-left: 4px solid var(--accent-copper);
+            border-radius: 0 18px 18px 0;
+            background: rgba(255, 255, 255, 0.52);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .positioning-label {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-copper);
+        }
+
+        .positioning-text {
+            margin-top: 10px;
+            font-family: var(--font-serif);
+            font-size: clamp(18px, 1.8vw, 22px);
+            line-height: 1.65;
+            color: var(--text-primary);
+        }
+
+        .status-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .status-chip.live {
+            background: rgba(67, 93, 82, 0.12);
+            color: var(--accent-forest);
+        }
+
+        .status-chip.plan {
+            background: rgba(148, 106, 58, 0.12);
+            color: var(--accent-copper);
+        }
+
+        .training-showcase {
+            display: grid;
+            grid-template-columns: 0.95fr 1.05fr;
+            gap: clamp(24px, 4vw, 44px);
+            align-items: start;
+        }
+
+        .training-photos {
+            display: grid;
+            grid-template-columns: 1.12fr 0.88fr;
+            gap: 14px;
+        }
+
+        .training-photo-card {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(203, 194, 182, 0.6);
+            background: rgba(255, 255, 255, 0.45);
+        }
+
+        .training-photo-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .training-photo-card.large {
+            grid-row: span 2;
+        }
+
+        .training-photo-card.large img {
+            height: 494px;
+        }
+
+        .training-photo-caption {
+            padding: 16px 18px 18px;
+            background: rgba(250, 247, 240, 0.92);
+            color: var(--text-primary);
+            border-top: 1px solid rgba(203, 194, 182, 0.42);
+        }
+
+        .training-photo-title {
+            font-family: var(--font-serif);
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .training-photo-text {
+            margin-top: 4px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            line-height: 1.65;
+            color: var(--text-muted);
         }
 
         .stat-block {
@@ -205,12 +630,59 @@
             opacity: 1;
         }
 
-        .client-cell img[alt="华润医药"] {
-            max-height: 46px;
+        .client-cell img[alt="华润集团"] {
+            max-height: 42px;
         }
 
-        .client-cell img[alt="南控集团"] {
-            max-height: 52px;
+        .client-cell img[alt="中海物业"] {
+            max-height: 34px;
+        }
+
+        .client-cell img[alt="东风汽车"] {
+            max-height: 30px;
+        }
+
+        .client-cell img[alt="得力集团"] {
+            max-height: 34px;
+        }
+
+        .client-cell img[alt="中国工商银行"],
+        .client-cell img[alt="中国石油"],
+        .client-cell img[alt="中国人寿"],
+        .client-cell img[alt="中国邮政"] {
+            max-height: 34px;
+        }
+
+        .client-cell img[alt="招商局港口"],
+        .client-cell img[alt="中外运"],
+        .client-cell img[alt="中国民生银行"] {
+            max-height: 32px;
+        }
+
+        .client-cell img[alt="海尔"] {
+            max-height: 30px;
+        }
+
+        .client-cell img[alt="中国建设银行"],
+        .client-cell img[alt="平安证券"] {
+            max-height: 32px;
+        }
+
+        .client-cell img[alt="辽港集团"],
+        .client-cell img[alt="中国南山"],
+        .client-cell img[alt="中信证券"],
+        .client-cell img[alt="海纳云"] {
+            max-height: 28px;
+        }
+
+        .client-cell img[alt="印力"],
+        .client-cell img[alt="精一"],
+        .client-cell img[alt="维谛技术"] {
+            max-height: 26px;
+        }
+
+        .client-cell img[alt="五征集团"] {
+            max-height: 31px;
         }
 
         .client-cell .client-name {
@@ -256,6 +728,15 @@
             .grid-3col { grid-template-columns: 1fr; }
             .grid-2col { grid-template-columns: 1fr; }
             .client-grid { grid-template-columns: repeat(3, 1fr); }
+            .journey-grid { grid-template-columns: 1fr; }
+            .consulting-panel { grid-template-columns: 1fr; }
+            .detail-grid { grid-template-columns: 1fr; }
+            .product-showcase { grid-template-columns: 1fr; }
+            .training-showcase { grid-template-columns: 1fr; }
+            .training-photos { grid-template-columns: 1fr; }
+            .training-photo-card img { height: 230px; }
+            .training-photo-card.large { grid-row: span 1; }
+            .training-photo-card.large img { height: 320px; }
         }
 
         @media (max-width: 640px) {
@@ -319,17 +800,35 @@
 
 
     <!-- ===== HERO ===== -->
-    <section style="padding: clamp(100px, 14vh, 170px) 0 clamp(72px, 9vh, 120px);">
+    <section style="padding: clamp(72px, 10vh, 116px) 0 clamp(46px, 6vh, 78px);">
         <div class="container-main">
-            <p class="label-section reveal" style="margin-bottom: 24px;">关于元说科技</p>
-            <h1 class="heading-hero reveal" style="max-width: 820px;">
-                让 AI 回到<br>经营现场
+            <p class="label-section reveal" style="margin-bottom: 18px;">关于元说科技</p>
+            <h1 class="heading-hero reveal" style="max-width: 680px;">
+                让 AI 真落地
             </h1>
-            <p class="body-large reveal" style="max-width: 680px; margin-top: clamp(24px, 4vh, 42px);">
-                深圳元说科技是一家聚焦"AI + 业务增长"的咨询与科技公司。我们不兜售技术概念，我们进入企业的真实业务流程，用驻场咨询和实战培训帮助团队把 AI 真正用起来。
+            <p class="body-large reveal" style="max-width: 680px; margin-top: clamp(18px, 3vh, 28px);">
+                深圳元说科技是一家聚焦"AI + 业务增长"的咨询与产品公司。我们不兜售技术概念，我们进入企业的真实业务流程，用实战培训、驻场咨询和产品实践帮助团队把 AI 真正用起来。
             </p>
-            <div class="reveal" style="margin-top: clamp(32px, 4vh, 48px);">
-                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" class="btn-primary">联系我们</a>
+            <div class="reveal" style="margin-top: clamp(22px, 3vh, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(148, 106, 58, 0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-copper); font-size: 18px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <p style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 2px;">联系人</p>
+                        <p style="font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--text-primary);">黄老师</p>
+                    </div>
+                </div>
+                <div style="width: 1px; height: 36px; background: var(--rule-color);"></div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(148, 106, 58, 0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-copper); font-size: 18px;">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <p style="font-family: var(--font-sans); font-size: 12px; color: var(--text-muted); margin-bottom: 2px;">手机号码</p>
+                        <a href="tel:15800565566" style="font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--text-primary); text-decoration: none;">15800565566</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -348,10 +847,7 @@
                         在 AI 浪潮中，绝大多数企业面临的不是"要不要用 AI"的问题，而是"从哪里开始、谁来推进、怎么验证效果"。
                     </p>
                     <p class="body-regular" style="margin-top: 22px;">
-                        我们见过太多企业在 AI 上投入了大量资源，最终只得到一份 PPT 和几次培训。所以我们选择了一条更"重"的路——驻场式、手把手的陪跑。不是卖完报告就抽身离去，而是愿意蹲在客户工位旁，跟着业务流程走完全程的增长伙伴。
-                    </p>
-                    <p class="body-regular" style="margin-top: 16px;">
-                        我们要解决的，是企业 AI 商业化落地的"最后一公里"。
+                        我们不卖一份报告就离场，而是陪企业走完从判断、试点到组织落地的关键几步。
                     </p>
                 </div>
             </div>
@@ -369,135 +865,382 @@
                 </div>
                 <div>
                     <p class="body-large">
-                        咨询定战略、科技做落地、培训建组织。三件事不是三条产品线，而是同一个项目里的三个阶段。
+                        培训建组织、咨询定战略、产品做落地。三件事不是三条产品线，而是同一个项目里的三个阶段。
                     </p>
                 </div>
             </div>
 
             <div class="grid-3col reveal" style="margin-top: clamp(36px, 5vh, 60px);">
-                <div class="method-card">
-                    <div class="method-icon" style="background: #e8ddd0; color: #8b6f47;">
-                        <i class="fas fa-compass"></i>
+                <a class="method-link" href="#training-section" aria-label="跳转到培训实践">
+                    <div class="method-card">
+                        <div class="method-icon" style="background: #dce8d5; color: #5a7a4a;">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <h3 class="heading-card">培训：建组织</h3>
+                        <p class="body-regular" style="margin-top: 12px;">
+                            围绕真实岗位做讲练结合，让团队不只听懂 AI，而是真的在工作里用起来。
+                        </p>
                     </div>
-                    <h3 class="heading-card">咨询：定战略</h3>
-                    <p class="body-regular" style="margin-top: 12px;">
-                        围绕 AI 战略咨询、AI 转型咨询与 AI+GTM 全链路诊断，帮助企业梳理增长目标、识别高价值场景，并把市场洞察、产品定义、上市策略与转化承接连接成可执行路径。
+                </a>
+
+                <a class="method-link" href="#consulting-section" aria-label="跳转到咨询方案">
+                    <div class="method-card">
+                        <div class="method-icon" style="background: #e8ddd0; color: #8b6f47;">
+                            <i class="fas fa-compass"></i>
+                        </div>
+                        <h3 class="heading-card">咨询：定战略</h3>
+                        <p class="body-regular" style="margin-top: 12px;">
+                            帮企业看清从哪里切入、谁来推进、怎样把 AI 变成组织动作。
+                        </p>
+                    </div>
+                </a>
+
+                <a class="method-link" href="#product-section" aria-label="跳转到产品案例">
+                    <div class="method-card">
+                        <div class="method-icon" style="background: #d5dce8; color: #4a5d80;">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h3 class="heading-card">产品：做落地</h3>
+                        <p class="body-regular" style="margin-top: 12px;">
+                            把想法做成真实产品与工作流，重点不是炫技，而是能长期运行、持续迭代、真正被使用。
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== TRAINING ===== -->
+    <section id="training-section" class="section-anchor" style="padding: clamp(48px, 7vh, 96px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="training-showcase reveal" style="padding-top: clamp(44px, 6vh, 76px);">
+                <div>
+                    <p class="label-section">培训实践</p>
+                    <h2 class="heading-section" style="margin-top: 12px;">把 AI 带进业务团队，而不是停留在课堂里</h2>
+                    <p class="body-large" style="margin-top: 24px;">
+                        培训的目标不是“听懂就散场”，而是让关键岗位在真实工作里把 AI 用起来，并尽快把个人尝试变成团队里的共同能力。
                     </p>
+
+                    <div class="positioning-box">
+                        <div class="positioning-label">培训目标</div>
+                        <div class="positioning-text">让团队在真实业务问题里学会用 AI，减少试错成本，把方法、模板和内部样板留在组织里。</div>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-title">常见形式</div>
+                            <ul class="detail-list">
+                                <li>企业内训</li>
+                                <li>业务场景工作坊</li>
+                                <li>AI 实战营与部门陪练</li>
+                            </ul>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-title">交付结果</div>
+                            <ul class="detail-list">
+                                <li>部门场景清单与优先级</li>
+                                <li>岗位实操模板与提示词资产</li>
+                                <li>训练营成果与后续推广建议</li>
+                                <li>可持续复用的内部培训素材与方法包</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="flow-grid" style="margin-top: 28px;">
+                        <div class="flow-item">
+                            <div class="flow-label">Step 1</div>
+                            <div class="flow-title">统一认知</div>
+                            <div class="flow-text">先让管理层和骨干看清 AI 的边界与优先级。</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-label">Step 2</div>
+                            <div class="flow-title">真实上手</div>
+                            <div class="flow-text">围绕真实岗位任务做讲练结合，不做脱离现场的演示。</div>
+                        </div>
+                        <div class="flow-item">
+                            <div class="flow-label">Step 3</div>
+                            <div class="flow-title">沉淀方法</div>
+                            <div class="flow-text">把提示词、模板和部门经验留下来，方便继续扩散。</div>
+                        </div>
+                    </div>
+
+                    <div class="deliverable-row">
+                        <span class="deliverable-pill">企业内训</span>
+                        <span class="deliverable-pill">业务工作坊</span>
+                        <span class="deliverable-pill">讲练结合</span>
+                        <span class="deliverable-pill">组织落地</span>
+                    </div>
                 </div>
 
-                <div class="method-card">
-                    <div class="method-icon" style="background: #d5dce8; color: #4a5d80;">
-                        <i class="fas fa-microchip"></i>
+                <div class="training-photos">
+                    <div class="training-photo-card large">
+                        <img src="/pic/practice/enterprise-classroom-enablement.jpg" alt="企业业务团队 AI 培训现场">
+                        <div class="training-photo-caption">
+                            <div class="training-photo-title">企业业务团队 AI 内训</div>
+                            <div class="training-photo-text">围绕真实岗位任务开展授课与演练，让培训内容直接对接业务现场。</div>
+                        </div>
                     </div>
-                    <h3 class="heading-card">科技：做落地</h3>
-                    <p class="body-regular" style="margin-top: 12px;">
-                        围绕大模型应用、Agent 工作流和企业级工具链，把咨询结论真正落成流程、工具与协同机制。我们优先选择能提升效率、改善决策、带动增长的实用方案，而不是堆砌技术概念。
-                    </p>
-                </div>
-
-                <div class="method-card">
-                    <div class="method-icon" style="background: #dce8d5; color: #5a7a4a;">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                    <div class="training-photo-card">
+                        <img src="/pic/practice/executive-workshop.jpg" alt="管理层工作坊现场">
+                        <div class="training-photo-caption">
+                            <div class="training-photo-title">管理层工作坊</div>
+                            <div class="training-photo-text">帮助关键决策者先形成统一认知，再推动后续组织动作。</div>
+                        </div>
                     </div>
-                    <h3 class="heading-card">培训：建组织</h3>
-                    <p class="body-regular" style="margin-top: 12px;">
-                        面向管理层与业务部门提供企业内训、专题工作坊和岗位训练营，并结合训后陪跑，把 AI 从课堂知识转成团队日常可复用的方法与动作。
-                    </p>
+                    <div class="training-photo-card">
+                        <img src="/pic/practice/government-lecture-stage.jpg" alt="正式授课与分享现场">
+                        <div class="training-photo-caption">
+                            <div class="training-photo-title">正式授课与分享</div>
+                            <div class="training-photo-text">把复杂议题讲清楚，也把方法论讲到可借鉴、可启动。</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
 
-    <!-- ===== SERVICES ===== -->
-    <section style="padding: clamp(48px, 7vh, 96px) 0;">
+    <!-- ===== CONSULTING ===== -->
+    <section id="consulting-section" class="section-anchor" style="padding: clamp(48px, 7vh, 96px) 0;">
         <div class="container-main">
             <hr class="rule reveal">
             <div class="split-layout reveal" style="padding-top: clamp(44px, 6vh, 76px);">
                 <div>
-                    <h2 class="heading-section">企业培训与咨询服务</h2>
+                    <p class="label-section">咨询方案</p>
+                    <h2 class="heading-section" style="margin-top: 12px;">把 AI 从想法，推进到组织动作</h2>
                 </div>
                 <div>
                     <p class="body-large">
-                        我们把企业培训、咨询诊断与落地陪跑放在同一条业务链路里设计，目标不是办一场课，而是帮助团队把 AI 真正带回岗位和流程。
+                        我们的咨询聚焦 3 件事：先把切入点找准，再把组织带动起来，最后把经验沉淀成能力资产。
+                    </p>
+                </div>
+            </div>
+
+            <div class="consulting-figure reveal">
+                <img src="/pic/about/ai-transformation-roadmap.png" alt="企业 AI 转型三步走全景图">
+                <p class="consulting-figure-caption">
+                    先摸清岗位与部门的 AI 渗透家底，再通过 AI 先锋队把真实案例跑出来，最后把成熟经验沉淀成可对外输出的能力。
+                </p>
+            </div>
+
+            <div class="consulting-panel reveal" style="margin-top: clamp(28px, 4vh, 40px);">
+                <div>
+                    <span class="number-index">01</span>
+                    <h3 class="heading-card" style="margin-top: 10px;">员工的一天</h3>
+                    <p class="consulting-subtitle">岗位 AI 渗透全景诊断</p>
+                </div>
+                <div>
+                    <p class="consulting-lead">
+                        从员工真实的一天入手，把岗位任务拆到可分析的颗粒度，帮企业看清 AI 该先投向哪里、哪些岗位最值得优先重构。
+                    </p>
+
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-title">它能帮你什么</div>
+                            <ul class="detail-list">
+                                <li>看清 AI 该先从哪个岗位、任务和部门切入，避免一上来就盲目买工具、铺系统。</li>
+                                <li>找到最值得优先投预算、做试点和做培训的战场，让 AI 投入更快跑出投入产出比。</li>
+                                <li>提前识别人机协作的临界岗位，为未来 12 个月的岗位调整、转型准备和编制规划留出时间。</li>
+                            </ul>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-title">交付结果</div>
+                            <ul class="detail-list">
+                                <li>岗位 AI 光谱分析报告</li>
+                                <li>部门 AI 渗透热力图</li>
+                                <li>公司 AI 全景透视图</li>
+                                <li>AI 投资优先级建议与行动路径</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="consulting-panel reveal" style="margin-top: 22px;">
+                <div>
+                    <span class="number-index">02</span>
+                    <h3 class="heading-card" style="margin-top: 10px;">AI 先锋队陪跑</h3>
+                    <p class="consulting-subtitle">企业内部 AI 推广引擎</p>
+                </div>
+                <div>
+                    <p class="consulting-lead">
+                        不是做一次培训，而是用 6 个月陪企业搭起一支跨部门 AI 先锋队，把零散的个人尝试变成可复制、可扩散的组织动作。
+                    </p>
+
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-title">它能帮你什么</div>
+                            <ul class="detail-list">
+                                <li>解决工具已经引入、但员工不会持续用，或者用了也跑不出真实业务结果的问题。</li>
+                                <li>在多个部门同时跑出经过验证的 AI 场景，减少组织内部的观望、抵触和“没人带头”的状态。</li>
+                                <li>建立一批内部 AI 接口人和推广节点，让后续扩散不再完全依赖外部顾问。</li>
+                            </ul>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-title">交付结果</div>
+                            <ul class="detail-list">
+                                <li>20-30 份部门 AI 应用案例</li>
+                                <li>公司 AI 应用地图</li>
+                                <li>先锋队运营手册与陪跑机制</li>
+                                <li>可持续自运转的内部推广网络</li>
+                                <li>AI 使用率提升数据报告</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="consulting-panel reveal" style="margin-top: 22px;">
+                <div>
+                    <span class="number-index">03</span>
+                    <h3 class="heading-card" style="margin-top: 10px;">行业 AI 能力输出</h3>
+                    <p class="consulting-subtitle">从使用者到赋能者的跨越</p>
+                </div>
+                <div>
+                    <p class="consulting-lead">
+                        当企业内部已经跑通 AI，我们帮助把经验整理成课程、工具和可复制的输出方案。
+                    </p>
+
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-title">适合什么情况</div>
+                            <ul class="detail-list">
+                                <li>内部已有稳定 AI 实践，希望进一步放大价值。</li>
+                                <li>需要带动供应链、渠道或生态伙伴提升能力。</li>
+                            </ul>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-title">交付结果</div>
+                            <ul class="detail-list">
+                                <li>内部 AI 能力资产盘点报告</li>
+                                <li>行业 AI 赋能产品包</li>
+                                <li>2-3 家试点输出执行报告</li>
+                                <li>商业模式与定价框架</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== PRODUCT ===== -->
+    <section id="product-section" class="section-anchor" style="padding: clamp(48px, 7vh, 96px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="product-showcase reveal" style="padding-top: clamp(44px, 6vh, 76px);">
+                <div>
+                    <p class="label-section">产品案例</p>
+                    <h2 class="heading-section" style="margin-top: 12px;">AI资讯日报</h2>
+                    <p class="body-large" style="margin-top: 24px;">
+                        AI资讯日报是一款持续更新的 AI 信息产品，帮助用户更快浏览当天值得关注的动态。
                     </p>
                     <p class="body-regular" style="margin-top: 18px;">
-                        服务内容围绕管理层共识、业务部门实战和组织协同提效展开，适用于消费品、跨境电商、零售、汽车、金融、政务等多类场景。
+                        核心不是“搬新闻”，而是把信源聚合、AI 提炼和多形态分发做成一条稳定的内容链路。这套能力并不只适用于 AI 行业，也可以复制到制造、汽车、消费、医药、金融等任何行业，做成对应行业的资讯日报与情报产品。
+                    </p>
+
+                    <div class="positioning-box">
+                        <div class="positioning-label">一句话定位</div>
+                        <div class="positioning-text">帮忙碌的从业者在更短时间内完成当天动态的「看一遍、抓重点、顺手听完」，也能延展成任何行业的专属情报入口。</div>
+                    </div>
+
+                    <div class="feature-figure">
+                        <img src="/pic/about/ai-news-daily-overview.png" alt="AI资讯日报从信源采集到多形态输出的产品流程图">
+                        <p class="feature-figure-caption">
+                            这张图对应 AI资讯日报的完整产品链路：信源采集、AI 提炼、阅读页、关键词和播客输出，以及它对信息消费效率带来的价值。
+                        </p>
+                    </div>
+
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-title">它能带来什么价值</div>
+                            <ul class="detail-list">
+                                <li>把分散在多个站点、公众号和信源里的行业动态，压缩成一个更高效的消费入口。</li>
+                                <li>降低管理者、销售、产品和研究岗位每天获取信息的时间成本，让团队把注意力放回判断和行动。</li>
+                                <li>同一套能力可以延伸为某个行业、某条赛道或某家企业自己的日报、关键词和音频情报产品。</li>
+                            </ul>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-title">适合谁用</div>
+                            <ul class="detail-list">
+                                <li>持续关注 AI 行业变化的从业者与创业者。</li>
+                                <li>需要快速同步团队信息的管理者和业务负责人。</li>
+                                <li>想用低成本建立 AI 情报输入机制的企业与内容团队。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="deliverable-row">
+                        <span class="deliverable-pill">每日 AI 资讯</span>
+                        <span class="deliverable-pill">热点关键词</span>
+                        <span class="deliverable-pill">今日播客</span>
+                        <span class="deliverable-pill">稳定内容生产链路</span>
+                    </div>
+
+                    <div style="margin-top: 28px;">
+                        <a href="news.html" class="btn-primary">查看 AI资讯日报</a>
+                    </div>
+                </div>
+
+                <div class="product-fact-card">
+                    <div class="product-kicker">Product Snapshot</div>
+                    <h3 class="heading-card" style="margin-top: 12px;">把海量 AI 动态，压缩成一个可消费入口</h3>
+                    <ul class="product-fact-list">
+                        <li>
+                            <span class="product-fact-label">定位</span>
+                            <span class="product-fact-value">面向高密度信息消费者的 AI 每日情报产品</span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">输入</span>
+                            <span class="product-fact-value">国内外 AI 信源聚合，规划上以 RSS 作为主要采集层</span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">处理</span>
+                            <span class="product-fact-value">AI 筛选、摘要提炼、结构化整理、关键词归纳</span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">输出</span>
+                            <span class="product-fact-value">日报阅读页、热点关键词、播客音频版本</span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">场景</span>
+                            <span class="product-fact-value">晨间浏览、午间速读、通勤收听、团队同步</span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">延展</span>
+                            <span class="product-fact-value">可复制到任意行业，形成该行业的资讯日报、关键词摘要与音频情报产品</span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">当前</span>
+                            <span class="product-fact-value">
+                                <span class="status-chip live">已验证</span>
+                                日报阅读页、热点关键词、今日播客
+                            </span>
+                        </li>
+                        <li>
+                            <span class="product-fact-label">规划</span>
+                            <span class="product-fact-value">
+                                <span class="status-chip plan">下一步</span>
+                                信源池扩展、栏目化分发、公众号/邮件/企业内参
+                            </span>
+                        </li>
+                    </ul>
+
+                    <div class="product-chip-row">
+                        <span class="product-chip">RSS 聚合</span>
+                        <span class="product-chip">AI 摘要</span>
+                        <span class="product-chip">关键词提炼</span>
+                        <span class="product-chip">播客生成</span>
+                    </div>
+
+                    <p class="body-small" style="margin-top: 18px;">
+                        这也是我们“产品：做落地”的一个样本：不只展示功能，而是把内容采集、处理与分发做成一条可持续运行的产品链路。
                     </p>
                 </div>
             </div>
-
-            <div class="grid-2col reveal" style="margin-top: clamp(36px, 5vh, 60px);">
-                <div class="method-card">
-                    <p class="label-section" style="margin-bottom: 18px;">咨询支持</p>
-                    <div style="display: grid; gap: 18px;">
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">AI 战略咨询</h3>
-                            <p class="body-regular" style="margin-top: 8px;">围绕企业增长目标与业务重点，明确 AI 应该优先进入哪些场景、由谁推进、如何评估阶段性成果。</p>
-                        </div>
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">AI 转型咨询</h3>
-                            <p class="body-regular" style="margin-top: 8px;">从组织分工、流程协作到工具能力，设计适合企业现状的转型路径，减少“知道要做却不知道怎么落地”的空转。</p>
-                        </div>
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">AI+GTM 全链路赋能</h3>
-                            <p class="body-regular" style="margin-top: 8px;">从市场洞察、产品定义、上市策略到转化承接，梳理关键节点，用 AI 提升判断速度、内容效率与协同质量。</p>
-                        </div>
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">业务流程诊断与增长提效</h3>
-                            <p class="body-regular" style="margin-top: 8px;">聚焦企业当前最卡的链路，识别高重复、高延迟、高依赖经验的环节，优先打通效率和结果最明显的突破口。</p>
-                        </div>
-                        <div>
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">行业场景梳理与落地路径设计</h3>
-                            <p class="body-regular" style="margin-top: 8px;">结合行业特征把抽象技术翻译成具体业务动作，让团队知道“先做什么、后做什么、做到什么程度算有效”。</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="method-card">
-                    <p class="label-section" style="margin-bottom: 18px;">培训服务</p>
-                    <div style="display: grid; gap: 18px;">
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">管理层 AI 共识工作坊</h3>
-                            <p class="body-regular" style="margin-top: 8px;">帮助管理层快速建立统一认知，判断 AI 在战略、经营和组织升级中的真实机会，适合开年规划、专项启动与高层对齐。</p>
-                        </div>
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">市场与销售实战训练营</h3>
-                            <p class="body-regular" style="margin-top: 8px;">围绕客户洞察、内容生成、商机推进与销售转化开展企业内训，训练市场和销售团队把 AI 真正用进高频工作，而不是停留在演示层。</p>
-                        </div>
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">财务与组织效能训练营</h3>
-                            <p class="body-regular" style="margin-top: 8px;">面向财务、运营与管理岗位开展岗位训练营，训练团队在分析、汇报、协作和流程推进中使用 AI，提升组织效能。</p>
-                        </div>
-                        <div style="padding-bottom: 18px; border-bottom: 1px solid rgba(203, 194, 182, 0.55);">
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">AI 行业研究与商业汇报训练</h3>
-                            <p class="body-regular" style="margin-top: 8px;">适合业务、战略和中后台团队的专题训练，帮助团队提升信息处理、观点提炼与表达效率，让汇报与复盘更快形成结论。</p>
-                        </div>
-                        <div>
-                            <h3 class="heading-card" style="font-size: clamp(18px, 1.9vw, 23px);">企业内训与训后陪跑</h3>
-                            <p class="body-regular" style="margin-top: 8px;">围绕企业真实业务素材设计内训内容，并结合训后陪跑、复盘与模板沉淀，把工具、方法与岗位场景绑定，确保团队能继续自己跑下去。</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: clamp(34px, 5vh, 56px); border: 1px solid var(--rule-color); border-radius: 22px; overflow: hidden; background: rgba(247, 243, 236, 0.72);" class="reveal">
-                <div class="stat-block" style="border-right: 1px solid var(--rule-color);">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">服务企业与机构</div>
-                </div>
-                <div class="stat-block" style="border-right: 1px solid var(--rule-color);">
-                    <div class="stat-number">11000+</div>
-                    <div class="stat-label">培训覆盖学员</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-number">15+</div>
-                    <div class="stat-label">覆盖行业场景</div>
-                </div>
-            </div>
-            <p class="body-small reveal" style="margin-top: 18px; text-align: center;">
-                服务 50+ 企业与机构，培训覆盖 11000+ 学员，覆盖 15+ 行业场景。
-            </p>
         </div>
     </section>
 
@@ -603,42 +1346,99 @@
                 他们选择了我们
             </h2>
             <p class="body-regular reveal" style="margin-top: 14px; max-width: 600px;">
-                覆盖央国企、金融保险、智能制造、珠宝零售、医药健康、通信运营商、地产物业及政府公共部门。
+                以下为部分服务客户，覆盖央国企、金融保险、通信运营商、地产物业、能源化工、智能制造、消费零售与企业服务等多个行业。
             </p>
 
             <div class="client-grid reveal" style="margin-top: clamp(28px, 4vh, 44px);">
                 <div class="client-cell">
-                    <img src="/pic/clients/china-merchants.png" alt="招商局集团">
+                    <img src="/pic/clients/china-merchants.png" alt="招商局集团" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/byd.png" alt="比亚迪">
+                    <img src="/pic/clients/crc-group.png" alt="华润集团" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/chow-tai-fook.png" alt="周大福">
+                    <img src="/pic/clients/china-overseas-property-logo.png" alt="中海物业" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/cr-pharma.svg" alt="华润医药">
+                    <img src="/pic/clients/china-mobile.png" alt="中国移动" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/psbc.png" alt="中国邮政储蓄银行">
+                    <img src="/pic/clients/china-unicom.png" alt="中国联通" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/desay-sv.jpg" alt="德赛西威">
+                    <img src="/pic/clients/dongfeng.png" alt="东风汽车" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/china-unicom.png" alt="广东联通">
+                    <img src="/pic/clients/byd.png" alt="比亚迪" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/china-mobile.png" alt="河北移动">
+                    <img src="/pic/clients/chow-tai-fook.png" alt="周大福" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/gdh.svg" alt="粤海集团">
+                    <img src="/pic/clients/desay-sv.jpg" alt="德赛西威" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <img src="/pic/clients/nanhai-holding.svg" alt="南控集团">
+                    <img src="/pic/clients/deli.svg" alt="得力集团" loading="lazy">
                 </div>
                 <div class="client-cell">
-                    <span class="client-name">佛山工信局</span>
+                    <img src="/pic/clients/icbc.png" alt="中国工商银行" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/sinopec.png" alt="中国石油" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/china-life.png" alt="中国人寿" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/gac-group.jpeg" alt="广汽集团" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/cmport.png" alt="招商局港口" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/sinotrans.png" alt="中外运" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/guangfa-bank.png" alt="广发银行" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/cmbc.png" alt="中国民生银行" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/haier.png" alt="海尔" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/china-post.png" alt="中国邮政" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/ccb.png" alt="中国建设银行" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/pingan-securities.png" alt="平安证券" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/liaoning-port.png" alt="辽港集团" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/china-nanshan.png" alt="中国南山" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/citic-securities.png" alt="中信证券" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/scpg.png" alt="印力" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/jingyi.png" alt="精一" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/wuzheng.png" alt="五征集团" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/vertiv.png" alt="维谛技术" loading="lazy">
+                </div>
+                <div class="client-cell">
+                    <img src="/pic/clients/hainayun.png" alt="海纳云" loading="lazy">
                 </div>
             </div>
         </div>
@@ -658,7 +1458,9 @@
                         影响中国百万职场人，<br>深度服务 100 家企业。
                     </p>
                     <p class="body-regular" style="margin-top: 22px;">
-                        让更多人学会在真实工作中使用 AI，让更多企业完成从"知道 AI 重要"到"真正把 AI 用起来"的跨越。这是我们认为值得长期投入的事。
+                        在AI时代，我们一起成为跑赢全场的人<br>
+                        在AI时代，我们一起成为那个最懂业务的人<br>
+                        在AI时代，我们一起成为最能将新技术应用在业务中的人
                     </p>
                 </div>
             </div>
@@ -675,22 +1477,21 @@
             <p class="body-large reveal" style="color: #a09a93; max-width: 540px; margin: clamp(20px, 3vh, 34px) auto 0;">
                 无论你是在规划 AI 战略、寻找落地场景，还是想给团队做一次实战培训，我们都可以先聊聊。
             </p>
-            <div class="reveal" style="margin-top: clamp(28px, 4vh, 44px);">
-                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" style="
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 14px 32px;
-                    background: var(--bg-warm);
-                    color: var(--text-primary);
-                    font-family: var(--font-sans);
-                    font-size: 15px;
-                    font-weight: 600;
-                    border: none;
-                    border-radius: 999px;
-                    text-decoration: none;
-                    transition: all 0.2s ease;
-                ">联系我们</a>
+            <div class="reveal" style="margin-top: clamp(28px, 4vh, 44px); display: flex; justify-content: center; flex-wrap: wrap; gap: 24px;">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-radius: 999px; background: rgba(236, 232, 225, 0.1); border: 1px solid rgba(236, 232, 225, 0.15);">
+                    <i class="fas fa-user" style="color: #a09a93; font-size: 16px;"></i>
+                    <div style="text-align: left;">
+                        <p style="font-family: var(--font-sans); font-size: 11px; color: #7a7570; margin-bottom: 2px;">联系人</p>
+                        <p style="font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--bg-warm);">黄老师</p>
+                    </div>
+                </div>
+                <a href="tel:15800565566" style="display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-radius: 999px; background: rgba(236, 232, 225, 0.1); border: 1px solid rgba(236, 232, 225, 0.15); text-decoration: none;">
+                    <i class="fas fa-phone-alt" style="color: #a09a93; font-size: 16px;"></i>
+                    <div style="text-align: left;">
+                        <p style="font-family: var(--font-sans); font-size: 11px; color: #7a7570; margin-bottom: 2px;">手机号码</p>
+                        <p style="font-family: var(--font-sans); font-size: 17px; font-weight: 700; color: var(--bg-warm);">15800565566</p>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
