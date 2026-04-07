@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skill 详情 - Agent Skills - AIcoming</title>
-    <meta id="skillDetailDescription" name="description" content="Agent Skills 详情页：查看 Skill 的适用场景、使用方式与相关推荐。">
+    <title>Skill 详情 - AI 能力库 - AIcoming</title>
+    <meta id="skillDetailDescription" name="description" content="AI 能力库详情页：查看安装命令、可复制提示词、预期结果与实操说明。">
     <meta name="keywords" content="Agent Skills,Skill详情,Skill使用说明,AIcoming">
 
     <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
@@ -199,6 +199,18 @@
             box-shadow: 0 12px 26px -24px rgba(var(--tone-rgb), 0.38);
         }
 
+        .detail-starter-note {
+            max-width: 720px;
+            padding: 14px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(var(--tone-rgb), 0.16);
+            background: rgba(255, 255, 255, 0.82);
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.8;
+            box-shadow: 0 18px 30px -28px rgba(var(--tone-rgb), 0.28);
+        }
+
         .detail-hero-rail {
             display: grid;
             gap: 12px;
@@ -363,6 +375,46 @@
             padding-left: 20px;
         }
 
+        .detail-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .detail-gallery-card {
+            margin: 0;
+            overflow: hidden;
+            border-radius: 24px;
+            border: 1px solid rgba(var(--tone-rgb), 0.16);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 24px 36px -34px rgba(15, 23, 42, 0.34);
+        }
+
+        .detail-gallery-card img {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #e2e8f0;
+        }
+
+        .detail-gallery-card figcaption {
+            display: grid;
+            gap: 6px;
+            padding: 14px 16px 16px;
+        }
+
+        .detail-gallery-card strong {
+            font-size: 16px;
+            line-height: 1.35;
+            letter-spacing: -0.02em;
+        }
+
+        .detail-gallery-card span {
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
         .detail-panel-wide {
             margin-top: 0;
         }
@@ -494,7 +546,8 @@
 
         @media (max-width: 900px) {
             .detail-grid,
-            .related-skill-grid {
+            .related-skill-grid,
+            .detail-gallery-grid {
                 grid-template-columns: 1fr;
             }
 

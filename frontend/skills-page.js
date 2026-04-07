@@ -17,19 +17,24 @@ function createSkillCard(skill) {
     const cardHeadline = skill.cardHeadline || skill.headline;
     const cardScenario = skill.cardScenario || skill.scenario;
     const cardClass = skill.detailType === 'mcp' ? 'skill-card skill-card-mcp' : 'skill-card';
+    const statusLabel = skill.statusLabel || '已实测';
 
     return `
         <article class="${cardClass}" data-tone="${skill.moduleTone}">
             <div class="skill-card-top">
-                <span class="skill-module-chip">${skill.moduleTitle}</span>
+                <div class="skill-card-badges">
+                    <span class="skill-module-chip">${skill.moduleTitle}</span>
+                    <span class="skill-tested-chip">${statusLabel}</span>
+                </div>
                 <h3>${skill.name}</h3>
             </div>
             <div class="skill-card-copy">
                 <p class="skill-headline">${cardHeadline}</p>
                 <p class="skill-scenario">${cardScenario}</p>
+                <p class="skill-card-support">附安装命令、可复制提示词和结果说明。</p>
             </div>
             <a class="skill-card-link" href="${skill.detailUrl}">
-                <span>查看使用说明</span>
+                <span>查看上手教程</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </a>
         </article>

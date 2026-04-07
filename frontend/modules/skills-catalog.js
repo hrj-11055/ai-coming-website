@@ -1,3 +1,5 @@
+import { FEATURED_SKILL_CONTENT, FEATURED_SKILL_GROUPS } from './featured-skills-content.js';
+
 const REFERENCE_SOURCE_URL = 'https://ai.codefather.cn/skills';
 const REFERENCE_SOURCE_LABEL = '参考来源';
 const ANTHROPIC_SKILLS_BASE_URL = 'https://github.com/anthropics/skills/tree/main/skills';
@@ -1138,6 +1140,10 @@ const SKILL_DETAIL_OVERRIDES = {
     }
 };
 
+const BASE_SKILL_BY_SLUG = new Map(
+    BASE_SKILL_MODULES.flatMap((module) => module.skills.map((skill) => [skill.slug, skill]))
+);
+
 function normalizeSkill(module, skill) {
     const overrides = SKILL_DETAIL_OVERRIDES[skill.slug] || {};
 
@@ -1157,25 +1163,28 @@ function normalizeSkill(module, skill) {
     };
 }
 
-const SKILL_MODULE_ORDER = [
-    'claude-official',
-    'document-processing',
-    'efficiency-tools',
-    'content-media',
-    'data-analysis',
-    'business-marketing',
-    'software-development',
-    'devops',
-    'mcp'
-];
+function buildFeaturedSkill(slug) {
+    const baseSkill = BASE_SKILL_BY_SLUG.get(slug) || null;
+    const featuredSkill = FEATURED_SKILL_CONTENT[slug] || null;
 
-export const SKILL_MODULES = SKILL_MODULE_ORDER
-    .map((moduleId) => BASE_SKILL_MODULES.find((module) => module.id === moduleId))
-    .filter(Boolean)
-    .map((module) => ({
+    if (!baseSkill && !featuredSkill) {
+        return null;
+    }
+
+    return {
+        ...(baseSkill || {}),
+        ...(featuredSkill || {}),
+        slug
+    };
+}
+
+export const SKILL_MODULES = FEATURED_SKILL_GROUPS.map((module) => ({
     ...module,
-    skills: module.skills.map((skill) => normalizeSkill(module, skill))
-    }));
+    skills: module.skillSlugs
+        .map((slug) => buildFeaturedSkill(slug))
+        .filter(Boolean)
+        .map((skill) => normalizeSkill(module, skill))
+}));
 
 export const ALL_SKILLS = SKILL_MODULES.flatMap((module) => module.skills);
 
