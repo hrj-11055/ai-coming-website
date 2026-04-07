@@ -8,7 +8,7 @@ function readProjectFile(relativePath) {
     return readFileSync(new URL(`../${relativePath}`, import.meta.url), 'utf8');
 }
 
-test('all primary nav pages include the Agent Skills entry', () => {
+test('all primary nav pages include the AI capability library entry', () => {
     for (const page of NAV_PAGES) {
         const html = readProjectFile(page);
         assert.match(

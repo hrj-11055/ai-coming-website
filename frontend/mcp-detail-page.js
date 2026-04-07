@@ -35,7 +35,7 @@ function renderDetail(skill) {
     return `
         <div class="detail-hero-card">
             <div class="detail-breadcrumb">
-                <a href="skills.html">Agent Skills</a>
+                    <a href="skills.html">AI 能力库</a>
                 <span>/</span>
                 <span>${skill.moduleTitle}</span>
             </div>
@@ -101,7 +101,7 @@ function renderDetail(skill) {
                     <h2>推荐搭配</h2>
                     <p>先从当前 MCP 上手，再和相邻工具串成完整工作流。</p>
                 </div>
-                <a class="detail-back-link" href="skills.html#${skill.moduleId}">返回模块</a>
+                <a class="detail-back-link" href="skills.html#${skill.moduleId}">返回分组</a>
             </div>
             <div class="related-skill-grid">
                 ${relatedEntries.length ? relatedEntries.map(renderRelatedEntry).join('') : '<p class="detail-empty">这个 MCP 暂时没有补充的相关推荐。</p>'}
@@ -161,8 +161,8 @@ function renderNotFound(slug) {
         <div class="detail-hero-card detail-hero-card--empty">
             <span class="detail-module-chip">未找到 MCP</span>
             <h1>这个 MCP 详情页还没有准备好</h1>
-            <p>当前 slug：${escapeHtml(slug || '空参数')}。你可以先回到 Agent Skills 列表继续浏览其它模块。</p>
-            <p><a class="detail-back-link" href="skills.html#mcp">返回 MCP 模块</a></p>
+            <p>当前 slug：${escapeHtml(slug || '空参数')}。你可以先回到 AI 能力库列表继续浏览其它分组。</p>
+            <p><a class="detail-back-link" href="skills.html#mcp-starter">返回 MCP 分组</a></p>
         </div>
     `;
 }
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    document.title = `${skill.name} - MCP 详情 - AIcoming`;
+    document.title = `${skill.name} - AI 能力库 - AIcoming`;
     if (title) title.textContent = skill.name;
     if (description) {
         description.setAttribute('content', `${skill.name}：${skill.headline}`);
