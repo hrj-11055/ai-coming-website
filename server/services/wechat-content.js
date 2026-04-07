@@ -174,6 +174,36 @@ function buildPodcastMarkdown({ date, metadata }) {
     return lines.join('\n').trim();
 }
 
+function buildPodcastVoiceMessageText(metadata, maxChars = 170) {
+    const source = sanitizeInlineText(metadata?.script_tts_text || metadata?.transcript || metadata?.summary || '');
+    if (!source) {
+        return '';
+    }
+
+    const outro = '更多内容请看公众号文章。';
+    const budget = Math.max(40, maxChars - outro.length - 1);
+    const sentences = source
+        .split(/(?<=[。！？!?；;])/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+    let body = '';
+    for (const sentence of sentences) {
+        if ((body + sentence).length > budget) {
+            break;
+        }
+        body += sentence;
+    }
+
+    if (!body) {
+        body = source.slice(0, budget).trim();
+        body = body.replace(/[，、；,.!?！？:：\s]+$/g, '');
+        body += '。';
+    }
+
+    return `${body}${outro}`;
+}
+
 function hashText(value) {
     return crypto.createHash('sha1').update(String(value || '')).digest('hex');
 }
@@ -181,6 +211,7 @@ function hashText(value) {
 module.exports = {
     buildNewsMarkdown,
     buildPodcastMarkdown,
+    buildPodcastVoiceMessageText,
     buildWechatDigest,
     formatWechatTitle,
     hashText,

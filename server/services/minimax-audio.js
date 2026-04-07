@@ -4,6 +4,14 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const DEFAULT_MINIMAX_TTS_FILE_METADATA_API_URL = 'https://api.minimaxi.com/v1/files/retrieve';
+const DEFAULT_MINIMAX_TTS_API_URL = 'https://api.minimaxi.com/v1/t2a_async_v2';
+const DEFAULT_MINIMAX_TTS_QUERY_API_URL = 'https://api.minimaxi.com/v1/query/t2a_async_query_v2';
+const DEFAULT_MINIMAX_TTS_MODEL = 'speech-2.8-turbo';
+const DEFAULT_MINIMAX_TTS_VOICE_ID = 'male-qn-jingying';
+const DEFAULT_AUDIO_FORMAT = 'mp3';
+const DEFAULT_LANGUAGE_BOOST = 'Chinese';
+const DEFAULT_TTS_POLL_INTERVAL_MS = 3000;
+const DEFAULT_TTS_TIMEOUT_MS = 600000;
 
 function parseMinimaxMessage(data, fallbackMessage) {
     return data?.error?.message
@@ -23,6 +31,25 @@ function ensureMinimaxSuccess(data, fallbackMessage) {
 function buildAsyncTtsFileMetadataUrl(fileMetadataApiUrl, fileId) {
     const separator = String(fileMetadataApiUrl || '').includes('?') ? '&' : '?';
     return `${fileMetadataApiUrl}${separator}file_id=${encodeURIComponent(fileId)}`;
+}
+
+function buildAsyncTtsQueryUrl(queryApiUrl, taskId) {
+    const separator = String(queryApiUrl || '').includes('?') ? '&' : '?';
+    return `${queryApiUrl}${separator}task_id=${encodeURIComponent(taskId)}`;
+}
+
+function isAsyncTtsCompleted(status) {
+    return ['success', 'succeeded', 'completed', 'done', 'finish', 'finished']
+        .includes(String(status || '').trim().toLowerCase());
+}
+
+function isAsyncTtsFailed(status) {
+    return ['failed', 'error', 'expired', 'canceled', 'cancelled']
+        .includes(String(status || '').trim().toLowerCase());
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function bufferLooksLikeAudio(buffer) {
@@ -131,6 +158,119 @@ function createMinimaxAudioClient({
     };
 }
 
+function createMinimaxTtsClient({
+    apiKey = process.env.MINIMAX_API_KEY || '',
+    apiUrl = process.env.MINIMAX_TTS_API_URL || DEFAULT_MINIMAX_TTS_API_URL,
+    queryApiUrl = process.env.MINIMAX_TTS_QUERY_API_URL || DEFAULT_MINIMAX_TTS_QUERY_API_URL,
+    fileMetadataApiUrl = process.env.MINIMAX_TTS_FILE_METADATA_API_URL || DEFAULT_MINIMAX_TTS_FILE_METADATA_API_URL,
+    model = process.env.MINIMAX_TTS_MODEL || DEFAULT_MINIMAX_TTS_MODEL,
+    voiceId = process.env.MINIMAX_TTS_VOICE_ID || DEFAULT_MINIMAX_TTS_VOICE_ID,
+    audioFormat = process.env.MINIMAX_TTS_FORMAT || DEFAULT_AUDIO_FORMAT,
+    speed = Number(process.env.MINIMAX_TTS_SPEED || 1.0),
+    volume = Number(process.env.MINIMAX_TTS_VOLUME || 1.0),
+    pitch = Number(process.env.MINIMAX_TTS_PITCH || 0),
+    languageBoost = process.env.MINIMAX_TTS_LANGUAGE_BOOST || DEFAULT_LANGUAGE_BOOST,
+    pollIntervalMs = Number(process.env.MINIMAX_TTS_POLL_INTERVAL_MS || DEFAULT_TTS_POLL_INTERVAL_MS),
+    timeoutMs = Number(process.env.MINIMAX_TTS_TIMEOUT_MS || DEFAULT_TTS_TIMEOUT_MS),
+    fetchImpl = fetch
+} = {}) {
+    const audioClient = createMinimaxAudioClient({
+        apiKey,
+        fileMetadataApiUrl,
+        fetchImpl
+    });
+
+    return {
+        async synthesizeTextToAudioBuffer(text) {
+            const normalizedText = String(text || '').trim();
+            if (!normalizedText) {
+                throw new Error('MiniMax 短音频合成缺少文本');
+            }
+            if (!apiKey || !apiUrl || !queryApiUrl) {
+                throw new Error('MiniMax 短音频合成能力尚未配置完成');
+            }
+
+            const createResponse = await fetchImpl(apiUrl, {
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model,
+                    text: normalizedText,
+                    voice_setting: {
+                        voice_id: voiceId,
+                        speed,
+                        vol: volume,
+                        pitch
+                    },
+                    audio_setting: {
+                        audio_sample_rate: 32000,
+                        bitrate: 128000,
+                        format: String(audioFormat || DEFAULT_AUDIO_FORMAT).replace(/^\./, ''),
+                        channel: 1
+                    },
+                    language_boost: languageBoost
+                })
+            });
+
+            const createData = await createResponse.json().catch(() => ({}));
+            if (!createResponse.ok) {
+                throw new Error(parseMinimaxMessage(createData, `MiniMax 短音频合成任务创建失败: HTTP ${createResponse.status}`));
+            }
+            ensureMinimaxSuccess(createData, 'MiniMax 短音频合成任务创建失败');
+
+            const taskId = createData?.task_id || createData?.data?.task_id || null;
+            const initialFileId = createData?.file_id || createData?.data?.file_id || null;
+            if (!taskId) {
+                throw new Error('MiniMax 短音频合成未返回 task_id');
+            }
+
+            const deadline = Date.now() + Math.max(1000, timeoutMs || DEFAULT_TTS_TIMEOUT_MS);
+            let fileId = initialFileId;
+            while (Date.now() <= deadline) {
+                const queryResponse = await fetchImpl(buildAsyncTtsQueryUrl(queryApiUrl, taskId), {
+                    headers: {
+                        Authorization: `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const queryData = await queryResponse.json().catch(() => ({}));
+                if (!queryResponse.ok) {
+                    throw new Error(parseMinimaxMessage(queryData, `MiniMax 短音频合成查询失败: HTTP ${queryResponse.status}`));
+                }
+                ensureMinimaxSuccess(queryData, 'MiniMax 短音频合成查询失败');
+
+                const payload = queryData?.data || queryData;
+                const status = payload?.status || payload?.task_status || payload?.state || null;
+                fileId = payload?.file_id || payload?.result_file_id || payload?.audio_file_id || fileId;
+
+                if (isAsyncTtsCompleted(status)) {
+                    if (!fileId) {
+                        throw new Error('MiniMax 短音频合成已完成但未返回 file_id');
+                    }
+                    const downloaded = await audioClient.downloadAudioBufferFromFileId(fileId);
+                    return {
+                        ...downloaded,
+                        taskId,
+                        fileId
+                    };
+                }
+
+                if (isAsyncTtsFailed(status)) {
+                    throw new Error(parseMinimaxMessage(queryData, `MiniMax 短音频合成失败: ${status || 'unknown'}`));
+                }
+
+                await sleep(Math.max(1, pollIntervalMs || DEFAULT_TTS_POLL_INTERVAL_MS));
+            }
+
+            throw new Error(`MiniMax 短音频合成轮询超时（>${Math.max(1000, timeoutMs || DEFAULT_TTS_TIMEOUT_MS)}ms）`);
+        }
+    };
+}
+
 module.exports = {
-    createMinimaxAudioClient
+    createMinimaxAudioClient,
+    createMinimaxTtsClient
 };

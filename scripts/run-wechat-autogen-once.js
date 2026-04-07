@@ -8,11 +8,12 @@ const path = require('path');
 const {
     buildNewsMarkdown,
     buildPodcastMarkdown,
+    buildPodcastVoiceMessageText,
     buildWechatDigest,
     formatWechatTitle,
     hashText
 } = require('../server/services/wechat-content');
-const { createMinimaxAudioClient } = require('../server/services/minimax-audio');
+const { createMinimaxAudioClient, createMinimaxTtsClient } = require('../server/services/minimax-audio');
 const { createWechatPodcastFormatter } = require('../server/services/wechat-podcast-formatter');
 const { createWechatPublisher } = require('../server/services/wechat-publisher');
 
@@ -101,7 +102,7 @@ function createPodcastFingerprint(metadata, formatterFingerprint = '') {
     }));
 }
 
-function createPodcastAudioFingerprint(metadata, deliveryFingerprint = '') {
+function createPodcastAudioFingerprint(metadata, deliveryFingerprint = '', shortVoiceText = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         audio_url: metadata?.audio_url || '',
@@ -111,6 +112,7 @@ function createPodcastAudioFingerprint(metadata, deliveryFingerprint = '') {
         tts_file_id: metadata?.tts_file_id || '',
         content_hash: metadata?.content_hash || '',
         generation_signature: metadata?.generation_signature || '',
+        short_voice_text: shortVoiceText || '',
         delivery_fingerprint: deliveryFingerprint || ''
     }));
 }
@@ -280,6 +282,7 @@ async function maybePublishPodcastAudio({
     state,
     publisher,
     podcastAudioDownloader,
+    podcastAudioSynthesizer,
     enabledTypes,
     siteBaseUrl
 }) {
@@ -298,12 +301,25 @@ async function maybePublishPodcastAudio({
     }
 
     const preferRemoteAudio = metadata.audio_storage !== 'local';
-    const audioPath = preferRemoteAudio ? null : resolveLocalPodcastAudioPath(podcastMetadataDir, metadata);
-    const audioUrl = preferRemoteAudio ? toAbsoluteUrl(siteBaseUrl, metadata.audio_url || '') : '';
+    let audioPath = preferRemoteAudio ? null : resolveLocalPodcastAudioPath(podcastMetadataDir, metadata);
+    let audioUrl = preferRemoteAudio ? toAbsoluteUrl(siteBaseUrl, metadata.audio_url || '') : '';
     let audioBuffer = null;
     let fileName = audioPath ? path.basename(audioPath) : '';
+    const shortVoiceText = buildPodcastVoiceMessageText(metadata);
 
-    if (!audioPath && !audioUrl && metadata?.tts_file_id) {
+    if (shortVoiceText) {
+        try {
+            const synthesized = await podcastAudioSynthesizer.synthesizeTextToAudioBuffer(shortVoiceText);
+            audioBuffer = synthesized.audioBuffer;
+            fileName = synthesized.fileName || `podcast-${date}.mp3`;
+            audioPath = null;
+            audioUrl = '';
+        } catch (error) {
+            console.warn(`[wechat-autogen] podcast audio short tts failed, fallback to existing audio source: ${error.message}`);
+        }
+    }
+
+    if (!audioBuffer && !audioPath && !audioUrl && metadata?.tts_file_id) {
         const downloaded = await podcastAudioDownloader.downloadAudioBufferFromFileId(metadata.tts_file_id);
         audioBuffer = downloaded.audioBuffer;
         fileName = downloaded.fileName || `podcast-${date}.mp3`;
@@ -316,7 +332,7 @@ async function maybePublishPodcastAudio({
     const deliveryFingerprint = typeof publisher.getAudioDeliveryFingerprint === 'function'
         ? (publisher.getAudioDeliveryFingerprint() || '')
         : '';
-    const fingerprint = createPodcastAudioFingerprint(metadata, deliveryFingerprint);
+    const fingerprint = createPodcastAudioFingerprint(metadata, deliveryFingerprint, shortVoiceText);
     if (state?.podcast_audio?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
@@ -372,6 +388,7 @@ async function runWechatAutogenOnce(options = {}) {
     let publisher = options.publisher || null;
     let podcastFormatter = options.podcastFormatter || null;
     let podcastAudioDownloader = options.podcastAudioDownloader || null;
+    let podcastAudioSynthesizer = options.podcastAudioSynthesizer || null;
     function getPublisher() {
         if (!publisher) {
             publisher = createWechatPublisher(options.publisherOptions || {});
@@ -389,6 +406,12 @@ async function runWechatAutogenOnce(options = {}) {
             podcastAudioDownloader = createMinimaxAudioClient(options.podcastAudioDownloaderOptions || {});
         }
         return podcastAudioDownloader;
+    }
+    function getPodcastAudioSynthesizer() {
+        if (!podcastAudioSynthesizer) {
+            podcastAudioSynthesizer = createMinimaxTtsClient(options.podcastAudioSynthesizerOptions || {});
+        }
+        return podcastAudioSynthesizer;
     }
     const reportResult = await maybePublishReport({
         date: dateInfo.date,
@@ -442,6 +465,11 @@ async function runWechatAutogenOnce(options = {}) {
         podcastAudioDownloader: {
             downloadAudioBufferFromFileId(fileId) {
                 return getPodcastAudioDownloader().downloadAudioBufferFromFileId(fileId);
+            }
+        },
+        podcastAudioSynthesizer: {
+            synthesizeTextToAudioBuffer(text) {
+                return getPodcastAudioSynthesizer().synthesizeTextToAudioBuffer(text);
             }
         },
         enabledTypes,

@@ -223,6 +223,7 @@ test('runWechatAutogenOnce sends only todays ready podcast audio and skips older
     const podcastMetadataDir = path.join(root, 'podcasts');
     const audioDir = path.join(podcastMetadataDir, 'audio');
     const calls = [];
+    const synthCalls = [];
 
     fs.mkdirSync(audioDir, { recursive: true });
     fs.writeFileSync(path.join(audioDir, '2026-04-02.mp3'), 'fake-mp3');
@@ -247,6 +248,15 @@ test('runWechatAutogenOnce sends only todays ready podcast audio and skips older
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         enabledTypes: ['podcast_audio'],
+        podcastAudioSynthesizer: {
+            async synthesizeTextToAudioBuffer(text) {
+                synthCalls.push(text);
+                return {
+                    audioBuffer: Buffer.from('short-audio'),
+                    fileName: 'short.mp3'
+                };
+            }
+        },
         publisher: {
             getAudioDeliveryFingerprint() {
                 return 'sendall-all';
@@ -259,6 +269,7 @@ test('runWechatAutogenOnce sends only todays ready podcast audio and skips older
     });
 
     assert.equal(calls.length, 1);
+    assert.equal(synthCalls.length, 0);
     assert.equal(calls[0].date, '2026-04-02');
     assert.match(calls[0].audioPath, /2026-04-02\.mp3$/);
     assert.equal(result.podcastAudio.action, 'sent');
@@ -269,11 +280,13 @@ test('runWechatAutogenOnce falls back to remote audio url for podcast audio send
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-audio-url-'));
     const podcastMetadataDir = path.join(root, 'podcasts');
     const calls = [];
+    const synthCalls = [];
 
     writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
         status: 'ready',
         audio_storage: 'oss',
-        audio_url: 'https://cdn.example.com/podcast.mp3'
+        audio_url: 'https://cdn.example.com/podcast.mp3',
+        script_tts_text: '大家好，欢迎收听今天的AI早报。第一条，Claude已经可以自主生成漏洞利用。第二条，Anthropic营收飙升但算力吃紧。第三条，具身智能进入工业化门槛。后面还有很多内容。'
     });
 
     const result = await runWechatAutogenOnce({
@@ -283,6 +296,15 @@ test('runWechatAutogenOnce falls back to remote audio url for podcast audio send
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         enabledTypes: ['podcast_audio'],
+        podcastAudioSynthesizer: {
+            async synthesizeTextToAudioBuffer(text) {
+                synthCalls.push(text);
+                return {
+                    audioBuffer: Buffer.from('short-audio'),
+                    fileName: 'short.mp3'
+                };
+            }
+        },
         publisher: {
             getAudioDeliveryFingerprint() {
                 return 'sendall-all';
@@ -295,9 +317,11 @@ test('runWechatAutogenOnce falls back to remote audio url for podcast audio send
     });
 
     assert.equal(calls.length, 1);
-    assert.equal(calls[0].audioUrl, 'https://cdn.example.com/podcast.mp3');
+    assert.equal(synthCalls.length, 1);
+    assert.equal(calls[0].audioUrl, '');
     assert.equal(calls[0].audioPath, null);
-    assert.equal(calls[0].audioBuffer, null);
+    assert.equal(String(calls[0].audioBuffer), 'short-audio');
+    assert.equal(calls[0].fileName, 'short.mp3');
     assert.equal(result.podcastAudio.action, 'sent');
 });
 
@@ -306,6 +330,7 @@ test('runWechatAutogenOnce falls back to minimax file download when podcast audi
     const podcastMetadataDir = path.join(root, 'podcasts');
     const calls = [];
     const downloaderCalls = [];
+    const synthCalls = [];
 
     writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
         status: 'ready',
@@ -321,6 +346,12 @@ test('runWechatAutogenOnce falls back to minimax file download when podcast audi
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         enabledTypes: ['podcast_audio'],
+        podcastAudioSynthesizer: {
+            async synthesizeTextToAudioBuffer(text) {
+                synthCalls.push(text);
+                throw new Error('short tts unavailable');
+            }
+        },
         podcastAudioDownloader: {
             async downloadAudioBufferFromFileId(fileId) {
                 downloaderCalls.push(fileId);
@@ -341,11 +372,60 @@ test('runWechatAutogenOnce falls back to minimax file download when podcast audi
         }
     });
 
+    assert.equal(synthCalls.length, 0);
     assert.deepEqual(downloaderCalls, [7788]);
     assert.equal(calls.length, 1);
     assert.equal(calls[0].audioUrl, '');
     assert.equal(calls[0].audioPath, null);
     assert.equal(String(calls[0].audioBuffer), 'fake-mp3');
     assert.equal(calls[0].fileName, 'downloaded.mp3');
+    assert.equal(result.podcastAudio.action, 'sent');
+});
+
+test('runWechatAutogenOnce prefers synthesized short podcast audio when script exists', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-short-audio-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const calls = [];
+    const synthCalls = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        audio_storage: 'oss',
+        audio_url: 'https://cdn.example.com/podcast.mp3',
+        script_tts_text: '大家好，欢迎收听今天的AI早报。第一条，Claude已经可以自主生成漏洞利用。第二条，Anthropic营收飙升但算力吃紧。第三条，具身智能进入工业化门槛。后面还有很多内容。'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabledTypes: ['podcast_audio'],
+        podcastAudioSynthesizer: {
+            async synthesizeTextToAudioBuffer(text) {
+                synthCalls.push(text);
+                return {
+                    audioBuffer: Buffer.from('short-audio'),
+                    fileName: 'short.mp3'
+                };
+            }
+        },
+        publisher: {
+            getAudioDeliveryFingerprint() {
+                return 'sendall-all';
+            },
+            async publishPodcastAudio(payload) {
+                calls.push(payload);
+                return { msg_id: 2004, voice_media_id: 'voice-4', delivery_mode: 'sendall' };
+            }
+        }
+    });
+
+    assert.equal(synthCalls.length, 1);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].audioUrl, '');
+    assert.equal(calls[0].audioPath, null);
+    assert.equal(String(calls[0].audioBuffer), 'short-audio');
     assert.equal(result.podcastAudio.action, 'sent');
 });
