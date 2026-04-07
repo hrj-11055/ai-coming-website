@@ -14,3 +14,4 @@ logs/
 data/podcasts/
 backups/
 .podcast-autogen.lock
+.worktrees/
