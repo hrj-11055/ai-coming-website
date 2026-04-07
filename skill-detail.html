@@ -499,6 +499,99 @@
             margin: 0;
         }
 
+        /* Screenshot Gallery */
+        .detail-panel--full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .detail-screenshot-item {
+            margin: 0;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(var(--tone-rgb), 0.12);
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 12px 28px -20px rgba(var(--tone-rgb), 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .detail-screenshot-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px -22px rgba(var(--tone-rgb), 0.32);
+        }
+
+        .detail-screenshot-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: zoom-in;
+            transition: opacity 0.2s ease;
+        }
+
+        .detail-screenshot-item img:hover {
+            opacity: 0.92;
+        }
+
+        .detail-screenshot-item figcaption {
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.5;
+            border-top: 1px solid rgba(var(--tone-rgb), 0.08);
+        }
+
+        /* Lightbox */
+        .detail-lightbox-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.85);
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .detail-lightbox-overlay.is-active {
+            display: flex;
+        }
+
+        .detail-lightbox-img {
+            max-width: 95%;
+            max-height: 92vh;
+            border-radius: 12px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+        }
+
+        .detail-lightbox-close {
+            position: fixed;
+            top: 20px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .detail-lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         .skill-detail-shell[data-tone="violet"] {
             --tone-rgb: 99, 102, 241;
             --tone-strong: #4f46e5;

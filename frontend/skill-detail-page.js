@@ -155,6 +155,36 @@ function renderDetail(skill) {
         </section>
     ` : '';
 
+    const screenshotsPanel = (skill.screenshots && skill.screenshots.length) ? `
+        <article class="detail-panel detail-panel--full">
+            <span class="detail-panel-kicker">Screenshots</span>
+            <h2>实操截图</h2>
+            <div class="detail-screenshot-grid">
+                ${skill.screenshots.map((shot, i) => `
+                    <figure class="detail-screenshot-item" data-index="${i}">
+                        <img src="${shot.src}" alt="${escapeHtml(shot.caption)}" loading="lazy" />
+                        <figcaption>${escapeHtml(shot.caption)}</figcaption>
+                    </figure>
+                `).join('')}
+            </div>
+        </article>
+    ` : '';
+
+    const examplePromptPanel = skill.examplePrompt ? `
+        <article class="detail-panel">
+            <span class="detail-panel-kicker">Example</span>
+            <h2>示例提示词</h2>
+            <p>你可以直接复制这段提示词，在 Claude Code 中粘贴使用。</p>
+            <div class="detail-code-wrap">
+                <pre class="detail-code-block"><code>${escapeHtml(skill.examplePrompt)}</code></pre>
+                <button class="detail-copy-btn" type="button" data-copy-text="${escapeHtml(skill.examplePrompt)}">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>复制提示词</span>
+                </button>
+            </div>
+        </article>
+    ` : '';
+
     return `
         <div class="skill-detail-shell" data-tone="${skill.moduleTone || 'violet'}">
             <section class="detail-hero-card">
@@ -190,11 +220,13 @@ function renderDetail(skill) {
                 </article>
                 ${installPanel}
                 ${preparationPanel}
+                ${examplePromptPanel}
                 <article class="detail-panel">
                     <span class="detail-panel-kicker">Use Cases</span>
                     <h2>适合场景</h2>
                     <ul>${renderList(skill.useCases || [])}</ul>
                 </article>
+                ${screenshotsPanel}
                 <article class="detail-panel" id="usage-guide">
                     <span class="detail-panel-kicker">Workflow</span>
                     <h2>怎么开始使用</h2>
@@ -277,6 +309,42 @@ function bindCopyButtons() {
     });
 }
 
+function bindScreenshotLightbox() {
+    const overlay = document.createElement('div');
+    overlay.className = 'detail-lightbox-overlay';
+    overlay.innerHTML = '<img class="detail-lightbox-img" src="" alt="" /><button class="detail-lightbox-close" type="button" aria-label="关闭"><i class="fa-solid fa-xmark"></i></button>';
+    document.body.appendChild(overlay);
+
+    const lightboxImg = overlay.querySelector('.detail-lightbox-img');
+    const closeBtn = overlay.querySelector('.detail-lightbox-close');
+
+    function openLightbox(src, alt) {
+        lightboxImg.src = src;
+        lightboxImg.alt = alt;
+        overlay.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        overlay.classList.remove('is-active');
+        document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeLightbox();
+    });
+
+    document.querySelectorAll('.detail-screenshot-item img').forEach((img) => {
+        img.addEventListener('click', () => {
+            openLightbox(img.src, img.alt);
+        });
+    });
+}
+
 function renderNotFound(slug) {
     return `
         <div class="detail-hero-card detail-hero-card--empty">
@@ -313,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     content.innerHTML = renderDetail(skill);
     bindCopyButtons();
+    bindScreenshotLightbox();
 });
 
 export { ALL_SKILLS };

@@ -1154,20 +1154,38 @@ const SKILL_DETAIL_OVERRIDES = {
     docx: {
         installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/docx`),
         installHint: 'Anthropic 官方仓库已经把 docx 放进 document-skills。这里保留的是按单个 skill 目录安装的快捷命令。',
-        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/docx`
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/docx`,
+        screenshots: [
+            { src: '/pic/skills/docx-install.png', caption: '安装 docx skill 及依赖' },
+            { src: '/pic/skills/docx-output-1.png', caption: '生成带标题和表格的 Word 文档' },
+            { src: '/pic/skills/docx-output-2.png', caption: '复杂排版效果：目录、页眉页脚和图片' }
+        ],
+        examplePrompt: '帮我读取 quarterly-report.docx 的内容，然后创建一份新的 Word 文档，包含三级标题结构、数据表格和公司 logo 图片。'
     },
     pdf: {
         installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/pdf`),
         installHint: 'Anthropic 官方 document-skills 里已经包含这个 PDF skill；如果你只想取 PDF 能力，这条单 skill 命令最直接。',
-        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pdf`
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pdf`,
+        screenshots: [
+            { src: '/pic/skills/pdf-install.png', caption: '安装 PDF skill 及 pypdf、pdfplumber、reportlab 依赖' }
+        ],
+        examplePrompt: '帮我把 report1.pdf 和 report2.pdf 合并成一个文件，然后提取里面的表格数据导出到 Excel。'
     },
     pptx: {
-        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pptx`
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pptx`,
+        screenshots: [
+            { src: '/pic/skills/pptx-output.png', caption: '从零生成的演示文稿效果' }
+        ],
+        examplePrompt: '帮我基于这份市场调研材料，创建一个 5 页的幻灯片，配色用深蓝色主题，每页包含一个核心观点和配图。'
     },
     xlsx: {
         installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/xlsx`),
         installHint: 'Anthropic 官方仓库已经提供完整的 xlsx skill；这里保留的是按单目录安装的复制命令。',
-        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/xlsx`
+        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/xlsx`,
+        screenshots: [
+            { src: '/pic/skills/xlsx-output.png', caption: '读取 Excel 数据并用公式计算统计分析结果' }
+        ],
+        examplePrompt: '读取 sales.xlsx 里的销售数据，做一个数据统计分析，用 Excel 公式计算各产品的销售总额和同比增长率，保存到新文件。'
     },
     'notebooklm-py': {
         overview: '这个页面对应的是 NotebookLM 的官方社区 skill + Python CLI 组合：先把 GitHub 上的 root skill 安装进 Agent，再补上 `notebooklm-py` 和 Chromium 依赖，之后就能把资料库、问答、播客、脑图、信息图和幻灯片生成串成一条本地工作流。',
@@ -1209,6 +1227,13 @@ const SKILL_DETAIL_OVERRIDES = {
         installHint: '`speech` 属于 Codex 的系统级语音工作流；升级到最新版 Codex 后，再补 OpenAI Python SDK，就能直接调用 bundled CLI 来批量生成音频。',
         skillDocPurpose: '这个 skill 的 SKILL.md 主要在规范 TTS 的输入收集、单条/批量模式选择、CLI 调用方式和试听校验步骤，避免 Agent 每次都重新组织一遍语音生成流程。',
         sourceUrl: OPENAI_SKILLS_REPO_URL
+    },
+    'search-first': {
+        screenshots: [
+            { src: '/pic/skills/search-first-output.png', caption: 'Search First 搜索结果输出' },
+            { src: '/pic/skills/search-first-alt.png', caption: '搜索结果对比与方案推荐' }
+        ],
+        examplePrompt: '我想做一个 Markdown 格式的文档转换功能，帮我先搜索一下现有的开源库和方案，再决定是自己写还是直接用现成的。'
     }
 };
 
