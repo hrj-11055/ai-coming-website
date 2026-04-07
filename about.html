@@ -264,7 +264,7 @@
     </style>
 </head>
 
-<body x-data="{ mobileMenuOpen: false, contactModalOpen: false }" :class="contactModalOpen ? 'overflow-hidden' : ''">
+<body x-data="{ mobileMenuOpen: false }">
 
     <!-- ===== NAVIGATION ===== -->
     <div class="nav-container" id="navContainer">
@@ -329,7 +329,10 @@
                 深圳元说科技是一家聚焦"AI + 业务增长"的咨询与科技公司。我们不兜售技术概念，我们进入企业的真实业务流程，用驻场咨询和实战培训帮助团队把 AI 真正用起来。
             </p>
             <div class="reveal" style="margin-top: clamp(32px, 4vh, 48px);">
-                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" class="btn-primary">联系我们</a>
+                <a href="tel:15800565566" class="btn-primary" style="flex-direction: column; align-items: flex-start; gap: 2px; max-width: 100%; white-space: normal; line-height: 1.45;">
+                    <span style="font-size: 13px; opacity: 0.82;">黄老师</span>
+                    <span>电话：15800565566</span>
+                </a>
             </div>
         </div>
     </section>
@@ -403,6 +406,55 @@
                     <p class="body-regular" style="margin-top: 12px;">
                         面向市场、销售、产品、研发、运营等核心岗位开展定制化 AI 实战营。不教代码，专注帮助团队用 AI 解决具体业务问题，培育"懂业务、懂 AI"的复合型人才。
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===== TECH PRODUCT CASE ===== -->
+    <section style="padding: clamp(48px, 7vh, 96px) 0;">
+        <div class="container-main">
+            <hr class="rule reveal">
+            <div class="split-layout" style="padding-top: clamp(44px, 6vh, 76px); align-items: stretch;">
+                <div class="reveal">
+                    <p class="label-section" style="margin-bottom: 16px;">科技产品案例</p>
+                    <h2 class="heading-section">AI资讯日报</h2>
+                    <p class="body-large" style="margin-top: 20px;">
+                        AI资讯日报是我们持续运营的一款 AI 内容产品。我们把每天分散的 AI 信息整理成可浏览、可跟踪、可继续消费的内容入口，帮助用户更快了解当天值得关注的技术动态与行业变化。
+                    </p>
+                    <p class="body-regular" style="margin-top: 18px;">
+                        它不是简单的信息堆砌，而是把内容组织、信息提炼、产品化承接与持续更新放在同一个工作流里，也是我们“科技：做落地”的一个真实样本。
+                    </p>
+                    <div style="margin-top: 28px;">
+                        <a href="news.html" class="btn-primary">查看 AI资讯日报</a>
+                    </div>
+                </div>
+
+                <div class="method-card reveal">
+                    <p class="label-section" style="margin-bottom: 18px;">产品事实</p>
+                    <h3 class="heading-card">持续更新的 AI 信息产品</h3>
+                    <p class="body-small" style="margin-top: 12px;">
+                        围绕真实的信息获取与内容消费场景持续迭代。
+                    </p>
+                    <div style="margin-top: 24px; display: grid; gap: 14px;">
+                        <div>
+                            <p class="body-small">当前能力</p>
+                            <p class="body-regular">每日 AI 资讯</p>
+                        </div>
+                        <div>
+                            <p class="body-small">当前能力</p>
+                            <p class="body-regular">热点关键词</p>
+                        </div>
+                        <div>
+                            <p class="body-small">当前能力</p>
+                            <p class="body-regular">今日播客</p>
+                        </div>
+                        <div>
+                            <p class="body-small">产品入口</p>
+                            <p class="body-regular">news.html</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -583,10 +635,11 @@
                 无论你是在规划 AI 战略、寻找落地场景，还是想给团队做一次实战培训，我们都可以先聊聊。
             </p>
             <div class="reveal" style="margin-top: clamp(28px, 4vh, 44px);">
-                <a href="javascript:void(0)" @click.prevent="contactModalOpen = true" style="
+                <a href="tel:15800565566" style="
                     display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 2px;
                     padding: 14px 32px;
                     background: var(--bg-warm);
                     color: var(--text-primary);
@@ -597,48 +650,17 @@
                     border-radius: 999px;
                     text-decoration: none;
                     transition: all 0.2s ease;
-                ">联系我们</a>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- ===== CONTACT MODAL ===== -->
-    <div x-show="contactModalOpen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm transition-opacity" x-transition.opacity style="display: none;">
-        <div @click.away="contactModalOpen = false" class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl transform transition-transform" x-transition>
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="heading-card" style="font-size: 22px;">联系我们</h3>
-                <button @click="contactModalOpen = false" class="text-gray-400 hover:text-gray-700 transition-colors">
-                    <i class="fas fa-times text-xl"></i>
-                </button>
-            </div>
-            <div class="space-y-5">
-                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                    <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 mb-1" style="font-family: var(--font-sans);">联系人</p>
-                        <p class="font-semibold text-lg text-gray-900" style="font-family: var(--font-sans);">黄老师</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 p-3 rounded-xl bg-gray-50 border border-gray-100">
-                    <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-700">
-                        <i class="fas fa-phone-alt"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500 mb-1" style="font-family: var(--font-sans);">手机号码</p>
-                        <p class="font-semibold text-lg text-gray-900 select-all" style="font-family: var(--font-sans);">15800565566</p>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8">
-                <a href="tel:15800565566" class="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-black text-white hover:bg-gray-800 transition-colors" style="font-family: var(--font-sans); font-weight: 600; font-size: 15px; text-decoration: none;">
-                    <i class="fas fa-phone"></i> 拨打电话
+                    max-width: 100%;
+                    white-space: normal;
+                    line-height: 1.45;
+                    text-align: left;
+                ">
+                    <span style="font-size: 13px; opacity: 0.82;">黄老师</span>
+                    <span>电话：15800565566</span>
                 </a>
             </div>
         </div>
-    </div>
+    </section>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
