@@ -51,7 +51,7 @@ test('createMinimaxAudioClient downloads audio buffer from minimax file id', asy
         'https://tts.example.com/v1/files/retrieve?file_id=998',
         'https://download.example.com/podcast-output.tar'
     ]);
-    assert.equal(result.fileName, 'podcast-output.tar');
+    assert.equal(result.fileName, 'podcast-output.mp3');
     assert.equal(String(result.audioBuffer), 'ID3fake-audio-buffer');
 });
 
@@ -128,6 +128,6 @@ test('createMinimaxTtsClient synthesizes short text and downloads audio buffer',
 
     assert.equal(result.taskId, 'task-123');
     assert.equal(result.fileId, 998);
-    assert.equal(result.fileName, 'short-podcast.tar');
+    assert.equal(result.fileName, 'short-podcast.mp3');
     assert.equal(String(result.audioBuffer), 'ID3short-audio-buffer');
 });

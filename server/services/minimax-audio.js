@@ -58,11 +58,81 @@ function bufferLooksLikeAudio(buffer) {
     }
 
     const header = buffer.subarray(0, 4);
+    const amrHeader = buffer.subarray(0, 6);
     return buffer.subarray(0, 3).equals(Buffer.from('ID3'))
         || header.equals(Buffer.from('RIFF'))
         || header.equals(Buffer.from('OggS'))
         || header.equals(Buffer.from('fLaC'))
+        || amrHeader.equals(Buffer.from('#!AMR\n'))
         || (header[0] === 0xff && (header[1] & 0xe0) === 0xe0);
+}
+
+function isAudioFileName(fileName) {
+    return /\.(mp3|wav|m4a|flac|ogg|amr)$/i.test(String(fileName || '').trim());
+}
+
+function detectAudioExtension(buffer, contentType = '') {
+    const normalizedContentType = String(contentType || '').toLowerCase();
+    if (normalizedContentType.includes('audio/mpeg') || normalizedContentType.includes('audio/mp3')) {
+        return '.mp3';
+    }
+    if (normalizedContentType.includes('audio/wav') || normalizedContentType.includes('audio/x-wav')) {
+        return '.wav';
+    }
+    if (normalizedContentType.includes('audio/mp4') || normalizedContentType.includes('audio/x-m4a')) {
+        return '.m4a';
+    }
+    if (normalizedContentType.includes('audio/flac')) {
+        return '.flac';
+    }
+    if (normalizedContentType.includes('audio/ogg')) {
+        return '.ogg';
+    }
+    if (normalizedContentType.includes('audio/amr')) {
+        return '.amr';
+    }
+
+    if (!buffer || buffer.length < 4) {
+        return '';
+    }
+
+    const header = buffer.subarray(0, 4);
+    const amrHeader = buffer.subarray(0, 6);
+    if (buffer.subarray(0, 3).equals(Buffer.from('ID3')) || (header[0] === 0xff && (header[1] & 0xe0) === 0xe0)) {
+        return '.mp3';
+    }
+    if (header.equals(Buffer.from('RIFF'))) {
+        return '.wav';
+    }
+    if (header.equals(Buffer.from('OggS'))) {
+        return '.ogg';
+    }
+    if (header.equals(Buffer.from('fLaC'))) {
+        return '.flac';
+    }
+    if (amrHeader.equals(Buffer.from('#!AMR\n'))) {
+        return '.amr';
+    }
+
+    return '';
+}
+
+function resolveAudioFileName({ preferredName = '', fallbackName = '', buffer = null, contentType = '' }) {
+    const normalizedPreferred = path.basename(String(preferredName || '').trim());
+    if (isAudioFileName(normalizedPreferred)) {
+        return normalizedPreferred;
+    }
+
+    const normalizedFallback = path.basename(String(fallbackName || '').trim());
+    const detectedExtension = detectAudioExtension(buffer, contentType);
+    if (!detectedExtension) {
+        return normalizedPreferred || normalizedFallback || null;
+    }
+
+    const sourceName = normalizedPreferred || normalizedFallback || 'audio';
+    const parsed = path.parse(sourceName);
+    const baseName = parsed.name || 'audio';
+    return `${baseName}${detectedExtension}`;
 }
 
 function extractAudioBufferFromArchive(archiveBuffer) {
@@ -147,11 +217,17 @@ function createMinimaxAudioClient({
             }
 
             const arrayBuffer = await downloadResponse.arrayBuffer();
+            const downloadContentType = downloadResponse.headers.get('content-type') || '';
             const extracted = extractAudioBufferFromArchive(Buffer.from(arrayBuffer));
 
             return {
                 audioBuffer: extracted.audioBuffer,
-                fileName: file?.filename || extracted.fileName || null,
+                fileName: resolveAudioFileName({
+                    preferredName: extracted.fileName,
+                    fallbackName: file?.filename || '',
+                    buffer: extracted.audioBuffer,
+                    contentType: downloadContentType
+                }),
                 downloadUrl
             };
         }
