@@ -209,8 +209,8 @@
 
         .consulting-panel {
             display: grid;
-            grid-template-columns: 0.85fr 1.45fr;
-            gap: clamp(24px, 4vw, 48px);
+            grid-template-columns: 0.72fr 1.58fr;
+            gap: clamp(18px, 3vw, 36px);
             padding: clamp(28px, 3.2vw, 42px);
             border: 1px solid rgba(203, 194, 182, 0.75);
             border-radius: 24px;
@@ -230,6 +230,47 @@
             font-family: var(--font-serif);
             font-size: clamp(16px, 1.5vw, 18px);
             line-height: 1.85;
+            color: var(--text-body);
+        }
+
+        .consulting-value {
+            margin-top: 14px;
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-body);
+        }
+
+        .consulting-meta {
+            margin-top: 20px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .consulting-meta-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 18px;
+            align-items: start;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.56);
+            border: 1px solid rgba(203, 194, 182, 0.55);
+        }
+
+        .consulting-meta-label {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        .consulting-meta-text {
+            font-family: var(--font-sans);
+            font-size: 14px;
+            line-height: 1.8;
             color: var(--text-body);
         }
 
@@ -730,6 +771,7 @@
             .client-grid { grid-template-columns: repeat(3, 1fr); }
             .journey-grid { grid-template-columns: 1fr; }
             .consulting-panel { grid-template-columns: 1fr; }
+            .consulting-meta-row { grid-template-columns: 1fr; gap: 8px; }
             .detail-grid { grid-template-columns: 1fr; }
             .product-showcase { grid-template-columns: 1fr; }
             .training-showcase { grid-template-columns: 1fr; }
@@ -1035,24 +1077,18 @@
                     <p class="consulting-lead">
                         从员工真实的一天入手，把岗位任务拆到可分析的颗粒度，帮企业看清 AI 该先投向哪里、哪些岗位最值得优先重构。
                     </p>
+                    <p class="consulting-value">
+                        价值在于先把企业的 AI 家底看清楚，再决定预算投向、试点顺序和岗位调整节奏，避免在错误的地方先投入。
+                    </p>
 
-                    <div class="detail-grid">
-                        <div class="detail-box">
-                            <div class="detail-title">它能帮你什么</div>
-                            <ul class="detail-list">
-                                <li>看清 AI 该先从哪个岗位、任务和部门切入，避免一上来就盲目买工具、铺系统。</li>
-                                <li>找到最值得优先投预算、做试点和做培训的战场，让 AI 投入更快跑出投入产出比。</li>
-                                <li>提前识别人机协作的临界岗位，为未来 12 个月的岗位调整、转型准备和编制规划留出时间。</li>
-                            </ul>
+                    <div class="consulting-meta">
+                        <div class="consulting-meta-row">
+                            <div class="consulting-meta-label">它能帮你什么</div>
+                            <div class="consulting-meta-text">看清 AI 该先从哪个岗位、任务和部门切入；找到最值得优先投预算、做试点和做培训的战场；提前识别人机协作的临界岗位，为未来 12 个月的岗位调整、转型准备和编制规划留出时间。</div>
                         </div>
-                        <div class="detail-box">
-                            <div class="detail-title">交付结果</div>
-                            <ul class="detail-list">
-                                <li>岗位 AI 光谱分析报告</li>
-                                <li>部门 AI 渗透热力图</li>
-                                <li>公司 AI 全景透视图</li>
-                                <li>AI 投资优先级建议与行动路径</li>
-                            </ul>
+                        <div class="consulting-meta-row">
+                            <div class="consulting-meta-label">交付结果</div>
+                            <div class="consulting-meta-text">岗位 AI 光谱分析报告、部门 AI 渗透热力图、公司 AI 全景透视图、AI 投资优先级建议与行动路径。</div>
                         </div>
                     </div>
                 </div>
@@ -1068,25 +1104,18 @@
                     <p class="consulting-lead">
                         不是做一次培训，而是用 6 个月陪企业搭起一支跨部门 AI 先锋队，把零散的个人尝试变成可复制、可扩散的组织动作。
                     </p>
+                    <p class="consulting-value">
+                        价值在于把“有人会用 AI”升级成“组织会持续推广 AI”，让内部真正长出一批能带头、能复制、能扩散的节点。
+                    </p>
 
-                    <div class="detail-grid">
-                        <div class="detail-box">
-                            <div class="detail-title">它能帮你什么</div>
-                            <ul class="detail-list">
-                                <li>解决工具已经引入、但员工不会持续用，或者用了也跑不出真实业务结果的问题。</li>
-                                <li>在多个部门同时跑出经过验证的 AI 场景，减少组织内部的观望、抵触和“没人带头”的状态。</li>
-                                <li>建立一批内部 AI 接口人和推广节点，让后续扩散不再完全依赖外部顾问。</li>
-                            </ul>
+                    <div class="consulting-meta">
+                        <div class="consulting-meta-row">
+                            <div class="consulting-meta-label">它能帮你什么</div>
+                            <div class="consulting-meta-text">解决工具已经引入、但员工不会持续用，或者用了也跑不出真实业务结果的问题；在多个部门同时跑出经过验证的 AI 场景，减少组织内部的观望、抵触和“没人带头”的状态；建立一批内部 AI 接口人和推广节点，让后续扩散不再完全依赖外部顾问。</div>
                         </div>
-                        <div class="detail-box">
-                            <div class="detail-title">交付结果</div>
-                            <ul class="detail-list">
-                                <li>20-30 份部门 AI 应用案例</li>
-                                <li>公司 AI 应用地图</li>
-                                <li>先锋队运营手册与陪跑机制</li>
-                                <li>可持续自运转的内部推广网络</li>
-                                <li>AI 使用率提升数据报告</li>
-                            </ul>
+                        <div class="consulting-meta-row">
+                            <div class="consulting-meta-label">交付结果</div>
+                            <div class="consulting-meta-text">20-30 份部门 AI 应用案例、公司 AI 应用地图、先锋队运营手册与陪跑机制、可持续自运转的内部推广网络、AI 使用率提升数据报告。</div>
                         </div>
                     </div>
                 </div>
@@ -1102,23 +1131,18 @@
                     <p class="consulting-lead">
                         当企业内部已经跑通 AI，我们帮助把经验整理成课程、工具和可复制的输出方案。
                     </p>
+                    <p class="consulting-value">
+                        价值在于把内部已经验证过的 AI 能力，从成本中心升级成对外可复制、可赋能、可形成生态壁垒的业务能力。
+                    </p>
 
-                    <div class="detail-grid">
-                        <div class="detail-box">
-                            <div class="detail-title">适合什么情况</div>
-                            <ul class="detail-list">
-                                <li>内部已有稳定 AI 实践，希望进一步放大价值。</li>
-                                <li>需要带动供应链、渠道或生态伙伴提升能力。</li>
-                            </ul>
+                    <div class="consulting-meta">
+                        <div class="consulting-meta-row">
+                            <div class="consulting-meta-label">它能帮你什么</div>
+                            <div class="consulting-meta-text">适合内部已有稳定 AI 实践、希望进一步放大价值的企业；也适合需要带动供应链、渠道或生态伙伴提升能力，把内部经验沉淀成外部赋能产品的团队。</div>
                         </div>
-                        <div class="detail-box">
-                            <div class="detail-title">交付结果</div>
-                            <ul class="detail-list">
-                                <li>内部 AI 能力资产盘点报告</li>
-                                <li>行业 AI 赋能产品包</li>
-                                <li>2-3 家试点输出执行报告</li>
-                                <li>商业模式与定价框架</li>
-                            </ul>
+                        <div class="consulting-meta-row">
+                            <div class="consulting-meta-label">交付结果</div>
+                            <div class="consulting-meta-text">内部 AI 能力资产盘点报告、行业 AI 赋能产品包、2-3 家试点输出执行报告、商业模式与定价框架。</div>
                         </div>
                     </div>
                 </div>
