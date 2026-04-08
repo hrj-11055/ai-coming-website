@@ -8,6 +8,7 @@ import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 
 const {
+    createPodcastEmailConfigFromEnv,
     createPodcastEmailFingerprint,
     createPodcastEmailService
 } = require('../server/services/podcast-email.js');
@@ -36,6 +37,13 @@ test('createPodcastEmailFingerprint is stable for same metadata payload', () => 
     });
 
     assert.equal(left, right);
+});
+
+test('createPodcastEmailConfigFromEnv defaults email sending to disabled until explicitly enabled', () => {
+    const config = createPodcastEmailConfigFromEnv({});
+
+    assert.equal(config.enabled, false);
+    assert.equal(config.to, 'noel.huang@aicoming.cn');
 });
 
 test('sendReadyPodcastEmail sends once and skips duplicate same fingerprint', async () => {

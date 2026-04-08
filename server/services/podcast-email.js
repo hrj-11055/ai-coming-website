@@ -86,7 +86,7 @@ function inferAudioFilename(date, metadata, fallbackExtension = 'mp3') {
 
 function createPodcastEmailConfigFromEnv(env = process.env) {
     return {
-        enabled: normalizeBoolean(env.PODCAST_EMAIL_ENABLED, true),
+        enabled: normalizeBoolean(env.PODCAST_EMAIL_ENABLED, false),
         to: String(env.PODCAST_EMAIL_TO || DEFAULT_RECIPIENT).trim() || DEFAULT_RECIPIENT,
         stateFile: env.PODCAST_EMAIL_STATE_FILE || path.join(process.cwd(), 'data', 'podcast-email-state.json'),
         siteBaseUrl: env.PODCAST_EMAIL_SITE_BASE_URL || env.WECHAT_AUTOGEN_SITE_BASE_URL || ''
