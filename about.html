@@ -403,6 +403,12 @@
             border-radius: 20px;
         }
 
+        .consulting-figure picture,
+        .feature-figure picture,
+        .training-photo-card picture {
+            display: block;
+        }
+
         .consulting-figure-caption {
             margin-top: 14px;
             font-family: var(--font-sans);
@@ -661,13 +667,10 @@
             max-height: 38px;
             max-width: 100%;
             object-fit: contain;
-            filter: grayscale(100%);
-            opacity: 0.78;
-            transition: filter 0.3s ease, opacity 0.3s ease;
+            transition: opacity 0.3s ease;
         }
 
         .client-cell:hover img {
-            filter: grayscale(0%);
             opacity: 1;
         }
 
@@ -1016,23 +1019,32 @@
                     </div>
                 </div>
 
-                <div class="training-photos">
-                    <div class="training-photo-card large">
-                        <img src="/pic/practice/enterprise-classroom-enablement.jpg" alt="企业业务团队 AI 培训现场">
+                    <div class="training-photos">
+                        <div class="training-photo-card large">
+                            <picture>
+                                <source srcset="/pic/practice/enterprise-classroom-enablement.webp" type="image/webp">
+                                <img src="/pic/practice/enterprise-classroom-enablement.jpg" alt="企业业务团队 AI 培训现场" loading="lazy" decoding="async" fetchpriority="low" width="693" height="520">
+                            </picture>
                         <div class="training-photo-caption">
                             <div class="training-photo-title">企业业务团队 AI 内训</div>
                             <div class="training-photo-text">围绕真实岗位任务开展授课与演练，让培训内容直接对接业务现场。</div>
                         </div>
                     </div>
                     <div class="training-photo-card">
-                        <img src="/pic/practice/executive-workshop.jpg" alt="管理层工作坊现场">
+                        <picture>
+                            <source srcset="/pic/practice/executive-workshop.webp" type="image/webp">
+                            <img src="/pic/practice/executive-workshop.jpg" alt="管理层工作坊现场" loading="lazy" decoding="async" fetchpriority="low" width="693" height="520">
+                        </picture>
                         <div class="training-photo-caption">
                             <div class="training-photo-title">管理层工作坊</div>
                             <div class="training-photo-text">帮助关键决策者先形成统一认知，再推动后续组织动作。</div>
                         </div>
                     </div>
                     <div class="training-photo-card">
-                        <img src="/pic/practice/government-lecture-stage.jpg" alt="正式授课与分享现场">
+                        <picture>
+                            <source srcset="/pic/practice/government-lecture-stage.webp" type="image/webp">
+                            <img src="/pic/practice/government-lecture-stage.jpg" alt="正式授课与分享现场" loading="lazy" decoding="async" fetchpriority="low" width="693" height="462">
+                        </picture>
                         <div class="training-photo-caption">
                             <div class="training-photo-title">正式授课与分享</div>
                             <div class="training-photo-text">把复杂议题讲清楚，也把方法论讲到可借鉴、可启动。</div>
@@ -1061,7 +1073,10 @@
             </div>
 
             <div class="consulting-figure reveal">
-                <img src="/pic/about/ai-transformation-roadmap.png" alt="企业 AI 转型三步走全景图">
+                <picture>
+                    <source srcset="/pic/about/ai-transformation-roadmap.webp" type="image/webp">
+                    <img src="/pic/about/ai-transformation-roadmap.png" alt="企业 AI 转型三步走全景图" loading="lazy" decoding="async" fetchpriority="low" width="1280" height="713">
+                </picture>
                 <p class="consulting-figure-caption">
                     先摸清岗位与部门的 AI 渗透家底，再通过 AI 先锋队把真实案例跑出来，最后把成熟经验沉淀成可对外输出的能力。
                 </p>
@@ -1172,7 +1187,10 @@
                     </div>
 
                     <div class="feature-figure">
-                        <img src="/pic/about/ai-news-daily-overview.png" alt="AI资讯日报从信源采集到多形态输出的产品流程图">
+                        <picture>
+                            <source srcset="/pic/about/ai-news-daily-overview.webp" type="image/webp">
+                            <img src="/pic/about/ai-news-daily-overview.png" alt="AI资讯日报从信源采集到多形态输出的产品流程图" loading="lazy" decoding="async" fetchpriority="low" width="1280" height="713">
+                        </picture>
                         <p class="feature-figure-caption">
                             这张图对应 AI资讯日报的完整产品链路：信源采集、AI 提炼、阅读页、关键词和播客输出，以及它对信息消费效率带来的价值。
                         </p>
