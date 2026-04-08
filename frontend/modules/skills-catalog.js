@@ -1270,8 +1270,177 @@ const SKILL_DETAIL_OVERRIDES = {
             { src: '/pic/skills/search-first-alt.png', caption: '搜索结果对比与方案推荐' }
         ],
         examplePrompt: '我想做一个 Markdown 格式的文档转换功能，帮我先搜索一下现有的开源库和方案，再决定是自己写还是直接用现成的。'
+    },
+    'market-research': {
+        screenshots: [
+            { src: '/pic/skills/market-research-output.png', caption: '市场调研 Skill 实操输出' }
+        ],
+        examplePrompt: '帮我做一份 2026 年中国 AI 编程助手市场的竞品调研，重点对比主流产品的功能、定价和用户评价。'
     }
 };
+
+const STANDALONE_SKILLS = [
+    {
+        name: 'Superpowers 星级推荐',
+        slug: 'superpowers-guide',
+        headline: '更适合日常高频协作的一组 Skill 组合，强项在于把模糊任务快速收敛成可执行、可验证、可交付的结果。',
+        scenario: '适合你已经开始高频使用 Claude Code，希望优先装一组“每天都真会用到”的 Skill，而不是一次装很多却想不起来怎么触发。',
+        overview: 'Superpowers 不是单个 Skill，而是一组非常适合高频协作的工作流集合。它的价值不在“收录很多”，而在于每个 Skill 都很贴近真实做事节奏，尤其适合需求还模糊、问题还没定位清楚、任务又比较长的场景。如果你只想先挑一套最不容易吃灰的仓库来装，Superpowers 很值得优先试。',
+        statusLabel: '仓库专题',
+        featuredBadge: '高频优先',
+        useCases: [
+            '想先装一组最常用、最容易立刻产生价值的 Skill',
+            '做复杂任务时，需要先收敛思路、定位问题、拆分步骤',
+            '希望把“做到差不多”升级成“有验证、有评审、有交付闭环”'
+        ],
+        gettingStarted: [
+            '第一批优先试：深度头脑风暴、系统化调试、代码评审、完成前验证、多 Agent 并行拆分',
+            '先挑 2 到 3 个最贴近日常任务的 Skill 跑通，不要一上来追求整套都记住',
+            '把这些 Skill 和你现在常做的页面改版、问题排查、发版前自查串起来，复用率会很高'
+        ],
+        installCommand: addSkillsRepoCommand('obra/superpowers'),
+        installHint: '推荐先整仓安装 `obra/superpowers`，再优先从最常用的几个 Skill 开始体验。',
+        resultSummary: '这类推荐页的作用不是替代单个 Skill，而是帮你先选出真正高频、最不容易闲置的那几个入口。',
+        resultBullets: [
+            '比较值得优先装的有：深度头脑风暴、系统化调试、代码评审、完成前验证、多 Agent 并行拆分。',
+            '如果你经常做需求澄清、调试、重构和交付收口，这组 Skill 的复用率通常很高。',
+            '它更像“工作节奏增强包”，而不是只解决某一种文件格式或单点能力。'
+        ],
+        guideHighlights: [
+            {
+                title: '更适合什么人',
+                body: '适合已经开始频繁和 Agent 协作，希望优先补齐“需求澄清、问题定位、交付收口”这几类高频动作的人。'
+            },
+            {
+                title: '为什么值得先装',
+                body: '这些 Skill 不依赖特别复杂的外部环境，日常任务复用率高，上手后很快就能形成自己的固定工作节奏。'
+            },
+            {
+                title: '不要怎么装',
+                body: '不要一上来想着把整个仓库每个 Skill 都记住。先挑 2 到 3 个与你当前任务最贴近的，连续用一周，价值会更明显。'
+            }
+        ],
+        featuredSkills: [
+            {
+                slug: 'brainstorming',
+                name: '深度头脑风暴',
+                fit: '适合需求还模糊、方向还没收敛的时候先开路。',
+                reason: '先把模糊想法沉淀成明确方案，后面的写代码、做设计、拆任务都会更顺。'
+            },
+            {
+                slug: 'systematic-debugging',
+                name: '系统化调试',
+                fit: '适合线上问题、复杂报错和反复试错的排查过程。',
+                reason: '它能逼着排查过程更成体系，避免“试一个猜一个”的低效调试方式。'
+            },
+            {
+                slug: 'requesting-code-review',
+                name: '代码评审',
+                fit: '适合提交前自查、重要改动复核和回归风险识别。',
+                reason: '比起简单问“这段代码行不行”，它更像帮你建立一套更靠谱的审查节奏。'
+            },
+            {
+                slug: 'verification-before-completion',
+                name: '完成前验证',
+                fit: '适合发版前、交付前和任务收尾前的最后一道保险。',
+                reason: '它能把“差不多做完了”变成“我知道它为什么可以交付”。'
+            }
+        ],
+        notes: [
+            'Superpowers 的优势在于日常协作密度高，尤其适合你已经开始频繁和 Agent 配合做事的时候。',
+            '建议先把最常用的 2 到 3 个 Skill 真正用顺，再继续扩展。'
+        ],
+        skillDocPurpose: '这个独立页的重点是告诉你：Superpowers 仓库里哪些 Skill 最值得优先装、分别适合什么工作阶段，以及为什么它们比“看起来很多但不常用”的仓库更适合日常高频使用。',
+        relatedSlugs: ['brainstorming', 'systematic-debugging', 'requesting-code-review'],
+        sourceUrl: 'https://github.com/obra/superpowers/tree/main/skills',
+        sourceLabel: 'GitHub',
+        moduleId: 'star-recommendation',
+        moduleTitle: '星级推荐',
+        moduleTone: 'amber',
+        moduleIcon: 'fa-solid fa-star',
+        moduleDescription: '优先挑出更适合高频实际使用的 Skill 仓库。'
+    },
+    {
+        name: 'Everything Claude Code 星级推荐',
+        slug: 'everything-claude-code-guide',
+        headline: '更适合工程型与研究型任务的一组 Skill 组合，强项在于覆盖开发、分析、调研、内容与部署等更长链路工作。',
+        scenario: '适合你做的是偏工程、偏研究、偏业务分析的中长链路任务，希望优先装一组覆盖面更完整的 Skill 仓库。',
+        overview: 'Everything Claude Code 的长处不是单点爆发，而是面向工程、研究和业务场景的覆盖面很完整。它里面很多 Skill 非常适合中长链路任务，比如从前后端开发、编码规范，到市场调研、内容引擎、部署模式和安全审查，比较像一个更全的工作仓库。如果你更常做的是“连续多步”的任务，而不只是某一个局部动作，它会比纯效率型仓库更合适。',
+        statusLabel: '仓库专题',
+        featuredBadge: '长链路优先',
+        useCases: [
+            '需要一套能覆盖开发、调研、分析和交付的综合型 Skill 仓库',
+            '更常做前后端实现、技术方案分析、市场研究或部署上线',
+            '希望同一套仓库同时覆盖工程型与业务型工作'
+        ],
+        gettingStarted: [
+            '第一批优先试：前端模式、后端模式、编码规范、市场调研、内容引擎、部署模式、安全审查',
+            '先按你当前任务类型选 2 到 3 个，例如开发类先试前端模式 / 后端模式 / 编码规范',
+            '如果你做的是研究或业务链路，再把市场调研、内容引擎、部署模式串起来用'
+        ],
+        installCommand: addSkillsRepoCommand('affaan-m/everything-claude-code'),
+        installHint: '推荐先整仓安装 `affaan-m/everything-claude-code`，再按当前工作类型挑出最常用的几个 Skill。',
+        resultSummary: '这类推荐页更像“仓库导览”，帮助你从一个覆盖面很大的仓库里，优先挑出真正高频的 Skill。',
+        resultBullets: [
+            '比较值得优先装的有：前端模式、后端模式、编码规范、市场调研、内容引擎、部署模式、安全审查。',
+            '如果你的任务往往横跨实现、分析、调研和交付，这个仓库会更适合长期留着。',
+            '它比纯效率向仓库更适合中长链路、多角色、多阶段的工作。'
+        ],
+        guideHighlights: [
+            {
+                title: '更适合什么人',
+                body: '适合任务链比较长、经常横跨开发、分析、研究和交付的人，而不是只做某一个单点动作的人。'
+            },
+            {
+                title: '为什么值得先装',
+                body: '它最大的优势是覆盖完整。你不需要每遇到一种新任务就重新找仓库，而是能在同一套体系里逐步扩展。'
+            },
+            {
+                title: '怎么开始更稳',
+                body: '先按当前任务类型选 2 到 3 个最相关的 Skill，例如开发期先试前端模式、后端模式、编码规范，研究期再补市场调研和内容引擎。'
+            }
+        ],
+        featuredSkills: [
+            {
+                slug: 'frontend-patterns',
+                name: '前端模式',
+                fit: '适合页面改版、交互打磨、组件梳理和体验优化。',
+                reason: '如果你经常碰 Web 页面和前端结构，这类 Skill 很容易直接进入日常工作流。'
+            },
+            {
+                slug: 'backend-patterns',
+                name: '后端模式',
+                fit: '适合接口设计、服务拆分、数据流梳理和系统实现。',
+                reason: '它更适合把工程型任务做深，而不是停留在表层建议。'
+            },
+            {
+                slug: 'market-research',
+                name: '市场调研',
+                fit: '适合做竞品分析、用户需求研究和行业信息整理。',
+                reason: '当你的任务不只是写代码，还要看市场和业务决策时，这类 Skill 很有价值。'
+            },
+            {
+                slug: 'content-engine',
+                name: '内容引擎',
+                fit: '适合把研究结果、产品内容和长文稿转成多平台输出。',
+                reason: '它能把工程和业务输出真正连接起来，适合做完整交付的人。'
+            }
+        ],
+        notes: [
+            'Everything Claude Code 更适合“任务链比较长”的人，不一定每个 Skill 都要马上装上手。',
+            '建议先从与你当前最相关的 2 到 3 个 Skill 开始，避免一次把范围开太大。'
+        ],
+        skillDocPurpose: '这个独立页的重点是帮你先看清：Everything Claude Code 仓库里哪些 Skill 最值得优先装、它们分别对应什么任务类型，以及为什么这套仓库更适合工程型和研究型的长链路工作。',
+        relatedSlugs: ['frontend-patterns', 'backend-patterns', 'market-research'],
+        sourceUrl: 'https://github.com/affaan-m/everything-claude-code/tree/main/skills',
+        sourceLabel: 'GitHub',
+        moduleId: 'star-recommendation',
+        moduleTitle: '星级推荐',
+        moduleTone: 'amber',
+        moduleIcon: 'fa-solid fa-star',
+        moduleDescription: '优先挑出更适合高频实际使用的 Skill 仓库。'
+    }
+];
 
 const BASE_SKILL_BY_SLUG = new Map(
     BASE_SKILL_MODULES.flatMap((module) => module.skills.map((skill) => [skill.slug, skill]))
@@ -1319,7 +1488,13 @@ export const SKILL_MODULES = FEATURED_SKILL_GROUPS.map((module) => ({
         .map((skill) => normalizeSkill(module, skill))
 }));
 
-export const ALL_SKILLS = SKILL_MODULES.flatMap((module) => module.skills);
+export const ALL_SKILLS = [
+    ...SKILL_MODULES.flatMap((module) => module.skills),
+    ...STANDALONE_SKILLS.map((skill) => ({
+        ...skill,
+        detailUrl: `skill-detail.html?slug=${skill.slug}`
+    }))
+];
 
 export function getSkillBySlug(slug) {
     return ALL_SKILLS.find((skill) => skill.slug === slug) || null;
