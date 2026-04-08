@@ -37,6 +37,27 @@ This is an AI News Management System (AI资讯管理系统) - an enterprise-leve
 - Check sync status: `mutagen sync list`
 - Pause sync before major changes: `mutagen project pause`
 
+### Default Local -> GitHub -> Server Workflow
+
+This is a local-first project, but the Linux server is a standing comparison target and the default release target. Do not treat local completion as final completion.
+
+**Default rule**: after each completed requirement or feature, finish the full loop unless the user explicitly says "local only".
+
+1. Implement and verify in the local workspace
+2. Check whether the server has drift, newer code, or runtime-only changes that matter
+3. Commit the completed change locally
+4. Push the same completed change to GitHub
+5. Sync or deploy the change to the Linux server
+6. Verify the server version directly before claiming the task is done
+
+**Operational expectations**:
+- Frequently inspect the server when working on deployment-sensitive pages, podcast workflows, generated content, or anything the user says "server may be different" about
+- Never assume the server can safely `git pull`; inspect `git status`, branch state, and runtime artifacts first
+- If the server has newer or divergent code, reconcile that state before overwriting it
+- Prefer syncing only the code/files relevant to the completed requirement instead of blindly overwriting runtime data
+- Do not overwrite `.env`, runtime JSON data, generated audio, logs, backups, or other production-only artifacts unless the user explicitly asks
+- A task is not considered fully complete by default until GitHub and the server both reflect the intended version
+
 ### Podcast Operations: Server First
 
 For podcast-related work, the source of truth is the Linux server at `/var/www/ai-coming-website`, not the local macOS workspace.

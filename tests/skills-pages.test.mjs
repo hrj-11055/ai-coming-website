@@ -19,7 +19,7 @@ test('all primary nav pages include the AI capability library entry', () => {
     }
 });
 
-test('skills catalog exposes only the curated ten featured skills', async () => {
+test('skills catalog exposes the curated featured skill and MCP groups', async () => {
     const { SKILL_MODULES, ALL_SKILLS } = await import('../frontend/modules/skills-catalog.js');
 
     assert.deepEqual(
@@ -32,20 +32,28 @@ test('skills catalog exposes only the curated ten featured skills', async () => 
             { id: 'document-processing', title: '文档处理', count: 4 },
             { id: 'efficiency-tools', title: '效率工具', count: 2 },
             { id: 'research-content', title: '研究与内容', count: 3 },
-            { id: 'mcp-starter', title: 'MCP 入门', count: 1 }
+            { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose four curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 10, 'Expected only ten featured skills to remain online');
+    assert.equal(ALL_SKILLS.length, 14, 'Expected fourteen curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
-            assert.match(
-                skill.detailUrl,
-                /^skill-detail\.html\?slug=[a-z0-9-]+$/,
-                `Expected ${skill.name} to point to the shared skill detail template`
-            );
+            if (skill.detailType === 'mcp') {
+                assert.match(
+                    skill.detailUrl,
+                    /^mcp-detail\.html\?slug=[a-z0-9-]+$/,
+                    `Expected ${skill.name} to point to the shared MCP detail template`
+                );
+            } else {
+                assert.match(
+                    skill.detailUrl,
+                    /^skill-detail\.html\?slug=[a-z0-9-]+$/,
+                    `Expected ${skill.name} to point to the shared skill detail template`
+                );
+            }
         }
     }
 });
@@ -65,7 +73,11 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'market-research',
             'content-engine',
             'douyin-video-downloader',
-            'mcp-server-fetch'
+            'filesystem-mcp',
+            'pdf-reader-mcp',
+            'playwright-mcp',
+            'mermaid-mcp',
+            'free-web-search-mcp'
         ],
         'Expected the curated skills to follow the requested order'
     );
@@ -86,7 +98,11 @@ test('featured skills expose user-facing Chinese names', async () => {
             '市场调研与竞品分析',
             '多平台内容改写',
             '抖音无水印视频下载',
-            '网页内容抓取（MCP）'
+            '文件系统操作（MCP）',
+            'PDF 文档解析（MCP）',
+            '网页自动化（MCP）',
+            '流程图生成（MCP）',
+            '实时网络搜索（MCP）'
         ],
         'Expected featured skill cards to use Chinese names that explain the skill purpose'
     );
@@ -128,27 +144,36 @@ test('brainstorming and douyin featured skills include practical walkthrough med
     );
 });
 
-test('mcp-server-fetch now behaves like a shared skill detail page entry', async () => {
-    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
-    const skill = getSkillBySlug('mcp-server-fetch');
+test('featured MCP entries point to the shared MCP detail template', async () => {
+    const { getSkillBySlug, getMcpBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const skill = getSkillBySlug('filesystem-mcp');
+    const mcp = getMcpBySlug('filesystem-mcp');
 
-    assert.ok(skill, 'Expected the mcp-server-fetch skill to exist');
+    assert.ok(skill, 'Expected the filesystem-mcp entry to exist');
+    assert.ok(mcp, 'Expected filesystem-mcp to be retrievable as an MCP entry');
     assert.equal(
         skill.detailUrl,
-        'skill-detail.html?slug=mcp-server-fetch',
-        'Expected mcp-server-fetch to use the shared skill detail template'
+        'mcp-detail.html?slug=filesystem-mcp',
+        'Expected filesystem-mcp to use the shared MCP detail template'
     );
     assert.equal(
         skill.installCommand,
-        'claude mcp add search -- npx -y @modelcontextprotocol/server-fetch',
-        'Expected mcp-server-fetch to expose the tested Claude MCP install command'
+        `{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/ABSOLUTE/PATH/TO/WORKSPACE"]
+    }
+  }
+}`,
+        'Expected filesystem-mcp to expose the tested MCP config template'
     );
 });
 
 test('skills page hero copy reflects the curated newcomer-friendly positioning', () => {
     const html = readProjectFile('skills.html');
 
-    assert.match(html, /10 个真正跑通过的 Skill/, 'Expected the curated hero headline');
+    assert.match(html, /14 个真正能直接上手的能力入口/, 'Expected the curated hero headline');
     assert.match(html, /精选实测/, 'Expected the new curated hero kicker');
     assert.match(html, /AI 能力库/, 'Expected the page to preserve the AI 能力库 name');
 });
@@ -238,4 +263,7 @@ test('mcp detail page still provides the shared slug-driven shell for legacy lin
         'Expected the shared MCP detail page script to be loaded'
     );
     assert.match(script, /class="detail-copy-btn"/, 'Expected the MCP detail renderer to output a copy button');
+    assert.match(script, /第一次可以直接复制的测试提示词/, 'Expected the MCP detail renderer to include the prompt-copy panel');
+    assert.match(script, /<h2>使用前准备<\/h2>/, 'Expected the MCP detail renderer to include the preparation section');
+    assert.match(script, /<h2>运行后你会看到什么<\/h2>/, 'Expected the MCP detail renderer to include the result section');
 });

@@ -28,8 +28,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: 'MCP 入门',
         icon: 'fa-solid fa-plug',
         tone: 'sky',
-        description: '如果你想先给 Claude Code 补一项最实用的联网能力，就从这个入门 Skill 开始。',
-        skillSlugs: ['mcp-server-fetch']
+        description: '先把文件、文档、网页、流程图和搜索这 5 类最常用的外部能力接进来，AI 才会真正开始帮你干活。',
+        skillSlugs: ['filesystem-mcp', 'pdf-reader-mcp', 'playwright-mcp', 'mermaid-mcp', 'free-web-search-mcp']
     }
 ];
 
@@ -37,7 +37,7 @@ export const FEATURED_SKILL_CONTENT = {
     docx: {
         name: 'Word 文档生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '第一次用时，先做一份页数不多的小文档，把标题、表格和导出链路跑通，再上复杂版式。',
         preparation: [
             '先确定文档主题、目标读者和最终文件名。',
@@ -63,7 +63,7 @@ export const FEATURED_SKILL_CONTENT = {
     pptx: {
         name: 'PPT 演示文稿生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '先用 5 页左右的小型演示稿试一次，确认标题页、正文页和数据页都能按预期生成。',
         preparation: [
             '先确定 PPT 的用途，是路演、汇报、培训还是提案。',
@@ -89,7 +89,7 @@ export const FEATURED_SKILL_CONTENT = {
     pdf: {
         name: 'PDF 文档生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: 'PDF 更适合做“最终交付件”，第一次上手时尽量把版式要求写具体一些。',
         preparation: [
             '先确定 PDF 是偏报告、表单、海报还是多页说明书。',
@@ -114,7 +114,7 @@ export const FEATURED_SKILL_CONTENT = {
     xlsx: {
         name: 'Excel 表格生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '第一次建议从“单个 sheet + 一段筛选逻辑”开始，确认它会输出真正可编辑的 Excel 文件。',
         preparation: [
             '先想清楚表头字段、主键列和最终交付格式。',
@@ -140,7 +140,7 @@ export const FEATURED_SKILL_CONTENT = {
     brainstorming: {
         name: '深度头脑风暴',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '这个 Skill 的重点不是快，而是把模糊想法打磨成能执行的设计，所以要预留多轮确认时间。',
         preparation: [
             '把主题、目标、受众、预算和成功标准尽量写清楚。',
@@ -174,7 +174,7 @@ export const FEATURED_SKILL_CONTENT = {
     'search-first': {
         name: '先搜索再动手',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '当你不确定“要不要自己造轮子”时，先用这个 Skill 去查现成方案，通常能省下很多试错时间。',
         preparation: [
             '先把你真正要解决的问题写清楚，而不是只写一个抽象主题。',
@@ -200,7 +200,7 @@ export const FEATURED_SKILL_CONTENT = {
     'market-research': {
         name: '市场调研与竞品分析',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '最关键的是先说清楚你要做什么决策，Skill 才会把资料整理成有判断价值的输出。',
         preparation: [
             '先明确你要判断的是市场机会、竞品差异、出海可行性还是价格策略。',
@@ -227,7 +227,7 @@ export const FEATURED_SKILL_CONTENT = {
     'content-engine': {
         name: '多平台内容改写',
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '这个 Skill 不适合“把同一段话复制到所有平台”，它的价值就在于把同一份母稿拆成平台原生表达。',
         preparation: [
             '先准备一份已经写好的母稿、长文、播客提纲或产品说明。',
@@ -266,7 +266,7 @@ export const FEATURED_SKILL_CONTENT = {
         skillDocPurpose: '这个 Skill 的说明重点在于把“分享口令解析 -> 获取直链 -> 保存 MP4”这条链路固定下来，让 Agent 不用依赖登录态也能完成无水印下载。',
         relatedSlugs: ['content-engine', 'mcp-server-fetch'],
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '第一次使用时，直接贴完整分享文案最省心，因为里面通常已经带了可解析的短链接。',
         preparation: [
             '先拿到抖音分享文案或短链接，越完整越好。',
@@ -294,6 +294,137 @@ https://v.douyin.com/C7-Eq5Paw6A/
             '如果解析失败，优先检查分享链接是否已失效，或者换成更完整的分享文案再试一次。'
         ]
     },
+    'filesystem-mcp': {
+        name: '文件系统操作（MCP）',
+        statusLabel: '已实测',
+        featuredBadge: '精选 14',
+        beginnerNote: '它最适合拿来做“AI 直接读你的工作目录”这件事。第一次不要一上来就开放整个硬盘，先只给一个项目文件夹。',
+        preparation: [
+            '先想清楚你要让 AI 访问哪一个工作目录，尽量只开放最小范围。',
+            '准备一个真实测试场景，例如“整理会议纪要”“汇总本周日报”或“批量改几个 markdown 文件”。',
+            '如果目录里有敏感文件，先单独挪走，或者先在测试目录里试跑。'
+        ],
+        promptExample: `安装完成后，可以先这样测试 Filesystem MCP：
+1. 读取我这个项目目录里的所有 Markdown 文件，按主题分组整理。
+2. 帮我找出上周新增的周报文件，并汇总成一份待办清单。
+3. 不要修改原文件，先把整理结果输出成一个新的 \`weekly-summary.md\` 草稿。`,
+        resultSummary: 'MCP 生效后，AI 不再只是“告诉你应该怎么整理文件”，而是能直接读取目录、抓取内容，并把整理结果写成新的交付文件。',
+        resultBullets: [
+            '特别适合资料归档、日报周报汇总、批量改文档和项目目录梳理。',
+            '第一次就能明显感受到 AI 从“聊天”变成“处理文件”。',
+            '如果你只开放了一个工作目录，安全边界也会更清楚。'
+        ],
+        notes: [
+            '先把权限范围缩小，再逐步扩大，比一开始就开放整个电脑更稳。',
+            '涉及批量写文件时，第一次建议先要求 AI 只生成草稿，不直接覆盖原文。'
+        ]
+    },
+    'pdf-reader-mcp': {
+        name: 'PDF 文档解析（MCP）',
+        statusLabel: '已实测',
+        featuredBadge: '精选 14',
+        beginnerNote: '如果你经常看合同、方案、研究报告或扫描件，这个 MCP 会是最容易立刻产生价值的一项。',
+        preparation: [
+            '先准备 1 到 2 份真实 PDF 样本，最好包含一份普通 PDF 和一份较复杂或较长的 PDF。',
+            '先明确你最想让 AI 帮你做什么，是提取重点、转结构化内容，还是整理成提纲。',
+            '如果是扫描件，第一次测试时先观察抽取质量，再决定要不要继续做表格或流程图转换。'
+        ],
+        promptExample: `安装完成后，请帮我测试这个 PDF Reader MCP：
+1. 读取这份 PDF 并提取核心结论。
+2. 把全文整理成“背景 / 关键数据 / 风险点 / 下一步动作”四段结构。
+3. 如果文档里有流程或步骤，再补一版适合转成流程图的结构化摘要。`,
+        resultSummary: '你会先拿到一份更适合继续处理的结构化内容，而不是自己一页页硬读 PDF。',
+        resultBullets: [
+            '适合长文档快速抓重点，也适合把 PDF 变成后续汇报和知识整理的输入。',
+            '如果文档原本难复制或页数很长，节省时间会非常明显。',
+            '和 Mermaid MCP 连起来用时，可以把文档里的流程再转成图。'
+        ],
+        notes: [
+            '第一次先用“摘要 + 提纲”类任务最稳，确认质量后再做更复杂的抽取。',
+            '如果 PDF 质量很差，先把预期放在“提取关键信息”，不要一开始就要求完美还原版式。'
+        ]
+    },
+    'playwright-mcp': {
+        name: '网页自动化（MCP）',
+        statusLabel: '已实测',
+        featuredBadge: '精选 14',
+        beginnerNote: '它适合替你做重复网页动作。第一次先选一个登录要求低、步骤不长的页面流程，最容易跑通。',
+        preparation: [
+            '先明确一段最短网页流程，例如打开页面、搜索、点击、读取结果。',
+            '如果目标页面需要登录，先确认测试环境和账号权限是否合适。',
+            '第一次尽量避免过长的多系统流程，先从 3 到 5 步的简单操作开始。'
+        ],
+        promptExample: `安装 Playwright MCP 后，请先做一个最小测试：
+1. 打开指定网页。
+2. 点击页面上的主要按钮或导航项。
+3. 截图并告诉我页面上出现了哪些关键内容。
+
+如果这个最小流程没问题，再继续帮我把整套网页操作步骤串起来。`,
+        resultSummary: '配置完成后，AI 能真实执行点击、输入、等待和截图，不只是“描述应该怎么操作网页”。',
+        resultBullets: [
+            '很适合重复后台操作、表单检查、页面巡检和数据收集。',
+            '如果网页是动态加载的，效果会明显比普通抓取类 MCP 更稳。',
+            '一旦最小流程跑通，后续就可以把多个步骤串成自动化任务。'
+        ],
+        notes: [
+            '先验证最小流程成功，再加登录、跳转和复杂条件判断。',
+            '遇到需要验证码或严格风控的网站时，先确认是否适合自动化。'
+        ]
+    },
+    'mermaid-mcp': {
+        name: '流程图生成（MCP）',
+        statusLabel: '已实测',
+        featuredBadge: '精选 14',
+        beginnerNote: '它最适合把“说不清的一段流程描述”直接变成一张能看、能改、能继续复用的图。',
+        preparation: [
+            '先准备一段流程说明，哪怕只是几步自然语言也可以。',
+            '提前想好你要的是业务流程、SOP、系统结构，还是任务拆解图。',
+            '第一次先做结构简单的图，确认风格和节点层级都对，再扩成复杂版本。'
+        ],
+        promptExample: `请用 Mermaid MCP 帮我把下面这段说明画成流程图：
+1. 用户提交需求
+2. 系统自动分类
+3. 运营人工复核
+4. 通过后进入执行
+5. 执行结果回传并归档
+
+要求：先输出一版清晰的主流程图，再补一个适合放进汇报文档的简洁版本。`,
+        resultSummary: '你会得到可视化流程图产物，而不是只有一段“建议你自己去画图”的文字说明。',
+        resultBullets: [
+            '适合把 SOP、项目流程、业务步骤和系统结构说清楚。',
+            '修改成本很低，后续只要改文字描述就能继续生成新图。',
+            '和 PDF Reader 一起用时，能把文档中的流程直接转成图。'
+        ],
+        notes: [
+            '第一次先追求结构正确，不要一开始就追求很复杂的视觉美化。',
+            '如果输入描述本身不清楚，先让 AI 帮你整理成步骤，再生成流程图会更稳。'
+        ]
+    },
+    'free-web-search-mcp': {
+        name: '实时网络搜索（MCP）',
+        statusLabel: '已实测',
+        featuredBadge: '精选 14',
+        beginnerNote: '这是“给 AI 补实时信息能力”的增强项。它不一定是第一个必装，但一旦你要查最新资料，它会非常有用。',
+        preparation: [
+            '先想清楚你查的是新闻、行业信息、事实核验，还是资料初筛。',
+            '第一次测试时，尽量问一个有明确时间性的实际问题。',
+            '如果你后面还要做总结或研究，先定义你最终要输出什么结果。'
+        ],
+        promptExample: `安装完成后，请直接帮我测试这个搜索 MCP：
+1. 搜索最近一周关于“AI Agent”最值得关注的 5 条消息。
+2. 给出每条消息的来源和一句话摘要。
+3. 再帮我判断哪些信息更值得继续深挖，哪些只是热闹。`,
+        resultSummary: '它会先帮你搜索和初筛，再把结果整理成可以继续判断和汇总的资料列表。',
+        resultBullets: [
+            '特别适合最新资料查询、事实核验和轻量研究。',
+            '相比只靠模型记忆，它更适合回答时效性强的问题。',
+            '和 PDF、Playwright 一类 MCP 组合后，可以把“搜资料 -> 抓内容 -> 整理输出”串成完整流程。'
+        ],
+        notes: [
+            '它更像增强能力，不一定是第一个必须安装的 MCP。',
+            '如果你已经拿到目标链接，直接用 Fetch 或 Playwright 读取正文会更高效。'
+        ]
+    },
     'mcp-server-fetch': {
         name: '网页内容抓取（MCP）',
         slug: 'mcp-server-fetch',
@@ -308,7 +439,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
         skillDocPurpose: '这个 Skill 的说明重点在于把“先给客户端加联网抓取能力”这件事说清楚，让 AI 能真的去读网页，而不是继续只凭模型记忆作答。',
         relatedSlugs: ['search-first', 'market-research'],
         statusLabel: '已实测',
-        featuredBadge: '精选 10',
+        featuredBadge: '精选 14',
         beginnerNote: '它更像一个“能力开关”而不是普通内容 Skill。装好之后，后续很多联网任务都会直接受益。',
         preparation: [
             '先在 Claude Code 环境里执行安装命令。',

@@ -669,6 +669,54 @@ const BASE_SKILL_MODULES = [
                 sourceUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/git'
             },
             {
+                name: 'Filesystem MCP',
+                slug: 'filesystem-mcp',
+                detailType: 'mcp',
+                headline: '把本地工作目录直接接进 AI，适合文件读取、资料整理、批量改文档和项目目录级处理。',
+                cardHeadline: '先把工作目录接进 AI，再让它真正处理文件。',
+                scenario: '适合本地文件整理、周报汇总、批量改文档、目录检索和项目资料收纳。',
+                cardScenario: '适合本地文件整理和目录级批量处理。',
+                overview: 'Filesystem MCP 的核心价值很直接：它让 AI 不再只是告诉你“下一步该打开哪个文件”，而是能在受控目录内直接读取和处理文件。对于需要整理文档、汇总资料、生成草稿或批量改文本的人来说，这是最容易感受到“AI 真在干活”的 MCP 之一。',
+                useCases: ['读取工作目录里的多份文档并汇总', '批量整理 Markdown、TXT 或配置文件', '围绕一个项目目录做资料检索和归类', '把分散文件内容汇总成新的说明稿或报告'],
+                gettingStarted: ['先只开放一个工作目录，不要第一次就给整块磁盘权限', '把目标路径写进 MCP 配置后，用几份真实文档先试读和汇总', '第一次尽量让 AI 先生成新文件或草稿，不直接覆盖原文件'],
+                installCommand: `{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/ABSOLUTE/PATH/TO/WORKSPACE"]
+    }
+  }
+}`,
+                installHint: '官方 filesystem server 最关键的是把允许访问的目录路径写清楚。第一次建议只放一个工作目录，安全边界会更明确。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动官方 Filesystem MCP，并把允许访问的工作目录传给服务。生效后，AI 才能在这个范围内读取和处理本地文件。',
+                relatedSlugs: ['pdf-reader-mcp', 'mermaid-mcp', 'free-web-search-mcp'],
+                sourceUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem'
+            },
+            {
+                name: 'PDF Reader MCP',
+                slug: 'pdf-reader-mcp',
+                detailType: 'mcp',
+                headline: '专门把 PDF 变成可提取、可总结、可继续处理的内容输入，适合长文档、报告和扫描件场景。',
+                cardHeadline: '先把 PDF 读懂，再交给 AI 继续整理。',
+                scenario: '适合合同、报告、方案、扫描件、研究材料和任何“难复制但必须快速读懂”的 PDF 文档。',
+                cardScenario: '适合长 PDF、扫描件和重点提取任务。',
+                overview: 'PDF Reader MCP 的价值在于把“人工翻 PDF”这件事变成结构化处理流程。你不需要自己一页页找重点，而是可以直接让 AI 先读内容、做摘要、抽结构，再接到后续整理或汇报流程里。',
+                useCases: ['提取 PDF 核心内容并生成摘要', '把长文档整理成结构化提纲', '快速抓取合同、报告或方案里的重点段落', '把 PDF 内容转成后续流程图或汇报材料的输入'],
+                gettingStarted: ['先挑 1 到 2 份真实 PDF 做样本测试，确认提取质量', '第一次建议先做“摘要 + 提纲”这类最稳的任务', '如果结果符合预期，再继续扩到表格抽取、流程整理或批量处理'],
+                installCommand: `{
+  "mcpServers": {
+    "pdf-reader": {
+      "command": "npx",
+      "args": ["-y", "@sylphx/pdf-reader-mcp"]
+    }
+  }
+}`,
+                installHint: '这个项目主打“先把 PDF 读快、读对、读结构化”。如果你想先最低成本体验 PDF MCP，这个 `npx` 配置是最直接的起点。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动 PDF Reader MCP，让客户端获得 PDF 读取、解析和结构化提取能力，适合把 PDF 变成 AI 可继续处理的输入。',
+                relatedSlugs: ['filesystem-mcp', 'mermaid-mcp', 'free-web-search-mcp'],
+                sourceUrl: 'https://github.com/SylphxAI/pdf-reader-mcp'
+            },
+            {
                 name: 'Playwright MCP Server',
                 slug: 'playwright-mcp',
                 detailType: 'mcp',
@@ -689,8 +737,32 @@ const BASE_SKILL_MODULES = [
 }`,
                 installHint: '这是微软官方仓库给出的标准接入方式之一，适合 Claude Desktop、Cursor、Codex 等常见 MCP 客户端。',
                 mcpConfigPurpose: '这段配置会通过 `npx` 启动 Playwright MCP Server。生效后，AI 就能调用浏览器自动化能力，执行点击、输入、等待、截图和状态检查。',
-                relatedSlugs: ['browserbase-mcp', 'firecrawl-mcp', 'fetch-mcp'],
+                relatedSlugs: ['filesystem-mcp', 'free-web-search-mcp', 'mermaid-mcp'],
                 sourceUrl: 'https://github.com/microsoft/playwright-mcp'
+            },
+            {
+                name: 'Mermaid MCP Server',
+                slug: 'mermaid-mcp',
+                detailType: 'mcp',
+                headline: '把流程、结构和步骤说明直接转成图，适合 SOP、业务流程、系统结构和汇报表达。',
+                cardHeadline: '把文字流程直接变成可复用的流程图。',
+                scenario: '适合业务流程图、工作 SOP、系统结构、任务拆解和需要可视化表达的说明场景。',
+                cardScenario: '适合流程表达、SOP 和结构图说明。',
+                overview: 'Mermaid MCP 的实用点不在“它会画图”，而在于它把图形生成变成了可迭代的工作流。你只要给出步骤、结构或节点关系，AI 就能快速生成流程图，并且很容易继续修改、重画和复用。',
+                useCases: ['把流程描述转成流程图', '将 SOP 或项目步骤可视化', '把系统结构和依赖关系画成图', '把文档中的步骤整理成更直观的表达'],
+                gettingStarted: ['先拿一个结构简单的流程试跑，确认节点和箭头方向都正确', '如果是从文档里提流程，先让 AI 提炼步骤，再交给 Mermaid 生成图', '第一次先追求结构清晰，再逐步加入主题风格和细节优化'],
+                installCommand: `{
+  "mcpServers": {
+    "mermaid": {
+      "command": "npx",
+      "args": ["-y", "@peng-shawn/mermaid-mcp-server"]
+    }
+  }
+}`,
+                installHint: '这是 README 里给出的 Claude Desktop 标准接法之一。装好以后，AI 就能把 Mermaid 代码直接生成成 PNG 或 SVG 图形。',
+                mcpConfigPurpose: '这段配置会通过 `npx` 启动 Mermaid MCP Server，让 AI 具备流程图和结构图生成能力，适合把抽象步骤变成可视化产物。',
+                relatedSlugs: ['pdf-reader-mcp', 'filesystem-mcp', 'playwright-mcp'],
+                sourceUrl: 'https://github.com/peng-shawn/mermaid-mcp-server'
             },
             {
                 name: 'Browserbase MCP',
@@ -788,7 +860,7 @@ const BASE_SKILL_MODULES = [
 }`,
                 installHint: '列表里的安装说明明确给出了 `pip install cross-validated-search`。配置前先装好命令行入口，否则客户端无法直接拉起服务。',
                 mcpConfigPurpose: '这段配置会把搜索与证据核验服务注册到客户端里，让 AI 在回答事实型问题前能够先搜索、再浏览、再验证，而不是只凭模型记忆作答。',
-                relatedSlugs: ['fetch-mcp', 'firecrawl-mcp', 'apify-actors-mcp'],
+                relatedSlugs: ['filesystem-mcp', 'pdf-reader-mcp', 'playwright-mcp'],
                 sourceUrl: 'https://github.com/wd041216-bit/free-web-search-ultimate'
             },
             {
