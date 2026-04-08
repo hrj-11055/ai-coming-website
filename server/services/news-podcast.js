@@ -372,6 +372,7 @@ function createNewsPodcastService({
     metadataDir,
     config,
     podcastScriptService = null,
+    podcastEmailService = null,
     fetchImpl = fetch
 }) {
     const jobs = new Map();
@@ -1101,6 +1102,18 @@ function createNewsPodcastService({
                 });
                 readyMetadata.duration_seconds = normalizeAudioLengthSeconds(ttsResult.duration, generatedScript.script_tts_text);
                 saveMetadata(date, readyMetadata);
+
+                if (podcastEmailService && typeof podcastEmailService.sendReadyPodcastEmail === 'function') {
+                    try {
+                        await podcastEmailService.sendReadyPodcastEmail({
+                            date,
+                            metadata: readyMetadata,
+                            audioBuffer
+                        });
+                    } catch (error) {
+                        console.error(`[podcast-email] 发送失败 ${date}:`, error.message);
+                    }
+                }
             } catch (error) {
                 const transcript = generatedScript?.script_tts_text || null;
                 const scriptHash = transcript ? hashText(transcript) : null;

@@ -287,6 +287,267 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
     assert.deepEqual(ready.selected_titles, ['企业 AI 开始争抢入口']);
 });
 
+test('generateNewsPodcast triggers podcast email after ready metadata persists', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-email-trigger-'));
+    const dataDir = path.join(root, 'data');
+    const archiveDir = path.join(dataDir, 'archive', 'daily');
+    const metadataDir = path.join(dataDir, 'podcasts', 'news');
+    const newsFile = path.join(dataDir, 'news.json');
+    const promptFile = path.join(root, 'config', 'podcast-script-system-prompt.md');
+    const emailCalls = [];
+
+    writeJson(newsFile, [
+        {
+            id: 1,
+            title: 'Enterprise AI copilots move into workflow software',
+            key_point: 'Vendors are embedding copilots deeper into day-to-day tools.',
+            summary: 'The competitive edge is shifting from model demos to workflow ownership.',
+            source_url: 'https://example.com/news',
+            source_name: 'Example News',
+            category: 'Enterprise AI',
+            importance_score: 5,
+            created_at: '2026-03-18T08:00:00.000Z'
+        }
+    ]);
+    fs.mkdirSync(path.dirname(promptFile), { recursive: true });
+    fs.writeFileSync(promptFile, '# prompt');
+
+    const readData = createJsonReader();
+    const service = createNewsPodcastService({
+        readData,
+        newsFile,
+        dataDir,
+        dailyArchiveDir: archiveDir,
+        metadataDir,
+        config: {
+            script: {
+                apiKey: 'script-key',
+                apiUrl: 'https://script.example.com',
+                model: 'MiniMax-M2.5',
+                timeoutMs: 120000,
+                systemPromptFile: promptFile
+            },
+            minimaxTts: {
+                apiKey: 'tts-key',
+                apiUrl: 'https://tts.example.com/v1/t2a_async_v2',
+                queryApiUrl: 'https://tts.example.com/v1/query/t2a_async_query_v2',
+                fileMetadataApiUrl: 'https://tts.example.com/v1/files/retrieve',
+                fileApiUrl: 'https://tts.example.com/v1/files/retrieve_content',
+                model: 'speech-2.8-turbo',
+                voiceId: 'male-qn-jingying',
+                audioFormat: 'mp3',
+                speed: 1,
+                volume: 1,
+                pitch: 0,
+                languageBoost: 'Chinese',
+                pollIntervalMs: 1,
+                timeoutMs: 50
+            },
+            oss: {}
+        },
+        podcastScriptService: {
+            async generateScript() {
+                return {
+                    script_markdown: '# 小元说AI',
+                    script_tts_text: '今天我们重点聊企业 AI 工具如何抢占工作流入口。今天的内容就到这里。',
+                    wechat_copy: '',
+                    excluded_items: [],
+                    selected_titles: ['企业 AI 开始争抢入口']
+                };
+            }
+        },
+        podcastEmailService: {
+            async sendReadyPodcastEmail(payload) {
+                const savedMetadata = JSON.parse(fs.readFileSync(path.join(metadataDir, '2026-03-18.json'), 'utf8'));
+                emailCalls.push({
+                    ...payload,
+                    savedStatus: savedMetadata.status
+                });
+                return { action: 'sent', reason: 'email_sent' };
+            }
+        },
+        fetchImpl: async (url) => {
+            if (url === 'https://tts.example.com/v1/t2a_async_v2') {
+                return new Response(JSON.stringify({
+                    task_id: 'task-123',
+                    base_resp: { status_code: 0, status_msg: 'success' }
+                }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+            }
+
+            if (url === 'https://tts.example.com/v1/query/t2a_async_query_v2?task_id=task-123') {
+                return new Response(JSON.stringify({
+                    task_id: 'task-123',
+                    status: 'Success',
+                    file_id: 998,
+                    extra_info: { audio_length: 61234 },
+                    base_resp: { status_code: 0, status_msg: 'success' }
+                }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+            }
+
+            if (url === 'https://tts.example.com/v1/files/retrieve?file_id=998') {
+                return new Response(JSON.stringify({
+                    file: {
+                        file_id: 998,
+                        filename: 'podcast-output.tar',
+                        download_url: 'https://download.example.com/podcast-output.tar'
+                    },
+                    base_resp: { status_code: 0, status_msg: 'success' }
+                }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+            }
+
+            if (url === 'https://download.example.com/podcast-output.tar') {
+                return new Response(Buffer.from('ID3fake-audio-buffer'), {
+                    status: 200,
+                    headers: { 'Content-Type': 'audio/mpeg' }
+                });
+            }
+
+            throw new Error(`Unexpected fetch: ${url}`);
+        }
+    });
+
+    const pending = await service.generateNewsPodcast('2026-03-18');
+    assert.equal(pending.status, 'pending');
+
+    await new Promise((resolve) => setTimeout(resolve, 20));
+
+    const ready = service.getCurrentMetadata('2026-03-18');
+    assert.equal(ready.status, 'ready');
+    assert.equal(emailCalls.length, 1);
+    assert.equal(emailCalls[0].date, '2026-03-18');
+    assert.equal(emailCalls[0].savedStatus, 'ready');
+    assert.equal(emailCalls[0].metadata.status, 'ready');
+    assert.ok(Buffer.isBuffer(emailCalls[0].audioBuffer));
+});
+
+test('generateNewsPodcast keeps ready metadata when podcast email send fails', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-email-failure-'));
+    const dataDir = path.join(root, 'data');
+    const archiveDir = path.join(dataDir, 'archive', 'daily');
+    const metadataDir = path.join(dataDir, 'podcasts', 'news');
+    const newsFile = path.join(dataDir, 'news.json');
+    const promptFile = path.join(root, 'config', 'podcast-script-system-prompt.md');
+
+    writeJson(newsFile, [
+        {
+            id: 1,
+            title: 'Enterprise AI copilots move into workflow software',
+            key_point: 'Vendors are embedding copilots deeper into day-to-day tools.',
+            summary: 'The competitive edge is shifting from model demos to workflow ownership.',
+            source_url: 'https://example.com/news',
+            source_name: 'Example News',
+            category: 'Enterprise AI',
+            importance_score: 5,
+            created_at: '2026-03-18T08:00:00.000Z'
+        }
+    ]);
+    fs.mkdirSync(path.dirname(promptFile), { recursive: true });
+    fs.writeFileSync(promptFile, '# prompt');
+
+    const originalError = console.error;
+    console.error = () => {};
+
+    try {
+        const service = createNewsPodcastService({
+            readData: createJsonReader(),
+            newsFile,
+            dataDir,
+            dailyArchiveDir: archiveDir,
+            metadataDir,
+            config: {
+                script: {
+                    apiKey: 'script-key',
+                    apiUrl: 'https://script.example.com',
+                    model: 'MiniMax-M2.5',
+                    timeoutMs: 120000,
+                    systemPromptFile: promptFile
+                },
+                minimaxTts: {
+                    apiKey: 'tts-key',
+                    apiUrl: 'https://tts.example.com/v1/t2a_async_v2',
+                    queryApiUrl: 'https://tts.example.com/v1/query/t2a_async_query_v2',
+                    fileMetadataApiUrl: 'https://tts.example.com/v1/files/retrieve',
+                    fileApiUrl: 'https://tts.example.com/v1/files/retrieve_content',
+                    model: 'speech-2.8-turbo',
+                    voiceId: 'male-qn-jingying',
+                    audioFormat: 'mp3',
+                    speed: 1,
+                    volume: 1,
+                    pitch: 0,
+                    languageBoost: 'Chinese',
+                    pollIntervalMs: 1,
+                    timeoutMs: 50
+                },
+                oss: {}
+            },
+            podcastScriptService: {
+                async generateScript() {
+                    return {
+                        script_markdown: '# 小元说AI',
+                        script_tts_text: '今天我们重点聊企业 AI 工具如何抢占工作流入口。今天的内容就到这里。',
+                        wechat_copy: '',
+                        excluded_items: [],
+                        selected_titles: ['企业 AI 开始争抢入口']
+                    };
+                }
+            },
+            podcastEmailService: {
+                async sendReadyPodcastEmail() {
+                    throw new Error('smtp unavailable');
+                }
+            },
+            fetchImpl: async (url) => {
+                if (url === 'https://tts.example.com/v1/t2a_async_v2') {
+                    return new Response(JSON.stringify({
+                        task_id: 'task-123',
+                        base_resp: { status_code: 0, status_msg: 'success' }
+                    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                }
+
+                if (url === 'https://tts.example.com/v1/query/t2a_async_query_v2?task_id=task-123') {
+                    return new Response(JSON.stringify({
+                        task_id: 'task-123',
+                        status: 'Success',
+                        file_id: 998,
+                        extra_info: { audio_length: 61234 },
+                        base_resp: { status_code: 0, status_msg: 'success' }
+                    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                }
+
+                if (url === 'https://tts.example.com/v1/files/retrieve?file_id=998') {
+                    return new Response(JSON.stringify({
+                        file: {
+                            file_id: 998,
+                            filename: 'podcast-output.tar',
+                            download_url: 'https://download.example.com/podcast-output.tar'
+                        },
+                        base_resp: { status_code: 0, status_msg: 'success' }
+                    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+                }
+
+                if (url === 'https://download.example.com/podcast-output.tar') {
+                    return new Response(Buffer.from('ID3fake-audio-buffer'), {
+                        status: 200,
+                        headers: { 'Content-Type': 'audio/mpeg' }
+                    });
+                }
+
+                throw new Error(`Unexpected fetch: ${url}`);
+            }
+        });
+
+        const pending = await service.generateNewsPodcast('2026-03-18');
+        assert.equal(pending.status, 'pending');
+
+        await new Promise((resolve) => setTimeout(resolve, 20));
+
+        const ready = service.getCurrentMetadata('2026-03-18');
+        assert.equal(ready.status, 'ready');
+    } finally {
+        console.error = originalError;
+    }
+});
+
 test('queryMinimaxTaskStatus returns normalized async task state', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-task-status-test-'));
     const dataDir = path.join(root, 'data');

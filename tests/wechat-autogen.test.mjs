@@ -23,6 +23,7 @@ test('runWechatAutogenOnce skips report upload when today report json is missing
         podcastMetadataDir: path.join(root, 'podcasts'),
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['markdown', 'podcast'],
         publisher: {
             async publishMarkdownDraft() {
@@ -35,6 +36,29 @@ test('runWechatAutogenOnce skips report upload when today report json is missing
     assert.equal(result.report.action, 'skip');
     assert.equal(result.report.reason, 'report_missing_today');
     assert.equal(result.podcast.action, 'skip');
+});
+
+test('runWechatAutogenOnce is disabled by default and records skip state', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-disabled-'));
+    const stateFile = path.join(root, 'state.json');
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-04-08T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir: path.join(root, 'podcasts'),
+        stagingDir: path.join(root, 'staging'),
+        stateFile
+    });
+
+    assert.equal(result.action, 'skip');
+    assert.equal(result.reason, 'disabled');
+    assert.equal(result.report.reason, 'disabled');
+    assert.equal(result.podcast.reason, 'disabled');
+    assert.equal(result.podcastAudio.reason, 'disabled');
+
+    const savedState = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+    assert.equal(savedState.last_skip_reason, 'disabled');
+    assert.equal(savedState.last_scan_date, '2026-04-08');
 });
 
 test('runWechatAutogenOnce does not require wechat credentials when todays content is missing', async () => {
@@ -52,6 +76,7 @@ test('runWechatAutogenOnce does not require wechat credentials when todays conte
             podcastMetadataDir: path.join(root, 'podcasts'),
             stagingDir: path.join(root, 'staging'),
             stateFile: path.join(root, 'state.json'),
+            enabled: true,
             enabledTypes: ['markdown', 'podcast']
         });
 
@@ -100,6 +125,7 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         siteBaseUrl: 'https://ai-coming.example.com',
+        enabled: true,
         enabledTypes: ['markdown', 'podcast'],
         podcastFormatter: {
             async formatForWechat({ title, summary, scriptMarkdown, wechatCopy }) {
@@ -150,6 +176,7 @@ test('runWechatAutogenOnce republishes podcast when formatter fingerprint change
         podcastMetadataDir,
         stateFile,
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['podcast'],
         podcastFormatter: {
             getFingerprint() {
@@ -193,6 +220,7 @@ test('runWechatAutogenOnce falls back to source markdown when formatter fails', 
         podcastMetadataDir,
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['podcast'],
         podcastFormatter: {
             getFingerprint() {
@@ -247,6 +275,7 @@ test('runWechatAutogenOnce sends only todays ready podcast audio and skips older
         podcastMetadataDir,
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['podcast_audio'],
         podcastAudioSynthesizer: {
             async synthesizeTextToAudioBuffer(text) {
@@ -295,6 +324,7 @@ test('runWechatAutogenOnce falls back to remote audio url for podcast audio send
         podcastMetadataDir,
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['podcast_audio'],
         podcastAudioSynthesizer: {
             async synthesizeTextToAudioBuffer(text) {
@@ -345,6 +375,7 @@ test('runWechatAutogenOnce falls back to minimax file download when podcast audi
         podcastMetadataDir,
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['podcast_audio'],
         podcastAudioSynthesizer: {
             async synthesizeTextToAudioBuffer(text) {
@@ -401,6 +432,7 @@ test('runWechatAutogenOnce prefers synthesized short podcast audio when script e
         podcastMetadataDir,
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
+        enabled: true,
         enabledTypes: ['podcast_audio'],
         podcastAudioSynthesizer: {
             async synthesizeTextToAudioBuffer(text) {

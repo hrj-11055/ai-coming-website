@@ -26,6 +26,7 @@ const DEFAULT_TIMEZONE = process.env.WECHAT_AUTOGEN_TIMEZONE || 'Asia/Shanghai';
 const DEFAULT_START_HOUR = Number(process.env.WECHAT_AUTOGEN_START_HOUR || 9);
 const DEFAULT_START_MINUTE = Number(process.env.WECHAT_AUTOGEN_START_MINUTE || 5);
 const DEFAULT_SITE_BASE_URL = process.env.WECHAT_AUTOGEN_SITE_BASE_URL || '';
+const DEFAULT_ENABLED = isFeatureEnabled(process.env.WECHAT_AUTOGEN_ENABLED, false);
 const DEFAULT_ENABLED_TYPES = String(process.env.WECHAT_AUTOGEN_ENABLED_TYPES || 'podcast,markdown')
     .split(',')
     .map((value) => value.trim().toLowerCase())
@@ -60,6 +61,14 @@ function getArg(flag) {
 
 function hasFlag(flag) {
     return process.argv.includes(flag);
+}
+
+function isFeatureEnabled(value, defaultValue = false) {
+    if (value === undefined || value === null || value === '') {
+        return defaultValue;
+    }
+
+    return !['0', 'false', 'no', 'off'].includes(String(value).trim().toLowerCase());
 }
 
 function getCurrentDateInfo(timeZone, now = new Date()) {
@@ -366,6 +375,7 @@ async function runWechatAutogenOnce(options = {}) {
     const startHour = Number(options.startHour ?? getArg('--start-hour') ?? DEFAULT_START_HOUR);
     const startMinute = Number(options.startMinute ?? getArg('--start-minute') ?? DEFAULT_START_MINUTE);
     const siteBaseUrl = options.siteBaseUrl || getArg('--site-base-url') || DEFAULT_SITE_BASE_URL;
+    const enabled = isFeatureEnabled(options.enabled ?? getArg('--enabled') ?? DEFAULT_ENABLED, DEFAULT_ENABLED);
     const enabledTypes = new Set((options.enabledTypes || DEFAULT_ENABLED_TYPES).map((value) => String(value).toLowerCase()));
     const now = options.now || new Date();
     const dateInfo = getCurrentDateInfo(timeZone, now);
@@ -373,6 +383,20 @@ async function runWechatAutogenOnce(options = {}) {
 
     state.last_scan_at = now.toISOString();
     state.last_scan_date = dateInfo.date;
+
+    if (!enabled) {
+        state.last_skip_reason = 'disabled';
+        writeJsonFile(stateFile, state);
+        return {
+            ok: true,
+            action: 'skip',
+            reason: 'disabled',
+            date: dateInfo.date,
+            report: normalizeResult('skip', 'disabled'),
+            podcast: normalizeResult('skip', 'disabled'),
+            podcastAudio: normalizeResult('skip', 'disabled')
+        };
+    }
 
     if (!isWithinScanWindow(dateInfo, startHour, startMinute)) {
         state.last_skip_reason = 'outside_scan_window';
@@ -533,6 +557,7 @@ module.exports = {
     createPodcastAudioFingerprint,
     createPodcastFingerprint,
     getCurrentDateInfo,
+    isFeatureEnabled,
     isWithinScanWindow,
     runWechatAutogenOnce
 };

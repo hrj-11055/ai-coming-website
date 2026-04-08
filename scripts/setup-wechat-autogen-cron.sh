@@ -7,6 +7,13 @@ LOG_FILE="$ROOT_DIR/logs/wechat-autogen-cron.log"
 ERR_FILE="$ROOT_DIR/logs/wechat-autogen-cron.err.log"
 CRON_EXPR="* * * * *"
 MARKER="# ai-coming wechat autogen job"
+FEATURE_FLAG="$(printf '%s' "${WECHAT_AUTOGEN_ENABLED:-false}" | tr '[:upper:]' '[:lower:]')"
+
+if [ "$FEATURE_FLAG" != "true" ]; then
+  echo "WeChat autogen is now legacy and disabled by default." >&2
+  echo "Set WECHAT_AUTOGEN_ENABLED=true only if you explicitly need to re-enable the old downstream workflow." >&2
+  exit 1
+fi
 
 mkdir -p "$ROOT_DIR/logs"
 

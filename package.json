@@ -28,6 +28,9 @@
     "podcast:autogen:once": "node scripts/run-podcast-autogen-once.js",
     "podcast:autogen:once:linux": "bash scripts/run-podcast-autogen-once.sh",
     "podcast:autogen:cron:install": "bash scripts/setup-podcast-autogen-cron.sh",
+    "podcast:email:once": "node scripts/run-podcast-email-once.js",
+    "podcast:email:once:linux": "bash scripts/run-podcast-email-once.sh",
+    "podcast:email:cron:install": "bash scripts/setup-podcast-email-cron.sh",
     "wechat:autogen:once": "node scripts/run-wechat-autogen-once.js",
     "wechat:autogen:once:linux": "bash scripts/run-wechat-autogen-once.sh",
     "wechat:autogen:cron:install": "bash scripts/setup-wechat-autogen-cron.sh",
@@ -47,7 +50,8 @@
     "dotenv": "^16.6.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.16.2"
+    "mysql2": "^3.16.2",
+    "nodemailer": "^8.0.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

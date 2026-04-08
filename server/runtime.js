@@ -10,6 +10,7 @@ const { createJsonFileStore, startCacheScheduler } = require('./services/file-st
 const { loadSystemPrompt, createAiConfigFromEnv, createWeeklyKeywordsAiConfigFromEnv } = require('./services/ai-proxy');
 const { createWeeklyKeywordsJob } = require('./services/weekly-keywords');
 const { createNewsPodcastService, createPodcastConfigFromEnv } = require('./services/news-podcast');
+const { createPodcastEmailService } = require('./services/podcast-email');
 const { createAuthRouter } = require('./routes/auth');
 const { createSettingsRouter } = require('./routes/settings');
 const { createKeywordsRouter } = require('./routes/keywords');
@@ -205,6 +206,9 @@ function createJsonRuntime({ rootDir, env = process.env }) {
     const aiConfig = createAiConfigFromEnv(env);
     const weeklyKeywordsAiConfig = createWeeklyKeywordsAiConfigFromEnv(env);
     const podcastConfig = createPodcastConfigFromEnv(env);
+    const podcastEmailService = createPodcastEmailService({
+        metadataDir: podcastNewsDir
+    });
     const weeklyKeywordsJob = createWeeklyKeywordsJob({
         readData,
         writeData,
@@ -226,7 +230,8 @@ function createJsonRuntime({ rootDir, env = process.env }) {
         dataDir,
         dailyArchiveDir,
         metadataDir: podcastNewsDir,
-        config: podcastConfig
+        config: podcastConfig,
+        podcastEmailService
     });
 
     app.use(securityRuntime.checkIPBan);

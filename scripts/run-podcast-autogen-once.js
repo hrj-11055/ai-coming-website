@@ -14,6 +14,7 @@ const DEFAULT_TIMEZONE = process.env.PODCAST_AUTOGEN_TIMEZONE || 'Asia/Shanghai'
 const DEFAULT_START_HOUR = Number(process.env.PODCAST_AUTOGEN_START_HOUR || 9);
 const DEFAULT_START_MINUTE = Number(process.env.PODCAST_AUTOGEN_START_MINUTE || 5);
 const DEFAULT_TRIGGER_TIMEOUT_MS = Number(process.env.PODCAST_AUTOGEN_TRIGGER_TIMEOUT_MS || 15000);
+const DEFAULT_ENABLED = isFeatureEnabled(process.env.PODCAST_AUTOGEN_ENABLED, false);
 
 function ensureParentDir(filePath) {
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -39,6 +40,14 @@ function getArg(flag) {
 
 function hasFlag(flag) {
     return process.argv.includes(flag);
+}
+
+function isFeatureEnabled(value, defaultValue = false) {
+    if (value === undefined || value === null || value === '') {
+        return defaultValue;
+    }
+
+    return !['0', 'false', 'no', 'off'].includes(String(value).trim().toLowerCase());
 }
 
 function getCurrentDateInfo(timeZone, now = new Date()) {
@@ -144,6 +153,7 @@ async function runPodcastAutogenOnce(options = {}) {
     const startHour = Number(options.startHour ?? getArg('--start-hour') ?? DEFAULT_START_HOUR);
     const startMinute = Number(options.startMinute ?? getArg('--start-minute') ?? DEFAULT_START_MINUTE);
     const timeoutMs = Number(options.timeoutMs ?? getArg('--timeout-ms') ?? DEFAULT_TRIGGER_TIMEOUT_MS);
+    const enabled = isFeatureEnabled(options.enabled ?? getArg('--enabled') ?? DEFAULT_ENABLED, DEFAULT_ENABLED);
     const now = options.now || new Date();
 
     const dateInfo = getCurrentDateInfo(timeZone, now);
@@ -151,6 +161,12 @@ async function runPodcastAutogenOnce(options = {}) {
 
     state.last_scan_at = now.toISOString();
     state.last_scan_date = dateInfo.date;
+
+    if (!enabled) {
+        state.last_skip_reason = 'disabled';
+        writeJsonFile(stateFile, state);
+        return { ok: true, action: 'skip', reason: 'disabled', date: dateInfo.date };
+    }
 
     if (!isWithinScanWindow(dateInfo, startHour, startMinute)) {
         state.last_skip_reason = 'outside_scan_window';
@@ -241,6 +257,7 @@ if (require.main === module) {
 
 module.exports = {
     getCurrentDateInfo,
+    isFeatureEnabled,
     isWithinScanWindow,
     shouldTriggerPodcast,
     runPodcastAutogenOnce

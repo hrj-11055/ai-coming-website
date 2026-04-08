@@ -7,6 +7,13 @@ LOG_FILE="$ROOT_DIR/logs/podcast-autogen-cron.log"
 ERR_FILE="$ROOT_DIR/logs/podcast-autogen-cron.err.log"
 CRON_EXPR="* * * * *"
 MARKER="# ai-coming podcast autogen job"
+FEATURE_FLAG="$(printf '%s' "${PODCAST_AUTOGEN_ENABLED:-false}" | tr '[:upper:]' '[:lower:]')"
+
+if [ "$FEATURE_FLAG" != "true" ]; then
+  echo "Podcast autogen is now legacy and disabled by default." >&2
+  echo "Set PODCAST_AUTOGEN_ENABLED=true only if you explicitly need to re-enable the old fallback scanner." >&2
+  exit 1
+fi
 
 mkdir -p "$ROOT_DIR/logs"
 

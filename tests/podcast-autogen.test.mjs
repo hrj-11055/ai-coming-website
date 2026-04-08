@@ -1,13 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import autogenModule from '../scripts/run-podcast-autogen-once.js';
 
 const {
     getCurrentDateInfo,
     isWithinScanWindow,
+    runPodcastAutogenOnce,
     shouldTriggerPodcast
 } = autogenModule;
+
+test('runPodcastAutogenOnce is disabled by default and records skip state', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-autogen-disabled-'));
+    const stateFile = path.join(root, 'state.json');
+
+    const result = await runPodcastAutogenOnce({
+        now: new Date('2026-04-08T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        metadataDir: path.join(root, 'metadata'),
+        stateFile
+    });
+
+    assert.equal(result.action, 'skip');
+    assert.equal(result.reason, 'disabled');
+
+    const savedState = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+    assert.equal(savedState.last_skip_reason, 'disabled');
+    assert.equal(savedState.last_scan_date, '2026-04-08');
+});
 
 test('getCurrentDateInfo resolves Asia/Shanghai date and time parts', () => {
     const info = getCurrentDateInfo('Asia/Shanghai', new Date('2026-03-19T01:06:00.000Z'));
