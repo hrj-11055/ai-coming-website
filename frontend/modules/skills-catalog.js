@@ -10,6 +10,8 @@ const BAOYU_RELEASE_SKILL_URL = 'https://github.com/JimLiu/baoyu-skills/tree/mai
 const OPENAI_SKILLS_REPO_URL = 'https://github.com/openai/skills';
 const NOTEBOOKLM_REPO_URL = 'https://github.com/teng-lin/notebooklm-py';
 const NUTRIENT_MCP_REPO_URL = 'https://github.com/PSPDFKit/nutrient-dws-mcp-server';
+const HERMES_AGENT_REPO_URL = 'https://github.com/NousResearch/hermes-agent';
+const HERMES_AGENT_POWERPOINT_URL = 'https://skillsmp.com/zh/skills/nousresearch-hermes-agent-skills-productivity-powerpoint-skill-md';
 
 const addSkillCommand = (url) => `npx add-skill ${url}`;
 const addSkillsRepoCommand = (repo) => `npx skills add ${repo}`;
@@ -31,7 +33,7 @@ const BASE_SKILL_MODULES = [
                 overview: '这是 Anthropic 官方仓库里最偏“正式开发入口”的 Skill。它不是泛泛讲模型能力，而是围绕 Claude API、Anthropic SDK 和 Agent SDK 的接入方式，帮助你先选对使用层级，再进入对应语言和实现路径。对于正在做 LLM 应用、工具调用、多轮工作流或 Agent 产品的人来说，这是最值得优先看的官方 Skill 之一。',
                 useCases: ['接入 Claude API 或 Anthropic SDK', '判断该用单次调用、工作流还是 Agent SDK', '为不同语言项目选择正确的接入方式', '实现流式输出、工具调用和长上下文对话'],
                 gettingStarted: ['先判断自己是在做单次调用、工具工作流，还是需要文件/网页/终端能力的 Agent', '确认项目主语言，再按官方 Skill 指引进入对应语言目录', '默认先用最简单的调用层级跑通，再扩展到工具调用或 Agent SDK'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/claude-api',
+                installCommand: 'npx skills add anthropics/skills --skill "claude-api" --yes',
                 installHint: '如果你希望把官方 Claude API Skill 装进本地工作流，可以直接用这条命令作为起点。',
                 skillDocPurpose: '这个 Skill 的 SKILL.md 主要在做两件事：第一，告诉 Agent 什么时候应该把任务识别成 Claude API / Anthropic SDK / Agent SDK 问题；第二，把“先选哪一层接入方式、再读哪份语言文档”的路径明确下来，避免一上来就用错 SDK 或把简单调用做成过度复杂的 Agent。',
                 relatedSlugs: ['mcp-builder', 'webapp-testing'],
@@ -45,7 +47,7 @@ const BASE_SKILL_MODULES = [
                 overview: '这是 Anthropic 官方示例里非常高频的一个 Skill。它强调的不是“把页面搭出来”，而是选一个清晰且有辨识度的设计方向，再把字体、颜色、排版、动效和视觉细节执行完整。对想做出不那么 AI 味、也不那么模板化前端的人来说，它非常实用。',
                 useCases: ['设计和实现品牌感更强的网页', '优化已有页面的视觉层级和审美方向', '生成更有完成度的落地页和产品界面', '避免千篇一律的 AI 默认设计风格'],
                 gettingStarted: ['先明确页面的用途、目标用户和你想走的风格方向', '不要一上来就写通用卡片堆叠，先定整体审美语言', '实现时把字体、色彩、空间和动效一起考虑，而不是只改配色'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/frontend-design',
+                installCommand: 'npx skills add anthropics/skills --skill "frontend-design" --yes',
                 installHint: '这个官方 Skill 很适合放进网页类项目里长期复用，尤其适合你现在这种持续补页面的站点。',
                 skillDocPurpose: '这个 Skill 的 SKILL.md 重点不是列一堆组件，而是强制 Agent 先选一个鲜明的审美方向，再围绕字体、色彩、动效、布局和背景细节做完整实现。它的价值在于让 Agent 少走“安全但平庸”的路线。',
                 relatedSlugs: ['web-artifacts-builder', 'webapp-testing'],
@@ -59,7 +61,7 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 直接面向 MCP Server 开发。它会把重点放在工具设计质量上，比如命名是否可发现、输出是否可结构化、错误信息是否足够可执行、分页和上下文是否友好。对任何准备做 MCP Server 的人来说，它比“随手写个 server”要系统得多。',
                 useCases: ['从零搭建新的 MCP Server', '为现有 API 设计更适合 LLM 调用的工具层', '改进工具命名、输入输出和错误处理', '给 MCP Server 补测试和评估问题集'],
                 gettingStarted: ['先研究目标服务真正高频的操作，而不是盲目把全部接口一口气暴露出来', '优先设计清晰、可发现的工具命名和结构化输出', '先做可读、可测、可分页的基础工具，再考虑更高层工作流工具'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/mcp-builder',
+                installCommand: 'npx skills add anthropics/skills --skill "mcp-builder" --yes',
                 installHint: '如果你经常做 MCP 接入，这个官方 Skill 值得长期保留。',
                 skillDocPurpose: '这个 Skill 的 SKILL.md 本质上是一套 MCP Server 研发方法。它会先引导 Agent 调研协议和 SDK，再设计工具命名、上下文、错误信息和评估题，而不是直接开始写 server 代码。',
                 relatedSlugs: ['claude-api', 'skill-creator'],
@@ -73,7 +75,7 @@ const BASE_SKILL_MODULES = [
                 overview: '这是 Anthropic 官方仓库里最适合“把经验产品化”的一个 Skill。它不只是帮你写一份 SKILL.md，而是强调从目标、触发时机、测试样例、评估反馈到迭代优化的整套流程。对于你这种已经在整理 Skill 导航页、也会继续扩展 Skill 内容的项目，它很有参考价值。',
                 useCases: ['从零创建新的 Skill', '改写已有 Skill 的说明和触发逻辑', '给 Skill 补测试提示词和评估方式', '优化 Skill 的描述，让它更容易被正确触发'],
                 gettingStarted: ['先定义这个 Skill 到底要解决什么问题、什么时候触发', '先写一版能工作的草稿，再补 2 到 3 个真实测试场景', '根据测试结果改说明和结构，而不是只看文档写得顺不顺'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/skill-creator',
+                installCommand: 'npx skills add anthropics/skills --skill "skill-creator" --yes',
                 installHint: '如果你后面还会继续做更多自定义 Skill，这个官方 Skill 很适合作为通用母版。',
                 skillDocPurpose: '这个 Skill 的 SKILL.md 重点在于把“写 Skill”这件事流程化。它会让 Agent 先确认意图和触发时机，再写草稿、设计测试、跑评估、看反馈，然后继续迭代，而不是一上来只产出一份孤立文档。',
                 relatedSlugs: ['mcp-builder', 'claude-api'],
@@ -87,7 +89,7 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 非常适合你当前这种静态站和页面型项目。它的核心不是再教一遍 Playwright 基础，而是把“先侦察页面、再定位选择器、再执行动作”的流程固定下来，并优先复用官方附带的脚本和黑盒工具，减少上下文污染和重复造轮子。',
                 useCases: ['验证本地页面是否正常渲染和交互', '为网页补一条最小回归测试脚本', '抓页面截图、Console 和浏览器行为', '对动态页面先侦察再执行自动化操作'],
                 gettingStarted: ['先判断是静态 HTML 还是需要真实启动服务的动态页面', '动态页面先等 `networkidle`，再去看 DOM 和选择器', '优先把官方附带脚本当黑盒工具调用，不要一上来就读大脚本源码'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/webapp-testing',
+                installCommand: 'npx skills add anthropics/skills --skill "webapp-testing" --yes',
                 installHint: '你这个项目后面如果还要继续改页面，这个官方测试 Skill 会非常常用。',
                 skillDocPurpose: '这个 Skill 的 SKILL.md 主要在规范本地 Web 测试流程：什么时候先截图侦察、什么时候先等网络稳定、什么时候该复用 `with_server.py` 这类脚本，而不是直接盲写 Playwright 自动化。',
                 relatedSlugs: ['frontend-design', 'web-artifacts-builder'],
@@ -101,7 +103,7 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 更适合复杂度已经明显上来的 Web 产物。官方定义里它面向的是使用 React、Tailwind 和 shadcn/ui 之类现代前端技术来构建更复杂的 HTML Artifact，而不是简单的单文件页面。对需要多模块协同、状态切换和完整前端结构的页面来说，它会比普通静态页面工作流更稳。',
                 useCases: ['构建复杂交互式 HTML Artifact', '处理多组件、多状态和更重的前端结构', '在单文件方案不够用时升级到更完整的前端实现', '为展示型页面补更强的组件化和交互能力'],
                 gettingStarted: ['先确认这个页面是不是已经超过了“单文件静态页”的复杂度', '如果需要明显的状态管理、组件拆分或复杂交互，再切到这个 Skill', '先定清楚组件边界和页面结构，再上 React、Tailwind 或 shadcn/ui 方案'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/web-artifacts-builder',
+                installCommand: 'npx skills add anthropics/skills --skill "web-artifacts-builder" --yes',
                 installHint: '这个官方 Skill 更适合做复杂页面，不建议拿去处理非常轻量的静态小页。',
                 skillDocPurpose: '这个 Skill 的 SKILL.md 主要在做复杂度分流：告诉 Agent 什么时候简单 HTML 已经不够，应该升级到更现代的前端 Artifact 技术栈，以及如何围绕组件、状态和路由来组织实现。',
                 relatedSlugs: ['frontend-design', 'webapp-testing'],
@@ -538,8 +540,8 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 不是简单“写一份 Word”，而是把 `.docx` 当成可读、可改、可校验的正式文档格式来处理。它既能创建新的 Word 文件，也适合编辑现有 `.docx`，包括目录、页眉页脚、分页、表格、图片、批注和修订痕迹等内容。对于需要交付给客户、领导或外部机构的正式文档，它会比通用写作式输出稳定得多。',
                 useCases: ['从零创建正式 `.docx` 文档', '编辑现有 Word 文件的结构与内容', '处理目录、页码、页眉页脚、表格和图片', '提取带修订痕迹的内容', '将旧 `.doc` 文档转为 `.docx` 后再继续加工'],
                 gettingStarted: ['如果是旧 `.doc` 文件，先转换成 `.docx` 再编辑', '如果只想快速看内容，可先提取文本；如果版式很重要，优先解包或渲染检查', '完成主要修改后一定做一次可视化校验，重点看分页、表格和图片位置'],
-                installCommand: 'python3 -m pip install python-docx pdf2image',
-                installHint: '这个 Skill 常见的本地依赖是 `python-docx` 和 `pdf2image`。如果你要真正创建、修改或渲染 `.docx`，先把这两个依赖装好更稳。',
+                installCommand: 'npx skills add anthropics/skills --skill "docx" --yes',
+                installHint: '复制到终端安装后，Agent 在遇到 `.docx` 相关任务时，就能走对 Word 专项工作流。',
                 skillDocPurpose: 'Skills.md（有些仓库里也会写成 SKILL.md）主要是告诉 Agent：什么时候应该把任务识别成 `.docx` 工作、优先走文本提取还是版式渲染、何时需要解包 XML、以及修改后必须做哪些校验。对 docx 这种高度依赖版式的 Skill 来说，Skills.md 的作用就是让 Agent 不只是“能生成文字”，而是知道怎么交付一份真正可用的 Word 文档。',
                 relatedSlugs: ['doc', 'pdf']
             },
@@ -551,8 +553,8 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 更像一套完整的 PDF 工作流，而不是单一工具推荐。它既适合读取和提取 PDF 内容，也适合生成新 PDF、合并拆分文件、抽取表格、OCR 扫描件，并在输出后做视觉层面的复检。只要任务里出现 `.pdf`，尤其是“既要正确又要看起来像样”的场景，这个 Skill 就很值得优先调用。',
                 useCases: ['提取 PDF 文本和表格', '合并、拆分、旋转或加水印', 'OCR 扫描 PDF 变成可搜索文档', '用代码生成新的 PDF 报告', '对输出结果做渲染级视觉检查'],
                 gettingStarted: ['先判断 PDF 是文本型还是扫描型，这会直接决定提取方式', '如果输出要交付给别人阅读，不要只看文本提取结果，必须做渲染检查', '涉及批量处理时，先抽样几份确认表格、分页和图片都正常'],
-                installCommand: 'python3 -m pip install reportlab pdfplumber pypdf',
-                installHint: '这个 Skill 常见的 Python 依赖是 `reportlab`、`pdfplumber` 和 `pypdf`，它们分别覆盖生成、抽取和基础编辑。',
+                installCommand: 'npx skills add anthropics/skills --skill "pdf" --yes',
+                installHint: '复制到终端安装后，Agent 在遇到 PDF 相关任务时，就能走对 PDF 专项工作流。',
                 skillDocPurpose: 'Skills.md（有些仓库里也会写成 SKILL.md）会告诉 Agent 什么时候该把 PDF 当成“文本抽取问题”，什么时候该把它当成“渲染与版式问题”，以及优先使用哪套工具链。对 pdf 这种既涉及内容又涉及视觉结果的 Skill 来说，Skills.md 的作用就是让 Agent 少走弯路，先选对处理路径再动手。',
                 relatedSlugs: ['docx', 'nutrient-document-processing']
             },
@@ -564,10 +566,25 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 的重点不是“帮你随便做几页 PPT”，而是把 `.pptx` 当成一个可以分析和编辑的正式文档格式来处理。它既能从零生成演示稿，也能基于模板快速改稿，还能直接处理现有演示文稿里的文本、布局、主题配色、讲者备注和批注等内容。如果任务已经涉及 `.pptx` 文件，这个 Skill 会明显比通用写作式提示更靠谱。',
                 useCases: ['从零创建新的 PowerPoint 演示稿', '基于现有模板批量替换内容', '编辑已有 `.pptx` 的文案、布局、备注或批注', '提取演示文稿中的文本、讲稿和结构信息', '分析主题配色、字体和母版结构'],
                 gettingStarted: ['如果只是读取内容，先把 `.pptx` 转成 markdown，快速看清文本层结构', '如果要处理备注、批注、布局、母版或复杂格式，优先解包 OOXML 再编辑', '如果要生成新的 PPT，先定设计方向，再走 HTML 转 PPT 和最终缩略图校验流程'],
-                installCommand: 'npx add-skill https://github.com/anthropics/skills/tree/main/skills/pptx',
+                installCommand: 'npx skills add anthropics/skills --skill "pptx" --yes',
                 installHint: '复制到终端安装后，Agent 在遇到 `.pptx`、slides、presentation、deck 等任务时，就更容易走对 PowerPoint 专项工作流。',
                 skillDocPurpose: 'Skills.md（有些仓库里也会写成 SKILL.md）主要是给 AI Agent 看的技能说明文件。它的作用是告诉 Agent：什么时候应该调用这个 pptx Skill、先读哪些辅助文档、优先走哪套 PowerPoint 工作流，以及在读写 `.pptx` 时要遵守哪些边界。对 pptx 这种强流程型 Skill 来说，Skills.md 的价值就在于让 Agent 不只是“会生成内容”，而是知道该怎么正确读取、编辑、生成并校验演示文稿。',
                 relatedSlugs: ['baoyu-slide-deck', 'investor-materials']
+            },
+            {
+                name: 'powerpoint',
+                slug: 'powerpoint',
+                headline: '偏重读取、分析和批量改稿的 PowerPoint 工作流，适合直接处理现有 `.pptx`，并保留讲者备注与整套幻灯结构。',
+                scenario: '适合复盘现有 deck、抽取讲稿、批量替换文案、整理 speaker notes，或把已有 PowerPoint 重新组织成可继续编辑的版本。',
+                overview: '这个 Skill 更像一个“PowerPoint 深加工入口”，重点不是从零做一套新 PPT，而是围绕现有 `.pptx` 做提取、分析、批量修改和结构整理。结合上游文档里对 `python-pptx` 与 speaker notes 的强调，它特别适合你已经拿到演示稿文件，需要快速读出每页内容、备注和结构，再继续重写或重排的场景。',
+                useCases: ['读取现有 `.pptx` 的标题、正文和讲者备注', '批量改写演示稿中的文案与页序', '把现有 deck 提炼成结构提纲或会议讲稿', '从演示文稿中抽取表格、图片占位和页面信息', '为已有 PPT 做信息重组，而不是从零生成'],
+                gettingStarted: ['先明确你是要“读内容”、还是要“改稿”，这会直接影响处理路径', '如果手里已经有 `.pptx` 文件，先抽取每页标题、正文和备注，快速确认结构', '开始批量改动前，先定义哪些内容必须保留，例如页序、品牌页、备注或固定结论页'],
+                installCommand: addSkillsRepoCommand('NousResearch/hermes-agent'),
+                installHint: 'SkillsMP 页面给出的安装入口是整仓安装 `NousResearch/hermes-agent`。装完之后，再按 `powerpoint` 相关指令进入 PowerPoint 专项流程。',
+                skillDocPurpose: '这个 Skill 的说明文件更像一张 PowerPoint 处理路线图：它会把任务识别成“读取现有 deck / 提取 speaker notes / 批量编辑演示稿”的文档型工作，而不是泛泛地生成几页新 PPT。它的价值在于让 Agent 优先用对 `.pptx` 和备注结构的处理方式，再去做内容改写。',
+                relatedSlugs: ['pptx', 'docx', 'investor-materials'],
+                sourceUrl: HERMES_AGENT_POWERPOINT_URL,
+                sourceLabel: 'SkillsMP'
             },
             {
                 name: 'xlsx',
@@ -577,8 +594,8 @@ const BASE_SKILL_MODULES = [
                 overview: '这个 Skill 的核心价值是：它不会把 Excel 当成“算完就写死”的静态结果，而是优先保留表格的可编辑性和可继续协作性。它适合创建新的 Excel、修改已有工作簿、补公式、清洗脏数据、调整格式和多 sheet 结构，也适合处理 `.csv/.tsv` 到 `.xlsx` 的整理链路。',
                 useCases: ['创建新的 Excel 工作簿', '编辑现有 `.xlsx` 的数据和格式', '用公式而不是硬编码值生成结果', '清洗脏数据并输出可继续协作的表格', '整理多 sheet 的财务或运营文件'],
                 gettingStarted: ['先确定主表头、主键列和最终交付格式', '如果有计算逻辑，优先写 Excel 公式而不是把结果硬编码进去', '输出后记得做一次公式重算与错误检查，避免把 `#REF!` 一类错误带出去'],
-                installCommand: 'python3 -m pip install pandas openpyxl',
-                installHint: '如果你要真正读写和整理 Excel，先装好 `pandas` 和 `openpyxl`；前者适合分析清洗，后者适合保留公式和格式。',
+                installCommand: 'npx skills add anthropics/skills --skill "xlsx" --yes',
+                installHint: '复制到终端安装后，Agent 在遇到 Excel 相关任务时，就能走对 xlsx 专项工作流。',
                 skillDocPurpose: 'Skills.md（有些仓库里也会写成 SKILL.md）会告诉 Agent 什么时候必须输出真正的 Excel 文件、什么时候该优先保留公式而不是硬编码、以及修改表格后要做哪些重算与错误检查。对 xlsx 这种很容易“表面看起来对、实际公式全坏掉”的 Skill 来说，Skills.md 的价值就在于把这些风险前置掉。',
                 relatedSlugs: ['regex-vs-llm-structured-text', 'market-research']
             },
@@ -1152,18 +1169,18 @@ const SKILL_DETAIL_OVERRIDES = {
         ])
     ),
     docx: {
-        installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/docx`),
-        installHint: 'Anthropic 官方仓库已经把 docx 放进 document-skills。这里保留的是按单个 skill 目录安装的快捷命令。',
+        installCommand: 'npx skills add anthropics/skills --skill "docx" --yes',
+        installHint: 'Anthropic 官方仓库已经把 docx 放进 document-skills。这里保留的是按单个 skill 安装的快捷命令。',
         sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/docx`,
         screenshots: [
             { src: '/pic/skills/docx-install.png', caption: '安装 docx skill 及依赖' },
             { src: '/pic/skills/docx-output-1.png', caption: '生成带标题和表格的 Word 文档' },
             { src: '/pic/skills/docx-output-2.png', caption: '复杂排版效果：目录、页眉页脚和图片' }
         ],
-        examplePrompt: '帮我读取 quarterly-report.docx 的内容，然后创建一份新的 Word 文档，包含三级标题结构、数据表格和公司 logo 图片。'
+        examplePrompt: '写一份《2026 全球 AI 演进报告》，使用的副标题是"小元所 3.0 生成"，输出成 word 文档。'
     },
     pdf: {
-        installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/pdf`),
+        installCommand: 'npx skills add anthropics/skills --skill "pdf" --yes',
         installHint: 'Anthropic 官方 document-skills 里已经包含这个 PDF skill；如果你只想取 PDF 能力，这条单 skill 命令最直接。',
         sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pdf`,
         screenshots: [
@@ -1178,9 +1195,28 @@ const SKILL_DETAIL_OVERRIDES = {
         ],
         examplePrompt: '帮我基于这份市场调研材料，创建一个 5 页的幻灯片，配色用深蓝色主题，每页包含一个核心观点和配图。'
     },
+    powerpoint: {
+        installCommand: addSkillsRepoCommand('NousResearch/hermes-agent'),
+        installHint: '上游 SkillsMP 页面展示的是整仓安装 `NousResearch/hermes-agent`；这个 PowerPoint skill 属于其中的 productivity 目录能力。',
+        sourceUrl: HERMES_AGENT_POWERPOINT_URL,
+        sourceLabel: 'SkillsMP',
+        screenshots: [
+            { src: '/pic/skills/powerpoint-01.webp', caption: 'PowerPoint Skill 实操截图 01' },
+            { src: '/pic/skills/powerpoint-02.webp', caption: 'PowerPoint Skill 实操截图 02' },
+            { src: '/pic/skills/powerpoint-03.webp', caption: 'PowerPoint Skill 实操截图 03' },
+            { src: '/pic/skills/powerpoint-04.webp', caption: 'PowerPoint Skill 实操截图 04' },
+            { src: '/pic/skills/powerpoint-05.webp', caption: 'PowerPoint Skill 实操截图 05' },
+            { src: '/pic/skills/powerpoint-06.webp', caption: 'PowerPoint Skill 实操截图 06' },
+            { src: '/pic/skills/powerpoint-07.webp', caption: 'PowerPoint Skill 实操截图 07' },
+            { src: '/pic/skills/powerpoint-08.webp', caption: 'PowerPoint Skill 实操截图 08' },
+            { src: '/pic/skills/powerpoint-09.webp', caption: 'PowerPoint Skill 实操截图 09' },
+            { src: '/pic/skills/powerpoint-10.webp', caption: 'PowerPoint Skill 实操截图 10' }
+        ],
+        examplePrompt: '帮我读取这份 quarterly-review.pptx，按“页码 / 标题 / 关键结论 / speaker notes”输出结构化摘要，然后把语气改得更适合董事会汇报。'
+    },
     xlsx: {
-        installCommand: addSkillCommand(`${ANTHROPIC_SKILLS_BASE_URL}/xlsx`),
-        installHint: 'Anthropic 官方仓库已经提供完整的 xlsx skill；这里保留的是按单目录安装的复制命令。',
+        installCommand: 'npx skills add anthropics/skills --skill "xlsx" --yes',
+        installHint: 'Anthropic 官方仓库已经提供完整的 xlsx skill；这里保留的是按单 skill 安装的复制命令。',
         sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/xlsx`,
         screenshots: [
             { src: '/pic/skills/xlsx-output.png', caption: '读取 Excel 数据并用公式计算统计分析结果' }
