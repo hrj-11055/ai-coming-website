@@ -33,7 +33,7 @@ function createSkillCard(skill) {
                 <p class="skill-scenario">${cardScenario}</p>
                 <p class="skill-card-support">附安装命令、可复制提示词和结果说明。</p>
             </div>
-            <a class="skill-card-link" href="${skill.detailUrl}">
+            <a class="skill-card-link" href="${skill.detailUrl}" target="_blank" rel="noopener noreferrer">
                 <span>查看上手教程</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </a>
@@ -70,6 +70,17 @@ function renderSections() {
     const content = document.getElementById('skillsSections');
     if (!content) return;
     content.innerHTML = SKILL_MODULES.map(createSection).join('');
+}
+
+function bindCardClicks() {
+    document.querySelectorAll('.skill-card').forEach((card) => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return;
+            const link = card.querySelector('.skill-card-link');
+            if (link?.href) window.open(link.href, '_blank', 'noopener,noreferrer');
+        });
+    });
 }
 
 function bindNavHighlight() {
@@ -112,5 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     trackPageView();
     renderNav();
     renderSections();
+    bindCardClicks();
     bindNavHighlight();
 });
