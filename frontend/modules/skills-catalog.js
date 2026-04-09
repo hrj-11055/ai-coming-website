@@ -1259,12 +1259,18 @@ const SKILL_DETAIL_OVERRIDES = {
         sourceUrl: OPENAI_SKILLS_REPO_URL
     },
     'search-first': {
+        installCommand: addSkillCommand(`${ECC_SKILLS_BASE_URL}/search-first`),
+        installHint: ECC_INSTALL_HINT,
+        sourceUrl: `${ECC_SKILLS_BASE_URL}/search-first`,
         screenshots: [
             { src: '/pic/skills/search-first-output.png', caption: 'Search First 搜索结果输出' }
         ],
         examplePrompt: '我想下载 YouTube 视频，帮我先搜索一下现有的开源库和方案，再决定是自己写还是直接用现成的。'
     },
     'market-research': {
+        installCommand: addSkillCommand(`${ECC_SKILLS_BASE_URL}/market-research`),
+        installHint: ECC_INSTALL_HINT,
+        sourceUrl: `${ECC_SKILLS_BASE_URL}/market-research`,
         screenshots: [
             { src: '/pic/skills/market-research-output.webp', caption: '市场调研 Skill 实操截图：新能源汽车市场研究报告' }
         ],
