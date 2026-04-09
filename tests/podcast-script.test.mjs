@@ -70,7 +70,7 @@ test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusi
 
 对管理者来说，下一阶段更值钱的是把工具接进组织，而不是只做一场漂亮试点。
 
-今天的内容就到这里，欢迎大家订阅小元说AI的视频号，我们明天再见。
+欢迎大家订阅小元说 AI 的公众号和视频号
 `;
 
     const parsed = parsePodcastScriptMarkdown(markdown);
@@ -85,7 +85,9 @@ test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusi
         '企业买单标准变了'
     ]);
     assert.match(parsed.script_tts_text, /今天最值得注意的是/);
-    assert.match(parsed.script_tts_text, /今天的内容就到这里/);
+    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听今天的硅基生存指南/m);
+    assert.match(parsed.script_tts_text, /欢迎大家订阅小元说 AI 的公众号和视频号$/);
+    assert.doesNotMatch(parsed.script_tts_text, /今天的内容就到这里/);
     assert.doesNotMatch(parsed.script_tts_text, /朋友圈文案/);
     assert.doesNotMatch(parsed.script_tts_text, /排除旧闻/);
 });
@@ -111,7 +113,10 @@ test('parsePodcastScriptMarkdown removes structural section labels from spoken t
 
     const parsed = parsePodcastScriptMarkdown(markdown);
 
-    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听3月28号的 AI 早报。/);
+    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听今天的硅基生存指南/m);
+    assert.match(parsed.script_tts_text, /欢迎大家订阅小元说 AI 的公众号和视频号$/);
+    assert.doesNotMatch(parsed.script_tts_text, /AI 早报/);
+    assert.doesNotMatch(parsed.script_tts_text, /今天的内容就到这里/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)硅基生存指南(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)开场钩子(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)十个信号(\n|$)/);

@@ -17,6 +17,8 @@ const STRUCTURAL_SPOKEN_LABELS = new Set([
     '十个信号',
     '生存智慧'
 ]);
+const REQUIRED_PODCAST_INTRO = '大家好，我是小元，欢迎收听今天的硅基生存指南';
+const REQUIRED_PODCAST_OUTRO = '欢迎大家订阅小元说 AI 的公众号和视频号';
 
 function hashText(value) {
     return crypto.createHash('sha1').update(String(value || '')).digest('hex');
@@ -76,6 +78,40 @@ function stripMarkdownForSpeech(markdown) {
         .trim();
 }
 
+function normalizePodcastSpeechBoundary(text) {
+    let normalized = String(text || '')
+        .replace(/\r\n/g, '\n')
+        .trim();
+
+    normalized = normalized
+        .replace(/^大家好，我是小元，欢迎收听(?:今天的)?[^\n。！？]*(?:AI\s*早报|硅基生存指南)[。！？]?\s*/u, '')
+        .trim();
+
+    const trailingPatterns = [
+        /(?:今天的内容就到这里[，,。！？!\s]*)?欢迎大家订阅小元说\s*AI\s*的?\s*(?:公众号和视频号|视频号和公众号|视频号|公众号)[，,。！？!\s]*(?:我们明天再见[。！？!\s]*)?$/u,
+        /今天的内容就到这里[，,。！？!\s]*$/u,
+        /我们明天再见[。！？!\s]*$/u
+    ];
+
+    let changed = true;
+    while (changed) {
+        changed = false;
+        trailingPatterns.forEach((pattern) => {
+            const next = normalized.replace(pattern, '').trim();
+            if (next !== normalized) {
+                normalized = next;
+                changed = true;
+            }
+        });
+    }
+
+    if (!normalized) {
+        return `${REQUIRED_PODCAST_INTRO}\n${REQUIRED_PODCAST_OUTRO}`;
+    }
+
+    return `${REQUIRED_PODCAST_INTRO}\n${normalized}\n${REQUIRED_PODCAST_OUTRO}`;
+}
+
 function extractBulletItems(block) {
     return block
         .split('\n')
@@ -94,7 +130,7 @@ function parsePodcastScriptMarkdown(markdown) {
 
     const speechStartIndex = normalized.search(/^##\s+开场钩子/m);
     const ttsMarkdown = speechStartIndex >= 0 ? normalized.slice(speechStartIndex) : normalized;
-    const scriptTtsText = stripMarkdownForSpeech(ttsMarkdown);
+    const scriptTtsText = normalizePodcastSpeechBoundary(stripMarkdownForSpeech(ttsMarkdown));
 
     if (!scriptTtsText) {
         throw new Error('生成的口播稿缺少可朗读正文');
