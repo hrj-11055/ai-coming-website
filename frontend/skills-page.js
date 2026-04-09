@@ -1,6 +1,13 @@
 import { SKILL_MODULES } from './modules/skills-catalog.js';
 import { trackPageView } from './modules/visit-tracker.js';
 
+const STAR_RECOMMENDATION_NAV = {
+    id: 'star-recommendation',
+    title: '星级推荐',
+    icon: 'fa-solid fa-star',
+    tone: 'amber'
+};
+
 function createNavItem(module, index) {
     return `
         <a class="skill-nav-link ${index === 0 ? 'active' : ''}" href="#${module.id}" data-section="${module.id}" data-tone="${module.tone}">
@@ -63,7 +70,8 @@ function createSection(module) {
 function renderNav() {
     const nav = document.getElementById('skillsNavList');
     if (!nav) return;
-    nav.innerHTML = SKILL_MODULES.map(createNavItem).join('');
+    const navItems = [STAR_RECOMMENDATION_NAV, ...SKILL_MODULES];
+    nav.innerHTML = navItems.map(createNavItem).join('');
 }
 
 function renderSections() {
@@ -85,7 +93,9 @@ function bindCardClicks() {
 
 function bindNavHighlight() {
     const links = Array.from(document.querySelectorAll('.skill-nav-link'));
-    const sections = SKILL_MODULES.map((module) => document.getElementById(module.id)).filter(Boolean);
+    const sections = [STAR_RECOMMENDATION_NAV, ...SKILL_MODULES]
+        .map((module) => document.getElementById(module.id))
+        .filter(Boolean);
 
     if (!links.length || !sections.length) {
         return;

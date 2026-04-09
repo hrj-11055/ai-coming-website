@@ -4,8 +4,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '文档处理',
         icon: 'fa-solid fa-file-lines',
         tone: 'orange',
-        description: '4 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。',
-        skillSlugs: ['docx', 'pptx', 'pdf', 'xlsx']
+        description: '5 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。',
+        skillSlugs: ['docx', 'pptx', 'powerpoint', 'pdf', 'xlsx']
     },
     {
         id: 'efficiency-tools',
@@ -37,7 +37,7 @@ export const FEATURED_SKILL_CONTENT = {
     docx: {
         name: 'Word 文档生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '第一次用时，先做一份页数不多的小文档，把标题、表格和导出链路跑通，再上复杂版式。',
         preparation: [
             '先确定文档主题、目标读者和最终文件名。',
@@ -63,7 +63,7 @@ export const FEATURED_SKILL_CONTENT = {
     pptx: {
         name: 'PPT 演示文稿生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '先用 5 页左右的小型演示稿试一次，确认标题页、正文页和数据页都能按预期生成。',
         preparation: [
             '先确定 PPT 的用途，是路演、汇报、培训还是提案。',
@@ -86,10 +86,36 @@ export const FEATURED_SKILL_CONTENT = {
             '如果后续还要套品牌模板，先让 Skill 出内容版，再做模板迁移会更省力。'
         ]
     },
+    powerpoint: {
+        name: 'PowerPoint 读取与改稿',
+        statusLabel: '已收录',
+        featuredBadge: '精选 15',
+        beginnerNote: '它更适合“先读懂现有 PPT，再继续改”，如果你手里已经有一份 deck，这个入口通常比从零生成更顺手。',
+        preparation: [
+            '先准备一份真实的 `.pptx` 文件，最好带标题页、正文页和讲者备注。',
+            '先想清楚你这次是要抽取结构、提炼讲稿，还是批量改写文案。',
+            '如果有不能动的页面、品牌页或备注内容，提前在提示词里明确写出来。'
+        ],
+        promptExample: `请用 powerpoint skill 读取这份 \`board-review-q2.pptx\`：
+1. 按页输出：页码、标题、3 条以内关键内容、speaker notes。
+2. 找出信息过载的页面，并标注哪些页更适合拆成两页。
+3. 保留原始结论不变，把整套语气改得更适合董事会汇报。
+4. 最后给我一版“建议保留 / 建议重写 / 建议删除”的改稿清单。`,
+        resultSummary: '这个 Skill 更偏向先把现有演示稿“读透”，再输出一份适合继续改稿和重组的结构化结果。',
+        resultBullets: [
+            '适合处理现成 `.pptx`，尤其是带讲者备注和固定页序的 deck。',
+            '相比纯生成型 PPT Skill，它更适合复盘、抽取和批量改稿。',
+            '如果提示词里写清“哪些页不能动”，输出会更接近真实审稿流程。'
+        ],
+        notes: [
+            '来源页被 Cloudflare 拦截，这里的文案是根据你给的 SkillsMP 链接、上游仓库信息，以及站内对该 skill 的交叉引用整理的。',
+            '如果你后面拿到这条 Skill 的完整 SKILL.md，我们可以再把细节补得更贴近原文。'
+        ]
+    },
     pdf: {
         name: 'PDF 文档生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: 'PDF 更适合做“最终交付件”，第一次上手时尽量把版式要求写具体一些。',
         preparation: [
             '先确定 PDF 是偏报告、表单、海报还是多页说明书。',
@@ -114,7 +140,7 @@ export const FEATURED_SKILL_CONTENT = {
     xlsx: {
         name: 'Excel 表格生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '第一次建议从“单个 sheet + 一段筛选逻辑”开始，确认它会输出真正可编辑的 Excel 文件。',
         preparation: [
             '先想清楚表头字段、主键列和最终交付格式。',
@@ -140,7 +166,7 @@ export const FEATURED_SKILL_CONTENT = {
     brainstorming: {
         name: '深度头脑风暴',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '这个 Skill 的重点不是快，而是把模糊想法打磨成能执行的设计，所以要预留多轮确认时间。',
         preparation: [
             '把主题、目标、受众、预算和成功标准尽量写清楚。',
@@ -174,7 +200,7 @@ export const FEATURED_SKILL_CONTENT = {
     'search-first': {
         name: '先搜索再动手',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '当你不确定“要不要自己造轮子”时，先用这个 Skill 去查现成方案，通常能省下很多试错时间。',
         preparation: [
             '先把你真正要解决的问题写清楚，而不是只写一个抽象主题。',
@@ -200,7 +226,7 @@ export const FEATURED_SKILL_CONTENT = {
     'market-research': {
         name: '市场调研与竞品分析',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '最关键的是先说清楚你要做什么决策，Skill 才会把资料整理成有判断价值的输出。',
         preparation: [
             '先明确你要判断的是市场机会、竞品差异、出海可行性还是价格策略。',
@@ -227,7 +253,7 @@ export const FEATURED_SKILL_CONTENT = {
     'content-engine': {
         name: '多平台内容改写',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '这个 Skill 不适合“把同一段话复制到所有平台”，它的价值就在于把同一份母稿拆成平台原生表达。',
         preparation: [
             '先准备一份已经写好的母稿、长文、播客提纲或产品说明。',
@@ -266,7 +292,7 @@ export const FEATURED_SKILL_CONTENT = {
         skillDocPurpose: '这个 Skill 的说明重点在于把“分享口令解析 -> 获取直链 -> 保存 MP4”这条链路固定下来，让 Agent 不用依赖登录态也能完成无水印下载。',
         relatedSlugs: ['content-engine', 'mcp-server-fetch'],
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '第一次使用时，直接贴完整分享文案最省心，因为里面通常已经带了可解析的短链接。',
         preparation: [
             '先拿到抖音分享文案或短链接，越完整越好。',
@@ -297,7 +323,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'filesystem-mcp': {
         name: '文件系统操作（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '它最适合拿来做“AI 直接读你的工作目录”这件事。第一次不要一上来就开放整个硬盘，先只给一个项目文件夹。',
         preparation: [
             '先想清楚你要让 AI 访问哪一个工作目录，尽量只开放最小范围。',
@@ -322,7 +348,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'pdf-reader-mcp': {
         name: 'PDF 文档解析（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '如果你经常看合同、方案、研究报告或扫描件，这个 MCP 会是最容易立刻产生价值的一项。',
         preparation: [
             '先准备 1 到 2 份真实 PDF 样本，最好包含一份普通 PDF 和一份较复杂或较长的 PDF。',
@@ -347,7 +373,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'playwright-mcp': {
         name: '网页自动化（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '它适合替你做重复网页动作。第一次先选一个登录要求低、步骤不长的页面流程，最容易跑通。',
         preparation: [
             '先明确一段最短网页流程，例如打开页面、搜索、点击、读取结果。',
@@ -374,7 +400,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'mermaid-mcp': {
         name: '流程图生成（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '它最适合把“说不清的一段流程描述”直接变成一张能看、能改、能继续复用的图。',
         preparation: [
             '先准备一段流程说明，哪怕只是几步自然语言也可以。',
@@ -401,28 +427,30 @@ https://v.douyin.com/C7-Eq5Paw6A/
         ]
     },
     'free-web-search-mcp': {
-        name: '实时网络搜索（MCP）',
+        name: 'Tavily 实时网络搜索（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
-        beginnerNote: '这是“给 AI 补实时信息能力”的增强项。它不一定是第一个必装，但一旦你要查最新资料，它会非常有用。',
+        featuredBadge: '精选 15',
+        beginnerNote: '这条 MCP 最适合当“联网搜索入口”来装。先把 Tavily API Key 配好，再用一个最新问题做测试，通常最容易确认有没有生效。',
         preparation: [
-            '先想清楚你查的是新闻、行业信息、事实核验，还是资料初筛。',
-            '第一次测试时，尽量问一个有明确时间性的实际问题。',
-            '如果你后面还要做总结或研究，先定义你最终要输出什么结果。'
+            '先到 Tavily 控制台注册账号并复制 API Key。',
+            '执行安装命令前，把命令里的 `<your-api-key>` 替换成你自己的真实 Key。',
+            '添加完成后，重启 Claude Code，再用 `/mcp` 确认 `tavily` 服务已经出现。'
         ],
-        promptExample: `安装完成后，请直接帮我测试这个搜索 MCP：
+        promptExample: `安装完成后，请先这样测试 Tavily MCP：
 1. 搜索最近一周关于“AI Agent”最值得关注的 5 条消息。
 2. 给出每条消息的来源和一句话摘要。
-3. 再帮我判断哪些信息更值得继续深挖，哪些只是热闹。`,
-        resultSummary: '它会先帮你搜索和初筛，再把结果整理成可以继续判断和汇总的资料列表。',
+3. 再帮我判断哪些信息更值得继续深挖，哪些只是热闹。
+
+如果 Tavily MCP 没有生效，请先提醒我检查 API Key 和 \`/mcp\` 列表。`,
+        resultSummary: '配置成功后，它会先联网搜索，再把结果整理成带来源的资料列表，适合继续做判断、对比和汇总。',
         resultBullets: [
             '特别适合最新资料查询、事实核验和轻量研究。',
-            '相比只靠模型记忆，它更适合回答时效性强的问题。',
-            '和 PDF、Playwright 一类 MCP 组合后，可以把“搜资料 -> 抓内容 -> 整理输出”串成完整流程。'
+            '相比只靠模型记忆，它更适合回答带时间性的搜索问题。',
+            '如果 `/mcp` 里已经能看到 `tavily`，通常就说明安装链路已经通了。'
         ],
         notes: [
-            '它更像增强能力，不一定是第一个必须安装的 MCP。',
-            '如果你已经拿到目标链接，直接用 Fetch 或 Playwright 读取正文会更高效。'
+            '如果你已经拿到目标链接，直接用 Fetch 或 Playwright 读取正文通常会更高效。',
+            '这条配置是 HTTP transport 方式，不是本地命令行拉起型 MCP。'
         ]
     },
     'mcp-server-fetch': {
@@ -439,7 +467,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
         skillDocPurpose: '这个 Skill 的说明重点在于把“先给客户端加联网抓取能力”这件事说清楚，让 AI 能真的去读网页，而不是继续只凭模型记忆作答。',
         relatedSlugs: ['search-first', 'market-research'],
         statusLabel: '已实测',
-        featuredBadge: '精选 14',
+        featuredBadge: '精选 15',
         beginnerNote: '它更像一个“能力开关”而不是普通内容 Skill。装好之后，后续很多联网任务都会直接受益。',
         preparation: [
             '先在 Claude Code 环境里执行安装命令。',

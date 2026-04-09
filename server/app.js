@@ -9,6 +9,16 @@ const path = require('path');
  */
 function createApp({ rootDir, staticRoot }) {
     const app = express();
+    const longCacheExtensions = new Set([
+        '.png',
+        '.jpg',
+        '.jpeg',
+        '.gif',
+        '.svg',
+        '.webp',
+        '.avif',
+        '.ico'
+    ]);
 
     function setStaticCacheHeaders(res, filePath) {
         const ext = path.extname(filePath).toLowerCase();
@@ -16,6 +26,11 @@ function createApp({ rootDir, staticRoot }) {
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.setHeader('Pragma', 'no-cache');
             res.setHeader('Expires', '0');
+            return;
+        }
+
+        if (longCacheExtensions.has(ext)) {
+            res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
         }
     }
 
@@ -26,6 +41,7 @@ function createApp({ rootDir, staticRoot }) {
         const resolvedStaticRoot = path.resolve(rootDir, staticRoot);
         if (fs.existsSync(resolvedStaticRoot)) {
             app.use(express.static(resolvedStaticRoot, {
+                cacheControl: false,
                 setHeaders: setStaticCacheHeaders
             }));
             console.log('Serving static files from ' + resolvedStaticRoot);

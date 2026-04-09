@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 能力库 - AIcoming</title>
-    <meta name="description" content="AIcoming 精选 14 个已实测能力入口，包含 9 个常用 Skill 与 5 个高频 MCP；每个详情页都提供安装命令、可复制提示词、预期结果与上手说明。">
+    <meta name="description" content="AIcoming 精选 15 个已实测能力入口，包含 10 个常用 Skill 与 5 个高频 MCP；每个详情页都提供安装命令、可复制提示词、预期结果与上手说明。">
     <meta name="keywords" content="AI能力库,Claude Skills,AI Skills,AIcoming,Skill导航">
 
     <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
@@ -235,10 +235,340 @@
             gap: 8px;
             margin-top: 12px;
             min-height: 0;
+            flex: 1;
             overflow-y: auto;
             padding-right: 4px;
             position: relative;
             z-index: 1;
+        }
+
+        .skills-reco-section {
+            position: relative;
+            margin-bottom: 18px;
+            padding: 26px;
+            border-radius: 34px;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(250, 204, 21, 0.18) 0%, transparent 26%),
+                radial-gradient(circle at 100% 8%, rgba(99, 102, 241, 0.14) 0%, transparent 24%),
+                linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 244, 255, 0.94) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            box-shadow: 0 30px 60px -38px rgba(15, 23, 42, 0.34);
+            overflow: hidden;
+        }
+
+        .skills-reco-section::after {
+            content: "";
+            position: absolute;
+            inset: auto -60px -90px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, rgba(99, 102, 241, 0) 72%);
+            pointer-events: none;
+        }
+
+        .skills-reco-head {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .skills-reco-copy {
+            display: grid;
+            gap: 8px;
+            max-width: 760px;
+        }
+
+        .skills-reco-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skills-reco-label > span {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: #b45309;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.22) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.22);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        }
+
+        .skills-reco-head strong {
+            font-size: 15px;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .skills-reco-copy h2 {
+            margin: 0;
+            font-size: clamp(24px, 3vw, 34px);
+            line-height: 1.08;
+            letter-spacing: -0.04em;
+            color: #0f172a;
+        }
+
+        .skills-reco-head p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .skills-reco-meta {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .skills-reco-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 14px 24px -24px rgba(15, 23, 42, 0.36);
+        }
+
+        .skills-reco-summary {
+            flex: 0 0 260px;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(245, 158, 11, 0.18);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 251, 235, 0.94) 100%);
+            box-shadow: 0 24px 34px -32px rgba(180, 83, 9, 0.3);
+        }
+
+        .skills-reco-summary-icon {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.22);
+            color: #d97706;
+            font-size: 20px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+        }
+
+        .skills-reco-summary-copy {
+            min-width: 0;
+        }
+
+        .skills-reco-summary-copy strong {
+            display: block;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .skills-reco-summary-copy span {
+            display: block;
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.65;
+            white-space: normal;
+        }
+
+        .skills-reco-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .skills-reco-card {
+            display: grid;
+            gap: 14px;
+            padding: 22px;
+            border-radius: 28px;
+            text-decoration: none;
+            color: inherit;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(248, 250, 252, 0.94) 100%);
+            border: 1px solid rgba(226, 232, 240, 0.82);
+            box-shadow: 0 24px 38px -28px rgba(15, 23, 42, 0.24);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .skills-reco-card[data-variant="daily"] {
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 249, 255, 0.94) 100%);
+        }
+
+        .skills-reco-card[data-variant="fullstack"] {
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 243, 255, 0.94) 100%);
+        }
+
+        .skills-reco-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 30px 42px -30px rgba(79, 70, 229, 0.26);
+        }
+
+        .skills-reco-card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .skills-reco-score {
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(241, 245, 249, 0.96) 100%);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.88);
+            color: #d97706;
+            font-size: 18px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .skills-reco-score small {
+            display: block;
+            margin-top: 2px;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #64748b;
+        }
+
+        .skills-reco-kicker {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            padding: 5px 8px;
+            border-radius: 999px;
+            background: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .skills-reco-title {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .skills-reco-title strong {
+            font-size: 24px;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .skills-reco-title i {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .skills-reco-card p {
+            margin: 0;
+            color: #475569;
+            font-size: 14px;
+            line-height: 1.85;
+        }
+
+        .skills-reco-featured {
+            display: grid;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.74);
+            border: 1px solid rgba(226, 232, 240, 0.82);
+        }
+
+        .skills-reco-featured strong {
+            font-size: 13px;
+            letter-spacing: -0.01em;
+            color: #0f172a;
+        }
+
+        .skills-reco-chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skills-reco-chip-list span {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 10px;
+            border-radius: 999px;
+            background: rgba(99, 102, 241, 0.08);
+            color: #4338ca;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .skills-reco-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 2px;
+        }
+
+        .skills-reco-fit {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .skills-reco-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.94);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .skills-reco-card ul {
+            margin: 0;
+            padding-left: 18px;
+            color: #334155;
+            font-size: 13px;
+            line-height: 1.8;
         }
 
         .skill-nav-link {
@@ -693,6 +1023,15 @@
             .skill-card-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
+            .skills-reco-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-reco-head {
+                grid-template-columns: 1fr;
+                display: grid;
+            }
         }
 
         @media (max-width: 720px) {
@@ -716,6 +1055,25 @@
 
             .skill-section-intro {
                 flex-direction: column;
+            }
+
+            .skills-reco-section {
+                padding: 18px;
+            }
+
+            .skills-reco-summary {
+                min-width: 0;
+                flex-basis: auto;
+                width: 100%;
+            }
+
+            .skills-reco-card {
+                padding: 18px;
+            }
+
+            .skills-reco-foot {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -775,17 +1133,17 @@
         <section class="skills-hero">
             <div class="skills-hero-copy">
                 <span class="skills-hero-kicker">精选实测</span>
-                <h1>14 个真正能直接上手的能力入口，包含 5 个常用 MCP</h1>
-                <p>这个页面先不再展示旧的全量清单，只保留我们已经实测过、并补了上手说明的 14 个能力入口，其中包括 9 个常用 Skill 和 5 个高频 MCP。每个详情页都直接给到安装命令、可复制提示词、预期结果和上手说明，让第一次用的人也能快速跑通。</p>
+                <h1>15 个真正能直接上手的能力入口，包含 5 个常用 MCP</h1>
+                <p>这个页面先不再展示旧的全量清单，只保留我们已经实测过、并补了上手说明的 15 个能力入口，其中包括 10 个常用 Skill 和 5 个高频 MCP。每个详情页都直接给到安装命令、可复制提示词、预期结果和上手说明，让第一次用的人也能快速跑通。</p>
                 <div class="skills-hero-tags">
-                    <span class="skills-hero-tag">只保留 14 个实测入口</span>
+                    <span class="skills-hero-tag">只保留 15 个实测入口</span>
                     <span class="skills-hero-tag">5 个高频 MCP 已补完整详情页</span>
                     <span class="skills-hero-tag">每个条目都有独立上手页</span>
                 </div>
             </div>
             <div class="skills-hero-stats">
                 <div class="skills-hero-stat">
-                    <strong>14</strong>
+                    <strong>15</strong>
                     <span>只上线这次已经实测过的入口，不再把旧清单一口气铺给用户。</span>
                 </div>
                 <div class="skills-hero-stat">
@@ -803,6 +1161,7 @@
             <aside class="skills-sidebar">
                 <div class="skills-sidebar-head">
                     <h2>AI 能力库</h2>
+                    <div class="text-xs text-slate-500 mt-2">含星级推荐</div>
                 </div>
                 <div class="skills-nav-list" id="skillsNavList">
                     <div class="text-sm text-slate-500 px-2 py-2">正在加载模块...</div>
@@ -810,6 +1169,88 @@
             </aside>
 
             <section class="skills-main">
+                <section class="skills-reco-section" id="star-recommendation">
+                    <div class="skills-reco-head">
+                        <div class="skills-reco-copy">
+                            <div class="skills-reco-label">
+                                <span><i class="fa-solid fa-star"></i></span>
+                                <strong>星级推荐</strong>
+                            </div>
+                            <h2>先从最值得优先装的两个仓库专题开始</h2>
+                            <p>先看这两个高频专题页，快速判断哪组仓库更适合你。</p>
+                        </div>
+                        <div class="skills-reco-summary">
+                            <div class="skills-reco-summary-icon"><i class="fa-solid fa-star"></i></div>
+                            <div class="skills-reco-summary-copy">
+                                <strong>优先推荐</strong>
+                                <span>先看两个高频专题，快速缩小选择范围。</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="skills-reco-meta">
+                        <span><i class="fa-solid fa-bolt"></i> 先看最不容易吃灰的 Skill 仓库</span>
+                        <span><i class="fa-solid fa-list-check"></i> 每个专题页都写明优先安装顺序</span>
+                        <span><i class="fa-solid fa-compass"></i> 帮你按任务类型选更合适的一组</span>
+                    </div>
+                    <div class="skills-reco-grid">
+                        <a class="skills-reco-card" data-variant="daily" href="skill-detail.html?slug=superpowers-guide" target="_blank" rel="noopener noreferrer">
+                            <div class="skills-reco-card-top">
+                                <div>
+                                    <span class="skills-reco-kicker">Superpowers</span>
+                                    <div class="skills-reco-title">
+                                        <strong>更适合日常高频协作</strong>
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </div>
+                                </div>
+                                <div class="skills-reco-score"><i class="fa-solid fa-star"></i><small>推荐</small></div>
+                            </div>
+                            <p>更偏向把模糊任务快速收敛成可执行结果，适合每天都在和 Agent 配合做需求澄清、调试、评审和交付收口的人。</p>
+                            <div class="skills-reco-featured">
+                                <strong>这个专题页里会重点讲这些更好用的 Skill</strong>
+                                <div class="skills-reco-chip-list">
+                                    <span>深度头脑风暴</span>
+                                    <span>系统化调试</span>
+                                    <span>代码评审</span>
+                                    <span>完成前验证</span>
+                                    <span>多 Agent 并行拆分</span>
+                                </div>
+                            </div>
+                            <div class="skills-reco-foot">
+                                <span class="skills-reco-fit">适合需求澄清、问题定位、交付前收口这类每天都会遇到的任务。</span>
+                                <span class="skills-reco-cta">查看完整专题页 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                        <a class="skills-reco-card" data-variant="fullstack" href="skill-detail.html?slug=everything-claude-code-guide" target="_blank" rel="noopener noreferrer">
+                            <div class="skills-reco-card-top">
+                                <div>
+                                    <span class="skills-reco-kicker">Everything Claude Code</span>
+                                    <div class="skills-reco-title">
+                                        <strong>更适合工程型与研究型任务</strong>
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </div>
+                                </div>
+                                <div class="skills-reco-score"><i class="fa-solid fa-star"></i><small>推荐</small></div>
+                            </div>
+                            <p>更适合中长链路的开发、分析和研究工作，覆盖面完整，适合想从一个仓库里同时拿到工程型和业务型能力的人。</p>
+                            <div class="skills-reco-featured">
+                                <strong>这个专题页里会重点讲这些更好用的 Skill</strong>
+                                <div class="skills-reco-chip-list">
+                                    <span>前端模式</span>
+                                    <span>后端模式</span>
+                                    <span>编码规范</span>
+                                    <span>市场调研</span>
+                                    <span>内容引擎</span>
+                                    <span>部署模式</span>
+                                    <span>安全审查</span>
+                                </div>
+                            </div>
+                            <div class="skills-reco-foot">
+                                <span class="skills-reco-fit">适合开发实现、方案分析、研究输出和部署交付这类中长链路任务。</span>
+                                <span class="skills-reco-cta">查看完整专题页 <i class="fa-solid fa-arrow-right"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                </section>
                 <div id="skillsSections">
                     <section class="skill-section">
                         <div class="text-sm text-slate-500">正在加载 Skill 列表...</div>

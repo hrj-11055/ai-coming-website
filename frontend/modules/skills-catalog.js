@@ -857,28 +857,22 @@ const BASE_SKILL_MODULES = [
                 sourceUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/fetch'
             },
             {
-                name: 'Free Web Search Ultimate',
+                name: 'Tavily 网络搜索',
                 slug: 'free-web-search-mcp',
                 detailType: 'mcp',
-                headline: '提供零门槛的网页搜索、浏览和证据核验能力，特别适合实时信息查询和事实型问题。',
-                cardHeadline: '先搜索、再浏览、再做事实核验。',
-                scenario: '适合联网搜索、实时资料查询、事实核验、新闻检索和轻量研究流程。',
-                cardScenario: '适合实时搜索、新闻检索和事实核验。',
-                overview: '这类 MCP 的核心价值是“先搜索、再回答”，比只依赖模型记忆更适合处理时效性强的问题。仓库本身已经把搜索、浏览、验证整合到了一起，所以它不只是拿搜索结果，而是更强调证据链和引用。',
-                useCases: ['给 AI 补实时网页搜索能力', '回答时效性问题前先做证据核验', '搜索新闻、图片、书籍和网页结果', '做轻量研究或信息初筛'],
-                gettingStarted: ['先执行 `pip install cross-validated-search` 安装命令行与 MCP 服务', '把 `cross-validated-search-mcp` 注册到客户端中', '如果你想走更稳定的免费搜索路径，再补一个自托管 SearXNG 配置'],
-                installCommand: `{
-  "mcpServers": {
-    "cross-validated-search": {
-      "command": "cross-validated-search-mcp",
-      "args": []
-    }
-  }
-}`,
-                installHint: '列表里的安装说明明确给出了 `pip install cross-validated-search`。配置前先装好命令行入口，否则客户端无法直接拉起服务。',
-                mcpConfigPurpose: '这段配置会把搜索与证据核验服务注册到客户端里，让 AI 在回答事实型问题前能够先搜索、再浏览、再验证，而不是只凭模型记忆作答。',
+                headline: '用 Tavily 给 Claude Code 补上实时联网搜索能力，适合最新资料查询、事实核验和研究前的资料初筛。',
+                cardHeadline: '给 Claude Code 补实时联网搜索能力。',
+                scenario: '适合新闻检索、时效性问题查询、资料初筛和研究前的信息收集。',
+                cardScenario: '适合实时搜索、资料初筛和事实核验。',
+                overview: '这条 MCP 走的是 Tavily 官方 HTTP transport 接入方式。你只需要准备好 Tavily API Key，把命令执行一次，再重启 Claude Code，就能给客户端补上实时联网搜索能力。它的价值在于让 AI 先搜索、再整理，而不是继续只靠模型记忆回答带时间性的问题。',
+                useCases: ['给 Claude Code 增加实时联网搜索能力', '搜索最近一周的新闻和行业动态', '回答事实型问题前先做来源初筛', '做轻量研究或竞品调研前先拉资料'],
+                gettingStarted: ['先打开 <a href="https://app.tavily.com/home" target="_blank" rel="noreferrer">Tavily 官网控制台</a> 注册账号并获取 API Key', '执行添加命令时，把 `<your-api-key>` 替换成真实 Key', '重启 Claude Code 后，用 `/mcp` 确认 `tavily` 服务已经出现'],
+                installCommand: 'claude mcp add --transport http tavily https://mcp.tavily.com/mcp/?tavilyApiKey=<your-api-key>',
+                installHint: '这是用户文档里给出的直接可用命令。最重要的是把 `<your-api-key>` 换成你自己的 Tavily Key，然后重启 Claude Code。',
+                mcpConfigPurpose: '这条命令会把 Tavily MCP 通过 HTTP transport 注册到 Claude Code，让客户端具备实时联网搜索能力，适合搜索最新资料、做来源初筛和回答带时间性的事实问题。',
                 relatedSlugs: ['filesystem-mcp', 'pdf-reader-mcp', 'playwright-mcp'],
-                sourceUrl: 'https://github.com/wd041216-bit/free-web-search-ultimate'
+                sourceUrl: 'https://github.com/tavily-ai/tavily-mcp',
+                sourceLabel: 'GitHub'
             },
             {
                 name: 'Notion MCP',
@@ -1266,14 +1260,13 @@ const SKILL_DETAIL_OVERRIDES = {
     },
     'search-first': {
         screenshots: [
-            { src: '/pic/skills/search-first-output.png', caption: 'Search First 搜索结果输出' },
-            { src: '/pic/skills/search-first-alt.png', caption: '搜索结果对比与方案推荐' }
+            { src: '/pic/skills/search-first-output.png', caption: 'Search First 搜索结果输出' }
         ],
-        examplePrompt: '我想做一个 Markdown 格式的文档转换功能，帮我先搜索一下现有的开源库和方案，再决定是自己写还是直接用现成的。'
+        examplePrompt: '我想下载 YouTube 视频，帮我先搜索一下现有的开源库和方案，再决定是自己写还是直接用现成的。'
     },
     'market-research': {
         screenshots: [
-            { src: '/pic/skills/market-research-output.png', caption: '市场调研 Skill 实操输出' }
+            { src: '/pic/skills/market-research-output.webp', caption: '市场调研 Skill 实操截图：新能源汽车市场研究报告' }
         ],
         examplePrompt: '帮我做一份 2026 年中国 AI 编程助手市场的竞品调研，重点对比主流产品的功能、定价和用户评价。'
     }

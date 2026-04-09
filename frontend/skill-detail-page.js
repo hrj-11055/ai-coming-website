@@ -62,6 +62,30 @@ function renderHeroSummaryCard(title, value, body) {
     `;
 }
 
+function renderGuideHighlightCard(item) {
+    return `
+        <article class="detail-guide-card">
+            <strong>${item.title}</strong>
+            <p>${item.body}</p>
+        </article>
+    `;
+}
+
+function renderFeaturedSkillPick(item) {
+    const linkedSkill = item.slug ? getSkillBySlug(item.slug) : null;
+    const tag = linkedSkill ? 'a' : 'article';
+    const href = linkedSkill ? ` href="${linkedSkill.detailUrl}"` : '';
+
+    return `
+        <${tag} class="detail-pick-card"${href}>
+            <span class="detail-pick-chip">${item.name}</span>
+            <strong>${item.fit}</strong>
+            <p>${item.reason}</p>
+            ${linkedSkill ? '<span class="detail-pick-link">查看对应 Skill <i class="fa-solid fa-arrow-right"></i></span>' : ''}
+        </${tag}>
+    `;
+}
+
 function renderDetail(skill) {
     const relatedSkills = getRelatedSkills(skill);
     const heroTags = [skill.statusLabel, skill.featuredBadge, ...(skill.useCases || [])]
@@ -103,6 +127,34 @@ function renderDetail(skill) {
             ${skill.resultSummary ? `<p>${skill.resultSummary}</p>` : ''}
             ${skill.resultBullets?.length ? `<ul>${renderList(skill.resultBullets)}</ul>` : ''}
         </article>
+    ` : '';
+    const guideHighlightsPanel = skill.guideHighlights?.length ? `
+        <section class="detail-panel detail-panel-wide detail-panel--full">
+            <div class="detail-panel-head">
+                <div>
+                    <span class="detail-panel-kicker">Why This Repo</span>
+                    <h2>为什么先看这个专题</h2>
+                    <p>先把“适合谁、为什么值得先装、应该怎么开始”说清楚，再决定要不要把整仓装进来。</p>
+                </div>
+            </div>
+            <div class="detail-guide-grid">
+                ${skill.guideHighlights.map(renderGuideHighlightCard).join('')}
+            </div>
+        </section>
+    ` : '';
+    const featuredSkillsPanel = skill.featuredSkills?.length ? `
+        <section class="detail-panel detail-panel-wide detail-panel--full">
+            <div class="detail-panel-head">
+                <div>
+                    <span class="detail-panel-kicker">Best Picks</span>
+                    <h2>优先试这几个 Skill</h2>
+                    <p>这部分不是列全集，而是先挑出最容易产生价值、最适合先跑通的入口。</p>
+                </div>
+            </div>
+            <div class="detail-pick-grid">
+                ${skill.featuredSkills.map(renderFeaturedSkillPick).join('')}
+            </div>
+        </section>
     ` : '';
     const notesPanel = skill.notes?.length ? `
         <article class="detail-panel">
@@ -226,7 +278,9 @@ function renderDetail(skill) {
                     <h2>适合场景</h2>
                     <ul>${renderList(skill.useCases || [])}</ul>
                 </article>
+                ${guideHighlightsPanel}
                 ${screenshotsPanel}
+                ${featuredSkillsPanel}
                 <article class="detail-panel" id="usage-guide">
                     <span class="detail-panel-kicker">Workflow</span>
                     <h2>怎么开始使用</h2>
