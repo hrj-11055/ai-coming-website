@@ -21,8 +21,8 @@ function escapeHtml(value) {
 function renderInlineMarkdown(text) {
     let output = escapeHtml(text);
     output = output.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-    output = output.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2">$1</a>');
-    output = output.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>');
+    output = output.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a style="color:#576b95;text-decoration:none;border-bottom:1px solid #576b95;" href="$2">$1</a>');
+    output = output.replace(/(?<![="])(https?:\/\/[^\s<]+)/g, '<a style="color:#576b95;text-decoration:none;border-bottom:1px solid #576b95;" href="$1">$1</a>');
     return output;
 }
 
@@ -31,9 +31,21 @@ function renderMarkdownToHtml(markdown) {
     const blocks = [];
     let currentList = null;
 
+    const STYLE = {
+        section: 'font-family:Optima-Regular,Optima,PingFangSC-light,PingFangTC-light,"PingFang SC",Cambria,Georgia,serif;color:#353535;line-height:1.75;font-size:16px;letter-spacing:0.8px;word-spacing:0.8px;padding:8px 4px;',
+        h2: 'font-size:18px;font-weight:700;color:#222;margin:24px 10px 0 0;padding-left:10px;border-left:5px solid rgb(248,57,41);',
+        h3: 'font-size:17px;font-weight:700;color:#353535;margin:24px 0 8px;display:inline-block;background:linear-gradient(#fff 60%,rgba(221,221,221,0.4) 40%);padding:2px 13px 2px 0;',
+        h4: 'font-size:16px;font-weight:700;color:#353535;margin:16px 0 4px;display:inline-block;padding-left:10px;border-left:5px solid #DEC6FB;',
+        p: 'margin:0.8em 0;font-size:16px;color:#353535;line-height:1.75;',
+        blockquote: 'border-left:4px solid #ddd;margin:1.2em 0;padding:0.5em 1em;color:#888;font-size:15px;',
+        hr: 'border:none;border-top:1px solid #eee;margin:1.5em 0;',
+        ul: 'margin:0.5em 0;padding-left:1.5em;color:#353535;line-height:1.75;',
+        li: 'margin:0.3em 0;'
+    };
+
     function flushList() {
         if (currentList && currentList.length > 0) {
-            blocks.push(`<ul>${currentList.join('')}</ul>`);
+            blocks.push(`<ul style="${STYLE.ul}">${currentList.join('')}</ul>`);
         }
         currentList = null;
     }
@@ -48,49 +60,49 @@ function renderMarkdownToHtml(markdown) {
 
         if (/^-\s+/.test(line)) {
             currentList = currentList || [];
-            currentList.push(`<li>${renderInlineMarkdown(line.replace(/^-\s+/, ''))}</li>`);
+            currentList.push(`<li style="${STYLE.li}">${renderInlineMarkdown(line.replace(/^-\s+/, ''))}</li>`);
             return;
         }
 
         flushList();
 
         if (/^#\s+/.test(line)) {
-            blocks.push(`<h1>${renderInlineMarkdown(line.replace(/^#\s+/, ''))}</h1>`);
+            blocks.push(`<h2 style="${STYLE.h2}">${renderInlineMarkdown(line.replace(/^#\s+/, ''))}</h2>`);
             return;
         }
 
         if (/^##\s+/.test(line)) {
-            blocks.push(`<h2>${renderInlineMarkdown(line.replace(/^##\s+/, ''))}</h2>`);
+            blocks.push(`<h2 style="${STYLE.h2}">${renderInlineMarkdown(line.replace(/^##\s+/, ''))}</h2>`);
             return;
         }
 
         if (/^###\s+/.test(line)) {
-            blocks.push(`<h3>${renderInlineMarkdown(line.replace(/^###\s+/, ''))}</h3>`);
+            blocks.push(`<h3 style="${STYLE.h3}">${renderInlineMarkdown(line.replace(/^###\s+/, ''))}</h3>`);
             return;
         }
 
         if (/^####\s+/.test(line)) {
-            blocks.push(`<h4>${renderInlineMarkdown(line.replace(/^####\s+/, ''))}</h4>`);
+            blocks.push(`<h4 style="${STYLE.h4}">${renderInlineMarkdown(line.replace(/^####\s+/, ''))}</h4>`);
             return;
         }
 
         if (/^-{3,}$/.test(line)) {
-            blocks.push('<hr/>');
+            blocks.push(`<hr style="${STYLE.hr}"/>`);
             return;
         }
 
         if (/^>\s+/.test(line)) {
-            blocks.push(`<blockquote>${renderInlineMarkdown(line.replace(/^>\s+/, ''))}</blockquote>`);
+            blocks.push(`<blockquote style="${STYLE.blockquote}">${renderInlineMarkdown(line.replace(/^>\s+/, ''))}</blockquote>`);
             return;
         }
 
-        blocks.push(`<p>${renderInlineMarkdown(line)}</p>`);
+        blocks.push(`<p style="${STYLE.p}">${renderInlineMarkdown(line)}</p>`);
     });
 
     flushList();
 
     return [
-        '<section style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',sans-serif;color:#1f2937;line-height:1.8;font-size:16px;">',
+        `<section style="${STYLE.section}">`,
         blocks.join('\n'),
         '</section>'
     ].join('\n');
