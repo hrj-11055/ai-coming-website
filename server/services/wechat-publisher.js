@@ -69,6 +69,16 @@ function renderMarkdownToHtml(markdown) {
             return;
         }
 
+        if (/^####\s+/.test(line)) {
+            blocks.push(`<h4>${renderInlineMarkdown(line.replace(/^####\s+/, ''))}</h4>`);
+            return;
+        }
+
+        if (/^-{3,}$/.test(line)) {
+            blocks.push('<hr/>');
+            return;
+        }
+
         if (/^>\s+/.test(line)) {
             blocks.push(`<blockquote>${renderInlineMarkdown(line.replace(/^>\s+/, ''))}</blockquote>`);
             return;
