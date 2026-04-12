@@ -50,14 +50,14 @@ test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusi
 - 某发布会预告（纯活动预告）
 
 ## 开场钩子
-今天最值得注意的是，AI 公司正在从拼模型参数，转向争夺企业真实工作流入口。好，今天从全球150多条情报里，提炼10个最值得关注的信号。
+今天最值得注意的是，AI 公司正在从拼模型参数，转向争夺企业真实工作流入口。好，今天从全球150多条情报里，提炼10条最值得关注的AI资讯。
 
-## 十个信号
-**信号1：AI 开始抢入口**
+## 十条资讯
+**资讯一：AI 开始抢入口**
 
 这件事意味着平台竞争进入新阶段。说白话就是，大家都在争谁先接管用户真正每天会打开的工作界面。
 
-**信号2：企业买单标准变了**
+**资讯二：企业买单标准变了**
 
 企业现在更关注能不能真的嵌进流程，而不是单次演示有多惊艳。
 
@@ -102,8 +102,8 @@ test('parsePodcastScriptMarkdown removes structural section labels from spoken t
 ## 开场钩子
 大家好，我是小元，欢迎收听3月28号的 AI 早报。今天最值得关注的一件事，是企业级 AI 工具开始从演示场走向真实工作流。
 
-## 十个信号
-**信号1：企业 AI 开始拼落地**
+## 十条资讯
+**资讯一：企业 AI 开始拼落地**
 
 真正的竞争点，开始从模型能力转向谁能进入组织流程。
 
@@ -119,7 +119,7 @@ test('parsePodcastScriptMarkdown removes structural section labels from spoken t
     assert.doesNotMatch(parsed.script_tts_text, /今天的内容就到这里/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)硅基生存指南(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)开场钩子(\n|$)/);
-    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)十个信号(\n|$)/);
+    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)十条资讯(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)生存智慧(\n|$)/);
 });
 

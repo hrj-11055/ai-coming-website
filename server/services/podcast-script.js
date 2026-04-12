@@ -15,6 +15,7 @@ const STRUCTURAL_SPOKEN_LABELS = new Set([
     '硅基生存指南',
     '开场钩子',
     '十个信号',
+    '十条资讯',
     '生存智慧'
 ]);
 const REQUIRED_PODCAST_INTRO = '大家好，我是小元，欢迎收听今天的硅基生存指南';
@@ -126,7 +127,7 @@ function parsePodcastScriptMarkdown(markdown) {
     const normalized = source.replace(/\r\n/g, '\n');
     const wechatMatch = normalized.match(/\*\*朋友圈文案\*\*：([^\n]+)/);
     const excludedBlockMatch = normalized.match(/\*\*排除旧闻\*\*：\n((?:[-*+]\s+[^\n]+\n?)*)/);
-    const selectedTitles = [...normalized.matchAll(/\*\*信号\d+：([^*\n]+)\*\*/g)].map((match) => match[1].trim());
+    const selectedTitles = [...normalized.matchAll(/\*\*(?:资讯|信号)(?:\d+|[一二三四五六七八九十]+)：([^*\n]+)\*\*/g)].map((match) => match[1].trim());
 
     const speechStartIndex = normalized.search(/^##\s+开场钩子/m);
     const ttsMarkdown = speechStartIndex >= 0 ? normalized.slice(speechStartIndex) : normalized;
