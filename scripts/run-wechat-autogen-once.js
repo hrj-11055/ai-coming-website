@@ -10,6 +10,7 @@ const {
     buildPodcastMarkdown,
     buildPodcastVoiceMessageText,
     buildWechatDigest,
+    formatWechatPodcastTitle,
     formatWechatTitle,
     hashText
 } = require('../server/services/wechat-content');
@@ -107,6 +108,7 @@ function createPodcastFingerprint(metadata, formatterFingerprint = '') {
         summary: metadata?.summary || '',
         script_markdown: metadata?.script_markdown || '',
         audio_url: metadata?.audio_url || '',
+        wechat_podcast_title: formatWechatPodcastTitle(),
         formatter_fingerprint: formatterFingerprint || ''
     }));
 }
@@ -247,6 +249,7 @@ async function maybePublishPodcast({
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
 
+    const podcastTitle = formatWechatPodcastTitle(date);
     const sourceMarkdown = buildPodcastMarkdown({ date, metadata, siteBaseUrl });
     let markdown = sourceMarkdown;
     let digest = buildWechatDigest(metadata.summary || markdown);
@@ -254,7 +257,7 @@ async function maybePublishPodcast({
 
     try {
         const formatted = await podcastFormatter.formatForWechat({
-            title: formatWechatTitle(date),
+            title: podcastTitle,
             summary: metadata.summary || '',
             scriptMarkdown: sourceMarkdown,
             wechatCopy: metadata.wechat_copy || ''
@@ -271,7 +274,7 @@ async function maybePublishPodcast({
 
     const publishResult = await publisher.publishMarkdownDraft({
         kind: 'podcast',
-        title: formatWechatTitle(date),
+        title: podcastTitle,
         markdown,
         digest
     });

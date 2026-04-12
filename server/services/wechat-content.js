@@ -1,5 +1,7 @@
 const crypto = require('crypto');
 
+const WECHAT_PODCAST_TITLE = '硅基生存指南';
+
 function padDatePart(value) {
     return String(value || '').padStart(2, '0');
 }
@@ -11,6 +13,10 @@ function formatWechatTitle(date) {
     }
 
     return `${match[2]}月${match[3]}日AI资讯早报`;
+}
+
+function formatWechatPodcastTitle() {
+    return WECHAT_PODCAST_TITLE;
 }
 
 function sanitizeInlineText(value) {
@@ -143,7 +149,7 @@ function trimPodcastScriptMarkdown(markdown) {
 }
 
 function buildPodcastMarkdown({ date, metadata }) {
-    const title = formatWechatTitle(date);
+    const title = formatWechatPodcastTitle(date);
     const scriptMarkdown = trimPodcastScriptMarkdown(metadata?.script_markdown || '');
     const lines = [
         `# ${title}`,
@@ -213,6 +219,7 @@ module.exports = {
     buildPodcastMarkdown,
     buildPodcastVoiceMessageText,
     buildWechatDigest,
+    formatWechatPodcastTitle,
     formatWechatTitle,
     hashText,
     normalizeArticles,
