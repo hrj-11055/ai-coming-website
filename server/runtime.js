@@ -8,6 +8,7 @@ const { generateId } = require('./utils/ids');
 const { normalizeEnumParam } = require('./utils/validation');
 const { createJsonFileStore, startCacheScheduler } = require('./services/file-store');
 const { loadSystemPrompt, createAiConfigFromEnv, createWeeklyKeywordsAiConfigFromEnv } = require('./services/ai-proxy');
+const { createAiUsageConfigFromEnv, createAiUsageService } = require('./services/ai-usage');
 const { createWeeklyKeywordsJob } = require('./services/weekly-keywords');
 const { createNewsPodcastService, createPodcastConfigFromEnv } = require('./services/news-podcast');
 const { createPodcastEmailService } = require('./services/podcast-email');
@@ -23,6 +24,7 @@ const { createMaintenanceRouter } = require('./routes/maintenance');
 const { createArchiveRouter } = require('./routes/archive');
 const { createTemplateRouter } = require('./routes/template');
 const { createAiRouter } = require('./routes/ai');
+const { createAiUsageRouter } = require('./routes/ai-usage');
 const { createReportsRouter } = require('./routes/reports');
 const { createPodcastRouter } = require('./routes/podcast');
 const { startServer } = require('./start');
@@ -48,6 +50,7 @@ function createJsonRuntime({ rootDir, env = process.env }) {
     const settingsFile = path.join(dataDir, 'settings.json');
     const visitLogsFile = path.join(dataDir, 'visit-logs.json');
     const apiCallsFile = path.join(dataDir, 'api-calls.json');
+    const aiUsageLogsFile = path.join(dataDir, 'ai-usage-logs.json');
     const bannedIpsFile = path.join(dataDir, 'banned-ips.json');
     const keywordsWeeklyJobStateFile = path.join(dataDir, 'keywords-weekly-job.json');
     const archiveDir = path.join(dataDir, 'archive');
@@ -92,6 +95,9 @@ function createJsonRuntime({ rootDir, env = process.env }) {
         }
         if (!fs.existsSync(apiCallsFile)) {
             fs.writeFileSync(apiCallsFile, JSON.stringify([]));
+        }
+        if (!fs.existsSync(aiUsageLogsFile)) {
+            fs.writeFileSync(aiUsageLogsFile, JSON.stringify([]));
         }
         if (!fs.existsSync(bannedIpsFile)) {
             fs.writeFileSync(bannedIpsFile, JSON.stringify([]));
@@ -204,6 +210,13 @@ function createJsonRuntime({ rootDir, env = process.env }) {
 
     const systemPrompt = loadSystemPrompt(rootDir);
     const aiConfig = createAiConfigFromEnv(env);
+    const aiUsageService = createAiUsageService({
+        readData,
+        writeData,
+        usageFile: aiUsageLogsFile,
+        config: createAiUsageConfigFromEnv(env, aiConfig),
+        ipHashSalt: env.AI_USAGE_IP_HASH_SALT || jwtSecret
+    });
     const weeklyKeywordsAiConfig = createWeeklyKeywordsAiConfigFromEnv(env);
     const podcastConfig = createPodcastConfigFromEnv(env);
     const podcastEmailService = createPodcastEmailService({
@@ -310,7 +323,12 @@ function createJsonRuntime({ rootDir, env = process.env }) {
     app.use('/api', createTemplateRouter());
     app.use('/api', createAiRouter({
         systemPrompt,
-        aiConfig
+        aiConfig,
+        aiUsageService
+    }));
+    app.use('/api', createAiUsageRouter({
+        aiUsageService,
+        authenticateToken
     }));
     app.use('/api', createReportsRouter({ rootDir }));
     app.use('/api', createPodcastRouter({ podcastService }));

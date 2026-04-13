@@ -1,10 +1,35 @@
 const express = require('express');
 const { isApiKeyConfigured } = require('../services/ai-proxy');
 
-function createAiRouter({ systemPrompt, aiConfig }) {
+function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
     const router = express.Router();
 
     router.post('/ai/chat', async (req, res) => {
+        const startedAt = Date.now();
+        let requestChars = 0;
+
+        function recordUsage(status, options = {}) {
+            if (!aiUsageService || typeof aiUsageService.recordUsage !== 'function') {
+                return;
+            }
+
+            try {
+                aiUsageService.recordUsage({
+                    req,
+                    status,
+                    model: aiConfig.model,
+                    source: 'homepage',
+                    stream: Boolean(options.stream),
+                    requestChars,
+                    latencyMs: Date.now() - startedAt,
+                    usage: options.usage,
+                    error: options.error
+                });
+            } catch (error) {
+                console.error('记录AI用量失败:', error);
+            }
+        }
+
         try {
             const { query, temperature = 0.7, max_tokens = 4000, stream = true } = req.body;
             const { apiKey, apiUrl, model } = aiConfig;
@@ -22,6 +47,8 @@ function createAiRouter({ systemPrompt, aiConfig }) {
                     message: 'query 参数必须是非空字符串'
                 });
             }
+
+            requestChars = query.trim().length;
 
             const messages = [
                 { role: 'system', content: systemPrompt },
@@ -53,6 +80,10 @@ function createAiRouter({ systemPrompt, aiConfig }) {
 
                     if (!response.ok) {
                         const errorData = await response.json().catch(() => ({}));
+                        recordUsage('error', {
+                            stream: true,
+                            error: errorData.message || `HTTP ${response.status}`
+                        });
                         res.write(`data: ${JSON.stringify({ error: errorData.message || 'API请求失败' })}\n\n`);
                         res.end();
                         return;
@@ -61,6 +92,7 @@ function createAiRouter({ systemPrompt, aiConfig }) {
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
                     let buffer = '';
+                    let responseUsage = null;
 
                     while (true) {
                         const { done, value } = await reader.read();
@@ -81,6 +113,9 @@ function createAiRouter({ systemPrompt, aiConfig }) {
 
                             try {
                                 const parsed = JSON.parse(data);
+                                if (parsed.usage) {
+                                    responseUsage = parsed.usage;
+                                }
                                 res.write(`data: ${JSON.stringify(parsed)}\n\n`);
                             } catch (error) {
                                 // ignore invalid chunks
@@ -88,9 +123,17 @@ function createAiRouter({ systemPrompt, aiConfig }) {
                         }
                     }
 
+                    recordUsage('success', {
+                        stream: true,
+                        usage: responseUsage
+                    });
                     res.end();
                 } catch (error) {
                     console.error('流式API调用错误:', error);
+                    recordUsage('error', {
+                        stream: true,
+                        error
+                    });
                     res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
                     res.end();
                 }
@@ -115,6 +158,10 @@ function createAiRouter({ systemPrompt, aiConfig }) {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                recordUsage('error', {
+                    stream: false,
+                    error: errorData.message || `HTTP ${response.status}`
+                });
                 return res.status(response.status).json({
                     error: 'API请求失败',
                     message: errorData.message || `HTTP ${response.status}`,
@@ -123,9 +170,17 @@ function createAiRouter({ systemPrompt, aiConfig }) {
             }
 
             const data = await response.json();
+            recordUsage('success', {
+                stream: false,
+                usage: data.usage
+            });
             return res.json(data);
         } catch (error) {
             console.error('AI搜索错误:', error);
+            recordUsage('error', {
+                stream: Boolean(req.body?.stream),
+                error
+            });
             if (!res.headersSent) {
                 return res.status(500).json({
                     error: '服务器错误',
