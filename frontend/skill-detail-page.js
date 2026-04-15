@@ -14,6 +14,23 @@ function renderList(items) {
     return items.map((item) => `<li>${item}</li>`).join('');
 }
 
+function githubUrlToZip(sourceUrl) {
+    if (!sourceUrl || !sourceUrl.includes('github.com')) return null;
+    // https://github.com/{owner}/{repo}/tree/{branch}/{path} -> https://github.com/{owner}/{repo}/archive/refs/heads/{branch}.zip
+    const treeMatch = sourceUrl.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/tree\/([^/]+)/);
+    if (treeMatch) {
+        const [, owner, repo, branch] = treeMatch;
+        return `https://github.com/${owner}/${repo}/archive/refs/heads/${branch}.zip`;
+    }
+    // https://github.com/{owner}/{repo} -> https://github.com/{owner}/{repo}/archive/refs/heads/main.zip
+    const plainMatch = sourceUrl.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)\/?$/);
+    if (plainMatch) {
+        const [, owner, repo] = plainMatch;
+        return `https://github.com/${owner}/${repo}/archive/refs/heads/main.zip`;
+    }
+    return null;
+}
+
 function renderCopyPanel({ kicker, title, description, text, buttonLabel, className = 'detail-panel detail-panel-emphasis' }) {
     if (!text) {
         return '';
@@ -98,13 +115,27 @@ function renderDetail(skill) {
         renderHeroSummaryCard('准备事项', preparationCount ? `${preparationCount} 项` : '少量准备', '先把输入条件准备好，Skill 的一次成功率会高很多。')
     ].join('');
 
+    const zipUrl = githubUrlToZip(skill.sourceUrl);
     const installPanel = renderCopyPanel({
         kicker: 'Quick Setup',
         title: '安装命令',
         description: skill.installHint || '复制下面的命令到终端即可安装这个 Skill。',
         text: skill.installCommand,
         buttonLabel: '复制命令'
-    });
+    }) + (zipUrl ? `
+        <article class="detail-panel">
+            <span class="detail-panel-kicker">Download</span>
+            <h2>下载源码包</h2>
+            <p>直接下载这个 Skill 所在仓库的 ZIP 压缩包，解压后可离线查看或手动安装。</p>
+            <div class="detail-source-actions">
+                <a class="detail-source-btn" href="${escapeHtml(zipUrl)}" download rel="noreferrer">
+                    <i class="fa-solid fa-file-zipper"></i>
+                    <span>下载 ZIP 源码包</span>
+                    <i class="fa-solid fa-download"></i>
+                </a>
+            </div>
+        </article>
+    ` : '');
     const promptPanel = renderCopyPanel({
         kicker: 'Prompt',
         title: '直接复制的提示词',
@@ -181,6 +212,13 @@ function renderDetail(skill) {
                     <span>查看 GitHub 仓库</span>
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
+                ${zipUrl ? `
+                <a class="detail-source-btn" href="${escapeHtml(zipUrl)}" download rel="noreferrer">
+                    <i class="fa-solid fa-file-zipper"></i>
+                    <span>下载 ZIP 源码包</span>
+                    <i class="fa-solid fa-download"></i>
+                </a>
+                ` : ''}
             </div>
         </article>
     ` : '';
