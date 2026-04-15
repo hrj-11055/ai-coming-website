@@ -111,8 +111,8 @@ function renderDetail(skill) {
     const preparationCount = (skill.preparation || []).length || (skill.gettingStarted || []).length || 0;
     const summaryCards = [
         renderHeroSummaryCard('所属模块', skill.moduleTitle, skill.moduleDescription || '按模块聚合高频可复用能力。'),
-        renderHeroSummaryCard('上手方式', skill.promptExample ? '复制命令 + 提示词' : '先完成安装', '详情页按第一次使用的路径组织，优先帮助你快速跑通。'),
-        renderHeroSummaryCard('准备事项', preparationCount ? `${preparationCount} 项` : '少量准备', '先把输入条件准备好，Skill 的一次成功率会高很多。')
+        renderHeroSummaryCard('上手方式', skill.promptExample ? '复制命令 + 提示词' : '先完成安装', '按照步骤操作，快速开始使用。'),
+        renderHeroSummaryCard('准备事项', preparationCount ? `${preparationCount} 项` : '少量准备', '提前准备好所需条件，提高首次使用成功率。')
     ].join('');
 
     const zipUrl = githubUrlToZip(skill.sourceUrl);
@@ -164,7 +164,7 @@ function renderDetail(skill) {
                 <div>
                     <span class="detail-panel-kicker">Why This Repo</span>
                     <h2>为什么先看这个专题</h2>
-                    <p>先把“适合谁、为什么值得先装、应该怎么开始”说清楚，再决定要不要把整仓装进来。</p>
+                    <p>了解这组 Skill 适合谁、为什么值得优先尝试、如何快速开始。</p>
                 </div>
             </div>
             <div class="detail-guide-grid">
@@ -178,7 +178,7 @@ function renderDetail(skill) {
                 <div>
                     <span class="detail-panel-kicker">Best Picks</span>
                     <h2>优先试这几个 Skill</h2>
-                    <p>这部分不是列全集，而是先挑出最容易产生价值、最适合先跑通的入口。</p>
+                    <p>以下是最容易上手、能快速看到效果的能力入口。</p>
                 </div>
             </div>
             <div class="detail-pick-grid">
@@ -202,9 +202,9 @@ function renderDetail(skill) {
     ` : '';
     const sourcePanel = skill.sourceUrl ? `
         <article class="detail-panel">
-            <span class="detail-panel-kicker">Upstream</span>
-            <h2>上游仓库</h2>
-            <p>想继续看官方 README、脚本细节、更新记录或完整使用方式，可以直接打开这个 Skill 的上游仓库。</p>
+            <span class="detail-panel-kicker">Source</span>
+            <h2>源码仓库</h2>
+            <p>查看官方 README、更新记录和完整使用说明。</p>
             <div class="detail-source-actions">
                 <a class="detail-source-btn" href="${escapeHtml(skill.sourceUrl)}" target="_blank" rel="noreferrer">
                     <i class="fa-brands fa-github"></i>
