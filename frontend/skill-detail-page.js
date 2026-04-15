@@ -116,26 +116,25 @@ function renderDetail(skill) {
     ].join('');
 
     const zipUrl = githubUrlToZip(skill.sourceUrl);
-    const installPanel = renderCopyPanel({
+    const installPanelBase = renderCopyPanel({
         kicker: 'Quick Setup',
         title: '安装命令',
         description: skill.installHint || '复制下面的命令到终端即可安装这个 Skill。',
         text: skill.installCommand,
         buttonLabel: '复制命令'
-    }) + (zipUrl ? `
-        <article class="detail-panel">
-            <span class="detail-panel-kicker">Download</span>
-            <h2>下载源码包</h2>
-            <p>直接下载这个 Skill 所在仓库的 ZIP 压缩包，解压后可离线查看或手动安装。</p>
+    });
+    const installPanel = zipUrl
+        ? installPanelBase.replace('</section>', `
             <div class="detail-source-actions">
                 <a class="detail-source-btn" href="${escapeHtml(zipUrl)}" download rel="noreferrer">
                     <i class="fa-solid fa-file-zipper"></i>
-                    <span>下载 ZIP 源码包</span>
+                    <span>下载 ZIP 安装包</span>
                     <i class="fa-solid fa-download"></i>
                 </a>
             </div>
-        </article>
-    ` : '');
+            <p style="margin-top:12px;color:#6b7280;font-size:13px;">如果安装命令执行失败，可以下载 ZIP 安装包手动安装。</p>
+        </section>`)
+        : installPanelBase;
     const promptPanel = renderCopyPanel({
         kicker: 'Prompt',
         title: '直接复制的提示词',
