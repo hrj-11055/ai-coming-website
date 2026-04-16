@@ -78,10 +78,7 @@
         .skills-hero {
             position: relative;
             overflow: hidden;
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) 320px;
-            gap: 18px;
-            padding: 30px;
+            padding: clamp(48px, 6vh, 72px) clamp(28px, 4vw, 56px);
             border-radius: 34px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(243, 246, 255, 0.92) 100%);
             border: 1px solid rgba(255, 255, 255, 0.82);
@@ -94,8 +91,8 @@
             content: "";
             position: absolute;
             inset: 0 0 auto 0;
-            height: 220px;
-            background: linear-gradient(145deg, rgba(99, 102, 241, 0.18) 0%, rgba(14, 165, 233, 0.08) 56%, rgba(255, 255, 255, 0) 100%);
+            height: 260px;
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.14) 0%, rgba(14, 165, 233, 0.06) 56%, rgba(255, 255, 255, 0) 100%);
             pointer-events: none;
         }
 
@@ -106,8 +103,9 @@
         }
 
         .skills-hero-copy {
-            display: grid;
-            gap: 14px;
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
         }
 
         .skills-hero-kicker {
@@ -127,15 +125,16 @@
 
         .skills-hero h1 {
             margin: 0;
-            max-width: 760px;
+            max-width: 560px;
             font-size: clamp(34px, 5vw, 52px);
-            line-height: 1.04;
+            line-height: 1.08;
             letter-spacing: -0.04em;
         }
 
         .skills-hero p {
             margin: 0;
-            max-width: 760px;
+            max-width: 560px;
+            margin-top: 16px;
             color: #475569;
             font-size: 16px;
             line-height: 1.85;
@@ -161,32 +160,63 @@
         }
 
         .skills-hero-stats {
-            display: grid;
-            gap: 12px;
+            display: none;
         }
 
-        .skills-hero-stat {
-            padding: 18px;
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.82);
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            box-shadow: 0 24px 34px -32px rgba(15, 23, 42, 0.3);
+        .skills-hero-metrics {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            margin-top: clamp(28px, 4vh, 40px);
+            padding-top: 24px;
+            border-top: 1px solid rgba(99, 102, 241, 0.12);
         }
 
-        .skills-hero-stat strong {
+        .skills-hero-metric {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 0 clamp(20px, 3vw, 32px);
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .skills-hero-metric:first-child {
+            padding-left: 0;
+        }
+
+        .skills-hero-metric:last-child {
+            border-right: none;
+        }
+
+        .skills-hero-metric-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .skills-hero-metric strong {
             display: block;
-            font-size: 28px;
+            font-size: 22px;
             line-height: 1;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.03em;
             color: #0f172a;
         }
 
-        .skills-hero-stat span {
+        .skills-hero-metric span {
             display: block;
-            margin-top: 8px;
-            color: #475569;
+            margin-top: 4px;
             font-size: 13px;
-            line-height: 1.7;
+            color: #64748b;
+            line-height: 1.5;
         }
 
         .skills-sidebar {
@@ -1002,10 +1032,6 @@
         }
 
         @media (max-width: 1120px) {
-            .skills-hero {
-                grid-template-columns: 1fr;
-            }
-
             .skills-layout {
                 grid-template-columns: 1fr;
             }
@@ -1041,7 +1067,23 @@
             }
 
             .skills-hero {
-                padding: 22px;
+                padding: 24px 20px;
+            }
+
+            .skills-hero-metrics {
+                flex-direction: column;
+                gap: 16px;
+                padding-top: 20px;
+            }
+
+            .skills-hero-metric {
+                padding: 0;
+                border-right: none;
+            }
+
+            .skills-hero-metric + .skills-hero-metric {
+                padding-top: 16px;
+                border-top: 1px solid rgba(99, 102, 241, 0.08);
             }
 
             .skills-nav-list,
@@ -1132,27 +1174,38 @@
     <main class="skills-page">
         <section class=”skills-hero”>
             <div class=”skills-hero-copy”>
-                <span class=”skills-hero-kicker”>精选推荐</span>
-                <h1>用 AI 把重复工作交给 Skill，一次安装、长期复用</h1>
-                <p>这里收录了 15 个经过验证的 AI 能力入口，涵盖日常高频 Skill 和实用 MCP 扩展。每个都附带安装命令、提示词和使用说明，打开即用。</p>
-                <div class=”skills-hero-tags”>
-                    <span class=”skills-hero-tag”>10 个精选 Skill</span>
-                    <span class=”skills-hero-tag”>5 个实用 MCP</span>
-                    <span class=”skills-hero-tag”>每个都有完整上手教程</span>
-                </div>
+                <span class=”skills-hero-kicker”>AI 能力库</span>
+                <h1>一次安装，长期复用</h1>
+                <p>精选经过验证的 AI 能力入口，涵盖常用 Skill 和实用 MCP 扩展。每个都附带安装命令、提示词和使用说明，打开即用。</p>
             </div>
-            <div class=”skills-hero-stats”>
-                <div class=”skills-hero-stat”>
-                    <strong>15</strong>
-                    <span>覆盖文档处理、效率提升、内容研究等常用场景。</span>
+            <div class=”skills-hero-metrics”>
+                <div class=”skills-hero-metric”>
+                    <div class=”skills-hero-metric-icon”><i class=”fa-solid fa-puzzle-piece”></i></div>
+                    <div>
+                        <strong>10+</strong>
+                        <span>精选 Skill</span>
+                    </div>
                 </div>
-                <div class=”skills-hero-stat”>
-                    <strong>4</strong>
-                    <span>按使用场景分组，快速找到适合你的能力。</span>
+                <div class=”skills-hero-metric”>
+                    <div class=”skills-hero-metric-icon”><i class=”fa-solid fa-plug”></i></div>
+                    <div>
+                        <strong>5</strong>
+                        <span>实用 MCP 扩展</span>
+                    </div>
                 </div>
-                <div class=”skills-hero-stat”>
-                    <strong>5</strong>
-                    <span>精选高频 MCP 扩展，扩展 AI 的工具能力边界。</span>
+                <div class=”skills-hero-metric”>
+                    <div class=”skills-hero-metric-icon”><i class=”fa-solid fa-layer-group”></i></div>
+                    <div>
+                        <strong>4</strong>
+                        <span>按场景分组</span>
+                    </div>
+                </div>
+                <div class=”skills-hero-metric”>
+                    <div class=”skills-hero-metric-icon”><i class=”fa-solid fa-book-open”></i></div>
+                    <div>
+                        <strong>完整</strong>
+                        <span>每个都有上手教程</span>
+                    </div>
                 </div>
             </div>
         </section>
