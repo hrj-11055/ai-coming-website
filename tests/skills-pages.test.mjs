@@ -173,9 +173,17 @@ test('featured MCP entries point to the shared MCP detail template', async () =>
 test('skills page hero copy reflects the curated newcomer-friendly positioning', () => {
     const html = readProjectFile('skills.html');
 
-    assert.match(html, /14 个真正能直接上手的能力入口/, 'Expected the curated hero headline');
-    assert.match(html, /精选实测/, 'Expected the new curated hero kicker');
+    assert.match(html, /一次安装，长期复用/, 'Expected the current curated hero headline');
+    assert.match(html, /精选经过验证的 AI 能力入口/, 'Expected the current curated hero copy');
     assert.match(html, /AI 能力库/, 'Expected the page to preserve the AI 能力库 name');
+});
+
+test('skills page hero uses valid class attributes for styled typography', () => {
+    const html = readProjectFile('skills.html');
+
+    assert.doesNotMatch(html, /[\u201c\u201d]/, 'Expected skills.html to avoid curly quotes that break class attributes');
+    assert.match(html, /<section class="skills-hero">/, 'Expected the skills hero section class to be valid HTML');
+    assert.match(html, /<div class="skills-hero-metrics">/, 'Expected the hero metrics class to be valid HTML');
 });
 
 test('skills page keeps the left navigation scrollable when groups exceed the viewport', () => {
