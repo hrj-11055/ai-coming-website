@@ -29,7 +29,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             count: module.skills.length
         })),
         [
-            { id: 'document-processing', title: '文档处理', count: 4 },
+            { id: 'document-processing', title: '文档处理', count: 5 },
             { id: 'efficiency-tools', title: '效率工具', count: 2 },
             { id: 'research-content', title: '研究与内容', count: 3 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
@@ -37,7 +37,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         'Expected the skills page to expose four curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 14, 'Expected fourteen curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 17, 'Expected seventeen curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -66,6 +66,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
         [
             'docx',
             'pptx',
+            'powerpoint',
             'pdf',
             'xlsx',
             'brainstorming',
@@ -77,7 +78,9 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'pdf-reader-mcp',
             'playwright-mcp',
             'mermaid-mcp',
-            'free-web-search-mcp'
+            'free-web-search-mcp',
+            'superpowers-guide',
+            'everything-claude-code-guide'
         ],
         'Expected the curated skills to follow the requested order'
     );
@@ -91,6 +94,7 @@ test('featured skills expose user-facing Chinese names', async () => {
         [
             'Word 文档生成',
             'PPT 演示文稿生成',
+            'PowerPoint 读取与改稿',
             'PDF 文档生成',
             'Excel 表格生成',
             '深度头脑风暴',
@@ -102,7 +106,9 @@ test('featured skills expose user-facing Chinese names', async () => {
             'PDF 文档解析（MCP）',
             '网页自动化（MCP）',
             '流程图生成（MCP）',
-            '实时网络搜索（MCP）'
+            'Tavily 实时网络搜索（MCP）',
+            'Superpowers 星级推荐',
+            'Everything Claude Code 星级推荐'
         ],
         'Expected featured skill cards to use Chinese names that explain the skill purpose'
     );
@@ -113,13 +119,21 @@ test('featured skills expose install commands, prompt examples, and non-placehol
 
     for (const skill of ALL_SKILLS) {
         assert.ok(skill.installCommand, `Expected ${skill.name} to expose an install command`);
-        assert.ok(skill.promptExample, `Expected ${skill.name} to expose a copy-friendly prompt example`);
         assert.ok(skill.sourceUrl, `Expected ${skill.name} to expose a source URL`);
         assert.notEqual(
             skill.sourceUrl,
             'https://ai.codefather.cn/skills',
             `Expected ${skill.name} to stop using the placeholder reference URL`
         );
+
+        if (skill.promptExample) {
+            assert.ok(skill.promptExample, `Expected ${skill.name} to expose a copy-friendly prompt example`);
+        } else {
+            assert.ok(
+                skill.guideHighlights?.length || skill.featuredSkills?.length,
+                `Expected ${skill.name} without a prompt example to expose guide content instead`
+            );
+        }
     }
 });
 
@@ -249,12 +263,12 @@ test('skill detail page provides the shared slug-driven shell', () => {
     );
 });
 
-test('skill detail page renders an upstream repository entry when sourceUrl exists', () => {
+test('skill detail page renders a source repository entry when sourceUrl exists', () => {
     const html = readProjectFile('skill-detail.html');
     const script = readProjectFile('frontend/skill-detail-page.js');
 
     assert.match(html, /\.detail-source-btn\s*\{/, 'Expected the skill detail page to style the upstream repository button');
-    assert.match(script, /<h2>上游仓库<\/h2>/, 'Expected the skill detail renderer to include an upstream repository panel');
+    assert.match(script, /<h2>源码仓库<\/h2>/, 'Expected the skill detail renderer to include a source repository panel');
     assert.match(script, /查看 GitHub 仓库/, 'Expected the skill detail renderer to expose a GitHub repository link label');
     assert.match(script, /class="detail-source-btn"/, 'Expected the skill detail renderer to output a source button class');
 });
