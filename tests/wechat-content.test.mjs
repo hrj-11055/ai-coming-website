@@ -39,7 +39,7 @@ test('buildNewsMarkdown renders fixed title and structured sections for today re
     assert.match(markdown, /- 分类：Agents/);
 });
 
-test('buildPodcastMarkdown renders fixed podcast title, marker, summary, and wechat copy', () => {
+test('buildPodcastMarkdown renders dated podcast title, marker, summary, and wechat copy', () => {
     const markdown = buildPodcastMarkdown({
         date: '2026-04-02',
         metadata: {
@@ -52,7 +52,7 @@ test('buildPodcastMarkdown renders fixed podcast title, marker, summary, and wec
         siteBaseUrl: 'https://ai-coming.example.com'
     });
 
-    assert.match(markdown, /^# 硅基生存指南/m);
+    assert.match(markdown, /^# 硅基生存指南26年04月02日/m);
     assert.match(markdown, /播客版/);
     assert.match(markdown, /今天整理 12 条 AI 快讯。/);
     assert.match(markdown, /转发文案/);
@@ -61,7 +61,7 @@ test('buildPodcastMarkdown renders fixed podcast title, marker, summary, and wec
 
 test('buildWechatDigest truncates long text and formatWechatTitle keeps mm月dd日 format', () => {
     assert.equal(formatWechatTitle('2026-11-09'), '11月09日AI资讯早报');
-    assert.equal(formatWechatPodcastTitle('2026-11-09'), '硅基生存指南');
+    assert.equal(formatWechatPodcastTitle('2026-11-09'), '硅基生存指南26年11月09日');
     const digest = buildWechatDigest('这是一段很长的摘要'.repeat(30));
     assert.ok(digest.length <= 120);
 });

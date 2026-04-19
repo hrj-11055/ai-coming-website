@@ -15,8 +15,13 @@ function formatWechatTitle(date) {
     return `${match[2]}月${match[3]}日AI资讯早报`;
 }
 
-function formatWechatPodcastTitle() {
-    return WECHAT_PODCAST_TITLE;
+function formatWechatPodcastTitle(date) {
+    const match = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+        throw new Error(`无效日期格式: ${date}`);
+    }
+
+    return `${WECHAT_PODCAST_TITLE}${match[1].slice(-2)}年${match[2]}月${match[3]}日`;
 }
 
 function sanitizeInlineText(value) {

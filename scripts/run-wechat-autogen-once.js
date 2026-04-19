@@ -102,13 +102,13 @@ function createFileFingerprint(filePath) {
     return [filePath, stats.size, stats.mtimeMs].join(':');
 }
 
-function createPodcastFingerprint(metadata, formatterFingerprint = '') {
+function createPodcastFingerprint(date, metadata, formatterFingerprint = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
         script_markdown: metadata?.script_markdown || '',
         audio_url: metadata?.audio_url || '',
-        wechat_podcast_title: formatWechatPodcastTitle(),
+        wechat_podcast_title: formatWechatPodcastTitle(date),
         formatter_fingerprint: formatterFingerprint || ''
     }));
 }
@@ -244,7 +244,7 @@ async function maybePublishPodcast({
     const formatterFingerprint = typeof podcastFormatter.getFingerprint === 'function'
         ? (podcastFormatter.getFingerprint() || '')
         : '';
-    const fingerprint = createPodcastFingerprint(metadata, formatterFingerprint);
+    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
