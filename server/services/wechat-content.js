@@ -21,7 +21,7 @@ function formatWechatPodcastTitle(date) {
         throw new Error(`无效日期格式: ${date}`);
     }
 
-    return `${WECHAT_PODCAST_TITLE}${match[1].slice(-2)}年${match[2]}月${match[3]}日`;
+    return `${WECHAT_PODCAST_TITLE} ${match[1]}.${match[2]}.${match[3]}.`;
 }
 
 function sanitizeInlineText(value) {

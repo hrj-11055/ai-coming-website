@@ -145,9 +145,9 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
         }
     });
 
-    assert.deepEqual(calls, [{ kind: 'podcast', title: '硅基生存指南26年04月02日' }]);
+    assert.deepEqual(calls, [{ kind: 'podcast', title: '硅基生存指南 2026.04.02.' }]);
     assert.equal(packagingCalls.length, 1);
-    assert.equal(packagingCalls[0].title, '硅基生存指南26年04月02日');
+    assert.equal(packagingCalls[0].title, '硅基生存指南 2026.04.02.');
     assert.match(packagingCalls[0].scriptMarkdown, /今播播客正文/);
     assert.equal(result.podcast.action, 'uploaded');
     assert.equal(result.podcast.reason, 'podcast_ready_today');
