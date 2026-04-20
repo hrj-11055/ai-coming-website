@@ -559,6 +559,11 @@
         .loading.loading-compact {
             padding: 20px;
             min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .spinner {
@@ -576,6 +581,7 @@
             height: 40px;
             margin: 0;
             border-width: 3px;
+            flex: 0 0 auto;
         }
 
         @keyframes spin {
@@ -585,6 +591,12 @@
         .loading-text {
             font-size: 1.1rem;
             font-weight: 300;
+        }
+
+        .loading-text-compact {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #4b5563;
         }
 
         /* 流式输出指示器 */
