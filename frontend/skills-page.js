@@ -1,5 +1,6 @@
 import { SKILL_MODULES } from './modules/skills-catalog.js';
 import { trackPageView } from './modules/visit-tracker.js';
+import { bindPrimaryNavTracking, trackInteraction } from './modules/interaction-tracker.js';
 
 const STAR_RECOMMENDATION_NAV = {
     id: 'star-recommendation',
@@ -110,6 +111,11 @@ function bindNavHighlight() {
     links.forEach((link) => {
         link.addEventListener('click', () => {
             setActive(link.dataset.section);
+            trackInteraction({
+                eventType: 'skills_section_click',
+                eventLabel: link.textContent,
+                target: link.dataset.section || ''
+            });
         });
     });
 
@@ -131,6 +137,7 @@ function bindNavHighlight() {
 
 document.addEventListener('DOMContentLoaded', () => {
     trackPageView();
+    bindPrimaryNavTracking();
     renderNav();
     renderSections();
     bindCardClicks();

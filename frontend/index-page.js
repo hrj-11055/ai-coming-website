@@ -1,3 +1,5 @@
+import { bindPrimaryNavTracking } from './modules/interaction-tracker.js';
+
         // 配置 - 使用本地API代理
         const CONFIG = {
             API_PROXY_URL: '/api/ai/chat', // 本地API代理地址
@@ -399,6 +401,7 @@
 
         // 页面加载完成后聚焦搜索框
         window.addEventListener('load', () => {
+            bindPrimaryNavTracking();
             searchInput.focus();
 
             // 添加输入框聚焦动画

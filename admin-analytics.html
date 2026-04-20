@@ -286,6 +286,23 @@
         </div>
 
         <div class="logs-table">
+            <h2>交互点击统计</h2>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="loadInteractionStats()">刷新交互统计</button>
+            </div>
+            <div id="interactionSummaryContainer">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+
+        <div class="logs-table">
+            <h2>最近交互事件</h2>
+            <div id="interactionRecentContainer">
+                <div class="loading">加载中...</div>
+            </div>
+        </div>
+
+        <div class="logs-table">
             <h2>详细访问日志</h2>
             <div class="controls">
                 <select class="select" id="provinceFilter" onchange="loadLogs(1)">
@@ -316,6 +333,7 @@
 
             loadProvinceStats();
             loadLogs(1);
+            loadInteractionStats();
         });
 
         // 加载省份统计数据
@@ -542,6 +560,132 @@
             container.innerHTML = html;
         }
 
+        function getTodayDateKey() {
+            return new Date().toLocaleDateString('en-CA');
+        }
+
+        function getInteractionLabel(eventType, fallbackLabel) {
+            const labels = {
+                nav_click: '顶部导航点击',
+                podcast_play: '播客播放',
+                podcast_audio_open: '打开播客音频',
+                tools_category_click: '工具分类点击',
+                skills_section_click: '能力库分组点击'
+            };
+            return labels[eventType] || fallbackLabel || eventType;
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadInteractionStats() {
+            const today = getTodayDateKey();
+            try {
+                const [summaryResponse, recentResponse] = await Promise.all([
+                    fetch(`/api/interaction/summary?from=${today}&to=${today}`, {
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    }),
+                    fetch('/api/interaction/recent?limit=50', {
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        }
+                    })
+                ]);
+
+                if (summaryResponse.status === 401 || recentResponse.status === 401) {
+                    alert('登录已过期，请重新登录');
+                    localStorage.removeItem('admin_token');
+                    window.location.href = 'admin-login.html';
+                    return;
+                }
+
+                const summaryData = summaryResponse.ok ? await summaryResponse.json() : { summary: [] };
+                const recentData = recentResponse.ok ? await recentResponse.json() : { events: [] };
+                renderInteractionSummary(summaryData.summary || []);
+                renderRecentInteractions(recentData.events || []);
+            } catch (error) {
+                console.error('加载交互统计失败:', error);
+                document.getElementById('interactionSummaryContainer').innerHTML = '<div class="no-data">加载失败</div>';
+                document.getElementById('interactionRecentContainer').innerHTML = '<div class="no-data">加载失败</div>';
+            }
+        }
+
+        function renderInteractionSummary(summary) {
+            const container = document.getElementById('interactionSummaryContainer');
+            if (!summary.length) {
+                container.innerHTML = '<div class="no-data">今日暂无交互点击数据</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>事件</th>
+                            <th>对象</th>
+                            <th>点击次数</th>
+                            <th>去重人数</th>
+                            <th>最近发生</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${summary.map((item) => `
+                            <tr>
+                                <td>${escapeHtml(item.date)}</td>
+                                <td>${escapeHtml(getInteractionLabel(item.eventType, item.eventLabel))}<br><small>${escapeHtml(item.eventType)}</small></td>
+                                <td>${escapeHtml(item.eventLabel || item.target || '-')}</td>
+                                <td>${item.clicks}</td>
+                                <td>${item.uniqueVisitors}</td>
+                                <td>${formatDate(item.lastOccurredAt)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function renderRecentInteractions(events) {
+            const container = document.getElementById('interactionRecentContainer');
+            if (!events.length) {
+                container.innerHTML = '<div class="no-data">暂无交互事件</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>事件</th>
+                            <th>对象</th>
+                            <th>页面</th>
+                            <th>IP地址</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${events.map((event) => `
+                            <tr>
+                                <td>${formatDate(event.createdAt)}</td>
+                                <td>${escapeHtml(getInteractionLabel(event.eventType, event.eventLabel))}<br><small>${escapeHtml(event.eventType)}</small></td>
+                                <td>${escapeHtml(event.eventLabel || event.target || '-')}</td>
+                                <td>${escapeHtml(event.pagePath || '-')}</td>
+                                <td>${maskIP(event.ip || '未知')}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
         // 渲染分页
         function renderPagination(pagination) {
             const container = document.getElementById('logsContainer');
@@ -594,6 +738,7 @@
         function refreshData() {
             loadProvinceStats();
             loadLogs(1);
+            loadInteractionStats();
         }
 
         // 清理旧日志

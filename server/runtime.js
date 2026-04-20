@@ -27,6 +27,7 @@ const { createAiRouter } = require('./routes/ai');
 const { createAiUsageRouter } = require('./routes/ai-usage');
 const { createReportsRouter } = require('./routes/reports');
 const { createPodcastRouter } = require('./routes/podcast');
+const { createInteractionRouter } = require('./routes/interaction');
 const { startServer } = require('./start');
 
 function ensureDirectory(dir) {
@@ -51,6 +52,7 @@ function createJsonRuntime({ rootDir, env = process.env }) {
     const visitLogsFile = path.join(dataDir, 'visit-logs.json');
     const apiCallsFile = path.join(dataDir, 'api-calls.json');
     const aiUsageLogsFile = path.join(dataDir, 'ai-usage-logs.json');
+    const interactionEventsFile = path.join(dataDir, 'interaction-events.json');
     const bannedIpsFile = path.join(dataDir, 'banned-ips.json');
     const keywordsWeeklyJobStateFile = path.join(dataDir, 'keywords-weekly-job.json');
     const archiveDir = path.join(dataDir, 'archive');
@@ -98,6 +100,9 @@ function createJsonRuntime({ rootDir, env = process.env }) {
         }
         if (!fs.existsSync(aiUsageLogsFile)) {
             fs.writeFileSync(aiUsageLogsFile, JSON.stringify([]));
+        }
+        if (!fs.existsSync(interactionEventsFile)) {
+            fs.writeFileSync(interactionEventsFile, JSON.stringify([]));
         }
         if (!fs.existsSync(bannedIpsFile)) {
             fs.writeFileSync(bannedIpsFile, JSON.stringify([]));
@@ -285,6 +290,12 @@ function createJsonRuntime({ rootDir, env = process.env }) {
         readData,
         writeData,
         visitLogsFile,
+        authenticateToken
+    }));
+    app.use('/api', createInteractionRouter({
+        readData,
+        writeData,
+        interactionEventsFile,
         authenticateToken
     }));
     app.use('/api', createToolsRouter({

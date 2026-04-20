@@ -1580,6 +1580,11 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
     </script>
+    <script type="module">
+        import { bindPrimaryNavTracking } from './frontend/modules/interaction-tracker.js';
+
+        bindPrimaryNavTracking();
+    </script>
 
 </body>
 </html>

@@ -4,6 +4,7 @@ import {
     generateWordCloud,
     switchContentTab
 } from './core-news.js';
+import { bindPrimaryNavTracking } from './interaction-tracker.js';
 
 function withTimeout(promise, timeoutMs, errorMessage) {
     return Promise.race([
@@ -22,6 +23,7 @@ export function initNewsPage() {
 
     // 页面加载时自动执行追踪
     trackVisit();
+    bindPrimaryNavTracking();
 
     document.addEventListener('DOMContentLoaded', function () {
         // 今日快讯与词云并行加载，提升首屏感知速度

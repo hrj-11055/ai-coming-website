@@ -1,4 +1,5 @@
 import { TOOL_SECTIONS } from './modules/tools-catalog.js';
+import { bindPrimaryNavTracking, trackInteraction } from './modules/interaction-tracker.js';
 
 const FALLBACK_LOGO = '/logos/default.png';
 const AI_COLLAB_ICON = `
@@ -266,11 +267,17 @@ function bindCategoryActiveState() {
         link.addEventListener('click', () => {
             links.forEach((item) => item.classList.remove('active'));
             link.classList.add('active');
+            trackInteraction({
+                eventType: 'tools_category_click',
+                eventLabel: link.textContent,
+                target: link.dataset.section || ''
+            });
         });
     });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    bindPrimaryNavTracking();
     renderCategoryList();
     renderToolsPage();
     bindCategoryActiveState();

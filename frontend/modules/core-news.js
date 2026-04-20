@@ -1,3 +1,5 @@
+import { trackInteraction } from './interaction-tracker.js';
+
 // AI资讯网站主JavaScript文件
 
 // ==================== 访问追踪功能 ====================
@@ -213,6 +215,7 @@ function initializePodcastPlayer(container, metadata) {
 
     const audio = player.querySelector('.podcast-audio-element');
     const playToggle = player.querySelector('.podcast-play-toggle');
+    const audioLink = player.querySelector('.podcast-audio-link');
     const progressRange = player.querySelector('.podcast-progress-range');
     const volumeRange = player.querySelector('.podcast-volume-range');
     const currentTimeLabel = player.querySelector('.podcast-current-time');
@@ -243,6 +246,11 @@ function initializePodcastPlayer(container, metadata) {
     playToggle.addEventListener('click', async () => {
         try {
             if (audio.paused) {
+                trackInteraction({
+                    eventType: 'podcast_play',
+                    eventLabel: '今日播客',
+                    target: metadata?.date || currentPodcastDate || getTodayDateKey()
+                });
                 await audio.play();
             } else {
                 audio.pause();
@@ -252,6 +260,16 @@ function initializePodcastPlayer(container, metadata) {
         }
         syncToggleLabel();
     });
+
+    if (audioLink) {
+        audioLink.addEventListener('click', () => {
+            trackInteraction({
+                eventType: 'podcast_audio_open',
+                eventLabel: '在新窗口打开音频',
+                target: metadata?.date || currentPodcastDate || getTodayDateKey()
+            });
+        });
+    }
 
     audio.addEventListener('play', syncToggleLabel);
     audio.addEventListener('pause', syncToggleLabel);
