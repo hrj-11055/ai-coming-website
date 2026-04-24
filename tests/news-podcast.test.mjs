@@ -94,14 +94,14 @@ test('createPodcastConfigFromEnv falls back to DeepSeek chat config for podcast 
     assert.equal(config.script.systemPromptFile, '/etc/podcast-prompt.md');
 });
 
-test('createPodcastConfigFromEnv defaults podcast scripts to deepseek-chat', () => {
+test('createPodcastConfigFromEnv defaults podcast scripts to DeepSeek V4 Flash', () => {
     const config = createPodcastConfigFromEnv({
         DEEPSEEK_API_KEY: 'deepseek-key',
         MINIMAX_API_KEY: 'tts-key',
         MINIMAX_TTS_VOICE_ID: 'male-qn-jingying'
     });
 
-    assert.equal(config.script.model, 'deepseek-chat');
+    assert.equal(config.script.model, 'deepseek-v4-flash');
 });
 
 test('isPodcastGenerationConfigured requires both script and minimax tts configuration', () => {

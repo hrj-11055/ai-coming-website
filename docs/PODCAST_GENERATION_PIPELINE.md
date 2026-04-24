@@ -57,7 +57,7 @@
 
 模型：
 
-- `deepseek-chat`
+- `deepseek-v4-flash`
 
 请求方式：
 
@@ -305,7 +305,7 @@ npm run podcast:audit:server
 ### 2026-03-19
 
 - 输入源：`/var/www/json/report/2026-03-19.json`
-- `script_model: deepseek-chat`
+- `script_model: deepseek-v4-flash`
 - `tts_model: speech-2.8-turbo`
 - `tts_task_id: 378319701635195`
 - `tts_status: Success`
@@ -323,13 +323,13 @@ npm run podcast:audit:server
 - 线上接口返回比本地代码默认值更重要
 - PM2 多实例下，内存态和磁盘 metadata 可能短暂不一致
 
-### 2. DeepSeek `reasoner` 不适合当前播客脚本生成
+### 2. DeepSeek thinking mode 不适合当前播客脚本生成
 
-`deepseek-reasoner` 会把大量预算花在 `reasoning_content` 上，导致正文为空或不稳定。
+DeepSeek V4 默认开启 thinking mode，会把部分预算花在 `reasoning_content` 上。当前播客链路只消费 `choices[0].message.content`，因此正式请求显式使用 `thinking: {"type":"disabled"}`，确保输出稳定落到正文。
 
 结论：
 
-- 当前正式脚本模型固定为 `deepseek-chat`
+- 当前正式脚本模型固定为 `deepseek-v4-flash`
 
 ### 3. Token Plan 不适合当前长播客 TTS
 

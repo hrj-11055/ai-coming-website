@@ -46,7 +46,7 @@ function createWeeklyKeywordsAiConfigFromEnv(env) {
     return {
         apiKey: env.DEEPSEEK_API_KEY || env.QWEN_API_KEY || env.DASHSCOPE_API_KEY,
         apiUrl: deepseekApiUrl,
-        model: env.DEEPSEEK_MODEL || 'deepseek-chat'
+        model: env.DEEPSEEK_MODEL || 'deepseek-v4-flash'
     };
 }
 

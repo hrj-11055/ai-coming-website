@@ -359,7 +359,7 @@ npm run audit:server:local
 
 线上有效状态：
 
-- `script_model = deepseek-chat`
+- `script_model = deepseek-v4-flash`
 - `tts_model = speech-2.8-turbo`
 - `script_mode = llm_rewritten`
 - 最新播客状态接口返回日期：`2026-04-07`

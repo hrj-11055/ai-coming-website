@@ -158,6 +158,21 @@ function buildPrompt(titles, keywordCount, rangeStart, rangeEnd) {
 
 async function requestKeywordsFromModel({ aiConfig, systemPrompt, prompt, timeoutMs }) {
     const { apiKey, apiUrl, model } = aiConfig;
+    const body = {
+        model,
+        stream: false,
+        temperature: 0.2,
+        max_tokens: 4000,
+        response_format: { type: 'json_object' },
+        messages: [
+            { role: 'system', content: systemPrompt || '你是一个严格输出JSON的助手。' },
+            { role: 'user', content: prompt }
+        ]
+    };
+
+    if (/^deepseek(?:-|$)/i.test(String(model || ''))) {
+        body.thinking = { type: 'disabled' };
+    }
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -169,17 +184,7 @@ async function requestKeywordsFromModel({ aiConfig, systemPrompt, prompt, timeou
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${apiKey}`
             },
-            body: JSON.stringify({
-                model,
-                stream: false,
-                temperature: 0.2,
-                max_tokens: 4000,
-                response_format: { type: 'json_object' },
-                messages: [
-                    { role: 'system', content: systemPrompt || '你是一个严格输出JSON的助手。' },
-                    { role: 'user', content: prompt }
-                ]
-            }),
+            body: JSON.stringify(body),
             signal: controller.signal
         });
 
