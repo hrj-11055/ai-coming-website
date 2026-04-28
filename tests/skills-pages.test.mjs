@@ -30,14 +30,14 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         })),
         [
             { id: 'document-processing', title: '文档处理', count: 5 },
-            { id: 'efficiency-tools', title: '效率工具', count: 2 },
+            { id: 'efficiency-tools', title: '效率工具', count: 3 },
             { id: 'research-content', title: '研究与内容', count: 3 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose four curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 17, 'Expected seventeen curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 18, 'Expected eighteen curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -71,6 +71,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'xlsx',
             'brainstorming',
             'search-first',
+            'creator-skill',
             'market-research',
             'content-engine',
             'douyin-video-downloader',
@@ -99,6 +100,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             'Excel 表格生成',
             '深度头脑风暴',
             '先搜索再动手',
+            'Skill 创建助手',
             '市场调研与竞品分析',
             '多平台内容改写',
             '抖音无水印视频下载',
