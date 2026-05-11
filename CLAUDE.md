@@ -77,7 +77,7 @@ Run `npm run podcast:audit:server` before claiming the local workspace matches p
 The production podcast pipeline is now considered stable and should be preserved unless the user explicitly changes the architecture.
 
 - Official daily input path: `/var/www/json/report/YYYY-MM-DD.json`
-- Script generation model: `deepseek-chat`
+- Script generation model: `deepseek-v4-flash`
 - TTS model: `speech-2.8-turbo`
 - TTS voice: `male-qn-jingying`
 - Official TTS mode: MiniMax async `t2a_async_v2` with direct `text` input
@@ -86,7 +86,7 @@ The production podcast pipeline is now considered stable and should be preserved
 - The server must persist `tts_task_id`, `tts_file_id`, and `tts_status` in metadata
 - Successful podcast output must be downloaded by the server, uploaded to OSS, and served to the website via `audio_url`
 - Do not assume MiniMax returns a bare mp3; the download flow may require resolving a download URL and extracting audio from an archive
-- `deepseek-reasoner` is not the default podcast script model for this project
+- DeepSeek thinking mode is disabled for podcast script generation in this project
 - Token Plan is not the recommended long-podcast TTS path for this project because it previously hit 1000-character and rolling-quota limits
 - Current safe timeout baseline for MiniMax async TTS is `600000ms`
 
