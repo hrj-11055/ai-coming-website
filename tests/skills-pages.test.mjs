@@ -29,11 +29,11 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             count: module.skills.length
         })),
         [
+            { id: 'ai-coding-assistant', title: 'AI 编程助手', count: 1 },
             { id: 'document-processing', title: '文档处理', count: 5 },
             { id: 'efficiency-tools', title: '效率工具', count: 3 },
             { id: 'research-content', title: '研究与内容', count: 3 },
-            { id: 'mcp-starter', title: 'MCP 入门', count: 5 },
-            { id: 'ai-coding-assistant', title: 'AI 编程助手', count: 1 }
+            { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose five curated groups'
     );
@@ -65,6 +65,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
     assert.deepEqual(
         ALL_SKILLS.map((skill) => skill.slug),
         [
+            'claude-code-config',
             'docx',
             'pptx',
             'powerpoint',
@@ -81,7 +82,6 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'playwright-mcp',
             'mermaid-mcp',
             'free-web-search-mcp',
-            'claude-code-config',
             'superpowers-guide',
             'everything-claude-code-guide'
         ],
@@ -95,6 +95,7 @@ test('featured skills expose user-facing Chinese names', async () => {
     assert.deepEqual(
         ALL_SKILLS.map((skill) => skill.name),
         [
+            'Claude Code + MiniMax 安装配置',
             'Word 文档生成',
             'PPT 演示文稿生成',
             'PowerPoint 读取与改稿',
@@ -111,7 +112,6 @@ test('featured skills expose user-facing Chinese names', async () => {
             '网页自动化（MCP）',
             '流程图生成（MCP）',
             'Tavily 实时网络搜索（MCP）',
-            'Claude Code 配置安装',
             'Superpowers 星级推荐',
             'Everything Claude Code 星级推荐'
         ],
@@ -170,25 +170,21 @@ test('claude code configuration tutorial is a markdown-style MiniMax Windows gui
     assert.ok(skill, 'Expected the Claude Code configuration tutorial entry to exist');
     assert.equal(skill?.moduleTitle, 'AI 编程助手');
     assert.equal(skill?.detailLayout, 'markdown');
-    assert.equal(skill?.sourceUrl, 'https://platform.minimax.io/docs/token-plan/claude-code');
     assert.match(skill?.installCommand || '', /npm install -g @anthropic-ai\/claude-code/);
     assert.match(skill?.installCommand || '', /registry\.npmmirror\.com/);
     assert.match(skill?.installCommand || '', /claude --version/);
     assert.ok(skill?.markdownSections?.length >= 8, 'Expected the tutorial to render a document-style walkthrough');
     assert.match(JSON.stringify(skill), /MiniMax/);
     assert.match(JSON.stringify(skill), /API Key/);
-    assert.match(JSON.stringify(skill), /https:\/\/api\.minimaxi\.com\/anthropic/);
-    assert.match(JSON.stringify(skill), /MiniMax-M2\.7/);
-    assert.match(JSON.stringify(skill), /~\/\.claude\/settings\.json/);
-    assert.doesNotMatch(JSON.stringify(skill), /NewAPI|New API|Linux/i);
-    assert.equal(
-        skill?.screenshots?.[0]?.src,
-        '/pic/skills-guides/claude-code/minimax-coding-plan.jpeg',
-        'Expected Claude Code screenshots to use MiniMax walkthrough assets'
-    );
+    assert.match(JSON.stringify(skill), /CC-Switch/);
+    assert.doesNotMatch(JSON.stringify(skill), /NewAPI|New API/i);
     assert.ok(
         skill?.markdownSections?.some((section) => section.image?.src === '/pic/skills-guides/claude-code/minimax-api-key.png'),
         'Expected the guide to include the MiniMax API Key screenshot'
+    );
+    assert.ok(
+        skill?.markdownSections?.some((section) => section.images?.length >= 16),
+        'Expected the guide to include the Git installation image grid'
     );
 });
 

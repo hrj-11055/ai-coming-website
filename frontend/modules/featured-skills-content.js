@@ -1,18 +1,33 @@
-const CLAUDE_CODE_MINIMAX_IMAGES = [
-    ['minimax-coding-plan.jpeg', 'MiniMax Coding Plan 订阅页面'],
-    ['minimax-api-key.png', 'MiniMax API Key 创建与复制页面'],
-    ['cc-switch-install.jpeg', 'CC-Switch 安装包下载页面'],
-    ['cc-switch-provider.jpeg', 'CC-Switch 添加服务商入口'],
-    ['cc-switch-minimax.jpeg', 'CC-Switch 填写 MiniMax 模型配置'],
-    ['claude-json-onboarding.png', '创建 Claude Code 首次引导配置文件'],
-    ['claude-trust-folder.jpeg', 'Claude Code 信任当前项目目录'],
-    ['minimax-claude-error.png', '未接入 MiniMax 前 Claude Code 的连接报错']
-].map(([file, caption]) => ({
-    src: `/pic/skills-guides/claude-code/${file}`,
-    caption
-}));
+const CC_IMG = (file, caption) => ({ src: `/pic/skills-guides/claude-code/${file}`, caption });
+
+const GIT_SETUP_IMAGES = [
+    CC_IMG('git-setup-01.png', '打开 Git 官网，下载 Windows 安装程序'),
+    CC_IMG('git-setup-02.png', 'Git 安装：接受 GNU 许可协议'),
+    CC_IMG('git-setup-03.png', 'Git 安装：选择安装路径（建议 D 盘，路径不含中文）'),
+    CC_IMG('git-setup-04.png', 'Git 安装：选择安装组件（保持默认即可）'),
+    CC_IMG('git-setup-05.png', 'Git 安装：选择开始菜单文件夹'),
+    CC_IMG('git-setup-06.png', 'Git 安装：选择默认编辑器（Vim）'),
+    CC_IMG('git-setup-07.png', 'Git 安装：调整初始分支名称（Let Git decide）'),
+    CC_IMG('git-setup-08.png', 'Git 安装：设置 PATH 环境（推荐第二项）'),
+    CC_IMG('git-setup-09.png', 'Git 安装：配置 SSL 后端（默认即可）'),
+    CC_IMG('git-setup-10.png', 'Git 安装：选择 HTTPS 传输后端'),
+    CC_IMG('git-setup-11.png', 'Git 安装：配置行尾符号转换（Windows 风格）'),
+    CC_IMG('git-setup-12.png', 'Git 安装：配置终端模拟器（MinTTY）'),
+    CC_IMG('git-setup-13.png', 'Git 安装：配置 git pull 默认行为'),
+    CC_IMG('git-setup-14.png', 'Git 安装：选择凭证助手'),
+    CC_IMG('git-setup-15.png', 'Git 安装：勾选额外功能后点击 Install'),
+    CC_IMG('git-setup-16.png', 'Git 安装验证：cmd 中显示 git version')
+];
 
 export const FEATURED_SKILL_GROUPS = [
+    {
+        id: 'ai-coding-assistant',
+        title: 'AI 编程助手',
+        icon: 'fa-solid fa-terminal',
+        tone: 'indigo',
+        description: 'Claude Code 安装配置教程：从零开始，把终端 AI 编程助手接入 MiniMax，覆盖安装、CC-Switch 配置和首次验证。',
+        skillSlugs: ['claude-code-config']
+    },
     {
         id: 'document-processing',
         title: '文档处理',
@@ -44,14 +59,6 @@ export const FEATURED_SKILL_GROUPS = [
         tone: 'sky',
         description: '先把文件、文档、网页、流程图和搜索这 5 类最常用的外部能力接进来，AI 才会真正开始帮你干活。',
         skillSlugs: ['filesystem-mcp', 'pdf-reader-mcp', 'playwright-mcp', 'mermaid-mcp', 'free-web-search-mcp']
-    },
-    {
-        id: 'ai-coding-assistant',
-        title: 'AI 编程助手',
-        icon: 'fa-solid fa-terminal',
-        tone: 'indigo',
-        description: '把终端编程助手真正接进本地开发环境，覆盖安装、环境变量、模型选择和首次验证。',
-        skillSlugs: ['claude-code-config']
     }
 ];
 
@@ -522,139 +529,148 @@ https://v.douyin.com/C7-Eq5Paw6A/
         ]
     },
     'claude-code-config': {
-        name: 'Claude Code 配置安装',
+        name: 'Claude Code + MiniMax 安装配置',
         slug: 'claude-code-config',
         detailLayout: 'markdown',
-        headline: 'Windows 用户从安装 Claude Code CLI 到接入 MiniMax 模型的一篇式配置教程。',
-        scenario: '适合第一次在 Windows 上安装 Claude Code，并希望把模型请求接入 MiniMax Coding Plan 的用户。',
-        overview: '这份教程根据 Claude Code Windows 版实操文档和 MiniMax 官方 Anthropic 兼容接入说明整理，按“安装 CLI、开通 Coding Plan、生成 API Key、写入配置、启动验证”的顺序一步步完成。',
+        headline: 'Windows 用户从零安装 Claude Code CLI，通过 CC-Switch 接入 MiniMax，预计耗时 30-60 分钟。',
+        scenario: '适合第一次在 Windows 上安装 Claude Code，希望用 MiniMax Coding Plan 替代官方账号的用户。',
+        overview: '本教程以 Windows 10/11 为例，按”安装 Claude Code → 开通 MiniMax → 配置 CC-Switch → 启动验证”顺序一步步完成。CC-Switch 会拦截 Claude Code 的 API 请求并转发到 MiniMax，无需额外写环境变量。',
         useCases: [
-            'Windows 电脑首次安装 Claude Code',
-            '将 Claude Code 接入 MiniMax 模型',
-            '生成并保存 MiniMax API Key',
+            'Windows 电脑首次安装 Claude Code CLI',
+            '使用 MiniMax Coding Plan 替代 Anthropic 官方账号',
+            '通过 CC-Switch 管理模型服务商配置',
             '排查 Claude Code 启动、PATH 和模型连接问题'
         ],
         gettingStarted: [
-            '先安装 Node.js、npm 和 Git，并在 PowerShell 中验证 `node --version`、`npm --version`、`git --version`。',
-            '用 npm 安装 Claude Code CLI，安装完成后运行 `claude --version`。',
-            '登录 MiniMax，开通 Coding Plan，进入 API Key 页面创建并复制 Key。',
-            '把 MiniMax Anthropic 兼容端点和 API Key 写入 `~/.claude/settings.json`，模型名称使用 `MiniMax-M2.7`。',
-            '进入项目目录运行 `claude`，选择信任当前文件夹后做一次真实提问验证。'
+            '确认电脑已安装 Node.js（v18+）和 Git for Windows，在 PowerShell 运行 `node --version` 和 `git --version` 验证。',
+            '执行 `npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com`，安装后运行 `claude --version`。',
+            '在 MiniMax 官网注册账号，开通 29 元/月的 Coding Plan 套餐，进入 API Key 页面复制 Key。',
+            '下载并安装 CC-Switch，添加 MiniMax 配置（选择预设 MiniMax 供应商，填入 API Key，模型名称填 MiniMax-M2.5），点击启用。',
+            '按 Win+R 输入 `notepad %USERPROFILE%\\.claude.json`，写入 `{“hasCompletedOnboarding”: true}` 并保存。',
+            '在项目目录运行 `claude`，出现聊天界面即配置成功。'
         ],
-        installCommand: `# Windows
-npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
-claude --version
-
-# 在项目目录启动
-cd D:\\你的项目
-claude
-`,
-        installHint: '本教程只保留 Windows 路径。先用 npm 安装 Claude Code，再通过 MiniMax 的 Anthropic 兼容端点接入模型。',
-        promptExample: `我已经按教程安装 Claude Code。请帮我做一次配置验收：
-1. 检查 \`claude --version\` 是否可用。
-2. 检查 \`~/.claude/settings.json\` 是否已经配置 MiniMax 端点和 API Key。
-3. 确认模型名称是否为 \`MiniMax-M2.7\`。
-4. 如果有任何一步失败，请先给我最小排查顺序。`,
-        resultSummary: '完成后，你应该能在项目目录直接运行 `claude`，Claude Code 的模型请求会通过 MiniMax 的 Anthropic 兼容端点发送。',
+        installCommand: `npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
+claude --version`,
+        installHint: '先通过 npm 安装 Claude Code CLI，再用 CC-Switch 接入 MiniMax，无需手动写环境变量。',
+        promptExample: `我已经完成 Claude Code + MiniMax 配置。请帮我做一次验收：
+1. 检查 claude --version 是否可用。
+2. 确认 CC-Switch 是否处于已启用状态。
+3. 在当前项目目录运行 claude，测试一次简单对话。
+4. 如果有任何步骤失败，请给我最小排查顺序。`,
+        resultSummary: '完成后在项目目录运行 `claude` 即可进入聊天界面，所有 API 请求通过 CC-Switch 转发到 MiniMax，无需 Anthropic 账号。',
         resultBullets: [
-            'Windows 用户能在 PowerShell 中完成安装、版本验证和 MiniMax 配置。',
-            'MiniMax API Key 写入后，无需每次启动 Claude Code 都重新配置。',
-            '最小验收路径是 `claude --version`、`claude` 和一次项目内真实提问。'
+            'CC-Switch 常驻后台时，后续只需在项目目录运行 `claude` 即可。',
+            '可在 CC-Switch 中一键切换不同模型服务商。',
+            '验收最简路径：`claude --version` → CC-Switch 绿色启用 → `claude` 出现聊天界面。'
         ],
-        screenshots: CLAUDE_CODE_MINIMAX_IMAGES,
         markdownSections: [
             {
-                title: '二、Claude Code + MiniMax 安装配置指南',
-                body: '本文以 Windows 10/11 为例，带你从零安装 Claude Code，并把 Claude Code 接入 MiniMax 的模型服务。教程中的截图来自 Windows 版实操文档，模型接入参数参考 MiniMax 官方 Anthropic 兼容接口说明。'
+                title: 'Claude Code + MiniMax 安装配置指南（Windows）',
+                body: '本教程以 Windows 10/11 为例，带你从零安装 Claude Code CLI，并通过 CC-Switch 将模型请求接入 MiniMax。预计耗时 30-60 分钟（首次配置）。\n如果已有旧版环境变量配置（ANTHROPIC_BASE_URL、ANTHROPIC_AUTH_TOKEN 等），请先删除，再按本教程重新配置，本文只使用 CC-Switch + MiniMax 方案。'
             },
             {
-                title: '（一）安装 Claude Code',
-                body: '先安装 Node.js、npm 和 Git。打开 PowerShell，分别运行 `node --version`、`npm --version`、`git --version`，能看到版本号就说明环境准备好了。然后执行下面的命令安装 Claude Code。',
+                title: '前提条件：确认 Node.js 与 Git 已安装',
+                body: '打开 PowerShell（按 Win+X 选 Windows PowerShell），分别运行以下命令，能看到版本号说明环境已就绪，可跳过安装步骤直接进入第一步。',
+                code: `node --version
+npm --version
+git --version`
+            },
+            {
+                title: '前提条件：安装 Git for Windows（未安装者参考）',
+                body: '访问 https://git-scm.com/download/win 下载安装包。安装过程按下图顺序操作，大多数选项保持默认即可。安装完成后关闭并重新打开 PowerShell，运行 git --version 验证。',
+                images: GIT_SETUP_IMAGES
+            },
+            {
+                title: '一、安装 Claude Code',
+                body: '打开 PowerShell，执行以下安装命令。安装完成后运行 `claude --version`，看到版本号（如 claude v2.x.x）即成功。如果出现红色报错提示，这是正常的——因为还没有配置模型，配置好 CC-Switch 后就会恢复正常。',
                 code: `npm install -g @anthropic-ai/claude-code --registry=https://registry.npmmirror.com
 claude --version`,
-                image: CLAUDE_CODE_MINIMAX_IMAGES[7]
+                image: CC_IMG('cc-install-success.png', 'Claude Code 安装成功，终端显示版本号')
             },
             {
-                title: '（二）申请 MiniMax 账号并开通 Coding Plan',
-                body: '进入 MiniMax 官网注册或登录账号，然后打开用户中心里的 Coding Plan 页面。按文档示例，可以选择 Starter 套餐开通，开通后才能获得 Claude Code 接入所需的模型调用额度。',
+                title: '二、申请 MiniMax 账号并开通套餐',
+                body: '访问 MiniMax 官网注册或登录账号，进入用户中心的 Coding Plan 页面，开通 29 元/月套餐。开通后才能获得 Claude Code 接入所需的模型调用额度。',
                 links: [
-                    { label: 'MiniMax 官网', href: 'https://www.minimaxi.com/' },
+                    { label: 'MiniMax 官网', href: 'https://www.minimaxi.com' },
                     { label: 'Coding Plan 页面', href: 'https://platform.minimaxi.com/user-center/payment/coding-plan' }
                 ],
-                image: CLAUDE_CODE_MINIMAX_IMAGES[0]
+                image: CC_IMG('minimax-coding-plan.jpeg', 'MiniMax 开通 Coding Plan 套餐（29 元/月）')
             },
             {
-                title: '（三）生成并复制 MiniMax API Key',
-                body: '在 MiniMax 平台进入 API Key 管理页面，点击创建 Key。创建后立即复制并保存，这个 Key 后面会写入 Claude Code 配置。不要把 Key 发给别人，也不要提交到代码仓库。',
-                image: CLAUDE_CODE_MINIMAX_IMAGES[1]
+                title: '二、获取 MiniMax API Key',
+                body: '在 MiniMax 平台进入 API Key 管理页面，点击”复制 API Key”。Key 只显示一次，复制后妥善保存，后面会填入 CC-Switch。不要把 Key 发给他人或提交到代码仓库。',
+                image: CC_IMG('minimax-api-key.png', 'MiniMax 平台：复制 API Key')
             },
             {
-                title: '（四）推荐方式：写入 Claude Code settings.json',
-                body: '在用户目录下创建或编辑 `~/.claude/settings.json`。国内账号使用 `https://api.minimaxi.com/anthropic`，国际站账号使用 `https://api.minimax.io/anthropic`。把下面的 `YOUR_MINIMAX_API_KEY` 替换成你刚复制的 MiniMax API Key。',
+                title: '三、安装 CC-Switch',
+                body: 'CC-Switch 是代理工具，它会拦截 Claude Code 的 API 请求并转发到指定模型（如 MiniMax）。点击下方链接下载 Windows 安装包（MSI 格式），双击安装后按提示完成，无需特殊配置。',
+                links: [
+                    { label: '下载 CC-Switch-v3.11.1-Windows.msi', href: 'https://github.com/CC-Switch/CC-Switch/releases' }
+                ]
+            },
+            {
+                title: '三、在 CC-Switch 中添加 MiniMax 配置',
+                body: '打开 CC-Switch，点击右上角”+”按钮，选择预设的 MiniMax 供应商，在 API Key 栏填入刚才复制的 MiniMax API Key。',
+                image: CC_IMG('cc-switch-provider.jpeg', 'CC-Switch：选择 MiniMax 供应商并填入 API Key')
+            },
+            {
+                title: '三、将模型名称改为 MiniMax-M2.5',
+                body: '将模型名称修改为 MiniMax-M2.5，完成后点击右下角”添加”按钮保存配置。',
+                image: CC_IMG('cc-switch-minimax.jpeg', 'CC-Switch：将模型名称改为 MiniMax-M2.5')
+            },
+            {
+                title: '三、启用 MiniMax 配置',
+                body: '回到 CC-Switch 首页，找到刚添加的 MiniMax 配置，点击”启用”。状态变为绿色”已启用”后，CC-Switch 就会接管 Claude Code 的 API 请求。',
+                image: CC_IMG('cc-switch-enable.png', 'CC-Switch：点击启用，状态变为绿色')
+            },
+            {
+                title: '三、创建首次引导配置文件（跳过登录界面）',
+                body: '按 Win+R，输入 `notepad %USERPROFILE%\\.claude.json` 后回车，在打开的记事本中填入以下内容，按 Ctrl+S 保存后关闭。此文件的作用是跳过 Claude Code 首次要求登录 Anthropic 账号的引导流程。',
                 code: `{
-  "env": {
-    "ANTHROPIC_BASE_URL": "https://api.minimaxi.com/anthropic",
-    "ANTHROPIC_AUTH_TOKEN": "YOUR_MINIMAX_API_KEY",
-    "API_TIMEOUT_MS": "3000000",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "ANTHROPIC_MODEL": "MiniMax-M2.7",
-    "ANTHROPIC_SMALL_FAST_MODEL": "MiniMax-M2.7"
-  }
-}`
-            },
-            {
-                title: '（五）可选方式：用 CC-Switch 管理模型配置',
-                body: '如果你经常切换不同模型服务商，可以安装 CC-Switch。下载 Windows 安装包后按提示安装，再在软件里新增一个 MiniMax 服务商配置。',
-                image: CLAUDE_CODE_MINIMAX_IMAGES[2]
-            },
-            {
-                title: '（六）在 CC-Switch 中添加 MiniMax',
-                body: '打开 CC-Switch，进入服务商配置页面，选择添加新配置。名称可以写 `MiniMax`，API 地址填写 MiniMax 的 Anthropic 兼容端点，认证 Key 填写刚创建的 MiniMax API Key。',
-                image: CLAUDE_CODE_MINIMAX_IMAGES[3]
-            },
-            {
-                title: '（七）确认模型名称并启用配置',
-                body: '模型名称填写 `MiniMax-M2.7`，保存后启用这个配置。启用后再打开 Claude Code，会读取你当前启用的模型服务商配置。',
-                image: CLAUDE_CODE_MINIMAX_IMAGES[4]
-            },
-            {
-                title: '（八）创建 Claude Code 首次引导配置',
-                body: '如果首次启动时一直卡在 onboarding，可以在用户目录创建 `.claude.json`，写入下面的内容，表示已经完成首次引导。',
-                code: `{
-  "hasCompletedOnboarding": true
+  “hasCompletedOnboarding”: true
 }`,
-                image: CLAUDE_CODE_MINIMAX_IMAGES[5]
+                image: CC_IMG('claude-json-onboarding.png', '创建 .claude.json，跳过 Claude Code 首次登录引导')
             },
             {
-                title: '（九）启动 Claude Code',
-                body: '进入你的项目目录后运行 `claude`。第一次进入项目时，Claude Code 会询问是否信任当前文件夹，确认目录无误后选择信任。',
-                code: `cd D:\\你的项目
-claude`,
-                image: CLAUDE_CODE_MINIMAX_IMAGES[6]
+                title: '四、启动 Claude Code',
+                body: '打开 PowerShell，进入你想使用的项目文件夹，运行 `claude`。',
+                code: `cd D:\\我的项目
+claude`
             },
             {
-                title: '（十）验证是否接入成功',
-                body: '在 Claude Code 里输入一个简单任务，例如让它解释当前项目结构或读取一个文件。如果没有再出现连接 Anthropic 的报错，并且能正常返回内容，就说明 Claude Code 已经接入 MiniMax。'
+                title: '五、验证配置成功',
+                body: '看到类似下图的聊天界面，说明 Claude Code 已经通过 CC-Switch 成功连接到 MiniMax。现在可以用自然语言和 Claude Code 对话了。',
+                image: CC_IMG('cc-chat-success.jpg', '配置成功：Claude Code 聊天界面正常启动')
             },
             {
-                title: '（十一）常见问题',
+                title: '六、快速上手技巧',
                 list: [
-                    '`npm` 不是内部或外部命令：重新安装 Node.js，并确认安装时勾选加入 PATH。',
-                    '`claude` 不是内部或外部命令：重新打开 PowerShell，再运行 `npm config get prefix` 检查全局安装路径是否在 PATH 中。',
-                    'API Key 报错：重新复制 MiniMax API Key，确认没有多余空格，也确认 Coding Plan 已开通。',
-                    '模型不可用：确认模型名写的是 `MiniMax-M2.7`，并确认 API 地址和账号区域匹配。',
-                    '不需要每次重新配置：`settings.json` 或 CC-Switch 配置保存后，后续直接在项目目录运行 `claude` 即可。'
+                    '每次使用前确认 CC-Switch 处于绿色”已启用”状态。',
+                    '在项目根目录创建 CLAUDE.md 文件，写入项目说明和编码规范，AI 会自动读取。',
+                    '用 /clear 清空对话历史，避免上下文过长影响质量。',
+                    '用 /help 查看所有可用命令，用 Ctrl+C 中断当前任务，用 Ctrl+D 退出 Claude Code。',
+                    '复杂任务可以先用”帮我规划一下……”，让 Claude Code 列出步骤后再逐步执行。'
+                ]
+            },
+            {
+                title: '七、常见问题',
+                list: [
+                    'npm command not found / npm 不是内部或外部命令：Node.js 未安装或未生效，重新安装后关闭并重新打开终端。',
+                    'claude command not found：安装成功后有时需要重启终端才能识别，关闭 PowerShell 窗口重新打开再试。',
+                    'CC-Switch 已启用但 Claude Code 还是报连接错误：确认 CC-Switch 状态为绿色已启用；关闭终端重新打开；重启 CC-Switch 后再次点击启用。',
+                    '之前配过 ANTHROPIC_BASE_URL 等环境变量想改回 CC-Switch：打开系统环境变量，删除 ANTHROPIC_BASE_URL、ANTHROPIC_AUTH_TOKEN、CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC，关闭所有终端后重新打开。',
+                    '配置完成后不需要每次重新配置：只要 CC-Switch 保持启用状态，以后直接在项目目录运行 claude 即可。'
                 ]
             }
         ],
         notes: [
-            '本教程只写 Windows 版安装与 MiniMax 接入流程。',
-            'MiniMax API Key 属于敏感信息，只放在本机配置里，不要写进项目文件。',
-            '如果使用国际站账号，把端点切换为 `https://api.minimax.io/anthropic`。'
+            '本教程只写 Windows 版安装与 CC-Switch + MiniMax 接入流程，不涉及手动写环境变量方案。',
+            'MiniMax API Key 属于敏感信息，只填在 CC-Switch 配置中，不要写进项目文件或分享给他人。',
+            'CC-Switch 支持多个配置，可以在首页一键切换不同模型服务商。'
         ],
-        sourceUrl: 'https://platform.minimax.io/docs/token-plan/claude-code',
-        sourceLabel: 'MiniMax Claude Code 文档',
-        skillDocPurpose: '这个条目不是一个可安装 Skill，而是能力库中的配置教程。它把 Windows 版 Claude Code 实操文档整理成一篇 Markdown 风格教程，帮助读者完成 MiniMax 模型接入。'
+        sourceUrl: 'https://platform.minimaxi.com/user-center/payment/coding-plan',
+        sourceLabel: 'MiniMax Coding Plan 页面',
+        skillDocPurpose: '这个条目不是可安装 Skill，而是 AI 能力库中的配置教程。它把 Windows 版 Claude Code + CC-Switch + MiniMax 实操安装流程整理成可浏览的教程，帮助读者完成首次配置。'
     },
     'mcp-server-fetch': {
         name: '网页内容抓取（MCP）',

@@ -232,6 +232,36 @@
             border-top: 1px solid #e2e8f0;
         }
 
+        .markdown-guide-image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 18px 0 0;
+        }
+
+        .markdown-guide-image-grid-item {
+            margin: 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        .markdown-guide-image-grid-item img {
+            display: block;
+            width: 100%;
+            height: auto;
+            cursor: zoom-in;
+        }
+
+        .markdown-guide-image-grid-item figcaption {
+            padding: 8px 10px;
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.5;
+            border-top: 1px solid #e2e8f0;
+        }
+
         .detail-hero-card,
         .detail-panel {
             position: relative;

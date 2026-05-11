@@ -120,6 +120,16 @@ function renderMarkdownSection(section, index) {
                     <figcaption>${escapeHtml(section.image.caption)}</figcaption>
                 </figure>
             ` : ''}
+            ${section.images?.length ? `
+                <div class="markdown-guide-image-grid">
+                    ${section.images.map((img) => `
+                        <figure class="markdown-guide-image-grid-item detail-screenshot-item">
+                            <img src="${escapeHtml(img.src)}" alt="${escapeHtml(img.caption)}" loading="lazy">
+                            <figcaption>${escapeHtml(img.caption)}</figcaption>
+                        </figure>
+                    `).join('')}
+                </div>
+            ` : ''}
         </section>
     `;
 }
