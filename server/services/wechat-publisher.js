@@ -104,6 +104,12 @@ function renderMarkdownToHtmlLegacy(markdown) {
             return;
         }
 
+        const imgMatch = line.match(/^!\[([^\]]*)\]\((https?:\/\/[^)]+)\)$/);
+        if (imgMatch) {
+            blocks.push(`<img src="${escapeHtml(imgMatch[2])}" alt="${escapeHtml(imgMatch[1])}" style="max-width:100%;display:block;margin:0 auto 16px;"/>`);
+            return;
+        }
+
         blocks.push(`<p style="${STYLE.p}">${renderInlineMarkdownLegacy(line)}</p>`);
     });
 
