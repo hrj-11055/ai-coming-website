@@ -22,17 +22,18 @@
 
     <style>
         :root {
-            --bg-warm: #ece8e1;
-            --bg-dark: #151515;
-            --text-primary: #1a1a1a;
-            --text-body: #2e2e2e;
-            --text-muted: #6b6560;
-            --rule-color: #c8c3bc;
-            --accent-copper: #946a3a;
-            --accent-forest: #435d52;
-            --font-serif: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            --shadow-soft: 0 20px 60px rgba(28, 23, 18, 0.08);
+            /* 映射到宣纸工坊 token */
+            --bg-warm:        var(--paper-bg);
+            --bg-dark:        #151515;
+            --text-primary:   var(--paper-ink);
+            --text-body:      var(--paper-ink-2);
+            --text-muted:     var(--paper-ink-3);
+            --rule-color:     var(--paper-rule);
+            --accent-copper:  var(--paper-vermilion);
+            --accent-forest:  var(--paper-vermilion-hv);
+            --font-serif:     var(--f-serif);
+            --font-sans:      var(--f-sans);
+            --shadow-soft:    var(--shadow-md);
         }
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -135,7 +136,7 @@
         .method-card {
             padding: clamp(24px, 3vw, 36px);
             background: rgba(247, 243, 236, 0.88);
-            border: 1px solid rgba(203, 194, 182, 0.65);
+            border: 1px solid rgba(216, 208, 194,0.65);
             border-radius: 22px;
             box-shadow: var(--shadow-soft);
             height: 100%;
@@ -165,7 +166,7 @@
         .method-link:focus-visible .method-card {
             transform: translateY(-6px) scale(1.03);
             box-shadow: 0 26px 64px rgba(28, 23, 18, 0.14);
-            border-color: rgba(148, 106, 58, 0.42);
+            border-color: rgba(186, 63, 20,0.42);
             background: rgba(255, 250, 243, 0.96);
         }
 
@@ -185,7 +186,7 @@
 
         .journey-card {
             padding: 22px 22px 20px;
-            border: 1px solid rgba(203, 194, 182, 0.7);
+            border: 1px solid rgba(216, 208, 194,0.7);
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.38);
             box-shadow: var(--shadow-soft);
@@ -212,7 +213,7 @@
             grid-template-columns: 0.72fr 1.58fr;
             gap: clamp(18px, 3vw, 36px);
             padding: clamp(28px, 3.2vw, 42px);
-            border: 1px solid rgba(203, 194, 182, 0.75);
+            border: 1px solid rgba(216, 208, 194,0.75);
             border-radius: 24px;
             background: linear-gradient(180deg, rgba(251, 249, 245, 0.96), rgba(244, 239, 231, 0.9));
             box-shadow: var(--shadow-soft);
@@ -255,7 +256,7 @@
             padding: 16px 18px;
             border-radius: 18px;
             background: rgba(255, 255, 255, 0.56);
-            border: 1px solid rgba(203, 194, 182, 0.55);
+            border: 1px solid rgba(216, 208, 194,0.55);
         }
 
         .consulting-meta-label {
@@ -283,7 +284,7 @@
 
         .flow-item {
             padding: 16px 16px 14px;
-            border: 1px solid rgba(203, 194, 182, 0.65);
+            border: 1px solid rgba(216, 208, 194,0.65);
             border-radius: 16px;
             background: rgba(255, 255, 255, 0.6);
         }
@@ -325,7 +326,7 @@
             padding: 18px 18px 16px;
             border-radius: 18px;
             background: rgba(255, 255, 255, 0.56);
-            border: 1px solid rgba(203, 194, 182, 0.55);
+            border: 1px solid rgba(216, 208, 194,0.55);
         }
 
         .detail-title {
@@ -379,8 +380,8 @@
             align-items: center;
             padding: 8px 14px;
             border-radius: 999px;
-            border: 1px solid rgba(148, 106, 58, 0.22);
-            background: rgba(148, 106, 58, 0.08);
+            border: 1px solid rgba(186, 63, 20,0.22);
+            background: rgba(186, 63, 20,0.08);
             font-family: var(--font-sans);
             font-size: 13px;
             font-weight: 600;
@@ -393,7 +394,7 @@
             padding: clamp(16px, 2vw, 20px);
             border-radius: 28px;
             background: rgba(255, 255, 255, 0.54);
-            border: 1px solid rgba(203, 194, 182, 0.62);
+            border: 1px solid rgba(216, 208, 194,0.62);
             box-shadow: var(--shadow-soft);
         }
 
@@ -422,7 +423,7 @@
             padding: clamp(14px, 1.8vw, 18px);
             border-radius: 28px;
             background: rgba(255, 255, 255, 0.56);
-            border: 1px solid rgba(203, 194, 182, 0.62);
+            border: 1px solid rgba(216, 208, 194,0.62);
             box-shadow: var(--shadow-soft);
         }
 
@@ -450,7 +451,7 @@
         .product-fact-card {
             padding: clamp(24px, 3vw, 34px);
             border-radius: 24px;
-            border: 1px solid rgba(203, 194, 182, 0.72);
+            border: 1px solid rgba(216, 208, 194,0.72);
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(243, 238, 229, 0.88));
             box-shadow: var(--shadow-soft);
         }
@@ -506,8 +507,8 @@
             align-items: center;
             padding: 8px 14px;
             border-radius: 999px;
-            background: rgba(67, 93, 82, 0.1);
-            border: 1px solid rgba(67, 93, 82, 0.18);
+            background: rgba(154, 52, 16,0.1);
+            border: 1px solid rgba(154, 52, 16,0.18);
             font-family: var(--font-sans);
             font-size: 13px;
             font-weight: 600;
@@ -553,12 +554,12 @@
         }
 
         .status-chip.live {
-            background: rgba(67, 93, 82, 0.12);
+            background: rgba(154, 52, 16,0.12);
             color: var(--accent-forest);
         }
 
         .status-chip.plan {
-            background: rgba(148, 106, 58, 0.12);
+            background: rgba(186, 63, 20,0.12);
             color: var(--accent-copper);
         }
 
@@ -581,7 +582,7 @@
             overflow: hidden;
             border-radius: 24px;
             box-shadow: var(--shadow-soft);
-            border: 1px solid rgba(203, 194, 182, 0.6);
+            border: 1px solid rgba(216, 208, 194,0.6);
             background: rgba(255, 255, 255, 0.45);
         }
 
@@ -604,7 +605,7 @@
             padding: 16px 18px 18px;
             background: rgba(250, 247, 240, 0.92);
             color: var(--text-primary);
-            border-top: 1px solid rgba(203, 194, 182, 0.42);
+            border-top: 1px solid rgba(216, 208, 194,0.42);
         }
 
         .training-photo-title {
@@ -677,7 +678,7 @@
         .client-cell {
             padding: 20px 14px;
             background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(203, 194, 182, 0.45);
+            border: 1px solid rgba(216, 208, 194,0.45);
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -888,7 +889,7 @@
             </p>
             <div class="reveal" style="margin-top: clamp(22px, 3vh, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 20px;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(148, 106, 58, 0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-copper); font-size: 18px;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(186, 63, 20,0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-copper); font-size: 18px;">
                         <i class="fas fa-user"></i>
                     </div>
                     <div>
@@ -898,7 +899,7 @@
                 </div>
                 <div style="width: 1px; height: 36px; background: var(--rule-color);"></div>
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(148, 106, 58, 0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-copper); font-size: 18px;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(186, 63, 20,0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-copper); font-size: 18px;">
                         <i class="fas fa-phone-alt"></i>
                     </div>
                     <div>
