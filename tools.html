@@ -16,6 +16,9 @@
     <script src="/vendor/alpinejs-cdn.min.js" defer></script>
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -30,9 +33,9 @@
 
         body {
             margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font-ui);
+            background: var(--paper-bg);
+            color: var(--paper-ink);
+            font-family: var(--f-sans);
         }
 
         .tools-page {
@@ -72,41 +75,23 @@
         }
 
         .category-link {
-            --category-accent: #4f46e5;
-            --category-accent-strong: #3730a3;
-            --category-bg: linear-gradient(135deg, #f5f3ff 0%, #eef2ff 100%);
-            --category-border: #d9d6fe;
-            --category-shadow: rgba(79, 70, 229, 0.16);
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 9px 10px;
-            border-radius: 10px;
-            border: 1px solid #edf1f5;
-            color: #334155;
+            border-radius: var(--r-lg);
+            border: 1px solid var(--paper-rule);
+            color: var(--paper-ink-2);
             text-decoration: none;
             font-size: 13px;
-            font-weight: 600;
-            background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
-            transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, color 0.16s ease;
+            font-weight: 500;
+            background: var(--paper-surface);
+            transition: border-color .16s, background .16s, color .16s;
             position: relative;
             overflow: hidden;
         }
 
-        .category-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 7px;
-            bottom: 7px;
-            width: 4px;
-            border-radius: 999px;
-            background: linear-gradient(180deg, var(--category-accent) 0%, var(--category-accent-strong) 100%);
-            opacity: 0.34;
-            transition: opacity 0.16s ease, transform 0.16s ease;
-            transform: scaleY(0.82);
-        }
+        .category-link::before { display: none; }
 
         .category-link .category-icon {
             width: 28px;
@@ -133,29 +118,18 @@
         }
 
         .category-link:hover {
-            background: var(--category-bg);
-            border-color: var(--category-border);
-            color: var(--category-accent-strong);
-            box-shadow: 0 10px 18px -14px var(--category-shadow);
-            transform: translateX(2px);
+            border-color: rgba(186,63,20,.3);
+            background: var(--paper-vermilion-dim);
+            color: var(--paper-vermilion);
         }
 
-        .category-link:hover::before {
-            opacity: 0.8;
-            transform: scaleY(1);
-        }
-
-        .category-link.active {
-            background: var(--category-bg);
-            border-color: var(--category-border);
-            color: var(--category-accent-strong);
-            font-weight: 700;
-            box-shadow: 0 16px 28px -18px var(--category-shadow);
-        }
-
-        .category-link.active::before {
-            opacity: 1;
-            transform: scaleY(1);
+        .category-link.active,
+        .category-link[aria-current="true"] {
+            border-color: rgba(186,63,20,.35);
+            border-left: 3px solid var(--paper-vermilion);
+            background: var(--paper-vermilion-dim);
+            color: var(--paper-vermilion);
+            font-weight: 600;
         }
 
         .category-link[data-tone="violet"] {
@@ -392,21 +366,21 @@
 
         .tool-card {
             min-height: 74px;
-            border: 1px solid var(--ai-border, #eceff2);
-            border-radius: var(--ai-radius-sm, 10px);
-            background: #fff;
+            border: 1px solid var(--paper-rule);
+            border-radius: var(--r-lg);
+            background: var(--paper-surface);
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 10px 12px;
-            transition: all 0.16s ease;
+            transition: border-color .15s, box-shadow .15s, transform .15s;
         }
 
         .tool-card:hover {
-            border-color: #c7d2fe;
-            box-shadow: var(--ai-shadow-brand, 0 6px 16px rgba(59, 130, 246, 0.1));
-            transform: translateY(-1px);
+            border-color: rgba(186,63,20,.3);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .tool-card.disabled {
@@ -596,7 +570,7 @@
                 <div class="flex justify-between items-center h-16">
                     <div class="flex-shrink-0">
                         <a href="index.html">
-                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                            <img src="./pic/AIcoming_zixunye_nobg.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
                         </a>
                     </div>
 

@@ -15,6 +15,9 @@
     <script src="/vendor/alpinejs-cdn.min.js" defer></script>
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -25,41 +28,28 @@
             position: relative;
             margin: 0;
             min-height: 100vh;
-            background:
-                radial-gradient(circle at 6% 8%, rgba(99, 102, 241, 0.16) 0%, transparent 26%),
-                radial-gradient(circle at 94% 12%, rgba(14, 165, 233, 0.12) 0%, transparent 22%),
-                linear-gradient(180deg, #f7f5ff 0%, #edf2ff 42%, #f8fbff 100%);
-            color: var(--ai-text-primary, #111827);
-            font-family: var(--ai-font-ui, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif);
+            background: var(--paper-bg);
+            color: var(--paper-ink);
+            font-family: var(--f-sans);
             overflow-x: hidden;
         }
 
-        body::before,
-        body::after {
-            content: "";
+        body::before {
+            content: '';
             position: fixed;
             inset: 0;
+            background-image: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 40px,
+                rgba(186,63,20,.02) 40px,
+                rgba(186,63,20,.02) 41px
+            );
             pointer-events: none;
-            z-index: -1;
+            z-index: 0;
         }
 
-        body::before {
-            background-image:
-                linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
-            background-size: 72px 72px;
-            mask-image: linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 78%);
-            opacity: 0.38;
-        }
-
-        body::after {
-            inset: auto -6% -18% auto;
-            width: 540px;
-            height: 540px;
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.18) 0%, rgba(59, 130, 246, 0) 72%);
-            filter: blur(28px);
-        }
+        body::after { display: none; }
 
         .skills-page {
             max-width: 1460px;
@@ -78,23 +68,15 @@
         .skills-hero {
             position: relative;
             overflow: hidden;
-            padding: clamp(48px, 6vh, 72px) clamp(28px, 4vw, 56px);
-            border-radius: 34px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(243, 246, 255, 0.92) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.82);
-            box-shadow:
-                0 34px 72px -42px rgba(15, 23, 42, 0.34),
-                inset 0 1px 0 rgba(255, 255, 255, 0.82);
+            padding: clamp(32px, 5vh, 56px) clamp(24px, 4vw, 48px);
+            border-radius: var(--r-xl);
+            background: var(--paper-surface-2);
+            border: 1px solid var(--paper-rule);
+            border-top: 3px solid var(--paper-vermilion);
+            box-shadow: var(--shadow-md);
         }
 
-        .skills-hero::before {
-            content: "";
-            position: absolute;
-            inset: 0 0 auto 0;
-            height: 260px;
-            background: linear-gradient(145deg, rgba(99, 102, 241, 0.14) 0%, rgba(14, 165, 233, 0.06) 56%, rgba(255, 255, 255, 0) 100%);
-            pointer-events: none;
-        }
+        .skills-hero::before { display: none; }
 
         .skills-hero-copy,
         .skills-hero-stats {
@@ -114,9 +96,9 @@
             width: fit-content;
             padding: 8px 12px;
             border-radius: 999px;
-            background: rgba(99, 102, 241, 0.1);
-            color: #4f46e5;
-            border: 1px solid rgba(99, 102, 241, 0.18);
+            background: var(--paper-vermilion-dim);
+            color: var(--paper-vermilion);
+            border: 1px solid rgba(186,63,20,.2);
             font-size: 12px;
             font-weight: 800;
             letter-spacing: 0.08em;
@@ -194,28 +176,29 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: rgba(99, 102, 241, 0.1);
+            background: var(--paper-vermilion-dim);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #4f46e5;
+            color: var(--paper-vermilion);
             font-size: 16px;
             flex-shrink: 0;
         }
 
         .skills-hero-metric strong {
             display: block;
+            font-family: var(--f-serif);
             font-size: 22px;
             line-height: 1;
             letter-spacing: 0;
-            color: #0f172a;
+            color: var(--paper-vermilion);
         }
 
         .skills-hero-metric span {
             display: block;
             margin-top: 4px;
             font-size: 13px;
-            color: #64748b;
+            color: var(--paper-ink-4);
             line-height: 1.5;
         }
 
@@ -225,14 +208,10 @@
             max-height: calc(100vh - var(--skills-nav-height) - 28px);
             display: flex;
             flex-direction: column;
-            background:
-                linear-gradient(180deg, rgba(255, 255, 255, 0.84) 0%, rgba(244, 247, 255, 0.88) 100%);
-            backdrop-filter: blur(22px);
-            border: 1px solid rgba(255, 255, 255, 0.72);
-            border-radius: 30px;
-            box-shadow:
-                0 34px 72px -42px rgba(15, 23, 42, 0.42),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            background: var(--paper-surface);
+            border: 1px solid var(--paper-rule);
+            border-radius: var(--r-xl);
+            box-shadow: var(--shadow-sm);
             padding: 12px;
             overflow: hidden;
         }
@@ -277,25 +256,14 @@
             margin-bottom: 18px;
             padding: 26px;
             border-radius: 34px;
-            background:
-                radial-gradient(circle at 0% 0%, rgba(250, 204, 21, 0.18) 0%, transparent 26%),
-                radial-gradient(circle at 100% 8%, rgba(99, 102, 241, 0.14) 0%, transparent 24%),
-                linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 244, 255, 0.94) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.82);
-            box-shadow: 0 30px 60px -38px rgba(15, 23, 42, 0.34);
+            background: var(--paper-surface-2);
+            border: 1px solid var(--paper-rule);
+            border-top: 3px solid var(--paper-vermilion);
+            box-shadow: var(--shadow-sm);
             overflow: hidden;
         }
 
-        .skills-reco-section::after {
-            content: "";
-            position: absolute;
-            inset: auto -60px -90px auto;
-            width: 220px;
-            height: 220px;
-            border-radius: 999px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, rgba(99, 102, 241, 0) 72%);
-            pointer-events: none;
-        }
+        .skills-reco-section::after { display: none; }
 
         .skills-reco-head {
             position: relative;
@@ -795,47 +763,37 @@
         }
 
         .skill-card {
-            --tone-rgb: 99, 102, 241;
-            --tone-strong: #4f46e5;
             position: relative;
             overflow: hidden;
             display: grid;
             gap: 16px;
             padding: 20px;
             min-height: 250px;
-            border-radius: 24px;
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(249, 251, 255, 0.94) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.78);
-            box-shadow:
-                0 28px 48px -38px rgba(15, 23, 42, 0.36),
-                inset 0 1px 0 rgba(255, 255, 255, 0.86);
-            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+            border-radius: var(--r-lg);
+            background: var(--paper-surface);
+            border: 1px solid var(--paper-rule);
+            transition: border-color .15s, box-shadow .15s, transform .15s;
         }
 
         .skill-card::before {
-            content: "";
+            content: '';
             position: absolute;
-            inset: 0 0 auto 0;
-            height: 120px;
-            background: linear-gradient(145deg, rgba(var(--tone-rgb), 0.18) 0%, rgba(var(--tone-rgb), 0) 72%);
-            pointer-events: none;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--paper-rule);
+            transition: background .15s;
         }
 
-        .skill-card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            border: 1px solid rgba(var(--tone-rgb), 0.08);
-            pointer-events: none;
+        .skill-card::after { display: none; }
+
+        .skill-card:hover::before {
+            background: var(--paper-vermilion);
         }
 
         .skill-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(var(--tone-rgb), 0.2);
-            box-shadow:
-                0 34px 58px -38px rgba(var(--tone-rgb), 0.28),
-                0 20px 34px -28px rgba(15, 23, 42, 0.24);
+            border-color: rgba(186,63,20,.25);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
 
         .skill-card-top {
@@ -1127,7 +1085,7 @@
                 <div class="flex justify-between items-center h-16">
                     <div class="flex-shrink-0">
                         <a href="index.html">
-                            <img src="./pic/AIcoming_zixunye.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                            <img src="./pic/AIcoming_zixunye_nobg.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
                         </a>
                     </div>
 

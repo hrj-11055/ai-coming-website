@@ -1,45 +1,75 @@
-/* AI资讯网站样式文件 */
+/* AI资讯网站样式文件 — 宣纸工坊主题 */
 
 :root {
-    --ai-font-ui: "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --ai-font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Courier New", monospace;
+  /* 字体栈 */
+  --f-serif: 'Noto Serif SC', Georgia, serif;
+  --f-sans:  'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', -apple-system, sans-serif;
+  --f-mono:  'JetBrains Mono', 'SFMono-Regular', Menlo, 'Courier New', monospace;
 
-    --ai-bg-page: #ffffff;
-    --ai-bg-muted: #f3f4f6;
-    --ai-bg-surface: #ffffff;
-    --ai-bg-soft: #f9fafb;
+  /* 背景层级 */
+  --paper-bg:        #f3ede2;
+  --paper-surface:   #f8f4ec;
+  --paper-surface-2: #fdfaf6;
 
-    --ai-text-primary: #111827;
-    --ai-text-secondary: #374151;
-    --ai-text-muted: #6b7280;
+  /* 文字层级 */
+  --paper-ink:   #1c1510;
+  --paper-ink-2: #3d3028;
+  --paper-ink-3: #6a5a4a;
+  --paper-ink-4: #a89880;
 
-    --ai-border: #e5e7eb;
-    --ai-border-strong: #cbd5e1;
+  /* 边框与分割线 */
+  --paper-rule:        #d8d0c2;
+  --paper-rule-strong: #b8a898;
 
-    --ai-brand-500: #667eea;
-    --ai-brand-600: #5b6fd9;
-    --ai-brand-700: #4c63cf;
-    --ai-accent-500: #764ba2;
-    --ai-success-500: #10b981;
-    --ai-success-600: #059669;
-    --ai-danger-500: #ef4444;
+  /* 品牌强调色：朱砂红 */
+  --paper-vermilion:     #ba3f14;
+  --paper-vermilion-hv:  #9a3410;
+  --paper-vermilion-dim: #f3e0d8;
 
-    --ai-radius-sm: 8px;
-    --ai-radius-md: 12px;
-    --ai-radius-lg: 16px;
-    --ai-radius-pill: 999px;
+  /* 圆角 */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-xl: 14px;
 
-    --ai-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --ai-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --ai-shadow-brand: 0 8px 24px rgba(102, 126, 234, 0.22);
+  /* 阴影 */
+  --shadow-sm: 0 1px 3px rgba(28,21,16,.06);
+  --shadow-md: 0 4px 16px rgba(28,21,16,.10);
+  --shadow-lg: 0 8px 32px rgba(28,21,16,.14);
 
-    --ai-gradient-brand: linear-gradient(135deg, var(--ai-brand-500) 0%, var(--ai-accent-500) 100%);
+  /* ── 向后兼容别名（过渡期间保留，勿删） ── */
+  --ai-font-ui:       var(--f-sans);
+  --ai-font-mono:     var(--f-mono);
+  --ai-bg-page:       var(--paper-bg);
+  --ai-bg-muted:      var(--paper-surface);
+  --ai-bg-surface:    var(--paper-surface-2);
+  --ai-bg-soft:       var(--paper-surface);
+  --ai-text-primary:  var(--paper-ink);
+  --ai-text-secondary:var(--paper-ink-2);
+  --ai-text-muted:    var(--paper-ink-3);
+  --ai-border:        var(--paper-rule);
+  --ai-border-strong: var(--paper-rule-strong);
+  --ai-brand-500:     var(--paper-vermilion);
+  --ai-brand-600:     var(--paper-vermilion-hv);
+  --ai-brand-700:     var(--paper-vermilion-hv);
+  --ai-accent-500:    var(--paper-vermilion);
+  --ai-success-500:   #10b981;
+  --ai-success-600:   #059669;
+  --ai-danger-500:    #ef4444;
+  --ai-radius-sm:     var(--r-sm);
+  --ai-radius-md:     var(--r-md);
+  --ai-radius-lg:     var(--r-lg);
+  --ai-radius-pill:   999px;
+  --ai-shadow-sm:     var(--shadow-sm);
+  --ai-shadow-md:     var(--shadow-md);
+  --ai-shadow-brand:  0 8px 24px rgba(186,63,20,.18);
+  --ai-gradient-brand:linear-gradient(135deg, var(--paper-vermilion) 0%, var(--paper-vermilion-hv) 100%);
 }
 
 html,
 body {
-    font-family: var(--ai-font-ui);
-    color: var(--ai-text-primary);
+  font-family: var(--f-sans);
+  color: var(--paper-ink);
 }
 
 /* Tailwind CDN 不可用时的最小兜底样式（仅作用于 news.html） */
@@ -244,10 +274,12 @@ body {
 }
 
 .nav-simplified {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--ai-border);
-    box-shadow: var(--ai-shadow-sm);
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: var(--paper-surface-2);
+  border-bottom: 2.5px solid var(--paper-ink);
+  box-shadow: none;
 }
 
 .nav-simplified .nav-content {
@@ -287,66 +319,59 @@ body {
 
 /* 现代化导航样式 */
 .modern-nav {
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .nav-link {
-    position: relative;
-    display: inline-block;
-    padding: 12px 20px;
-    color: var(--ai-text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: var(--ai-radius-sm);
-    margin: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--paper-ink-3);
+  text-decoration: none;
+  transition: color .15s, background .15s;
+  position: relative;
+  border-bottom: 2px solid transparent;
 }
 
 .nav-link:hover {
-    color: var(--ai-text-primary);
-    background: rgba(102, 126, 234, 0.12);
-    transform: translateY(-2px);
+  color: var(--paper-ink);
+  background: rgba(28,21,16,.04);
 }
 
 .nav-link.active {
-    color: var(--ai-text-primary);
-    background: rgba(102, 126, 234, 0.18);
-    box-shadow: var(--ai-shadow-brand);
+  color: var(--paper-vermilion);
+  border-bottom-color: var(--paper-vermilion);
+  background: transparent;
+  box-shadow: none;
 }
 
-.nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: var(--ai-gradient-brand);
-    transition: all 0.3s ease;
-    transform: translateX(-50%);
-}
-
+.nav-link::before { display: none; }
 .nav-link:hover::before,
-.nav-link.active::before {
-    width: 80%;
-}
+.nav-link.active::before { display: none; }
 
 .mobile-nav-link {
-    display: block;
-    padding: 12px 16px;
-    color: var(--ai-text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: var(--ai-radius-sm);
-    margin: 4px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  color: var(--paper-ink-4);
+  text-decoration: none;
+  font-size: 11px;
+  transition: color .15s;
 }
 
 .mobile-nav-link:hover,
 .mobile-nav-link.active {
-    color: var(--ai-text-primary);
-    background: rgba(102, 126, 234, 0.12);
+  color: var(--paper-vermilion);
+}
+
+.mobile-nav-link .nav-indicator {
+  background: var(--paper-vermilion);
 }
 
 .back-button {
@@ -815,4 +840,11 @@ footer {
 #footer-container {
     z-index: 1000 !important;
     position: relative;
+}
+
+/* 覆盖 Tailwind bg-white shadow-lg on #fullNav */
+#fullNav {
+  background: var(--paper-surface-2) !important;
+  box-shadow: none !important;
+  border-bottom: 2.5px solid var(--paper-ink) !important;
 }
