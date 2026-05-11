@@ -111,7 +111,7 @@ function createInteractionRouter({
             const logs = readData(interactionEventsFile, []);
             const event = {
                 id: Date.now(),
-                date: toDateKey(createdAtDate, timeZone),
+                date: toDateKey(() => createdAtDate, timeZone),
                 createdAt,
                 eventType,
                 eventLabel: sanitizeText(req.body?.eventLabel, 120),
