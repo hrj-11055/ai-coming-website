@@ -165,3 +165,42 @@ test('createWechatPublisher publishPodcastAudio uploads voice and sendall by def
     assert.equal(result.delivery_mode, 'sendall');
     assert.equal(fetchCalls.length, 3);
 });
+
+test('uploadNewsImage 上传图片 Buffer 到微信并返回 URL', async () => {
+    const { uploadNewsImage } = require('../server/services/wechat-publisher.js');
+    const calls = [];
+    const fakeBuffer = Buffer.from([0x89, 0x50, 0x4e, 0x47]);  // PNG magic bytes
+
+    const result = await uploadNewsImage({
+        accessToken: 'fake-token',
+        imageBuffer: fakeBuffer,
+        fetchImpl: async (url, opts) => {
+            calls.push({ url, contentType: opts.headers['Content-Type'] });
+            return new Response(JSON.stringify({ url: 'https://mmbiz.qpic.cn/test.png' }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+    });
+
+    assert.equal(calls.length, 1);
+    assert.match(calls[0].url, /uploadimg/);
+    assert.match(calls[0].url, /fake-token/);
+    assert.match(calls[0].contentType, /multipart\/form-data/);
+    assert.equal(result, 'https://mmbiz.qpic.cn/test.png');
+});
+
+test('uploadNewsImage 在微信返回 errcode 时抛出', async () => {
+    const { uploadNewsImage } = require('../server/services/wechat-publisher.js');
+    await assert.rejects(
+        () => uploadNewsImage({
+            accessToken: 'tok',
+            imageBuffer: Buffer.from('x'),
+            fetchImpl: async () => new Response(JSON.stringify({ errcode: 40001, errmsg: 'invalid credential' }), {
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            })
+        }),
+        /invalid credential/
+    );
+});
