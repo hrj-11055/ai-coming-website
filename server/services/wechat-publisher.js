@@ -15,6 +15,7 @@ const TEMP_MEDIA_UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload';
 const DRAFT_URL = 'https://api.weixin.qq.com/cgi-bin/draft/add';
 const PREVIEW_URL = 'https://api.weixin.qq.com/cgi-bin/message/mass/preview';
 const SENDALL_URL = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall';
+const NEWS_IMAGE_UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/media/uploadimg';
 
 function escapeHtml(value) {
     return String(value || '')
@@ -314,6 +315,38 @@ async function uploadVoice({
     return data;
 }
 
+async function uploadNewsImage({ accessToken, imageBuffer, fetchImpl = fetch }) {
+    const { boundary, body } = buildMultipartBody({
+        fieldName: 'media',
+        fileName: 'infographic.png',
+        mimeType: 'image/png',
+        fileBuffer: imageBuffer
+    });
+
+    const response = await fetchImpl(
+        `${NEWS_IMAGE_UPLOAD_URL}?access_token=${encodeURIComponent(accessToken)}`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': `multipart/form-data; boundary=${boundary}` },
+            body
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(`上传正文图片失败: HTTP ${response.status}`);
+    }
+
+    const data = await response.json().catch(() => ({}));
+    if (data.errcode) {
+        throw new Error(`上传正文图片失败: ${data.errmsg || data.errcode}`);
+    }
+    if (!data.url) {
+        throw new Error('上传正文图片成功但缺少 url');
+    }
+
+    return data.url;
+}
+
 async function publishDraft({ accessToken, article, fetchImpl = fetch }) {
     const response = await fetchImpl(`${DRAFT_URL}?access_token=${encodeURIComponent(accessToken)}`, {
         method: 'POST',
@@ -516,7 +549,11 @@ function createWechatPublisher(options = {}) {
                 voice_media_id: voiceUpload.media_id,
                 delivery_mode: audioSendMode
             };
-        }
+        },
+        async uploadNewsImageForContent({ imageBuffer }) {
+            const accessToken = await fetchAccessToken({ appId, appSecret, fetchImpl });
+            return uploadNewsImage({ accessToken, imageBuffer, fetchImpl });
+        },
     };
 }
 
@@ -529,5 +566,6 @@ module.exports = {
     renderMarkdownToHtml,
     renderMarkdownToHtmlLegacy,
     uploadImage,
+    uploadNewsImage,
     uploadVoice
 };
