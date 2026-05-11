@@ -32,12 +32,13 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             { id: 'document-processing', title: '文档处理', count: 5 },
             { id: 'efficiency-tools', title: '效率工具', count: 3 },
             { id: 'research-content', title: '研究与内容', count: 3 },
-            { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
+            { id: 'mcp-starter', title: 'MCP 入门', count: 5 },
+            { id: 'ai-coding-assistant', title: 'AI 编程助手', count: 1 }
         ],
-        'Expected the skills page to expose four curated groups'
+        'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 18, 'Expected eighteen curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 19, 'Expected nineteen curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -80,6 +81,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'playwright-mcp',
             'mermaid-mcp',
             'free-web-search-mcp',
+            'claude-code-config',
             'superpowers-guide',
             'everything-claude-code-guide'
         ],
@@ -109,6 +111,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             '网页自动化（MCP）',
             '流程图生成（MCP）',
             'Tavily 实时网络搜索（MCP）',
+            'Claude Code 配置安装',
             'Superpowers 星级推荐',
             'Everything Claude Code 星级推荐'
         ],
@@ -158,6 +161,26 @@ test('brainstorming and douyin featured skills include practical walkthrough med
         '/pic/skills-guides/douyin-video-downloader-example.png',
         'Expected douyin-video-downloader to point at the copied walkthrough asset'
     );
+});
+
+test('claude code configuration tutorial is exposed with source and walkthrough screenshots', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const skill = getSkillBySlug('claude-code-config');
+
+    assert.ok(skill, 'Expected the Claude Code configuration tutorial entry to exist');
+    assert.equal(skill?.moduleTitle, 'AI 编程助手');
+    assert.equal(skill?.sourceUrl, 'https://www.newapi.ai/zh/docs/apps/claude-code#ai-%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95');
+    assert.match(skill?.installCommand || '', /npm install -g @anthropic-ai\/claude-code/);
+    assert.match(skill?.installCommand || '', /claude --version/);
+    assert.ok(skill?.screenshots?.length >= 30, 'Expected the tutorial to preserve the extracted walkthrough images');
+    assert.equal(
+        skill?.screenshots?.[0]?.src,
+        '/pic/skills-guides/claude-code/introduce-01.webp',
+        'Expected Claude Code screenshots to use local extracted assets'
+    );
+    assert.match(skill?.gettingStarted?.join('\n') || '', /Windows/);
+    assert.match(skill?.gettingStarted?.join('\n') || '', /macOS/);
+    assert.match(skill?.gettingStarted?.join('\n') || '', /Linux/);
 });
 
 test('featured MCP entries point to the shared MCP detail template', async () => {
@@ -270,7 +293,7 @@ test('skill detail page renders a source repository entry when sourceUrl exists'
     const script = readProjectFile('frontend/skill-detail-page.js');
 
     assert.match(html, /\.detail-source-btn\s*\{/, 'Expected the skill detail page to style the upstream repository button');
-    assert.match(script, /<h2>源码仓库<\/h2>/, 'Expected the skill detail renderer to include a source repository panel');
+    assert.match(script, /sourceIsGithub \? '源码仓库' : '来源页面'/, 'Expected the skill detail renderer to label GitHub and non-GitHub sources clearly');
     assert.match(script, /查看 GitHub 仓库/, 'Expected the skill detail renderer to expose a GitHub repository link label');
     assert.match(script, /class="detail-source-btn"/, 'Expected the skill detail renderer to output a source button class');
 });

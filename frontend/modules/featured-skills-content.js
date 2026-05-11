@@ -1,3 +1,47 @@
+const CLAUDE_CODE_SCREENSHOTS = [
+    ['introduce-01.webp', 'Claude Code 终端协作效果演示'],
+    ['introduce-02.webp', 'Claude Code 多文件代码理解效果演示'],
+    ['windows-img-01.webp', 'Windows 安装 Node.js：进入 Node.js 官网'],
+    ['windows-img-02.webp', 'Windows 安装 Node.js：选择 LTS 版本'],
+    ['windows-img-03.webp', 'Windows 安装 Node.js：运行安装向导'],
+    ['windows-img-04.webp', 'Windows 安装 Node.js：保持默认选项'],
+    ['windows-img-05.webp', 'Windows 安装 Node.js：完成安装'],
+    ['windows-img-06.webp', 'Windows 安装 Git Bash：进入 Git for Windows 下载页'],
+    ['windows-img-07.webp', 'Windows 安装 Git Bash：下载安装包'],
+    ['windows-img-08.webp', 'Windows 安装 Git Bash：完成安装并验证'],
+    ['windows-img-09.webp', 'Windows 安装 Claude Code CLI'],
+    ['windows_configure.png', 'Windows 一键写入 Claude Code 环境变量'],
+    ['windows-img-11.webp', 'Windows 启动 Claude Code'],
+    ['windows-img-12.webp', 'Windows 进入项目目录后启动 Claude Code'],
+    ['windows-img-13.webp', 'Windows Claude Code 首次启动流程'],
+    ['windows-img-14.webp', 'Windows Claude Code 授权与确认界面'],
+    ['windows-img-15.webp', 'Windows Claude Code 进入可用状态'],
+    ['windows-img-16.webp', 'Windows 使用 /model 进入模型选择'],
+    ['windows-img-17.webp', 'Windows 选择模型后开始使用'],
+    ['macos-img-01.webp', 'macOS 打开终端'],
+    ['macos-img-02.webp', 'macOS 安装 Claude Code CLI'],
+    ['macos_configure.png', 'macOS 写入 Claude Code 环境变量'],
+    ['macos-img-04.webp', 'macOS 启动 Claude Code'],
+    ['macos-img-05.webp', 'macOS 进入项目目录'],
+    ['macos-img-06.webp', 'macOS Claude Code 首次启动'],
+    ['macos-img-07.webp', 'macOS Claude Code 授权与确认'],
+    ['macos-img-08.webp', 'macOS Claude Code 进入可用状态'],
+    ['macos-img-09.webp', 'macOS 使用 /model 进入模型选择'],
+    ['macos-img-10.webp', 'macOS 选择模型'],
+    ['macos-img-11.webp', 'macOS 模型选择完成'],
+    ['linux-img-01.webp', 'Linux 打开终端准备安装'],
+    ['linux-img-03.webp', 'Linux 安装并启动 Claude Code'],
+    ['linux-img-04.webp', 'Linux 进入项目目录'],
+    ['linux-img-05.webp', 'Linux Claude Code 首次启动'],
+    ['linux-img-06.webp', 'Linux 使用 /model 进入模型选择'],
+    ['linux-img-07.webp', 'Linux 选择模型'],
+    ['linux-img-08.webp', 'Linux 模型确认界面'],
+    ['linux-img-09.webp', 'Linux Claude Code 完成模型配置']
+].map(([file, caption]) => ({
+    src: `/pic/skills-guides/claude-code/${file}`,
+    caption
+}));
+
 export const FEATURED_SKILL_GROUPS = [
     {
         id: 'document-processing',
@@ -30,6 +74,14 @@ export const FEATURED_SKILL_GROUPS = [
         tone: 'sky',
         description: '先把文件、文档、网页、流程图和搜索这 5 类最常用的外部能力接进来，AI 才会真正开始帮你干活。',
         skillSlugs: ['filesystem-mcp', 'pdf-reader-mcp', 'playwright-mcp', 'mermaid-mcp', 'free-web-search-mcp']
+    },
+    {
+        id: 'ai-coding-assistant',
+        title: 'AI 编程助手',
+        icon: 'fa-solid fa-terminal',
+        tone: 'indigo',
+        description: '把终端编程助手真正接进本地开发环境，覆盖安装、环境变量、模型选择和首次验证。',
+        skillSlugs: ['claude-code-config']
     }
 ];
 
@@ -498,6 +550,62 @@ https://v.douyin.com/C7-Eq5Paw6A/
             '如果你已经拿到目标链接，直接用 Fetch 或 Playwright 读取正文通常会更高效。',
             '这条配置是 HTTP transport 方式，不是本地命令行拉起型 MCP。'
         ]
+    },
+    'claude-code-config': {
+        name: 'Claude Code 配置安装',
+        slug: 'claude-code-config',
+        headline: '从安装 Claude Code CLI 到配置 NewAPI 中转环境变量，按 Windows、macOS、Linux 三个平台跑通终端 AI 编程助手。',
+        scenario: '适合准备第一次安装 Claude Code、把 Claude Code 接入 NewAPI 或第三方 Anthropic 兼容端点、并希望按截图一步步验证的人。',
+        overview: '这份教程整理自 NewAPI 的 Claude Code 文档，并按本站能力库的上手逻辑重新组织：先解释 Claude Code 能做什么，再分平台完成 CLI 安装、环境变量写入、版本验证、项目内启动和模型选择。重点不是罗列命令，而是让你知道每一步做完以后应该看到什么、失败时先检查哪里。',
+        useCases: [
+            '在新电脑上安装 Claude Code CLI',
+            '把 Claude Code 的请求指向 NewAPI 或 Anthropic 兼容中转地址',
+            '为团队成员准备统一的 Claude Code 初次配置流程',
+            '排查 PATH、环境变量、模型选择和终端启动问题'
+        ],
+        gettingStarted: [
+            'Windows：先安装 Node.js LTS，再安装 Git for Windows；Claude Code 通过 `npm install -g @anthropic-ai/claude-code` 安装，安装后用 `node --version`、`npm --version`、`git --version` 和 `claude --version` 逐项验证。',
+            'Windows：如果提示找不到可执行文件，再把 `$HOME\\.local\\bin` 加入用户 PATH；配置 NewAPI 中转时，在 PowerShell 执行一键脚本 `iex (irm ...claude-cli-setup.ps1)`，然后重新打开终端。',
+            'macOS：打开 Terminal，执行 `curl -fsSL https://claude.ai/install.sh | bash`；如安装器提示 PATH 命令，按提示追加到 shell 配置文件后重新 source，再执行 `claude --version`。',
+            'macOS：执行 NewAPI 环境变量脚本 `curl -fsSL ...claude-cli-setup.sh | bash`；配置 `ANTHROPIC_BASE_URL` 后，官方预设模型也会走自定义接入点。',
+            'Linux：执行同一条安装脚本，必要时用 sudo；配置环境变量后，确认 `.bashrc` 或 `.zshrc` 已生效，并用 `echo $ANTHROPIC_BASE_URL` 检查目标地址。',
+            '三个平台都配置完成后，进入真实项目目录运行 `claude`，再输入 `/model` 进入模型选择。通常保留默认模型即可，重点是确认 Claude Code 已经能在项目上下文中启动。'
+        ],
+        installCommand: `# Windows
+npm install -g @anthropic-ai/claude-code
+claude --version
+iex (irm 'https://raw.githubusercontent.com/QuantumNous/new-api-docs/refs/heads/main/helper/claude-cli-setup.ps1')
+
+# macOS / Linux
+curl -fsSL https://claude.ai/install.sh | bash
+claude --version
+curl -fsSL https://raw.githubusercontent.com/QuantumNous/new-api-docs/refs/heads/main/helper/claude-cli-setup.sh | bash
+
+# 在项目目录启动
+cd /path/to/your/project
+claude
+/model`,
+        installHint: '按你的系统选择对应命令。Windows 需要先准备 Node.js 与 Git Bash；macOS 和 Linux 推荐使用官方安装脚本，再执行 NewAPI 环境变量脚本。',
+        promptExample: `我已经按教程安装 Claude Code。请帮我做一次配置验收：
+1. 检查 \`claude --version\` 是否可用。
+2. 检查当前终端里的 \`ANTHROPIC_BASE_URL\` 是否已经指向我的中转地址。
+3. 告诉我应该在项目目录里如何启动 \`claude\`，以及如何用 \`/model\` 确认模型选择。
+4. 如果有任何一步失败，请先给我最小排查顺序。`,
+        resultSummary: '完成后，你应该能在项目目录直接运行 `claude`，并通过 `/model` 进入模型选择界面。此时 Claude Code 的模型请求会走你配置的自定义接入点。',
+        resultBullets: [
+            'Windows 用户能在 PowerShell 中完成安装、版本验证和环境变量配置。',
+            'macOS / Linux 用户能通过官方安装脚本和 NewAPI 配置脚本完成接入。',
+            '所有平台都能通过 `claude --version`、`claude` 和 `/model` 做最小验收。'
+        ],
+        screenshots: CLAUDE_CODE_SCREENSHOTS,
+        notes: [
+            '设置 `ANTHROPIC_BASE_URL` 后，Claude Code 内的官方预设模型也会调用自定义接入点，不再消耗官方账号额度。',
+            '环境变量改完后如果没有生效，优先重启终端；Linux 和 macOS 再检查 `.bashrc` 或 `.zshrc` 是否被正确 source。',
+            'Windows 下安装 Claude Code 需要 Git Bash 参与，但日常使用和环境变量配置仍然可以在 PowerShell 中完成。'
+        ],
+        sourceUrl: 'https://www.newapi.ai/zh/docs/apps/claude-code#ai-%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95',
+        sourceLabel: 'NewAPI Claude Code 文档',
+        skillDocPurpose: '这个条目不是一个可安装 Skill，而是能力库中的配置教程。它把 NewAPI 文档里的文字和截图抽取成本地可浏览的子页面，帮助读者按系统完成 Claude Code 安装、环境变量接入和模型验证。'
     },
     'mcp-server-fetch': {
         name: '网页内容抓取（MCP）',
