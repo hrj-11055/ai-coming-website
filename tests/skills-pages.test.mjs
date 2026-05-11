@@ -163,24 +163,33 @@ test('brainstorming and douyin featured skills include practical walkthrough med
     );
 });
 
-test('claude code configuration tutorial is exposed with source and walkthrough screenshots', async () => {
+test('claude code configuration tutorial is a markdown-style MiniMax Windows guide', async () => {
     const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
     const skill = getSkillBySlug('claude-code-config');
 
     assert.ok(skill, 'Expected the Claude Code configuration tutorial entry to exist');
     assert.equal(skill?.moduleTitle, 'AI 编程助手');
-    assert.equal(skill?.sourceUrl, 'https://www.newapi.ai/zh/docs/apps/claude-code#ai-%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95');
+    assert.equal(skill?.detailLayout, 'markdown');
+    assert.equal(skill?.sourceUrl, 'https://platform.minimax.io/docs/token-plan/claude-code');
     assert.match(skill?.installCommand || '', /npm install -g @anthropic-ai\/claude-code/);
+    assert.match(skill?.installCommand || '', /registry\.npmmirror\.com/);
     assert.match(skill?.installCommand || '', /claude --version/);
-    assert.ok(skill?.screenshots?.length >= 30, 'Expected the tutorial to preserve the extracted walkthrough images');
+    assert.ok(skill?.markdownSections?.length >= 8, 'Expected the tutorial to render a document-style walkthrough');
+    assert.match(JSON.stringify(skill), /MiniMax/);
+    assert.match(JSON.stringify(skill), /API Key/);
+    assert.match(JSON.stringify(skill), /https:\/\/api\.minimaxi\.com\/anthropic/);
+    assert.match(JSON.stringify(skill), /MiniMax-M2\.7/);
+    assert.match(JSON.stringify(skill), /~\/\.claude\/settings\.json/);
+    assert.doesNotMatch(JSON.stringify(skill), /NewAPI|New API|Linux/i);
     assert.equal(
         skill?.screenshots?.[0]?.src,
-        '/pic/skills-guides/claude-code/introduce-01.webp',
-        'Expected Claude Code screenshots to use local extracted assets'
+        '/pic/skills-guides/claude-code/minimax-coding-plan.jpeg',
+        'Expected Claude Code screenshots to use MiniMax walkthrough assets'
     );
-    assert.match(skill?.gettingStarted?.join('\n') || '', /Windows/);
-    assert.match(skill?.gettingStarted?.join('\n') || '', /macOS/);
-    assert.match(skill?.gettingStarted?.join('\n') || '', /Linux/);
+    assert.ok(
+        skill?.markdownSections?.some((section) => section.image?.src === '/pic/skills-guides/claude-code/minimax-api-key.png'),
+        'Expected the guide to include the MiniMax API Key screenshot'
+    );
 });
 
 test('featured MCP entries point to the shared MCP detail template', async () => {
@@ -296,6 +305,17 @@ test('skill detail page renders a source repository entry when sourceUrl exists'
     assert.match(script, /sourceIsGithub \? '源码仓库' : '来源页面'/, 'Expected the skill detail renderer to label GitHub and non-GitHub sources clearly');
     assert.match(script, /查看 GitHub 仓库/, 'Expected the skill detail renderer to expose a GitHub repository link label');
     assert.match(script, /class="detail-source-btn"/, 'Expected the skill detail renderer to output a source button class');
+});
+
+test('skill detail page supports a markdown document layout for tutorial entries', () => {
+    const html = readProjectFile('skill-detail.html');
+    const script = readProjectFile('frontend/skill-detail-page.js');
+
+    assert.match(html, /\.markdown-guide-article\s*\{/, 'Expected markdown guide article styles');
+    assert.match(html, /\.markdown-guide-article h2\s*\{/, 'Expected markdown heading styles');
+    assert.match(script, /function renderMarkdownGuideDetail/, 'Expected a markdown detail renderer');
+    assert.match(script, /skill\.detailLayout === 'markdown'/, 'Expected detail layout switch');
+    assert.match(script, /markdown-guide-code/, 'Expected markdown code block copy support');
 });
 
 test('mcp detail page still provides the shared slug-driven shell for legacy links', () => {

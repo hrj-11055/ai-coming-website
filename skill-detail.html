@@ -74,6 +74,164 @@
             gap: 18px;
         }
 
+        .markdown-guide-article {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 42px clamp(18px, 5vw, 64px) 56px;
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 28px 80px -56px rgba(15, 23, 42, 0.36);
+        }
+
+        .markdown-guide-breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .markdown-guide-breadcrumb a,
+        .markdown-guide-header a,
+        .markdown-guide-links a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .markdown-guide-breadcrumb a:hover,
+        .markdown-guide-header a:hover,
+        .markdown-guide-links a:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        .markdown-guide-header {
+            margin: 26px 0 36px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .markdown-guide-header span {
+            display: inline-flex;
+            margin-bottom: 10px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .markdown-guide-header p {
+            margin: 0 0 14px;
+            color: #334155;
+            font-size: 16px;
+            line-height: 1.85;
+        }
+
+        .markdown-guide-section {
+            margin-top: 32px;
+        }
+
+        .markdown-guide-article h1,
+        .markdown-guide-article h2 {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            margin: 0 0 16px;
+            color: #0f172a;
+            letter-spacing: 0;
+            line-height: 1.35;
+        }
+
+        .markdown-guide-article h1 {
+            font-size: clamp(28px, 4vw, 38px);
+        }
+
+        .markdown-guide-article h2 {
+            padding-top: 12px;
+            font-size: 23px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .markdown-guide-hash {
+            color: #94a3b8;
+            font-family: var(--ai-font-mono, "JetBrains Mono", monospace);
+            font-size: 0.78em;
+            font-weight: 700;
+        }
+
+        .markdown-guide-article p,
+        .markdown-guide-article li {
+            color: #334155;
+            font-size: 16px;
+            line-height: 1.9;
+        }
+
+        .markdown-guide-article ul {
+            margin: 12px 0 0;
+            padding-left: 1.25em;
+        }
+
+        .markdown-guide-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 14px 0;
+        }
+
+        .markdown-guide-code-wrap {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: start;
+        }
+
+        .markdown-guide-code {
+            margin: 0;
+            padding: 18px;
+            border-radius: 8px;
+            background: #0f172a;
+            color: #f8fafc;
+            overflow-x: auto;
+            font-family: var(--ai-font-mono, "JetBrains Mono", monospace);
+            font-size: 13px;
+            line-height: 1.75;
+        }
+
+        .markdown-guide-code code {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .markdown-guide-copy {
+            margin-top: 0;
+            border-radius: 8px;
+        }
+
+        .markdown-guide-image {
+            margin: 18px 0 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        .markdown-guide-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            cursor: zoom-in;
+        }
+
+        .markdown-guide-image figcaption {
+            padding: 11px 14px;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.6;
+            border-top: 1px solid #e2e8f0;
+        }
+
         .detail-hero-card,
         .detail-panel {
             position: relative;

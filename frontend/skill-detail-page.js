@@ -79,6 +79,76 @@ function renderHeroSummaryCard(title, value, body) {
     `;
 }
 
+function renderMarkdownLinks(links = []) {
+    if (!links.length) return '';
+
+    return `
+        <div class="markdown-guide-links">
+            ${links.map((link) => `
+                <a href="${escapeHtml(link.href)}" target="_blank" rel="noreferrer">
+                    ${escapeHtml(link.label)}
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderMarkdownSection(section, index) {
+    const titleTag = index === 0 ? 'h1' : 'h2';
+    const hash = index === 0 ? '#' : '##';
+    const body = Array.isArray(section.body) ? section.body : [section.body].filter(Boolean);
+
+    return `
+        <section class="markdown-guide-section">
+            <${titleTag}><span class="markdown-guide-hash">${hash}</span>${escapeHtml(section.title)}</${titleTag}>
+            ${body.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+            ${renderMarkdownLinks(section.links)}
+            ${section.code ? `
+                <div class="markdown-guide-code-wrap">
+                    <pre class="markdown-guide-code"><code>${escapeHtml(section.code)}</code></pre>
+                    <button class="detail-copy-btn markdown-guide-copy" type="button" data-copy-text="${escapeHtml(section.code)}">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>复制代码</span>
+                    </button>
+                </div>
+            ` : ''}
+            ${section.list?.length ? `<ul>${section.list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+            ${section.image ? `
+                <figure class="markdown-guide-image detail-screenshot-item">
+                    <img src="${escapeHtml(section.image.src)}" alt="${escapeHtml(section.image.caption)}" loading="lazy">
+                    <figcaption>${escapeHtml(section.image.caption)}</figcaption>
+                </figure>
+            ` : ''}
+        </section>
+    `;
+}
+
+function renderMarkdownGuideDetail(skill) {
+    return `
+        <article class="markdown-guide-article">
+            <nav class="markdown-guide-breadcrumb" aria-label="面包屑">
+                <a href="skills.html#${skill.moduleId}">AI 能力库</a>
+                <i class="fa-solid fa-angle-right"></i>
+                <span>${escapeHtml(skill.name)}</span>
+            </nav>
+
+            <header class="markdown-guide-header">
+                <span>${escapeHtml(skill.moduleTitle || 'AI 能力库')}</span>
+                <p>${escapeHtml(skill.overview || skill.headline)}</p>
+                ${skill.sourceUrl ? `
+                    <a href="${escapeHtml(skill.sourceUrl)}" target="_blank" rel="noreferrer">
+                        ${escapeHtml(skill.sourceLabel || '查看来源')}
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                ` : ''}
+            </header>
+
+            ${(skill.markdownSections || []).map(renderMarkdownSection).join('')}
+        </article>
+    `;
+}
+
 function renderGuideHighlightCard(item) {
     return `
         <article class="detail-guide-card">
@@ -471,7 +541,9 @@ document.addEventListener('DOMContentLoaded', () => {
         description.setAttribute('content', `${skill.name}：${skill.headline}`);
     }
 
-    content.innerHTML = renderDetail(skill);
+    content.innerHTML = skill.detailLayout === 'markdown'
+        ? renderMarkdownGuideDetail(skill)
+        : renderDetail(skill);
     bindCopyButtons();
     bindScreenshotLightbox();
 });
