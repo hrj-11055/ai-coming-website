@@ -4,6 +4,7 @@ import { bindPrimaryNavTracking } from './modules/interaction-tracker.js';
         const CONFIG = {
             API_PROXY_URL: '/api/ai/chat', // 本地API代理地址
         };
+        const STREAM_LOADING_MESSAGE = 'AI 正在思考中，预计 1 分钟内生成，请稍候...';
 
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
@@ -223,10 +224,10 @@ import { bindPrimaryNavTracking } from './modules/interaction-tracker.js';
 
         // 显示流式加载状态
         function showStreamLoading(query) {
-            // 隐藏加载提示，直接显示空状态
             resultsContainer.innerHTML = `
                 <div class="loading loading-compact">
-                    <div class="spinner"></div>
+                    <div class="spinner" aria-hidden="true"></div>
+                    <div class="loading-text loading-text-compact">${STREAM_LOADING_MESSAGE}</div>
                 </div>
             `;
         }
@@ -235,7 +236,8 @@ import { bindPrimaryNavTracking } from './modules/interaction-tracker.js';
         function showLoadingCompactLegacy() {
             resultsContainer.innerHTML = `
                 <div class="loading loading-compact">
-                    <div class="spinner"></div>
+                    <div class="spinner" aria-hidden="true"></div>
+                    <div class="loading-text loading-text-compact">${STREAM_LOADING_MESSAGE}</div>
                 </div>
             `;
         }
@@ -283,8 +285,8 @@ import { bindPrimaryNavTracking } from './modules/interaction-tracker.js';
         function showLoading() {
             resultsContainer.innerHTML = `
                 <div class="loading">
-                    <div class="spinner"></div>
-                    <div class="loading-text">AI正在思考中...</div>
+                    <div class="spinner" aria-hidden="true"></div>
+                    <div class="loading-text">${STREAM_LOADING_MESSAGE}</div>
                 </div>
             `;
         }

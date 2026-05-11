@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const { buildWechatDigest } = require('./wechat-content');
 
 const DEFAULT_API_URL = 'https://api.deepseek.com/chat/completions';
-const DEFAULT_MODEL = 'deepseek-chat';
+const DEFAULT_MODEL = 'deepseek-v4-flash';
 const DEFAULT_TIMEOUT_MS = 120000;
 
 function buildWechatPodcastFormattingPrompt() {
@@ -125,6 +125,7 @@ function createWechatPodcastFormatter({
                         ],
                         temperature: 0.3,
                         max_tokens: 2200,
+                        thinking: { type: 'disabled' },
                         stream: false
                     }),
                     signal: controller.signal

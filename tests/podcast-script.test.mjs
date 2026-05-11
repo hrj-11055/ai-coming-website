@@ -146,7 +146,7 @@ test('createPodcastScriptService reads the fixed JSON input file and sends OpenA
         config: {
             apiKey: 'deepseek-key',
             apiUrl: 'https://api.deepseek.com/chat/completions',
-            model: 'deepseek-chat',
+            model: 'deepseek-v4-flash',
             inputDir,
             timeoutMs: 5000,
             maxTokens: 2200,
@@ -194,6 +194,7 @@ test('createPodcastScriptService reads the fixed JSON input file and sends OpenA
     assert.equal(Object.hasOwn(capturedBody.messages[0], 'name'), false);
     assert.equal(Object.hasOwn(capturedBody.messages[1], 'name'), false);
     assert.equal(capturedBody.max_tokens, 2200);
+    assert.deepEqual(capturedBody.thinking, { type: 'disabled' });
     assert.match(capturedBody.messages[1].content, /"report_date": "2026-03-18"/);
 });
 

@@ -23,7 +23,7 @@ test('createWechatPodcastFormatter calls deepseek and returns packaged markdown 
         config: {
             apiKey: 'deepseek-key',
             apiUrl: 'https://api.deepseek.com/chat/completions',
-            model: 'deepseek-chat',
+            model: 'deepseek-v4-flash',
             timeoutMs: 30000
         },
         fetchImpl: async (url, options) => {
@@ -52,7 +52,8 @@ test('createWechatPodcastFormatter calls deepseek and returns packaged markdown 
 
     assert.equal(calls.length, 1);
     assert.equal(calls[0].url, 'https://api.deepseek.com/chat/completions');
-    assert.equal(calls[0].body.model, 'deepseek-chat');
+    assert.equal(calls[0].body.model, 'deepseek-v4-flash');
+    assert.deepEqual(calls[0].body.thinking, { type: 'disabled' });
     assert.match(result.markdown, /这是轻包装后的播客文字版/);
     assert.ok(result.digest.length <= 120);
     assert.match(formatter.getFingerprint(), /^[a-f0-9]{40}$/);

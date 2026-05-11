@@ -200,15 +200,16 @@ function renderDetail(skill) {
             <p>${skill.skillDocPurpose}</p>
         </article>
     ` : '';
+    const sourceIsGithub = skill.sourceUrl?.includes('github.com');
     const sourcePanel = skill.sourceUrl ? `
         <article class="detail-panel">
             <span class="detail-panel-kicker">Source</span>
-            <h2>源码仓库</h2>
-            <p>查看官方 README、更新记录和完整使用说明。</p>
+            <h2>${sourceIsGithub ? '源码仓库' : '来源页面'}</h2>
+            <p>${sourceIsGithub ? '查看官方 README、更新记录和完整使用说明。' : '查看原始文档、截图来源和完整说明。'}</p>
             <div class="detail-source-actions">
                 <a class="detail-source-btn" href="${escapeHtml(skill.sourceUrl)}" target="_blank" rel="noreferrer">
-                    <i class="fa-brands fa-github"></i>
-                    <span>查看 GitHub 仓库</span>
+                    <i class="${sourceIsGithub ? 'fa-brands fa-github' : 'fa-solid fa-arrow-up-right-from-square'}"></i>
+                    <span>${escapeHtml(skill.sourceLabel || (sourceIsGithub ? '查看 GitHub 仓库' : '查看来源页面'))}</span>
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
                 ${zipUrl ? `

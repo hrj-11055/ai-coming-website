@@ -1,3 +1,47 @@
+const CLAUDE_CODE_SCREENSHOTS = [
+    ['introduce-01.webp', 'Claude Code 终端协作效果演示'],
+    ['introduce-02.webp', 'Claude Code 多文件代码理解效果演示'],
+    ['windows-img-01.webp', 'Windows 安装 Node.js：进入 Node.js 官网'],
+    ['windows-img-02.webp', 'Windows 安装 Node.js：选择 LTS 版本'],
+    ['windows-img-03.webp', 'Windows 安装 Node.js：运行安装向导'],
+    ['windows-img-04.webp', 'Windows 安装 Node.js：保持默认选项'],
+    ['windows-img-05.webp', 'Windows 安装 Node.js：完成安装'],
+    ['windows-img-06.webp', 'Windows 安装 Git Bash：进入 Git for Windows 下载页'],
+    ['windows-img-07.webp', 'Windows 安装 Git Bash：下载安装包'],
+    ['windows-img-08.webp', 'Windows 安装 Git Bash：完成安装并验证'],
+    ['windows-img-09.webp', 'Windows 安装 Claude Code CLI'],
+    ['windows_configure.png', 'Windows 一键写入 Claude Code 环境变量'],
+    ['windows-img-11.webp', 'Windows 启动 Claude Code'],
+    ['windows-img-12.webp', 'Windows 进入项目目录后启动 Claude Code'],
+    ['windows-img-13.webp', 'Windows Claude Code 首次启动流程'],
+    ['windows-img-14.webp', 'Windows Claude Code 授权与确认界面'],
+    ['windows-img-15.webp', 'Windows Claude Code 进入可用状态'],
+    ['windows-img-16.webp', 'Windows 使用 /model 进入模型选择'],
+    ['windows-img-17.webp', 'Windows 选择模型后开始使用'],
+    ['macos-img-01.webp', 'macOS 打开终端'],
+    ['macos-img-02.webp', 'macOS 安装 Claude Code CLI'],
+    ['macos_configure.png', 'macOS 写入 Claude Code 环境变量'],
+    ['macos-img-04.webp', 'macOS 启动 Claude Code'],
+    ['macos-img-05.webp', 'macOS 进入项目目录'],
+    ['macos-img-06.webp', 'macOS Claude Code 首次启动'],
+    ['macos-img-07.webp', 'macOS Claude Code 授权与确认'],
+    ['macos-img-08.webp', 'macOS Claude Code 进入可用状态'],
+    ['macos-img-09.webp', 'macOS 使用 /model 进入模型选择'],
+    ['macos-img-10.webp', 'macOS 选择模型'],
+    ['macos-img-11.webp', 'macOS 模型选择完成'],
+    ['linux-img-01.webp', 'Linux 打开终端准备安装'],
+    ['linux-img-03.webp', 'Linux 安装并启动 Claude Code'],
+    ['linux-img-04.webp', 'Linux 进入项目目录'],
+    ['linux-img-05.webp', 'Linux Claude Code 首次启动'],
+    ['linux-img-06.webp', 'Linux 使用 /model 进入模型选择'],
+    ['linux-img-07.webp', 'Linux 选择模型'],
+    ['linux-img-08.webp', 'Linux 模型确认界面'],
+    ['linux-img-09.webp', 'Linux Claude Code 完成模型配置']
+].map(([file, caption]) => ({
+    src: `/pic/skills-guides/claude-code/${file}`,
+    caption
+}));
+
 export const FEATURED_SKILL_GROUPS = [
     {
         id: 'document-processing',
@@ -12,8 +56,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '效率工具',
         icon: 'fa-solid fa-bolt',
         tone: 'amber',
-        description: '先把需求想清楚、把资料查清楚，再进入真正执行阶段，会比直接硬做更稳。',
-        skillSlugs: ['brainstorming', 'search-first']
+        description: '先把需求想清楚、把资料查清楚，再把高频经验沉淀成可复用 Skill，会比直接硬做更稳。',
+        skillSlugs: ['brainstorming', 'search-first', 'creator-skill']
     },
     {
         id: 'research-content',
@@ -30,6 +74,14 @@ export const FEATURED_SKILL_GROUPS = [
         tone: 'sky',
         description: '先把文件、文档、网页、流程图和搜索这 5 类最常用的外部能力接进来，AI 才会真正开始帮你干活。',
         skillSlugs: ['filesystem-mcp', 'pdf-reader-mcp', 'playwright-mcp', 'mermaid-mcp', 'free-web-search-mcp']
+    },
+    {
+        id: 'ai-coding-assistant',
+        title: 'AI 编程助手',
+        icon: 'fa-solid fa-terminal',
+        tone: 'indigo',
+        description: '把终端编程助手真正接进本地开发环境，覆盖安装、环境变量、模型选择和首次验证。',
+        skillSlugs: ['claude-code-config']
     }
 ];
 
@@ -37,7 +89,7 @@ export const FEATURED_SKILL_CONTENT = {
     docx: {
         name: 'Word 文档生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '第一次用时，先做一份页数不多的小文档，把标题、表格和导出链路跑通，再上复杂版式。',
         preparation: [
             '先确定文档主题、目标读者和最终文件名。',
@@ -63,7 +115,7 @@ export const FEATURED_SKILL_CONTENT = {
     pptx: {
         name: 'PPT 演示文稿生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '先用 5 页左右的小型演示稿试一次，确认标题页、正文页和数据页都能按预期生成。',
         preparation: [
             '先确定 PPT 的用途，是路演、汇报、培训还是提案。',
@@ -89,7 +141,7 @@ export const FEATURED_SKILL_CONTENT = {
     powerpoint: {
         name: 'PowerPoint 读取与改稿',
         statusLabel: '已收录',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '它更适合“先读懂现有 PPT，再继续改”，如果你手里已经有一份 deck，这个入口通常比从零生成更顺手。',
         preparation: [
             '先准备一份真实的 `.pptx` 文件，最好带标题页、正文页和讲者备注。',
@@ -115,7 +167,7 @@ export const FEATURED_SKILL_CONTENT = {
     pdf: {
         name: 'PDF 文档生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: 'PDF 更适合做“最终交付件”，第一次上手时尽量把版式要求写具体一些。',
         preparation: [
             '先确定 PDF 是偏报告、表单、海报还是多页说明书。',
@@ -140,7 +192,7 @@ export const FEATURED_SKILL_CONTENT = {
     xlsx: {
         name: 'Excel 表格生成',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '第一次建议从“单个 sheet + 一段筛选逻辑”开始，确认它会输出真正可编辑的 Excel 文件。',
         preparation: [
             '先想清楚表头字段、主键列和最终交付格式。',
@@ -166,7 +218,7 @@ export const FEATURED_SKILL_CONTENT = {
     brainstorming: {
         name: '深度头脑风暴',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '这个 Skill 的重点不是快，而是把模糊想法打磨成能执行的设计，所以要预留多轮确认时间。',
         preparation: [
             '把主题、目标、受众、预算和成功标准尽量写清楚。',
@@ -200,7 +252,7 @@ export const FEATURED_SKILL_CONTENT = {
     'search-first': {
         name: '先搜索再动手',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '当你不确定“要不要自己造轮子”时，先用这个 Skill 去查现成方案，通常能省下很多试错时间。',
         preparation: [
             '先把你真正要解决的问题写清楚，而不是只写一个抽象主题。',
@@ -223,10 +275,56 @@ export const FEATURED_SKILL_CONTENT = {
             '如果你已经有候选库名，直接写进去，会比泛泛搜索更高效。'
         ]
     },
+    'creator-skill': {
+        name: 'Skill 创建助手',
+        slug: 'creator-skill',
+        headline: '把你反复使用的工作方法整理成可安装、可触发、可测试的 AI Skill。',
+        scenario: '适合想创建个人 Skill、团队工作流 Skill、项目专用 Skill，或把已有提示词升级成长期可复用能力的人。',
+        overview: 'creator-skill 面向的是“创建 Skill”这件事本身。它会帮你先判断一个经验是否值得沉淀成 Skill，再梳理触发时机、输入要求、执行步骤、边界限制和测试样例。相比只写一段提示词，它更适合把稳定流程做成能长期复用、能交给团队共享、也方便后续迭代的能力说明。',
+        useCases: ['从零创建一个新的 Skill', '把常用提示词整理成标准 SKILL.md', '为团队流程补触发规则和使用说明', '给已有 Skill 增加测试样例和边界约束'],
+        gettingStarted: [
+            '先写清楚这个 Skill 要解决的具体任务，不要只写成一个宽泛主题。',
+            '列出它应该在什么场景触发，以及哪些场景不应该触发。',
+            '把执行步骤拆成 Agent 能照着做的流程，并补上输入、输出和验收标准。',
+            '准备 2 到 3 个真实测试提示词，确认 Skill 会在正确场景生效。',
+            '首次写完后先小范围试用，根据失败案例调整描述和步骤。'
+        ],
+        installCommand: 'npx skills add anthropics/skills --skill "skill-creator" --yes',
+        installHint: '这个入口对应 Anthropic 官方 `skill-creator`。安装后，你可以让 Agent 按它的工作流帮你设计、编写和评估新的 Skill。',
+        sourceUrl: 'https://github.com/anthropics/skills/tree/main/skills/skill-creator',
+        skillDocPurpose: '这个 Skill 的说明文件主要是在规范“如何创建 Skill”：先确认目标和触发条件，再编写 SKILL.md、补测试样例、用真实任务验证效果，最后根据失败点继续迭代。它的价值在于让 Skill 不只是写得像文档，而是真的能被 Agent 正确识别和调用。',
+        relatedSlugs: ['brainstorming', 'search-first', 'mcp-builder'],
+        statusLabel: '已收录',
+        featuredBadge: '精选 16',
+        beginnerNote: '第一次使用时，不要试图做一个“万能 Skill”。先选一个你最近重复做过 3 次以上的具体流程，成功率会高很多。',
+        preparation: [
+            '准备一个你想沉淀的具体工作流，例如“公众号排版检查”“每周数据复盘”或“PR 发布前自查”。',
+            '整理 1 到 2 个真实输入样例，让 Skill 创建过程不只停留在抽象描述。',
+            '提前想好输出形式，是一份 SKILL.md、一组测试提示词，还是同时包含安装说明。'
+        ],
+        promptExample: `请使用 creator-skill 帮我创建一个新的 Skill，主题是“公众号文章发布前检查”。
+我希望这个 Skill 能做到：
+1. 在我准备发布公众号长文前触发。
+2. 检查标题、摘要、段落长度、图片占位、CTA 和错别字风险。
+3. 输出一份可执行的发布前检查清单。
+4. 不要改写整篇文章，除非我明确要求。
+5. 帮我写好 SKILL.md，并补 3 个测试提示词。`,
+        resultSummary: '你会得到一份更接近可安装 Skill 的结构化说明，而不是零散提示词。',
+        resultBullets: [
+            '通常会产出 Skill 的触发描述、执行步骤、边界限制和示例提示词。',
+            '适合把个人经验、团队流程和项目规范沉淀成可复用能力。',
+            '如果提供真实样例，生成的 Skill 会更容易在正确场景触发。'
+        ],
+        notes: [
+            'Skill 的范围越具体，越容易写清楚触发条件，也越容易测试。',
+            '不要把临时一次性任务都做成 Skill；只有反复出现的流程才值得沉淀。',
+            '写完后最好用正例和反例各测一次，确认它不会在无关任务里误触发。'
+        ]
+    },
     'market-research': {
         name: '市场调研与竞品分析',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '最关键的是先说清楚你要做什么决策，Skill 才会把资料整理成有判断价值的输出。',
         preparation: [
             '先明确你要判断的是市场机会、竞品差异、出海可行性还是价格策略。',
@@ -253,7 +351,7 @@ export const FEATURED_SKILL_CONTENT = {
     'content-engine': {
         name: '多平台内容改写',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '这个 Skill 不适合“把同一段话复制到所有平台”，它的价值就在于把同一份母稿拆成平台原生表达。',
         preparation: [
             '先准备一份已经写好的母稿、长文、播客提纲或产品说明。',
@@ -292,7 +390,7 @@ export const FEATURED_SKILL_CONTENT = {
         skillDocPurpose: '这个 Skill 的说明重点在于把“分享口令解析 -> 获取直链 -> 保存 MP4”这条链路固定下来，让 Agent 不用依赖登录态也能完成无水印下载。',
         relatedSlugs: ['content-engine', 'mcp-server-fetch'],
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '第一次使用时，直接贴完整分享文案最省心，因为里面通常已经带了可解析的短链接。',
         preparation: [
             '先拿到抖音分享文案或短链接，越完整越好。',
@@ -323,7 +421,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'filesystem-mcp': {
         name: '文件系统操作（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '它最适合拿来做“AI 直接读你的工作目录”这件事。第一次不要一上来就开放整个硬盘，先只给一个项目文件夹。',
         preparation: [
             '先想清楚你要让 AI 访问哪一个工作目录，尽量只开放最小范围。',
@@ -348,7 +446,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'pdf-reader-mcp': {
         name: 'PDF 文档解析（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '如果你经常看合同、方案、研究报告或扫描件，这个 MCP 会是最容易立刻产生价值的一项。',
         preparation: [
             '先准备 1 到 2 份真实 PDF 样本，最好包含一份普通 PDF 和一份较复杂或较长的 PDF。',
@@ -373,7 +471,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'playwright-mcp': {
         name: '网页自动化（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '它适合替你做重复网页动作。第一次先选一个登录要求低、步骤不长的页面流程，最容易跑通。',
         preparation: [
             '先明确一段最短网页流程，例如打开页面、搜索、点击、读取结果。',
@@ -400,7 +498,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'mermaid-mcp': {
         name: '流程图生成（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '它最适合把“说不清的一段流程描述”直接变成一张能看、能改、能继续复用的图。',
         preparation: [
             '先准备一段流程说明，哪怕只是几步自然语言也可以。',
@@ -429,7 +527,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
     'free-web-search-mcp': {
         name: 'Tavily 实时网络搜索（MCP）',
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '这条 MCP 最适合当“联网搜索入口”来装。先把 Tavily API Key 配好，再用一个最新问题做测试，通常最容易确认有没有生效。',
         preparation: [
             '先到 Tavily 控制台注册账号并复制 API Key。',
@@ -453,6 +551,62 @@ https://v.douyin.com/C7-Eq5Paw6A/
             '这条配置是 HTTP transport 方式，不是本地命令行拉起型 MCP。'
         ]
     },
+    'claude-code-config': {
+        name: 'Claude Code 配置安装',
+        slug: 'claude-code-config',
+        headline: '从安装 Claude Code CLI 到配置 NewAPI 中转环境变量，按 Windows、macOS、Linux 三个平台跑通终端 AI 编程助手。',
+        scenario: '适合准备第一次安装 Claude Code、把 Claude Code 接入 NewAPI 或第三方 Anthropic 兼容端点、并希望按截图一步步验证的人。',
+        overview: '这份教程整理自 NewAPI 的 Claude Code 文档，并按本站能力库的上手逻辑重新组织：先解释 Claude Code 能做什么，再分平台完成 CLI 安装、环境变量写入、版本验证、项目内启动和模型选择。重点不是罗列命令，而是让你知道每一步做完以后应该看到什么、失败时先检查哪里。',
+        useCases: [
+            '在新电脑上安装 Claude Code CLI',
+            '把 Claude Code 的请求指向 NewAPI 或 Anthropic 兼容中转地址',
+            '为团队成员准备统一的 Claude Code 初次配置流程',
+            '排查 PATH、环境变量、模型选择和终端启动问题'
+        ],
+        gettingStarted: [
+            'Windows：先安装 Node.js LTS，再安装 Git for Windows；Claude Code 通过 `npm install -g @anthropic-ai/claude-code` 安装，安装后用 `node --version`、`npm --version`、`git --version` 和 `claude --version` 逐项验证。',
+            'Windows：如果提示找不到可执行文件，再把 `$HOME\\.local\\bin` 加入用户 PATH；配置 NewAPI 中转时，在 PowerShell 执行一键脚本 `iex (irm ...claude-cli-setup.ps1)`，然后重新打开终端。',
+            'macOS：打开 Terminal，执行 `curl -fsSL https://claude.ai/install.sh | bash`；如安装器提示 PATH 命令，按提示追加到 shell 配置文件后重新 source，再执行 `claude --version`。',
+            'macOS：执行 NewAPI 环境变量脚本 `curl -fsSL ...claude-cli-setup.sh | bash`；配置 `ANTHROPIC_BASE_URL` 后，官方预设模型也会走自定义接入点。',
+            'Linux：执行同一条安装脚本，必要时用 sudo；配置环境变量后，确认 `.bashrc` 或 `.zshrc` 已生效，并用 `echo $ANTHROPIC_BASE_URL` 检查目标地址。',
+            '三个平台都配置完成后，进入真实项目目录运行 `claude`，再输入 `/model` 进入模型选择。通常保留默认模型即可，重点是确认 Claude Code 已经能在项目上下文中启动。'
+        ],
+        installCommand: `# Windows
+npm install -g @anthropic-ai/claude-code
+claude --version
+iex (irm 'https://raw.githubusercontent.com/QuantumNous/new-api-docs/refs/heads/main/helper/claude-cli-setup.ps1')
+
+# macOS / Linux
+curl -fsSL https://claude.ai/install.sh | bash
+claude --version
+curl -fsSL https://raw.githubusercontent.com/QuantumNous/new-api-docs/refs/heads/main/helper/claude-cli-setup.sh | bash
+
+# 在项目目录启动
+cd /path/to/your/project
+claude
+/model`,
+        installHint: '按你的系统选择对应命令。Windows 需要先准备 Node.js 与 Git Bash；macOS 和 Linux 推荐使用官方安装脚本，再执行 NewAPI 环境变量脚本。',
+        promptExample: `我已经按教程安装 Claude Code。请帮我做一次配置验收：
+1. 检查 \`claude --version\` 是否可用。
+2. 检查当前终端里的 \`ANTHROPIC_BASE_URL\` 是否已经指向我的中转地址。
+3. 告诉我应该在项目目录里如何启动 \`claude\`，以及如何用 \`/model\` 确认模型选择。
+4. 如果有任何一步失败，请先给我最小排查顺序。`,
+        resultSummary: '完成后，你应该能在项目目录直接运行 `claude`，并通过 `/model` 进入模型选择界面。此时 Claude Code 的模型请求会走你配置的自定义接入点。',
+        resultBullets: [
+            'Windows 用户能在 PowerShell 中完成安装、版本验证和环境变量配置。',
+            'macOS / Linux 用户能通过官方安装脚本和 NewAPI 配置脚本完成接入。',
+            '所有平台都能通过 `claude --version`、`claude` 和 `/model` 做最小验收。'
+        ],
+        screenshots: CLAUDE_CODE_SCREENSHOTS,
+        notes: [
+            '设置 `ANTHROPIC_BASE_URL` 后，Claude Code 内的官方预设模型也会调用自定义接入点，不再消耗官方账号额度。',
+            '环境变量改完后如果没有生效，优先重启终端；Linux 和 macOS 再检查 `.bashrc` 或 `.zshrc` 是否被正确 source。',
+            'Windows 下安装 Claude Code 需要 Git Bash 参与，但日常使用和环境变量配置仍然可以在 PowerShell 中完成。'
+        ],
+        sourceUrl: 'https://www.newapi.ai/zh/docs/apps/claude-code#ai-%E6%A8%A1%E5%9E%8B%E9%85%8D%E7%BD%AE%E6%96%B9%E6%B3%95',
+        sourceLabel: 'NewAPI Claude Code 文档',
+        skillDocPurpose: '这个条目不是一个可安装 Skill，而是能力库中的配置教程。它把 NewAPI 文档里的文字和截图抽取成本地可浏览的子页面，帮助读者按系统完成 Claude Code 安装、环境变量接入和模型验证。'
+    },
     'mcp-server-fetch': {
         name: '网页内容抓取（MCP）',
         slug: 'mcp-server-fetch',
@@ -467,7 +621,7 @@ https://v.douyin.com/C7-Eq5Paw6A/
         skillDocPurpose: '这个 Skill 的说明重点在于把“先给客户端加联网抓取能力”这件事说清楚，让 AI 能真的去读网页，而不是继续只凭模型记忆作答。',
         relatedSlugs: ['search-first', 'market-research'],
         statusLabel: '已实测',
-        featuredBadge: '精选 15',
+        featuredBadge: '精选 16',
         beginnerNote: '它更像一个“能力开关”而不是普通内容 Skill。装好之后，后续很多联网任务都会直接受益。',
         preparation: [
             '先在 Claude Code 环境里执行安装命令。',

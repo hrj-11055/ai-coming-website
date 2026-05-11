@@ -9,6 +9,7 @@ SOURCE_DIR="${REPORT_SOURCE_DIR:-/var/www/json/report}"
 TARGET_DIR="${TARGET_DATA_DIR:-/var/www/ai-coming-website/data}"
 LOG_FILE="${REPORT_WATCH_LOG_FILE:-/var/www/ai-coming-website/logs/report-watch-copy.log}"
 POLL_INTERVAL="${REPORT_WATCH_POLL_INTERVAL:-15}"
+WATCH_DATE="${REPORT_WATCH_DATE:-}"
 
 ONCE_MODE=0
 if [[ "${1:-}" == "--once" ]]; then
@@ -74,6 +75,11 @@ copy_if_needed() {
         return 0
     fi
 
+    if [[ -n "$WATCH_DATE" && "$date" != "$WATCH_DATE" ]]; then
+        log "SKIP date outside requested report date: $base (requested=$WATCH_DATE)"
+        return 0
+    fi
+
     if ! is_valid_json "$source"; then
         log "SKIP invalid JSON: $base"
         return 0
@@ -111,7 +117,7 @@ if [[ ! -d "$SOURCE_DIR" ]]; then
     exit 1
 fi
 
-log "START watch report dir: $SOURCE_DIR -> $TARGET_DIR (once=$ONCE_MODE)"
+log "START watch report dir: $SOURCE_DIR -> $TARGET_DIR (once=$ONCE_MODE date=${WATCH_DATE:-all})"
 scan_once
 
 if (( ONCE_MODE == 1 )); then
@@ -131,4 +137,3 @@ else
         sleep "$POLL_INTERVAL"
     done
 fi
-

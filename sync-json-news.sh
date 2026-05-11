@@ -8,12 +8,12 @@
 set -e
 
 # 配置
-REPORT_SOURCE_DIR="/var/www/json/report"
-PROJECT_DIR="/var/www/ai-coming-website"
-LOG_FILE="$PROJECT_DIR/logs/json-sync.log"
-API_URL="http://localhost:3000/api/news/batch"
-ADMIN_USERNAME="admin"
-ADMIN_PASSWORD="admin123456"
+REPORT_SOURCE_DIR="${REPORT_SOURCE_DIR:-/var/www/json/report}"
+PROJECT_DIR="${PROJECT_DIR:-/var/www/ai-coming-website}"
+LOG_FILE="${LOG_FILE:-$PROJECT_DIR/logs/json-sync.log}"
+API_URL="${API_URL:-http://localhost:3000/api/news/batch}"
+ADMIN_USERNAME="${ADMIN_USERNAME:-admin}"
+ADMIN_PASSWORD="${ADMIN_PASSWORD:-admin123456}"
 
 # 创建必要目录
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -34,35 +34,13 @@ if [ ! -d "$REPORT_SOURCE_DIR" ]; then
     exit 1
 fi
 
-today=$(date +%F)
-yesterday=$(date -d "yesterday" +%F)
-
-# 在 [昨天, 今天] 窗口内挑选最新日期文件，避免被异常mtime旧文件误导
-candidate_rows=""
-while IFS= read -r file; do
-    [ -f "$file" ] || continue
-    filename=$(basename "$file")
-    name_date=$(echo "$filename" | grep -oE '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)
-    [ -n "$name_date" ] || continue
-    if [[ "$name_date" < "$yesterday" || "$name_date" > "$today" ]]; then
-        continue
-    fi
-    mtime=$(stat -c %Y "$file")
-    candidate_rows+="${name_date}|${mtime}|${file}"$'\n'
-done < <(find "$REPORT_SOURCE_DIR" -name "*.json" -type f 2>/dev/null)
-
-if [ -z "$candidate_rows" ]; then
-    log "📭 未找到可导入日报（允许区间: $yesterday ~ $today）"
-    exit 0
-fi
-
-selected=$(printf "%s" "$candidate_rows" | sed '/^$/d' | sort -t'|' -k1,1r -k2,2nr | head -1)
-name_date=$(echo "$selected" | cut -d'|' -f1)
-LATEST_JSON=$(echo "$selected" | cut -d'|' -f3-)
+today="${SYNC_REPORT_DATE:-$(date +%F)}"
+LATEST_JSON="$REPORT_SOURCE_DIR/$today.json"
+name_date="$today"
 
 if [ ! -f "$LATEST_JSON" ]; then
-    log "❌ 候选文件不存在: $LATEST_JSON"
-    exit 1
+    log "📭 当天日报不存在: $LATEST_JSON"
+    exit 0
 fi
 
 filename=$(basename "$LATEST_JSON")

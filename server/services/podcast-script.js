@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const DEFAULT_SCRIPT_API_URL = 'https://api.deepseek.com/chat/completions';
-const DEFAULT_SCRIPT_MODEL = 'deepseek-chat';
+const DEFAULT_SCRIPT_MODEL = 'deepseek-v4-flash';
 const DEFAULT_SCRIPT_TIMEOUT_MS = 120000;
 const DEFAULT_SCRIPT_INPUT_DIR = '/var/www/json/report';
 const DEFAULT_SCRIPT_MAX_TOKENS = 2200;
@@ -224,6 +224,10 @@ function resolveAssistantContent(data) {
     return '';
 }
 
+function isDeepSeekModel(model) {
+    return /^deepseek(?:-|$)/i.test(String(model || ''));
+}
+
 async function requestPodcastScript({
     config,
     fetchImpl = fetch,
@@ -241,28 +245,35 @@ async function requestPodcastScript({
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeoutMs);
         try {
+            const model = config.model || DEFAULT_SCRIPT_MODEL;
+            const body = {
+                model,
+                messages: [
+                    {
+                        role: 'system',
+                        content: systemPrompt
+                    },
+                    {
+                        role: 'user',
+                        content: sourceContent
+                    }
+                ],
+                temperature: 0.4,
+                max_tokens: maxTokens,
+                stream: false
+            };
+
+            if (isDeepSeekModel(model)) {
+                body.thinking = { type: 'disabled' };
+            }
+
             const response = await fetchImpl(config.apiUrl || DEFAULT_SCRIPT_API_URL, {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${config.apiKey}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    model: config.model || DEFAULT_SCRIPT_MODEL,
-                    messages: [
-                        {
-                            role: 'system',
-                            content: systemPrompt
-                        },
-                        {
-                            role: 'user',
-                            content: sourceContent
-                        }
-                    ],
-                    temperature: 0.4,
-                    max_tokens: maxTokens,
-                    stream: false
-                }),
+                body: JSON.stringify(body),
                 signal: controller.signal
             });
 

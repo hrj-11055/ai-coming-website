@@ -622,6 +622,31 @@
             color: var(--text-muted);
         }
 
+        /* ===== 5-IMAGE PHOTO GRID ===== */
+        .photos-5grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 14px;
+        }
+
+        .photos-5grid > :nth-child(1),
+        .photos-5grid > :nth-child(2),
+        .photos-5grid > :nth-child(3) {
+            grid-column: span 2;
+        }
+
+        .photos-5grid > :nth-child(4) {
+            grid-column: 2 / span 2;
+        }
+
+        .photos-5grid > :nth-child(5) {
+            grid-column: 4 / span 2;
+        }
+
+        .photos-5grid .training-photo-card img {
+            height: 220px;
+        }
+
         .stat-block {
             text-align: center;
             padding: 28px 16px;
@@ -782,6 +807,13 @@
             .training-photo-card img { height: 230px; }
             .training-photo-card.large { grid-row: span 1; }
             .training-photo-card.large img { height: 320px; }
+            .photos-5grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .photos-5grid > * {
+                grid-column: span 1 !important;
+            }
+            .photos-5grid .training-photo-card img { height: 200px; }
         }
 
         @media (max-width: 640px) {
@@ -960,12 +992,11 @@
     <section id="training-section" class="section-anchor" style="padding: clamp(48px, 7vh, 96px) 0;">
         <div class="container-main">
             <hr class="rule reveal">
-            <div class="training-showcase reveal" style="padding-top: clamp(44px, 6vh, 76px);">
-                <div>
+            <div class="reveal" style="padding-top: clamp(44px, 6vh, 76px);">
                     <p class="label-section">培训实践</p>
                     <h2 class="heading-section" style="margin-top: 12px;">把 AI 带进业务团队，而不是停留在课堂里</h2>
                     <p class="body-large" style="margin-top: 24px;">
-                        培训的目标不是“听懂就散场”，而是让关键岗位在真实工作里把 AI 用起来，并尽快把个人尝试变成团队里的共同能力。
+                        培训的目标不是"听懂就散场"，而是让关键岗位在真实工作里把 AI 用起来，并尽快把个人尝试变成团队里的共同能力。
                     </p>
 
                     <div class="positioning-box">
@@ -1019,29 +1050,44 @@
                     </div>
                 </div>
 
-                    <div class="training-photos">
-                        <div class="training-photo-card large">
-                            <picture>
-                                <source srcset="/pic/practice/enterprise-classroom-enablement.webp" type="image/webp">
-                                <img src="/pic/practice/enterprise-classroom-enablement.jpg" alt="企业业务团队 AI 培训现场" loading="lazy" decoding="async" fetchpriority="low" width="693" height="520">
-                            </picture>
+                <!-- 5 training photos below text -->
+                <div class="photos-5grid reveal" style="margin-top: clamp(36px, 5vh, 56px);">
+                    <div class="training-photo-card">
+                        <img src="/pic/practice/foshan-digital-training.jpg" alt="佛山数字化转型培训" loading="lazy" decoding="async" width="1400" height="979">
                         <div class="training-photo-caption">
-                            <div class="training-photo-title">企业业务团队 AI 内训</div>
-                            <div class="training-photo-text">围绕真实岗位任务开展授课与演练，让培训内容直接对接业务现场。</div>
+                            <div class="training-photo-title">佛山数字化转型培训</div>
+                            <div class="training-photo-text">佛山市中小企业数字化转型城市试点人才培训，覆盖多家企业。</div>
                         </div>
                     </div>
                     <div class="training-photo-card">
-                        <picture>
-                            <source srcset="/pic/practice/government-lecture-stage.webp" type="image/webp">
-                            <img src="/pic/practice/government-lecture-stage.jpg" alt="正式授课与分享现场" loading="lazy" decoding="async" fetchpriority="low" width="693" height="462">
-                        </picture>
+                        <img src="/pic/practice/enterprise-three-waves-lecture.jpg" alt="企业转型趋势讲座" loading="lazy" decoding="async" width="1400" height="1050">
                         <div class="training-photo-caption">
-                            <div class="training-photo-title">正式授课与分享</div>
-                            <div class="training-photo-text">把复杂议题讲清楚，也把方法论讲到可借鉴、可启动。</div>
+                            <div class="training-photo-title">企业转型趋势讲座</div>
+                            <div class="training-photo-text">三浪并发时代下，企业从传统模式到智能商业的进化路径。</div>
+                        </div>
+                    </div>
+                    <div class="training-photo-card">
+                        <img src="/pic/practice/ai-evolution-history-lecture.jpg" alt="AI 演进历史讲座" loading="lazy" decoding="async" width="1400" height="1050">
+                        <div class="training-photo-caption">
+                            <div class="training-photo-title">AI 演进历史讲座</div>
+                            <div class="training-photo-text">从中美博弈到 ChatGPT，帮助学员看清 AI 发展脉络。</div>
+                        </div>
+                    </div>
+                    <div class="training-photo-card">
+                        <img src="/pic/practice/user-insight-training.jpg" alt="用户洞察与决策者画像培训" loading="lazy" decoding="async" width="1400" height="1050">
+                        <div class="training-photo-caption">
+                            <div class="training-photo-title">用户洞察与决策者画像</div>
+                            <div class="training-photo-text">决策者洞察五环模型，帮助团队理解关键用户与业务决策逻辑。</div>
+                        </div>
+                    </div>
+                    <div class="training-photo-card">
+                        <img src="/pic/practice/industrial-digital-restructure.jpg" alt="工业企业数字化重构讲座" loading="lazy" decoding="async" width="1400" height="933">
+                        <div class="training-photo-caption">
+                            <div class="training-photo-title">工业企业数字化重构</div>
+                            <div class="training-photo-text">用生物学隐喻讲解工业互联网：数据是血液，网络是血管，AI 是大脑。</div>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </section>
 
@@ -1110,13 +1156,13 @@
                         不是做一次培训，而是用 6 个月陪企业搭起一支跨部门 AI 先锋队，把零散的个人尝试变成可复制、可扩散的组织动作。
                     </p>
                     <p class="consulting-value">
-                        价值在于把“有人会用 AI”升级成“组织会持续推广 AI”，让内部真正长出一批能带头、能复制、能扩散的节点。
+                        价值在于把"有人会用 AI"升级成"组织会持续推广 AI"，让内部真正长出一批能带头、能复制、能扩散的节点。
                     </p>
 
                     <div class="consulting-meta">
                         <div class="consulting-meta-row">
                             <div class="consulting-meta-label">它能帮你什么</div>
-                            <div class="consulting-meta-text">解决工具已经引入、但员工不会持续用，或者用了也跑不出真实业务结果的问题；在多个部门同时跑出经过验证的 AI 场景，减少组织内部的观望、抵触和“没人带头”的状态；建立一批内部 AI 接口人和推广节点，让后续扩散不再完全依赖外部顾问。</div>
+                            <div class="consulting-meta-text">解决工具已经引入、但员工不会持续用，或者用了也跑不出真实业务结果的问题；在多个部门同时跑出经过验证的 AI 场景，减少组织内部的观望、抵触和"没人带头"的状态；建立一批内部 AI 接口人和推广节点，让后续扩散不再完全依赖外部顾问。</div>
                         </div>
                         <div class="consulting-meta-row">
                             <div class="consulting-meta-label">交付结果</div>
@@ -1168,7 +1214,7 @@
                         AI资讯日报是一款持续更新的 AI 信息产品，帮助用户更快浏览当天值得关注的动态。
                     </p>
                     <p class="body-regular" style="margin-top: 18px;">
-                        核心不是“搬新闻”，而是把信源聚合、AI 提炼和多形态分发做成一条稳定的内容链路。这套能力并不只适用于 AI 行业，也可以复制到制造、汽车、消费、医药、金融等任何行业，做成对应行业的资讯日报与情报产品。
+                        核心不是"搬新闻"，而是把信源聚合、AI 提炼和多形态分发做成一条稳定的内容链路。这套能力并不只适用于 AI 行业，也可以复制到制造、汽车、消费、医药、金融等任何行业，做成对应行业的资讯日报与情报产品。
                     </p>
 
                     <div class="positioning-box">
@@ -1269,7 +1315,7 @@
                     </div>
 
                     <p class="body-small" style="margin-top: 18px;">
-                        这也是我们“产品：做落地”的一个样本：不只展示功能，而是把内容采集、处理与分发做成一条可持续运行的产品链路。
+                        这也是我们"产品：做落地"的一个样本：不只展示功能，而是把内容采集、处理与分发做成一条可持续运行的产品链路。
                     </p>
                 </div>
             </div>
@@ -1580,6 +1626,7 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
     </script>
+
     <script type="module">
         import { bindPrimaryNavTracking } from './frontend/modules/interaction-tracker.js';
 

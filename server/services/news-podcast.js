@@ -22,7 +22,7 @@ const DEFAULT_TTS_PITCH = 0;
 const DEFAULT_TTS_POLL_INTERVAL_MS = 3000;
 const DEFAULT_TTS_TIMEOUT_MS = 600000;
 const DEFAULT_PODCAST_SCRIPT_API_URL = 'https://api.deepseek.com/chat/completions';
-const DEFAULT_PODCAST_SCRIPT_MODEL = 'deepseek-chat';
+const DEFAULT_PODCAST_SCRIPT_MODEL = 'deepseek-v4-flash';
 
 function normalizeNewsPayload(rawData) {
     return Array.isArray(rawData) ? rawData : (rawData && Array.isArray(rawData.articles) ? rawData.articles : []);

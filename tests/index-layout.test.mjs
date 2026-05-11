@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const indexScript = readFileSync(new URL('../frontend/index-page.js', import.meta.url), 'utf8');
 
 test('homepage uses the shared nav container pattern', () => {
     assert.match(html, /<div class="nav-container"[^>]*>/, 'Expected homepage to use nav-container markup');
@@ -74,4 +75,12 @@ test('homepage logo moves down and prompt expert badge shifts left', () => {
 
     assert.match(logoRuleMatch[0], /top:\s*20px;/, 'Expected the homepage logo container to move down by 20px');
     assert.match(promptRowRuleMatch[0], /left:\s*-40px;/, 'Expected the prompt expert badge row to move left by 40px');
+});
+
+test('homepage stream loading state sets a clear wait-time expectation', () => {
+    assert.match(
+        indexScript,
+        /AI 正在思考中，预计 1 分钟内生成，请稍候\.\.\./,
+        'Expected the homepage compact loading state to explain the estimated generation time'
+    );
 });
