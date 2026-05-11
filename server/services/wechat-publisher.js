@@ -2,6 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+let baoyuMd = null;
+try {
+    baoyuMd = require('baoyu-md');
+} catch (_) {
+    // baoyu-md not installed; will fall back to legacy renderer
+}
+
 const TOKEN_URL = 'https://api.weixin.qq.com/cgi-bin/token';
 const UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/material/add_material';
 const TEMP_MEDIA_UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/media/upload';
@@ -18,7 +25,7 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
-function renderInlineMarkdown(text) {
+function renderInlineMarkdownLegacy(text) {
     let output = escapeHtml(text);
     output = output.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     output = output.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a style="color:#576b95;text-decoration:none;border-bottom:1px solid #576b95;" href="$2">$1</a>');
@@ -26,7 +33,7 @@ function renderInlineMarkdown(text) {
     return output;
 }
 
-function renderMarkdownToHtml(markdown) {
+function renderMarkdownToHtmlLegacy(markdown) {
     const lines = String(markdown || '').replace(/\r\n/g, '\n').split('\n');
     const blocks = [];
     let currentList = null;
@@ -60,29 +67,29 @@ function renderMarkdownToHtml(markdown) {
 
         if (/^-\s+/.test(line)) {
             currentList = currentList || [];
-            currentList.push(`<li style="${STYLE.li}">${renderInlineMarkdown(line.replace(/^-\s+/, ''))}</li>`);
+            currentList.push(`<li style="${STYLE.li}">${renderInlineMarkdownLegacy(line.replace(/^-\s+/, ''))}</li>`);
             return;
         }
 
         flushList();
 
         if (/^#\s+/.test(line)) {
-            blocks.push(`<h2 style="${STYLE.h2}">${renderInlineMarkdown(line.replace(/^#\s+/, ''))}</h2>`);
+            blocks.push(`<h2 style="${STYLE.h2}">${renderInlineMarkdownLegacy(line.replace(/^#\s+/, ''))}</h2>`);
             return;
         }
 
         if (/^##\s+/.test(line)) {
-            blocks.push(`<h2 style="${STYLE.h2}">${renderInlineMarkdown(line.replace(/^##\s+/, ''))}</h2>`);
+            blocks.push(`<h2 style="${STYLE.h2}">${renderInlineMarkdownLegacy(line.replace(/^##\s+/, ''))}</h2>`);
             return;
         }
 
         if (/^###\s+/.test(line)) {
-            blocks.push(`<h3 style="${STYLE.h3}">${renderInlineMarkdown(line.replace(/^###\s+/, ''))}</h3>`);
+            blocks.push(`<h3 style="${STYLE.h3}">${renderInlineMarkdownLegacy(line.replace(/^###\s+/, ''))}</h3>`);
             return;
         }
 
         if (/^####\s+/.test(line)) {
-            blocks.push(`<h4 style="${STYLE.h4}">${renderInlineMarkdown(line.replace(/^####\s+/, ''))}</h4>`);
+            blocks.push(`<h4 style="${STYLE.h4}">${renderInlineMarkdownLegacy(line.replace(/^####\s+/, ''))}</h4>`);
             return;
         }
 
@@ -92,11 +99,11 @@ function renderMarkdownToHtml(markdown) {
         }
 
         if (/^>\s+/.test(line)) {
-            blocks.push(`<blockquote style="${STYLE.blockquote}">${renderInlineMarkdown(line.replace(/^>\s+/, ''))}</blockquote>`);
+            blocks.push(`<blockquote style="${STYLE.blockquote}">${renderInlineMarkdownLegacy(line.replace(/^>\s+/, ''))}</blockquote>`);
             return;
         }
 
-        blocks.push(`<p style="${STYLE.p}">${renderInlineMarkdown(line)}</p>`);
+        blocks.push(`<p style="${STYLE.p}">${renderInlineMarkdownLegacy(line)}</p>`);
     });
 
     flushList();
@@ -106,6 +113,26 @@ function renderMarkdownToHtml(markdown) {
         blocks.join('\n'),
         '</section>'
     ].join('\n');
+}
+
+async function renderMarkdownToHtml(markdown, options = {}) {
+    if (!baoyuMd) {
+        return renderMarkdownToHtmlLegacy(markdown);
+    }
+
+    const theme = options.theme || process.env.WECHAT_MD_THEME || 'default';
+    const primaryColor = options.primaryColor || process.env.WECHAT_MD_COLOR || '#0F4C81';
+
+    const result = await baoyuMd.renderMarkdownDocument(String(markdown || ''), {
+        theme,
+        primaryColor,
+        keepTitle: true,
+        fontFamily: options.fontFamily || process.env.WECHAT_MD_FONT_FAMILY,
+        fontSize: options.fontSize || process.env.WECHAT_MD_FONT_SIZE
+    });
+
+    const bodyMatch = result.html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+    return bodyMatch ? bodyMatch[1].trim() : result.html;
 }
 
 async function fetchAccessToken({ appId, appSecret, fetchImpl = fetch }) {
@@ -448,7 +475,7 @@ function createWechatPublisher(options = {}) {
                     title: payload.title,
                     author: payload.author || defaultAuthor,
                     digest: payload.digest || '',
-                    content: renderMarkdownToHtml(payload.markdown),
+                    content: await renderMarkdownToHtml(payload.markdown),
                     thumbMediaId: coverUpload.media_id
                 },
                 fetchImpl
@@ -500,6 +527,7 @@ module.exports = {
     publishPreviewVoice,
     publishSendAllVoice,
     renderMarkdownToHtml,
+    renderMarkdownToHtmlLegacy,
     uploadImage,
     uploadVoice
 };
