@@ -607,8 +607,7 @@ claude --version`,
                 title: '二、申请 MiniMax 账号并开通套餐',
                 body: '访问 MiniMax 官网注册或登录账号，进入用户中心的 Coding Plan 页面，开通 29 元/月套餐。开通后才能获得 Claude Code 接入所需的模型调用额度。',
                 links: [
-                    { label: 'MiniMax 官网', href: 'https://www.minimaxi.com' },
-                    { label: 'Coding Plan 页面', href: 'https://platform.minimaxi.com/user-center/payment/coding-plan' }
+                    { label: 'MiniMax 订阅页面', href: 'https://platform.minimaxi.com/user-center/payment/coding-plan' }
                 ],
                 image: CC_IMG('minimax-coding-plan.jpeg', 'MiniMax 开通 Coding Plan 套餐（29 元/月）')
             },
