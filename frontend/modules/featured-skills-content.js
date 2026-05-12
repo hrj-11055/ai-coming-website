@@ -576,6 +576,22 @@ npm --version
 git --version`
             },
             {
+                title: '前提条件：安装 Node.js（未安装者参考）',
+                body: '打开 https://nodejs.org/，下载 LTS（长期支持版，版本号 ≥ 18）。双击运行安装程序，一路 Next 使用默认选项。安装完成后，重新打开 PowerShell 或 CMD，运行验证命令。',
+                links: [
+                    { label: 'Node.js 官网', href: 'https://nodejs.org/' }
+                ],
+                code: `node --version
+# 应输出 v18.x.x 或更高版本
+
+npm --version
+# 应输出 9.x.x 或更高版本`,
+                images: [
+                    CC_IMG('nodejs-homepage.png', 'Node.js 官网首页：点击"获取 Node.js®"下载 LTS 版'),
+                    CC_IMG('nodejs-download.png', 'Node.js 下载页：选择 Windows 安装程序（.msi）下载')
+                ]
+            },
+            {
                 title: '前提条件：安装 Git for Windows（未安装者参考）',
                 body: '访问 https://git-scm.com/download/win 下载安装包。安装过程按下图顺序操作，大多数选项保持默认即可。安装完成后关闭并重新打开 PowerShell，运行 git --version 验证。',
                 images: GIT_SETUP_IMAGES
