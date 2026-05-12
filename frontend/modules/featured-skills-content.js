@@ -619,9 +619,10 @@ claude --version`,
             },
             {
                 title: '三、安装 CC-Switch',
-                body: 'CC-Switch 是代理工具，它会拦截 Claude Code 的 API 请求并转发到指定模型（如 MiniMax）。点击下方链接下载 Windows 安装包（MSI 格式），双击安装后按提示完成，无需特殊配置。',
+                body: 'CC-Switch 是代理工具，它会拦截 Claude Code 的 API 请求并转发到指定模型（如 MiniMax）。下载 Windows 安装包（MSI 格式），双击安装后按提示完成，无需特殊配置。如果 GitHub 链接无法打开，请使用百度网盘备用下载（提取码：hraa）。',
                 links: [
-                    { label: '下载 CC-Switch-v3.11.1-Windows.msi', href: 'https://github.com/CC-Switch/CC-Switch/releases' }
+                    { label: 'GitHub 下载 CC-Switch-v3.14.1-Windows.msi（推荐）', href: 'https://github.com/farion1231/cc-switch/releases/download/v3.14.1/CC-Switch-v3.14.1-Windows.msi' },
+                    { label: '百度网盘备用下载（提取码：hraa）', href: 'https://pan.baidu.com/s/1_hLr95tA1VS98WsMyCMzRQ?pwd=hraa' }
                 ]
             },
             {
