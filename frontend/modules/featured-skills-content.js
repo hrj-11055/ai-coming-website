@@ -533,6 +533,12 @@ https://v.douyin.com/C7-Eq5Paw6A/
         slug: 'claude-code-config',
         detailLayout: 'markdown',
         headline: 'Windows 用户从零安装 Claude Code CLI，通过 CC-Switch 接入 MiniMax，预计耗时 30-60 分钟。',
+        guideIntro: [
+            '用自然语言对话，直接操作你电脑上的文件、代码和数据',
+            '理解完整项目上下文，支持跨文件分析、重构和批量修改',
+            '终端里完成复杂任务：合并 Excel、批量重命名、自动生成报告',
+            '配合 MiniMax 月付 29 元即可使用，无需 Anthropic 官方账号'
+        ],
         scenario: '适合第一次在 Windows 上安装 Claude Code，希望用 MiniMax Coding Plan 替代官方账号的用户。',
         overview: '本教程以 Windows 10/11 为例，按”安装 Claude Code → 开通 MiniMax → 配置 CC-Switch → 启动验证”顺序一步步完成。CC-Switch 会拦截 Claude Code 的 API 请求并转发到 MiniMax，无需额外写环境变量。',
         useCases: [

@@ -96,12 +96,12 @@ function renderMarkdownLinks(links = []) {
 
 function renderMarkdownSection(section, index) {
     const titleTag = index === 0 ? 'h1' : 'h2';
-    const hash = index === 0 ? '#' : '##';
     const body = Array.isArray(section.body) ? section.body : [section.body].filter(Boolean);
+    const sectionId = `guide-section-${index}`;
 
     return `
-        <section class="markdown-guide-section">
-            <${titleTag}><span class="markdown-guide-hash">${hash}</span>${escapeHtml(section.title)}</${titleTag}>
+        <section class="markdown-guide-section" id="${sectionId}">
+            <${titleTag}>${escapeHtml(section.title)}</${titleTag}>
             ${body.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
             ${renderMarkdownLinks(section.links)}
             ${section.code ? `
@@ -135,27 +135,37 @@ function renderMarkdownSection(section, index) {
 }
 
 function renderMarkdownGuideDetail(skill) {
+    const tocItems = (skill.markdownSections || []).map((s, i) => `
+        <li><a href="#guide-section-${i}">${escapeHtml(s.title)}</a></li>
+    `).join('');
+
+    const introItems = (skill.guideIntro || []).map((item) => `
+        <li>${escapeHtml(item)}</li>
+    `).join('');
+
     return `
-        <article class="markdown-guide-article">
-            <nav class="markdown-guide-breadcrumb" aria-label="面包屑">
-                <a href="skills.html#${skill.moduleId}">AI 能力库</a>
-                <i class="fa-solid fa-angle-right"></i>
-                <span>${escapeHtml(skill.name)}</span>
-            </nav>
-
-            <header class="markdown-guide-header">
-                <span>${escapeHtml(skill.moduleTitle || 'AI 能力库')}</span>
-                <p>${escapeHtml(skill.overview || skill.headline)}</p>
-                ${skill.sourceUrl ? `
-                    <a href="${escapeHtml(skill.sourceUrl)}" target="_blank" rel="noreferrer">
-                        ${escapeHtml(skill.sourceLabel || '查看来源')}
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
+        <div class="markdown-guide-layout">
+            <aside class="markdown-guide-sidebar">
+                ${introItems ? `
+                    <div class="markdown-guide-intro-card">
+                        <strong class="markdown-guide-sidebar-title">Claude Code 能做什么</strong>
+                        <ul class="markdown-guide-intro-list">${introItems}</ul>
+                    </div>
                 ` : ''}
-            </header>
-
-            ${(skill.markdownSections || []).map(renderMarkdownSection).join('')}
-        </article>
+                <nav class="markdown-guide-toc" aria-label="教程目录">
+                    <strong class="markdown-guide-sidebar-title">教程目录</strong>
+                    <ol class="markdown-guide-toc-list">${tocItems}</ol>
+                </nav>
+            </aside>
+            <article class="markdown-guide-article">
+                <nav class="markdown-guide-breadcrumb" aria-label="面包屑">
+                    <a href="skills.html#${skill.moduleId}">AI 能力库</a>
+                    <i class="fa-solid fa-angle-right"></i>
+                    <span>${escapeHtml(skill.name)}</span>
+                </nav>
+                ${(skill.markdownSections || []).map(renderMarkdownSection).join('')}
+            </article>
+        </div>
     `;
 }
 

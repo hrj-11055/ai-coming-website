@@ -74,10 +74,82 @@
             gap: 18px;
         }
 
-        .markdown-guide-article {
-            max-width: 920px;
+        /* Two-column layout */
+        .markdown-guide-layout {
+            display: grid;
+            grid-template-columns: 248px minmax(0, 1fr);
+            gap: 22px;
+            align-items: start;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 42px clamp(18px, 5vw, 64px) 56px;
+        }
+
+        .markdown-guide-sidebar {
+            position: sticky;
+            top: calc(var(--detail-nav-height, 64px) + 18px);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .markdown-guide-intro-card,
+        .markdown-guide-toc {
+            padding: 18px 20px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px -4px rgba(15, 23, 42, 0.08);
+        }
+
+        .markdown-guide-sidebar-title {
+            display: block;
+            margin-bottom: 10px;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .markdown-guide-intro-list {
+            margin: 0;
+            padding-left: 1.1em;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.8;
+            list-style: disc;
+        }
+
+        .markdown-guide-intro-list li + li {
+            margin-top: 5px;
+        }
+
+        .markdown-guide-toc-list {
+            margin: 0;
+            padding-left: 1.4em;
+            color: #64748b;
+            font-size: 12.5px;
+            line-height: 1.65;
+            list-style: decimal;
+        }
+
+        .markdown-guide-toc-list li + li {
+            margin-top: 3px;
+        }
+
+        .markdown-guide-toc-list a {
+            color: #475569;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        .markdown-guide-toc-list a:hover {
+            color: #0f172a;
+            text-decoration: underline;
+        }
+
+        .markdown-guide-article {
+            padding: 42px clamp(18px, 5vw, 56px) 56px;
             background: #ffffff;
             border: 1px solid rgba(226, 232, 240, 0.9);
             border-radius: 10px;
@@ -154,10 +226,7 @@
         }
 
         .markdown-guide-hash {
-            color: #94a3b8;
-            font-family: var(--ai-font-mono, "JetBrains Mono", monospace);
-            font-size: 0.78em;
-            font-weight: 700;
+            display: none;
         }
 
         .markdown-guide-article p,
@@ -1038,6 +1107,21 @@
         }
 
         @media (max-width: 900px) {
+            .markdown-guide-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .markdown-guide-sidebar {
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .markdown-guide-intro-card,
+            .markdown-guide-toc {
+                flex: 1 1 240px;
+            }
+
             .detail-grid,
             .related-skill-grid,
             .detail-gallery-grid,
