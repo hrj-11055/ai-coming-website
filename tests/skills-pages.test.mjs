@@ -29,7 +29,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             count: module.skills.length
         })),
         [
-            { id: 'ai-coding-assistant', title: 'AI 编程助手', count: 1 },
+            { id: 'ai-coding-assistant', title: '最强AI工具', count: 1 },
             { id: 'document-processing', title: '文档处理', count: 5 },
             { id: 'efficiency-tools', title: '效率工具', count: 3 },
             { id: 'research-content', title: '研究与内容', count: 3 },
@@ -168,7 +168,7 @@ test('claude code configuration tutorial is a markdown-style MiniMax Windows gui
     const skill = getSkillBySlug('claude-code-config');
 
     assert.ok(skill, 'Expected the Claude Code configuration tutorial entry to exist');
-    assert.equal(skill?.moduleTitle, 'AI 编程助手');
+    assert.equal(skill?.moduleTitle, '最强AI工具');
     assert.equal(skill?.detailLayout, 'markdown');
     assert.match(skill?.installCommand || '', /npm install -g @anthropic-ai\/claude-code/);
     assert.match(skill?.installCommand || '', /registry\.npmmirror\.com/);

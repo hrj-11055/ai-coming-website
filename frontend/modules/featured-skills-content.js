@@ -22,7 +22,7 @@ const GIT_SETUP_IMAGES = [
 export const FEATURED_SKILL_GROUPS = [
     {
         id: 'ai-coding-assistant',
-        title: 'AI 编程助手',
+        title: '最强AI工具',
         icon: 'fa-solid fa-terminal',
         tone: 'indigo',
         description: 'Claude Code 安装配置教程：从零开始，把终端 AI 编程助手接入 MiniMax，覆盖安装、CC-Switch 配置和首次验证。',
