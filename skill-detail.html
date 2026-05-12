@@ -92,7 +92,6 @@
             gap: 14px;
         }
 
-        .markdown-guide-intro-card,
         .markdown-guide-toc {
             padding: 18px 20px;
             background: #ffffff;
@@ -111,17 +110,35 @@
             text-transform: uppercase;
         }
 
+        /* Intro block at top of article */
+        .markdown-guide-intro-block {
+            margin: 24px 0 32px;
+            padding: 20px 24px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #334155;
+            border-radius: 8px;
+        }
+
+        .markdown-guide-intro-block-title {
+            display: block;
+            margin-bottom: 10px;
+            color: #0f172a;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
         .markdown-guide-intro-list {
             margin: 0;
-            padding-left: 1.1em;
+            padding-left: 1.2em;
             color: #475569;
-            font-size: 13px;
-            line-height: 1.8;
+            font-size: 14.5px;
+            line-height: 1.85;
             list-style: disc;
         }
 
         .markdown-guide-intro-list li + li {
-            margin-top: 5px;
+            margin-top: 6px;
         }
 
         .markdown-guide-toc-list {
@@ -1113,13 +1130,6 @@
 
             .markdown-guide-sidebar {
                 position: static;
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .markdown-guide-intro-card,
-            .markdown-guide-toc {
-                flex: 1 1 240px;
             }
 
             .detail-grid,

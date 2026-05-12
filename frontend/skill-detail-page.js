@@ -146,12 +146,6 @@ function renderMarkdownGuideDetail(skill) {
     return `
         <div class="markdown-guide-layout">
             <aside class="markdown-guide-sidebar">
-                ${introItems ? `
-                    <div class="markdown-guide-intro-card">
-                        <strong class="markdown-guide-sidebar-title">Claude Code 能做什么</strong>
-                        <ul class="markdown-guide-intro-list">${introItems}</ul>
-                    </div>
-                ` : ''}
                 <nav class="markdown-guide-toc" aria-label="教程目录">
                     <strong class="markdown-guide-sidebar-title">教程目录</strong>
                     <ol class="markdown-guide-toc-list">${tocItems}</ol>
@@ -163,6 +157,12 @@ function renderMarkdownGuideDetail(skill) {
                     <i class="fa-solid fa-angle-right"></i>
                     <span>${escapeHtml(skill.name)}</span>
                 </nav>
+                ${introItems ? `
+                    <div class="markdown-guide-intro-block">
+                        <strong class="markdown-guide-intro-block-title">Claude Code 能做什么</strong>
+                        <ul class="markdown-guide-intro-list">${introItems}</ul>
+                    </div>
+                ` : ''}
                 ${(skill.markdownSections || []).map(renderMarkdownSection).join('')}
             </article>
         </div>
