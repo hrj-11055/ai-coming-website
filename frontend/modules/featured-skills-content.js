@@ -613,8 +613,11 @@ claude --version`,
             },
             {
                 title: '二、获取 MiniMax API Key',
-                body: '在 MiniMax 平台进入 API Key 管理页面，点击”复制 API Key”。Key 只显示一次，复制后妥善保存，后面会填入 CC-Switch。不要把 Key 发给他人或提交到代码仓库。',
-                image: CC_IMG('minimax-api-key.png', 'MiniMax 平台：复制 API Key')
+                body: '打开下方链接进入接口密钥页面。找到 Token Plan Key 区域，点击”复制”按钮，保存 sk-cp- 开头的 Key，后面会填入 CC-Switch。不要把 Key 发给他人或提交到代码仓库。',
+                links: [
+                    { label: 'MiniMax 接口密钥页面', href: 'https://platform.minimaxi.com/user-center/basic-information/interface-key' }
+                ],
+                image: CC_IMG('minimax-api-key-new.png', 'MiniMax 接口密钥页面：在 Token Plan Key 区域点击复制')
             },
             {
                 title: '三、安装 CC-Switch',

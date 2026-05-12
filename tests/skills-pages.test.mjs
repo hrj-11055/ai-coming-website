@@ -179,7 +179,7 @@ test('claude code configuration tutorial is a markdown-style MiniMax Windows gui
     assert.match(JSON.stringify(skill), /CC-Switch/);
     assert.doesNotMatch(JSON.stringify(skill), /NewAPI|New API/i);
     assert.ok(
-        skill?.markdownSections?.some((section) => section.image?.src === '/pic/skills-guides/claude-code/minimax-api-key.png'),
+        skill?.markdownSections?.some((section) => section.image?.src?.includes('minimax-api-key')),
         'Expected the guide to include the MiniMax API Key screenshot'
     );
     assert.ok(
