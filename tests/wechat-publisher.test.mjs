@@ -204,3 +204,17 @@ test('uploadNewsImage 在微信返回 errcode 时抛出', async () => {
         /invalid credential/
     );
 });
+
+test('uploadNewsImage rejects images over the WeChat 1MB content limit before upload', async () => {
+    const { uploadNewsImage } = require('../server/services/wechat-publisher.js');
+    await assert.rejects(
+        () => uploadNewsImage({
+            accessToken: 'tok',
+            imageBuffer: Buffer.alloc((1024 * 1024) + 1),
+            fetchImpl: async () => {
+                throw new Error('should not upload oversized image');
+            }
+        }),
+        /1MB/
+    );
+});

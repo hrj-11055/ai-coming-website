@@ -29,6 +29,7 @@ const DEFAULT_START_HOUR = Number(process.env.WECHAT_AUTOGEN_START_HOUR || 9);
 const DEFAULT_START_MINUTE = Number(process.env.WECHAT_AUTOGEN_START_MINUTE || 5);
 const DEFAULT_SITE_BASE_URL = process.env.WECHAT_AUTOGEN_SITE_BASE_URL || '';
 const DEFAULT_ENABLED = isFeatureEnabled(process.env.WECHAT_AUTOGEN_ENABLED, false);
+const DEFAULT_REQUIRE_INFOGRAPHIC = isFeatureEnabled(process.env.WECHAT_AUTOGEN_REQUIRE_INFOGRAPHIC, false);
 const DEFAULT_ENABLED_TYPES = String(process.env.WECHAT_AUTOGEN_ENABLED_TYPES || 'podcast,markdown')
     .split(',')
     .map((value) => value.trim().toLowerCase())
@@ -103,14 +104,15 @@ function createFileFingerprint(filePath) {
     return [filePath, stats.size, stats.mtimeMs].join(':');
 }
 
-function createPodcastFingerprint(date, metadata, formatterFingerprint = '') {
+function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
         script_markdown: metadata?.script_markdown || '',
         audio_url: metadata?.audio_url || '',
         wechat_podcast_title: formatWechatPodcastTitle(date),
-        formatter_fingerprint: formatterFingerprint || ''
+        formatter_fingerprint: formatterFingerprint || '',
+        infographic_fingerprint: infographicFingerprint || ''
     }));
 }
 
@@ -226,6 +228,7 @@ async function maybePublishPodcast({
     publisher,
     podcastFormatter,
     infographicGenerator,
+    requireInfographic,
     enabledTypes,
     siteBaseUrl
 }) {
@@ -246,7 +249,8 @@ async function maybePublishPodcast({
     const formatterFingerprint = typeof podcastFormatter.getFingerprint === 'function'
         ? (podcastFormatter.getFingerprint() || '')
         : '';
-    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint);
+    const infographicFingerprint = requireInfographic ? 'required-v1' : 'optional-v1';
+    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
@@ -271,15 +275,26 @@ async function maybePublishPodcast({
         formatterFallbackReason = error?.message || 'unknown_formatter_error';
         console.warn(`[wechat-autogen] podcast formatter failed, fallback to source markdown: ${formatterFallbackReason}`);
     }
+    let infographicUrl = null;
+    let infographicError = null;
     if (infographicGenerator) {
         try {
             const imageBuffer = await infographicGenerator.generateInfographic({
                 scriptMarkdown: metadata.script_markdown || ''
             });
-            const imageUrl = await publisher.uploadNewsImageForContent({ imageBuffer });
-            markdown = `![AI资讯日报信息图](${imageUrl})\n\n${markdown}`;
+            infographicUrl = await publisher.uploadNewsImageForContent({ imageBuffer });
+            markdown = `![AI资讯日报信息图](${infographicUrl})\n\n${markdown}`;
         } catch (err) {
-            console.warn(`[wechat-autogen] infographic generation failed, skipping: ${err?.message || err}`);
+            infographicError = err?.message || String(err);
+            console.warn(`[wechat-autogen] infographic generation failed: ${infographicError}`);
+            if (requireInfographic) {
+                return normalizeResult('skip', 'infographic_failed', {
+                    metadataPath,
+                    fingerprint,
+                    formatterFallbackReason,
+                    infographicError
+                });
+            }
         }
     }
     const stagingPath = path.join(stagingDir, `${date}-podcast.md`);
@@ -297,7 +312,9 @@ async function maybePublishPodcast({
         fingerprint,
         stagingPath,
         mediaId: publishResult.media_id || null,
-        formatterFallbackReason
+        formatterFallbackReason,
+        infographicUrl,
+        infographicError
     });
 }
 
@@ -392,6 +409,7 @@ async function runWechatAutogenOnce(options = {}) {
     const startMinute = Number(options.startMinute ?? getArg('--start-minute') ?? DEFAULT_START_MINUTE);
     const siteBaseUrl = options.siteBaseUrl || getArg('--site-base-url') || DEFAULT_SITE_BASE_URL;
     const enabled = isFeatureEnabled(options.enabled ?? getArg('--enabled') ?? DEFAULT_ENABLED, DEFAULT_ENABLED);
+    const requireInfographic = isFeatureEnabled(options.requireInfographic ?? getArg('--require-infographic') ?? DEFAULT_REQUIRE_INFOGRAPHIC, DEFAULT_REQUIRE_INFOGRAPHIC);
     const enabledTypes = new Set((options.enabledTypes || DEFAULT_ENABLED_TYPES).map((value) => String(value).toLowerCase()));
     const now = options.now || new Date();
     const dateInfo = getCurrentDateInfo(timeZone, now);
@@ -427,7 +445,7 @@ async function runWechatAutogenOnce(options = {}) {
 
     let publisher = options.publisher || null;
     let podcastFormatter = options.podcastFormatter || null;
-    let infographicGenerator = null;
+    let infographicGenerator = options.infographicGenerator || null;
     let podcastAudioDownloader = options.podcastAudioDownloader || null;
     let podcastAudioSynthesizer = options.podcastAudioSynthesizer || null;
     function getPublisher() {
@@ -500,6 +518,7 @@ async function runWechatAutogenOnce(options = {}) {
                 return getInfographicGenerator().generateInfographic(payload);
             }
         },
+        requireInfographic,
         enabledTypes,
         siteBaseUrl
     });
@@ -546,7 +565,8 @@ async function runWechatAutogenOnce(options = {}) {
         last_result: podcastResult.action,
         last_reason: podcastResult.reason,
         last_media_id: podcastResult.mediaId || null,
-        last_error: null
+        last_error: podcastResult.infographicError || null,
+        last_infographic_url: podcastResult.infographicUrl || state.podcast?.last_infographic_url || null
     };
     state.podcast_audio = {
         last_attempted_date: dateInfo.date,

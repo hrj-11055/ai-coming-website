@@ -16,6 +16,7 @@ const DRAFT_URL = 'https://api.weixin.qq.com/cgi-bin/draft/add';
 const PREVIEW_URL = 'https://api.weixin.qq.com/cgi-bin/message/mass/preview';
 const SENDALL_URL = 'https://api.weixin.qq.com/cgi-bin/message/mass/sendall';
 const NEWS_IMAGE_UPLOAD_URL = 'https://api.weixin.qq.com/cgi-bin/media/uploadimg';
+const MAX_NEWS_IMAGE_BYTES = 1024 * 1024;
 
 function escapeHtml(value) {
     return String(value || '')
@@ -186,6 +187,26 @@ function getMimeType(filePath) {
     }
 }
 
+function detectImageUploadType(imageBuffer) {
+    if (Buffer.isBuffer(imageBuffer)) {
+        if (imageBuffer.length >= 3 && imageBuffer[0] === 0xff && imageBuffer[1] === 0xd8 && imageBuffer[2] === 0xff) {
+            return { fileName: 'infographic.jpg', mimeType: 'image/jpeg' };
+        }
+
+        if (
+            imageBuffer.length >= 8 &&
+            imageBuffer[0] === 0x89 &&
+            imageBuffer[1] === 0x50 &&
+            imageBuffer[2] === 0x4e &&
+            imageBuffer[3] === 0x47
+        ) {
+            return { fileName: 'infographic.png', mimeType: 'image/png' };
+        }
+    }
+
+    return { fileName: 'infographic.jpg', mimeType: 'image/jpeg' };
+}
+
 function buildMultipartBody({ fieldName, fileName, mimeType, fileBuffer }) {
     const boundary = `----wechat-boundary-${Date.now().toString(16)}-${crypto.randomBytes(4).toString('hex')}`;
     const header = [
@@ -322,10 +343,19 @@ async function uploadVoice({
 }
 
 async function uploadNewsImage({ accessToken, imageBuffer, fetchImpl = fetch }) {
+    if (!Buffer.isBuffer(imageBuffer) || imageBuffer.length === 0) {
+        throw new Error('上传正文图片失败: 图片 Buffer 为空');
+    }
+
+    if (imageBuffer.length > MAX_NEWS_IMAGE_BYTES) {
+        throw new Error(`上传正文图片失败: 图片超过微信 1MB 限制 (${imageBuffer.length} bytes)`);
+    }
+
+    const imageType = detectImageUploadType(imageBuffer);
     const { boundary, body } = buildMultipartBody({
         fieldName: 'media',
-        fileName: 'infographic.png',
-        mimeType: 'image/png',
+        fileName: imageType.fileName,
+        mimeType: imageType.mimeType,
         fileBuffer: imageBuffer
     });
 

@@ -51,6 +51,9 @@ test('generateInfographic 先调 DeepSeek 再调 gpt-image-2，返回 Buffer', a
     assert.equal(calls[1].body.prompt, '科技感信息图，今日AI三大热点：GPT-5发布，Gemini升级，开源模型爆发');
     assert.equal(calls[1].body.n, 1);
     assert.equal(calls[1].body.size, '1024x1024');
+    assert.equal(calls[1].body.quality, 'medium');
+    assert.equal(calls[1].body.output_format, 'jpeg');
+    assert.equal(calls[1].body.output_compression, 85);
 
     assert.ok(Buffer.isBuffer(buffer));
     assert.deepEqual(buffer, Buffer.from('fake-png-bytes'));

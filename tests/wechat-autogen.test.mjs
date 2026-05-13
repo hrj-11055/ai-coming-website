@@ -202,6 +202,120 @@ test('runWechatAutogenOnce republishes podcast when formatter fingerprint change
     assert.equal(result.podcast.action, 'uploaded');
 });
 
+test('runWechatAutogenOnce skips podcast draft when required infographic fails', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-infographic-fail-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const stateFile = path.join(root, 'state.json');
+    const uploads = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-05-13.json'), {
+        status: 'ready',
+        summary: '今播播客摘要',
+        script_markdown: '今播播客正文'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-05-13T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile,
+        stagingDir: path.join(root, 'staging'),
+        enabled: true,
+        requireInfographic: true,
+        enabledTypes: ['podcast'],
+        podcastFormatter: {
+            getFingerprint() {
+                return 'formatter-v2';
+            },
+            async formatForWechat({ title, scriptMarkdown }) {
+                return {
+                    markdown: `# ${title}\n\n${scriptMarkdown}`,
+                    digest: '今播播客摘要'
+                };
+            }
+        },
+        infographicGenerator: {
+            async generateInfographic() {
+                throw new Error('image timeout');
+            }
+        },
+        publisher: {
+            async uploadNewsImageForContent() {
+                throw new Error('should not upload image');
+            },
+            async publishMarkdownDraft(payload) {
+                uploads.push(payload);
+                return { media_id: 'podcast-draft' };
+            }
+        }
+    });
+
+    assert.equal(uploads.length, 0);
+    assert.equal(result.podcast.action, 'skip');
+    assert.equal(result.podcast.reason, 'infographic_failed');
+    assert.match(result.podcast.infographicError, /image timeout/);
+
+    const savedState = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
+    assert.equal(savedState.podcast.last_uploaded_fingerprint, null);
+    assert.equal(savedState.podcast.last_result, 'skip');
+    assert.equal(savedState.podcast.last_reason, 'infographic_failed');
+    assert.match(savedState.podcast.last_error, /image timeout/);
+});
+
+test('runWechatAutogenOnce injects required infographic before publishing podcast draft', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-infographic-ok-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const uploads = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-05-13.json'), {
+        status: 'ready',
+        summary: '今播播客摘要',
+        script_markdown: '今播播客正文'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-05-13T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabled: true,
+        requireInfographic: true,
+        enabledTypes: ['podcast'],
+        podcastFormatter: {
+            getFingerprint() {
+                return 'formatter-v2';
+            },
+            async formatForWechat({ title, scriptMarkdown }) {
+                return {
+                    markdown: `# ${title}\n\n${scriptMarkdown}`,
+                    digest: '今播播客摘要'
+                };
+            }
+        },
+        infographicGenerator: {
+            async generateInfographic() {
+                return Buffer.from('fake-image');
+            }
+        },
+        publisher: {
+            async uploadNewsImageForContent({ imageBuffer }) {
+                assert.deepEqual(imageBuffer, Buffer.from('fake-image'));
+                return 'https://mmbiz.qpic.cn/test.jpg';
+            },
+            async publishMarkdownDraft(payload) {
+                uploads.push(payload);
+                return { media_id: 'podcast-draft' };
+            }
+        }
+    });
+
+    assert.equal(uploads.length, 1);
+    assert.match(uploads[0].markdown, /^!\[AI资讯日报信息图\]\(https:\/\/mmbiz\.qpic\.cn\/test\.jpg\)/);
+    assert.equal(result.podcast.action, 'uploaded');
+    assert.equal(result.podcast.infographicUrl, 'https://mmbiz.qpic.cn/test.jpg');
+});
+
 test('runWechatAutogenOnce falls back to source markdown when formatter fails', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-fallback-'));
     const podcastMetadataDir = path.join(root, 'podcasts');
