@@ -32,7 +32,7 @@ export const TOOL_SECTIONS = [
     title: '图片生成',
     international: [
       { name: 'Midjourney', logo: '/logos/tool-collection-2026-02-26/3-AI图片/midjourney.svg', url: 'https://www.midjourney.com' },
-      { name: 'FLUX', logo: '/logos/tool-collection-2026-02-26/3-AI图片/flux.svg', url: 'https://blackforestlabs.ai' },
+      { name: 'ChatGPT', logo: '/logos/tool-collection-2026-02-26/2-AI写作/chatgpt.svg', url: 'https://chatgpt.com' },
       { name: 'Nano Banana', logo: '/logos/tool-collection-2026-02-26/3-AI图片/nano-banana.svg', url: 'https://gemini.google/overview/image-generation/' }
     ],
     china: [

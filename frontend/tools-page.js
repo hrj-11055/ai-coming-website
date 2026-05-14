@@ -61,7 +61,6 @@ const TOOL_TAG_MAP = {
     'Descript': '播客剪辑一体化',
     'Dify': '企业级应用编排',
     'ElevenLabs': '拟真英文配音',
-    'FLUX': '高质感文生图',
     'Fish Audio': '中文音色克隆',
     'Gamma': '一句话成演示稿',
     'Gemini': 'Google生态联动',
