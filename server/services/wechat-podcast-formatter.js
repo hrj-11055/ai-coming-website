@@ -1,6 +1,9 @@
 const crypto = require('crypto');
 
-const { buildWechatDigest } = require('./wechat-content');
+const {
+    buildWechatDigest,
+    normalizePlainWechatHeadings
+} = require('./wechat-content');
 
 const DEFAULT_API_URL = 'https://api.deepseek.com/chat/completions';
 const DEFAULT_MODEL = 'deepseek-v4-flash';
@@ -16,7 +19,7 @@ function buildWechatPodcastFormattingPrompt() {
         '1. 标题由外部提供，不要在正文重复输出新的 H1 标题。',
         '2. 只做轻包装，不要发散补充不存在的事实，不要改写核心观点。',
         '3. 不要输出音频链接、收听入口、二维码、图片占位提示。',
-        '4. 使用简洁的二级标题和短段落，适合微信公众号。',
+        '4. 必须使用 Markdown 标题标记：主要区块用 ##，区块内的新闻或观点小标题用 ###。',
         '5. 如果提供了转发文案，可以在文末整理成“推荐转发文案”区块。',
         '6. 输出纯 Markdown，不要解释，不要代码块。',
         '',
@@ -142,9 +145,10 @@ function createWechatPodcastFormatter({
                     throw new Error('DeepSeek 未返回播客公众号轻包装内容');
                 }
 
+                const normalizedMarkdown = normalizePlainWechatHeadings(markdown);
                 return {
-                    markdown,
-                    digest: buildWechatDigest(summary || markdown)
+                    markdown: normalizedMarkdown,
+                    digest: buildWechatDigest(summary || normalizedMarkdown)
                 };
             } finally {
                 clearTimeout(timer);
@@ -155,5 +159,6 @@ function createWechatPodcastFormatter({
 
 module.exports = {
     buildWechatPodcastFormattingPrompt,
-    createWechatPodcastFormatter
+    createWechatPodcastFormatter,
+    normalizePlainWechatHeadings
 };

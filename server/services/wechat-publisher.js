@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+const { normalizePlainWechatHeadings } = require('./wechat-content');
+
 let baoyuMd = null;
 try {
     baoyuMd = require('baoyu-md');
@@ -124,14 +126,16 @@ function renderMarkdownToHtmlLegacy(markdown) {
 }
 
 async function renderMarkdownToHtml(markdown, options = {}) {
-    if (!baoyuMd) {
-        return renderMarkdownToHtmlLegacy(markdown);
+    const normalizedMarkdown = normalizePlainWechatHeadings(markdown);
+    const renderer = options.renderer || process.env.WECHAT_MD_RENDERER || 'legacy';
+    if (renderer !== 'baoyu' || !baoyuMd) {
+        return renderMarkdownToHtmlLegacy(normalizedMarkdown);
     }
 
     const theme = options.theme || process.env.WECHAT_MD_THEME || 'default';
     const primaryColor = options.primaryColor || process.env.WECHAT_MD_COLOR || '#0F4C81';
 
-    const result = await baoyuMd.renderMarkdownDocument(String(markdown || ''), {
+    const result = await baoyuMd.renderMarkdownDocument(String(normalizedMarkdown || ''), {
         theme,
         primaryColor,
         keepTitle: true,

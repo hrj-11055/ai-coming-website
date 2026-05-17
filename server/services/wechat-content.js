@@ -74,6 +74,98 @@ function buildWechatDigest(text) {
     return lastPunct > 80 ? truncated.slice(0, lastPunct + 1) : `${truncated}...`;
 }
 
+function normalizePlainWechatHeadings(markdown) {
+    const lines = String(markdown || '')
+        .replace(/\r\n/g, '\n')
+        .split('\n');
+    const normalized = [];
+    const sectionLabels = new Set([
+        '开场',
+        '开场导语',
+        '今日内容',
+        '今日重点',
+        '今日看点',
+        '推荐转发',
+        '推荐转发文案',
+        '朋友圈文案'
+    ]);
+    let currentSection = '';
+
+    function cleanHeadingLabel(line) {
+        return line.replace(/\s+/g, ' ').replace(/[：:]\s*$/, '').trim();
+    }
+
+    function isMarkdownBlock(line) {
+        return /^(#{1,6}\s+|[-*+]\s+|>\s+|!\[[^\]]*]\(|```|---+$)/.test(line);
+    }
+
+    function isLikelySubheading(line, nextLine) {
+        const label = cleanHeadingLabel(line);
+        if (!label || sectionLabels.has(label) || isMarkdownBlock(label)) {
+            return false;
+        }
+
+        if (!nextLine || isMarkdownBlock(nextLine.trim())) {
+            return false;
+        }
+
+        if (label.length > 42) {
+            return false;
+        }
+
+        return currentSection === '今日内容' && !/[。！？!?；;]$/.test(label);
+    }
+
+    for (let index = 0; index < lines.length; index += 1) {
+        const rawLine = lines[index];
+        const line = rawLine.trim();
+
+        if (!line) {
+            normalized.push('');
+            continue;
+        }
+
+        if (isMarkdownBlock(line)) {
+            const headingMatch = line.match(/^#{1,6}\s+(.+)$/);
+            if (headingMatch) {
+                const label = cleanHeadingLabel(headingMatch[1]);
+                if (/^第[一二三四五六七八九十]+件[，,].+说起[。.]?$/.test(label)) {
+                    normalized.push(`#### ${label}`);
+                    continue;
+                }
+
+                if (sectionLabels.has(label)) {
+                    currentSection = label;
+                }
+            }
+            normalized.push(rawLine);
+            continue;
+        }
+
+        const label = cleanHeadingLabel(line);
+        if (sectionLabels.has(label)) {
+            normalized.push(`## ${label}`);
+            currentSection = label;
+            continue;
+        }
+
+        if (/^第[一二三四五六七八九十]+件[，,].+说起[。.]?$/.test(label)) {
+            normalized.push(`#### ${label}`);
+            continue;
+        }
+
+        const nextLine = lines.slice(index + 1).find((item) => item.trim());
+        if (isLikelySubheading(line, nextLine || '')) {
+            normalized.push(`### ${label}`);
+            continue;
+        }
+
+        normalized.push(rawLine);
+    }
+
+    return normalized.join('\n').trim();
+}
+
 function buildHighlightItems(articles, limit = 5) {
     return [...articles]
         .sort((left, right) => (Number(right.importance_score) || 0) - (Number(left.importance_score) || 0))
@@ -224,6 +316,7 @@ module.exports = {
     buildPodcastMarkdown,
     buildPodcastVoiceMessageText,
     buildWechatDigest,
+    normalizePlainWechatHeadings,
     formatWechatPodcastTitle,
     formatWechatTitle,
     hashText,

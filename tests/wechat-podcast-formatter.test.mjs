@@ -59,6 +59,59 @@ test('createWechatPodcastFormatter calls deepseek and returns packaged markdown 
     assert.match(formatter.getFingerprint(), /^[a-f0-9]{40}$/);
 });
 
+test('createWechatPodcastFormatter normalizes plain text section labels into markdown headings', async () => {
+    const formatter = createWechatPodcastFormatter({
+        config: {
+            apiKey: 'deepseek-key',
+            apiUrl: 'https://api.deepseek.com/chat/completions',
+            model: 'deepseek-v4-flash',
+            timeoutMs: 30000
+        },
+        fetchImpl: async () => new Response(JSON.stringify({
+            choices: [
+                {
+                    message: {
+                        content: [
+                            '开场导语',
+                            '今天我们来看10条最值得关注的AI资讯。',
+                            '',
+                            '今日内容',
+                            'OpenAI重组，Brockman亲自掌管三大核心产品线',
+                            'OpenAI今天宣布了一项关键的组织调整。',
+                            '',
+                            'AI生成虚假新闻网络曝光，成本仅需10美元',
+                            '美国媒体曝光了一个由AI驱动的虚假新闻网络。',
+                            '',
+                            '第一件，从Codex赚钱这件事说起。',
+                            '这件事最值得关注的不是金额，而是完整闭环。',
+                            '',
+                            '推荐转发文案',
+                            '今天的AI资讯值得收藏。'
+                        ].join('\n')
+                    }
+                }
+            ]
+        }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+        })
+    });
+
+    const result = await formatter.formatForWechat({
+        title: '硅基生存指南 2026.05.17.',
+        summary: '今天整理 10 条 AI 快讯。',
+        scriptMarkdown: '原始播客内容',
+        wechatCopy: '今天的AI资讯值得收藏。'
+    });
+
+    assert.match(result.markdown, /^## 开场导语/m);
+    assert.match(result.markdown, /^## 今日内容/m);
+    assert.match(result.markdown, /^### OpenAI重组，Brockman亲自掌管三大核心产品线/m);
+    assert.match(result.markdown, /^### AI生成虚假新闻网络曝光，成本仅需10美元/m);
+    assert.match(result.markdown, /^#### 第一件，从Codex赚钱这件事说起。/m);
+    assert.match(result.markdown, /^## 推荐转发文案/m);
+});
+
 test('createWechatPodcastFormatter exposes fingerprint even when api key is missing', () => {
     const formatter = createWechatPodcastFormatter({
         config: {

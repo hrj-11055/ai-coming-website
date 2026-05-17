@@ -10,6 +10,7 @@ const {
     publishDraft,
     publishPreviewVoice,
     publishSendAllVoice,
+    renderMarkdownToHtml,
     uploadVoice
 } = require('../server/services/wechat-publisher.js');
 
@@ -55,6 +56,61 @@ test('publishDraft sends fixed title and thumb media id to draft add api', async
     assert.equal(result.media_id, 'draft-1');
     assert.equal(requestBody.articles[0].title, '04月02日AI资讯早报');
     assert.equal(requestBody.articles[0].thumb_media_id, 'thumb-1');
+});
+
+test('renderMarkdownToHtml keeps the WeChat news template styles with leading images', async () => {
+    const html = await renderMarkdownToHtml([
+        '![AI资讯日报信息图](https://mmbiz.qpic.cn/test.jpg)',
+        '',
+        '## 今日内容',
+        '',
+        '### OpenAI重组，Brockman亲自掌管三大核心产品线',
+        '',
+        'OpenAI今天宣布了一项关键的组织调整。',
+        '',
+        '#### 第一件，从Codex赚钱这件事说起。',
+        '',
+        '这是正文。'
+    ].join('\n'));
+
+    assert.match(html, /<img[^>]+https:\/\/mmbiz\.qpic\.cn\/test\.jpg[^>]+max-width:100%/);
+    assert.match(html, /<h2 style="[^"]*border-left:5px solid rgb\(248,57,41\)/);
+    assert.match(html, /<h3 style="[^"]*linear-gradient/);
+    assert.match(html, /<h4 style="[^"]*border-left:5px solid #DEC6FB/);
+    assert.doesNotMatch(html, /<div id="output">/);
+});
+
+test('renderMarkdownToHtml normalizes plain text podcast headings before rendering', async () => {
+    const html = await renderMarkdownToHtml([
+        '![AI资讯日报信息图](https://mmbiz.qpic.cn/test.jpg)',
+        '',
+        '开场导语',
+        '今天我们来看10条最值得关注的AI资讯。',
+        '',
+        '今日内容',
+        'OpenAI重组，Brockman亲自掌管三大核心产品线',
+        'OpenAI今天宣布了一项关键的组织调整。',
+        '',
+        '第一件，从Codex赚钱这件事说起。',
+        '这件事最值得关注的不是金额，而是完整闭环。'
+    ].join('\n'));
+
+    assert.match(html, /<h2 style="[^"]*">开场导语<\/h2>/);
+    assert.match(html, /<h3 style="[^"]*">OpenAI重组，Brockman亲自掌管三大核心产品线<\/h3>/);
+    assert.match(html, /<h4 style="[^"]*">第一件，从Codex赚钱这件事说起。<\/h4>/);
+});
+
+test('renderMarkdownToHtml demotes survival-wisdom headings to the h4 accent style', async () => {
+    const html = await renderMarkdownToHtml([
+        '## 今日生存智慧',
+        '',
+        '### 第一件，从Codex赚钱这件事说起',
+        '这件事最值得关注的不是金额。'
+    ].join('\n'));
+
+    assert.match(html, /<h2 style="[^"]*">今日生存智慧<\/h2>/);
+    assert.match(html, /<h4 style="[^"]*#DEC6FB[^"]*">第一件，从Codex赚钱这件事说起<\/h4>/);
+    assert.doesNotMatch(html, /<h3 style="[^"]*">第一件，从Codex赚钱这件事说起<\/h3>/);
 });
 
 test('uploadVoice uploads voice media through temporary media api', async () => {
