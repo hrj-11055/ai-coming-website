@@ -400,6 +400,7 @@ async function publishDraft({ accessToken, article, fetchImpl = fetch }) {
                     author: article.author || undefined,
                     digest: article.digest || undefined,
                     content: article.content,
+                    content_source_url: article.contentSourceUrl || undefined,
                     thumb_media_id: article.thumbMediaId,
                     need_open_comment: 1,
                     only_fans_can_comment: 0
@@ -549,6 +550,7 @@ function createWechatPublisher(options = {}) {
                     author: payload.author || defaultAuthor,
                     digest: payload.digest || '',
                     content: await renderMarkdownToHtml(payload.markdown),
+                    contentSourceUrl: payload.contentSourceUrl || '',
                     thumbMediaId: coverUpload.media_id
                 },
                 fetchImpl

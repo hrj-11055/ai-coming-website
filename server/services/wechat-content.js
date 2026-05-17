@@ -229,6 +229,31 @@ function joinAbsoluteUrl(siteBaseUrl, maybeRelativeUrl) {
     return baseUrl ? `${baseUrl}${input.startsWith('/') ? '' : '/'}${input}` : input;
 }
 
+function buildPodcastLandingPageUrl({ date, siteBaseUrl }) {
+    const normalizedDate = sanitizeInlineText(date);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(normalizedDate)) {
+        return '';
+    }
+
+    return joinAbsoluteUrl(siteBaseUrl, `/podcast.html?date=${encodeURIComponent(normalizedDate)}`);
+}
+
+function appendPodcastListenCta(markdown, podcastPageUrl) {
+    const pageUrl = sanitizeInlineText(podcastPageUrl);
+    const source = String(markdown || '').trim();
+    if (!pageUrl || source.includes(pageUrl)) {
+        return source;
+    }
+
+    return [
+        source,
+        '',
+        '## 收听完整版音频',
+        '',
+        `想听完整播客，可以打开播放页继续收听：[打开播客播放页](${pageUrl})`
+    ].join('\n').trim();
+}
+
 function trimPodcastScriptMarkdown(markdown) {
     const lines = String(markdown || '')
         .replace(/\r\n/g, '\n')
@@ -313,7 +338,9 @@ function hashText(value) {
 
 module.exports = {
     buildNewsMarkdown,
+    appendPodcastListenCta,
     buildPodcastMarkdown,
+    buildPodcastLandingPageUrl,
     buildPodcastVoiceMessageText,
     buildWechatDigest,
     normalizePlainWechatHeadings,

@@ -10,6 +10,8 @@ const {
     buildWechatDigest,
     buildNewsMarkdown,
     buildPodcastMarkdown,
+    buildPodcastLandingPageUrl,
+    appendPodcastListenCta,
     buildPodcastVoiceMessageText
 } = require('../server/services/wechat-content.js');
 
@@ -57,6 +59,18 @@ test('buildPodcastMarkdown renders dated podcast title, marker, summary, and wec
     assert.match(markdown, /今天整理 12 条 AI 快讯。/);
     assert.match(markdown, /转发文案/);
     assert.doesNotMatch(markdown, /https:\/\/ai-coming\.example\.com\/api\/podcast\/news\/2026-04-02\/audio/);
+});
+
+test('buildPodcastLandingPageUrl and appendPodcastListenCta point readers to the long audio page', () => {
+    const pageUrl = buildPodcastLandingPageUrl({
+        date: '2026-04-02',
+        siteBaseUrl: 'https://ai-coming.example.com/'
+    });
+    const markdown = appendPodcastListenCta('## 今日内容\n\n正文', pageUrl);
+
+    assert.equal(pageUrl, 'https://ai-coming.example.com/podcast.html?date=2026-04-02');
+    assert.match(markdown, /## 收听完整版音频/);
+    assert.match(markdown, /\[打开播客播放页\]\(https:\/\/ai-coming\.example\.com\/podcast\.html\?date=2026-04-02\)/);
 });
 
 test('buildWechatDigest truncates long text and formatWechatTitle keeps mm月dd日 format', () => {

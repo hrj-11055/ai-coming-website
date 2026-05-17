@@ -138,14 +138,23 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
         },
         publisher: {
             async publishMarkdownDraft(payload) {
-                calls.push({ kind: payload.kind, title: payload.title });
+                calls.push({
+                    kind: payload.kind,
+                    title: payload.title,
+                    contentSourceUrl: payload.contentSourceUrl,
+                    markdown: payload.markdown
+                });
                 assert.doesNotMatch(payload.markdown, /https:\/\/ai-coming\.example\.com\/api\/podcast\/news\/2026-04-02\/audio/);
                 return { media_id: `${payload.kind}-draft` };
             }
         }
     });
 
-    assert.deepEqual(calls, [{ kind: 'podcast', title: '硅基生存指南 2026.04.02.' }]);
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].kind, 'podcast');
+    assert.equal(calls[0].title, '硅基生存指南 2026.04.02.');
+    assert.equal(calls[0].contentSourceUrl, 'https://ai-coming.example.com/podcast.html?date=2026-04-02');
+    assert.match(calls[0].markdown, /\[打开播客播放页\]\(https:\/\/ai-coming\.example\.com\/podcast\.html\?date=2026-04-02\)/);
     assert.equal(packagingCalls.length, 1);
     assert.equal(packagingCalls[0].title, '硅基生存指南 2026.04.02.');
     assert.match(packagingCalls[0].scriptMarkdown, /今播播客正文/);

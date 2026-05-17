@@ -58,6 +58,35 @@ test('publishDraft sends fixed title and thumb media id to draft add api', async
     assert.equal(requestBody.articles[0].thumb_media_id, 'thumb-1');
 });
 
+test('publishDraft includes content_source_url for reading-original audio landing pages', async () => {
+    let requestBody = null;
+
+    const result = await publishDraft({
+        accessToken: 'token-123',
+        article: {
+            title: '硅基生存指南 2026.04.02.',
+            author: 'AIcoming',
+            digest: '摘要',
+            content: '<p>播客版</p>',
+            contentSourceUrl: 'https://ai-coming.example.com/podcast.html?date=2026-04-02',
+            thumbMediaId: 'thumb-1'
+        },
+        fetchImpl: async (_url, options) => {
+            requestBody = JSON.parse(options.body);
+            return {
+                ok: true,
+                json: async () => ({ media_id: 'draft-1' })
+            };
+        }
+    });
+
+    assert.equal(result.media_id, 'draft-1');
+    assert.equal(
+        requestBody.articles[0].content_source_url,
+        'https://ai-coming.example.com/podcast.html?date=2026-04-02'
+    );
+});
+
 test('renderMarkdownToHtml keeps the WeChat news template styles with leading images', async () => {
     const html = await renderMarkdownToHtml([
         '![AI资讯日报信息图](https://mmbiz.qpic.cn/test.jpg)',

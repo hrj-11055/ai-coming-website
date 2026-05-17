@@ -6,6 +6,8 @@ const fs = require('fs');
 const path = require('path');
 
 const {
+    appendPodcastListenCta,
+    buildPodcastLandingPageUrl,
     buildNewsMarkdown,
     buildPodcastMarkdown,
     buildPodcastVoiceMessageText,
@@ -104,7 +106,7 @@ function createFileFingerprint(filePath) {
     return [filePath, stats.size, stats.mtimeMs].join(':');
 }
 
-function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '') {
+function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '', podcastPageUrl = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
@@ -112,7 +114,8 @@ function createPodcastFingerprint(date, metadata, formatterFingerprint = '', inf
         audio_url: metadata?.audio_url || '',
         wechat_podcast_title: formatWechatPodcastTitle(date),
         formatter_fingerprint: formatterFingerprint || '',
-        infographic_fingerprint: infographicFingerprint || ''
+        infographic_fingerprint: infographicFingerprint || '',
+        podcast_page_url: podcastPageUrl || ''
     }));
 }
 
@@ -250,7 +253,8 @@ async function maybePublishPodcast({
         ? (podcastFormatter.getFingerprint() || '')
         : '';
     const infographicFingerprint = requireInfographic ? 'required-v1' : 'optional-v1';
-    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint);
+    const podcastPageUrl = buildPodcastLandingPageUrl({ date, siteBaseUrl });
+    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint, podcastPageUrl);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
@@ -275,6 +279,7 @@ async function maybePublishPodcast({
         formatterFallbackReason = error?.message || 'unknown_formatter_error';
         console.warn(`[wechat-autogen] podcast formatter failed, fallback to source markdown: ${formatterFallbackReason}`);
     }
+    markdown = appendPodcastListenCta(markdown, podcastPageUrl);
     let infographicUrl = null;
     let infographicError = null;
     if (infographicGenerator) {
@@ -304,7 +309,8 @@ async function maybePublishPodcast({
         kind: 'podcast',
         title: podcastTitle,
         markdown,
-        digest
+        digest,
+        contentSourceUrl: podcastPageUrl
     });
 
     return normalizeResult('uploaded', 'podcast_ready_today', {
@@ -313,6 +319,7 @@ async function maybePublishPodcast({
         stagingPath,
         mediaId: publishResult.media_id || null,
         formatterFallbackReason,
+        podcastPageUrl,
         infographicUrl,
         infographicError
     });
