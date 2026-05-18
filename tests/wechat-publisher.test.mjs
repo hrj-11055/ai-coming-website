@@ -64,7 +64,7 @@ test('publishDraft includes content_source_url for reading-original audio landin
     const result = await publishDraft({
         accessToken: 'token-123',
         article: {
-            title: '硅基生存指南 2026.04.02.',
+            title: '小元说 AI日报 2026.04.02.',
             author: 'AIcoming',
             digest: '摘要',
             content: '<p>播客版</p>',
@@ -89,7 +89,7 @@ test('publishDraft includes content_source_url for reading-original audio landin
 
 test('renderMarkdownToHtml keeps the WeChat news template styles with leading images', async () => {
     const html = await renderMarkdownToHtml([
-        '![AI资讯日报信息图](https://mmbiz.qpic.cn/test.jpg)',
+        '![小元说 AI日报图片](https://mmbiz.qpic.cn/test.jpg)',
         '',
         '## 今日内容',
         '',
@@ -111,7 +111,7 @@ test('renderMarkdownToHtml keeps the WeChat news template styles with leading im
 
 test('renderMarkdownToHtml normalizes plain text podcast headings before rendering', async () => {
     const html = await renderMarkdownToHtml([
-        '![AI资讯日报信息图](https://mmbiz.qpic.cn/test.jpg)',
+        '![小元说 AI日报图片](https://mmbiz.qpic.cn/test.jpg)',
         '',
         '开场导语',
         '今天我们来看10条最值得关注的AI资讯。',

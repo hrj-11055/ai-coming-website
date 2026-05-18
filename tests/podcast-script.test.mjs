@@ -41,10 +41,10 @@ test('buildPodcastSourceMarkdown renders a structured markdown digest for daily 
 });
 
 test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusions, and pure tts text', () => {
-    const markdown = `# 小元说AI · 口播文稿 | 2026.03.18
+    const markdown = `# 小元说 AI日报 · 口播文稿 | 2026.03.18
 
 **字数**：约2800字 | **预计时长**：约11分钟
-**朋友圈文案**：【硅基生存指南】2026.03.18，AI 公司开始抢企业工作流入口，每天听10分钟AI故事，悦读生存智慧。#小元说AI
+**朋友圈文案**：【小元说 AI日报】2026.03.18，AI 公司开始抢企业工作流入口，每天听10分钟AI故事，悦读生存智慧。#小元说 AI日报
 **排除旧闻**：
 - OpenAI 1100亿美元融资（旧闻，不再报道）
 - 某发布会预告（纯活动预告）
@@ -70,12 +70,12 @@ test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusi
 
 对管理者来说，下一阶段更值钱的是把工具接进组织，而不是只做一场漂亮试点。
 
-欢迎大家订阅小元说 AI 的公众号和视频号
+欢迎大家订阅小元说 AI日报的公众号和视频号
 `;
 
     const parsed = parsePodcastScriptMarkdown(markdown);
 
-    assert.equal(parsed.wechat_copy, '【硅基生存指南】2026.03.18，AI 公司开始抢企业工作流入口，每天听10分钟AI故事，悦读生存智慧。#小元说AI');
+    assert.equal(parsed.wechat_copy, '【小元说 AI日报】2026.03.18，AI 公司开始抢企业工作流入口，每天听10分钟AI故事，悦读生存智慧。#小元说 AI日报');
     assert.deepEqual(parsed.excluded_items, [
         'OpenAI 1100亿美元融资（旧闻，不再报道）',
         '某发布会预告（纯活动预告）'
@@ -85,17 +85,17 @@ test('parsePodcastScriptMarkdown extracts publish copy, selected titles, exclusi
         '企业买单标准变了'
     ]);
     assert.match(parsed.script_tts_text, /今天最值得注意的是/);
-    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听今天的硅基生存指南/m);
-    assert.match(parsed.script_tts_text, /欢迎大家订阅小元说 AI 的公众号和视频号$/);
+    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听今天的小元说 AI日报/m);
+    assert.match(parsed.script_tts_text, /欢迎大家订阅小元说 AI日报的公众号和视频号$/);
     assert.doesNotMatch(parsed.script_tts_text, /今天的内容就到这里/);
     assert.doesNotMatch(parsed.script_tts_text, /朋友圈文案/);
     assert.doesNotMatch(parsed.script_tts_text, /排除旧闻/);
 });
 
 test('parsePodcastScriptMarkdown removes structural section labels from spoken text and keeps a fixed spoken intro', () => {
-    const markdown = `# 小元说AI · 口播文稿 | 2026.03.28
+    const markdown = `# 小元说 AI日报 · 口播文稿 | 2026.03.28
 
-# 硅基生存指南
+# 小元说 AI日报
 
 **朋友圈文案**：测试文案
 
@@ -108,16 +108,16 @@ test('parsePodcastScriptMarkdown removes structural section labels from spoken t
 真正的竞争点，开始从模型能力转向谁能进入组织流程。
 
 ## 生存智慧
-今天的内容就到这里，欢迎大家订阅小元说AI的视频号，我们明天再见。
+今天的内容就到这里，欢迎大家订阅小元说 AI日报的视频号，我们明天再见。
 `;
 
     const parsed = parsePodcastScriptMarkdown(markdown);
 
-    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听今天的硅基生存指南/m);
-    assert.match(parsed.script_tts_text, /欢迎大家订阅小元说 AI 的公众号和视频号$/);
+    assert.match(parsed.script_tts_text, /^大家好，我是小元，欢迎收听今天的小元说 AI日报/m);
+    assert.match(parsed.script_tts_text, /欢迎大家订阅小元说 AI日报的公众号和视频号$/);
     assert.doesNotMatch(parsed.script_tts_text, /AI 早报/);
     assert.doesNotMatch(parsed.script_tts_text, /今天的内容就到这里/);
-    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)硅基生存指南(\n|$)/);
+    assert.doesNotMatch(parsed.script_tts_text, /(^|\n)小元说 AI日报(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)开场钩子(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)十条资讯(\n|$)/);
     assert.doesNotMatch(parsed.script_tts_text, /(^|\n)生存智慧(\n|$)/);
@@ -162,7 +162,7 @@ test('createPodcastScriptService reads the fixed JSON input file and sends OpenA
                     choices: [
                         {
                             message: {
-                                content: `# 小元说AI · 口播文稿 | 2026.03.18
+                                content: `# 小元说 AI日报 · 口播文稿 | 2026.03.18
 
 **朋友圈文案**：测试文案
 
@@ -232,7 +232,7 @@ test('createPodcastScriptService retries retryable DeepSeek failures with backof
                 choices: [
                     {
                         message: {
-                            content: `# 小元说AI · 口播文稿 | 2026.03.18
+                            content: `# 小元说 AI日报 · 口播文稿 | 2026.03.18
 
 **朋友圈文案**：测试文案
 

@@ -111,7 +111,7 @@ function buildPodcastEmailSubject({
     date,
     metadata
 }) {
-    return `[AIcoming播客] ${date} ${metadata?.title || 'AI资讯日报播客'}`;
+    return `[AIcoming播客] ${date} ${metadata?.title || '小元说 AI日报'}`;
 }
 
 function buildPodcastEmailText({
@@ -123,7 +123,7 @@ function buildPodcastEmailText({
     const transcript = String(metadata?.script_tts_text || metadata?.transcript || '').trim();
     const lines = [
         `日期：${date}`,
-        `标题：${metadata?.title || 'AI资讯日报播客'}`,
+        `标题：${metadata?.title || '小元说 AI日报'}`,
         '',
         '摘要：',
         String(metadata?.summary || '无摘要').trim(),

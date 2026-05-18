@@ -98,7 +98,7 @@ test('createWechatPodcastFormatter normalizes plain text section labels into mar
     });
 
     const result = await formatter.formatForWechat({
-        title: '硅基生存指南 2026.05.17.',
+        title: '小元说 AI日报 2026.05.17.',
         summary: '今天整理 10 条 AI 快讯。',
         scriptMarkdown: '原始播客内容',
         wechatCopy: '今天的AI资讯值得收藏。'

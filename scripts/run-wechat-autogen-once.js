@@ -288,7 +288,7 @@ async function maybePublishPodcast({
                 scriptMarkdown: metadata.script_markdown || ''
             });
             infographicUrl = await publisher.uploadNewsImageForContent({ imageBuffer });
-            markdown = `![AI资讯日报信息图](${infographicUrl})\n\n${markdown}`;
+            markdown = `![小元说 AI日报图片](${infographicUrl})\n\n${markdown}`;
         } catch (err) {
             infographicError = err?.message || String(err);
             console.warn(`[wechat-autogen] infographic generation failed: ${infographicError}`);

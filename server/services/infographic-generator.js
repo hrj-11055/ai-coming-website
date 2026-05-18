@@ -6,7 +6,7 @@ const DEFAULT_TIMEOUT_MS = 600000;
 const DEFAULT_OUTPUT_FORMAT = 'jpeg';
 const DEFAULT_OUTPUT_COMPRESSION = 85;
 const DEFAULT_IMAGE_QUALITY = 'medium';
-const IMAGE_PROMPT_PREFIX = '请基于下面播客文字稿画一幅 AI 资讯日报图片。';
+const IMAGE_PROMPT_PREFIX = '请基于下面播客文字稿画一幅《小元说 AI日报》图片。';
 
 function buildImagePromptSystemMessage() {
     return IMAGE_PROMPT_PREFIX;

@@ -12,14 +12,15 @@ const DEFAULT_SCRIPT_RETRY_BASE_DELAY_MS = 1000;
 const MAX_TTS_TEXT_LENGTH = 100000;
 const RETRYABLE_HTTP_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
 const STRUCTURAL_SPOKEN_LABELS = new Set([
+    '小元说 AI日报',
     '硅基生存指南',
     '开场钩子',
     '十个信号',
     '十条资讯',
     '生存智慧'
 ]);
-const REQUIRED_PODCAST_INTRO = '大家好，我是小元，欢迎收听今天的硅基生存指南';
-const REQUIRED_PODCAST_OUTRO = '欢迎大家订阅小元说 AI 的公众号和视频号';
+const REQUIRED_PODCAST_INTRO = '大家好，我是小元，欢迎收听今天的小元说 AI日报';
+const REQUIRED_PODCAST_OUTRO = '欢迎大家订阅小元说 AI日报的公众号和视频号';
 
 function hashText(value) {
     return crypto.createHash('sha1').update(String(value || '')).digest('hex');
@@ -85,10 +86,11 @@ function normalizePodcastSpeechBoundary(text) {
         .trim();
 
     normalized = normalized
-        .replace(/^大家好，我是小元，欢迎收听(?:今天的)?[^\n。！？]*(?:AI\s*早报|硅基生存指南)[。！？]?\s*/u, '')
+        .replace(/^大家好，我是小元，欢迎收听(?:今天的)?[^\n。！？]*(?:AI\s*早报|小元说\s*AI日报|硅基生存指南)[。！？]?\s*/u, '')
         .trim();
 
     const trailingPatterns = [
+        /(?:今天的内容就到这里[，,。！？!\s]*)?欢迎大家订阅小元说\s*AI日报\s*的?\s*(?:公众号和视频号|视频号和公众号|视频号|公众号)[，,。！？!\s]*(?:我们明天再见[。！？!\s]*)?$/u,
         /(?:今天的内容就到这里[，,。！？!\s]*)?欢迎大家订阅小元说\s*AI\s*的?\s*(?:公众号和视频号|视频号和公众号|视频号|公众号)[，,。！？!\s]*(?:我们明天再见[。！？!\s]*)?$/u,
         /今天的内容就到这里[，,。！？!\s]*$/u,
         /我们明天再见[。！？!\s]*$/u

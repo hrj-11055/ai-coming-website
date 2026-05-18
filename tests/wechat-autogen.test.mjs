@@ -152,11 +152,11 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
 
     assert.equal(calls.length, 1);
     assert.equal(calls[0].kind, 'podcast');
-    assert.equal(calls[0].title, '硅基生存指南 2026.04.02.');
+    assert.equal(calls[0].title, '小元说 AI日报 2026.04.02.');
     assert.equal(calls[0].contentSourceUrl, 'https://ai-coming.example.com/podcast.html?date=2026-04-02');
     assert.match(calls[0].markdown, /\[打开播客播放页\]\(https:\/\/ai-coming\.example\.com\/podcast\.html\?date=2026-04-02\)/);
     assert.equal(packagingCalls.length, 1);
-    assert.equal(packagingCalls[0].title, '硅基生存指南 2026.04.02.');
+    assert.equal(packagingCalls[0].title, '小元说 AI日报 2026.04.02.');
     assert.match(packagingCalls[0].scriptMarkdown, /今播播客正文/);
     assert.equal(result.podcast.action, 'uploaded');
     assert.equal(result.podcast.reason, 'podcast_ready_today');
@@ -320,7 +320,7 @@ test('runWechatAutogenOnce injects required infographic before publishing podcas
     });
 
     assert.equal(uploads.length, 1);
-    assert.match(uploads[0].markdown, /^!\[AI资讯日报信息图\]\(https:\/\/mmbiz\.qpic\.cn\/test\.jpg\)/);
+    assert.match(uploads[0].markdown, /^!\[小元说 AI日报图片\]\(https:\/\/mmbiz\.qpic\.cn\/test\.jpg\)/);
     assert.equal(result.podcast.action, 'uploaded');
     assert.equal(result.podcast.infographicUrl, 'https://mmbiz.qpic.cn/test.jpg');
 });

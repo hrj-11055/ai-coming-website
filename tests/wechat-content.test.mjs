@@ -54,7 +54,7 @@ test('buildPodcastMarkdown renders dated podcast title, marker, summary, and wec
         siteBaseUrl: 'https://ai-coming.example.com'
     });
 
-    assert.match(markdown, /^# 硅基生存指南 2026\.04\.02\./m);
+    assert.match(markdown, /^# 小元说 AI日报 2026\.04\.02\./m);
     assert.match(markdown, /播客版/);
     assert.match(markdown, /今天整理 12 条 AI 快讯。/);
     assert.match(markdown, /转发文案/);
@@ -75,7 +75,7 @@ test('buildPodcastLandingPageUrl and appendPodcastListenCta point readers to the
 
 test('buildWechatDigest truncates long text and formatWechatTitle keeps mm月dd日 format', () => {
     assert.equal(formatWechatTitle('2026-11-09'), '11月09日AI资讯早报');
-    assert.equal(formatWechatPodcastTitle('2026-11-09'), '硅基生存指南 2026.11.09.');
+    assert.equal(formatWechatPodcastTitle('2026-11-09'), '小元说 AI日报 2026.11.09.');
     const digest = buildWechatDigest('这是一段很长的摘要'.repeat(30));
     assert.ok(digest.length <= 120);
 });

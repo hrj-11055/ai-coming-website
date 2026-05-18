@@ -188,7 +188,7 @@ function createPlaceholderMetadata({
     wechatCopy = '',
     excludedItems = [],
     selectedTitles = [],
-    title = 'AI资讯日报播客',
+    title = '小元说 AI日报',
     errorMessage = null
 }) {
     return {

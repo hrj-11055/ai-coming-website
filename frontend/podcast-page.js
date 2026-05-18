@@ -65,9 +65,9 @@ async function loadPodcast() {
 
     const metadata = await response.json();
     const pageUrl = `${window.location.origin}/podcast.html?date=${date}`;
-    document.title = `${metadata.title || '小元说 AI'} - AIcoming`;
+    document.title = `${metadata.title || '小元说 AI日报'} - AIcoming`;
     setText('podcast-date', date);
-    setText('podcast-title', metadata.title || '小元说 AI');
+    setText('podcast-title', metadata.title || '小元说 AI日报');
     setText('podcast-summary', metadata.summary || '今日 AI 资讯播客已准备。');
     setText('podcast-status', metadata.status === 'ready' ? '已生成' : metadata.status || '状态未知');
     setText('podcast-duration', formatDuration(metadata.duration_seconds));

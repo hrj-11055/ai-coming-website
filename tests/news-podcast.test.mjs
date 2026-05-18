@@ -196,9 +196,9 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
         podcastScriptService: {
             async generateScript() {
                 return {
-                    script_markdown: '# 小元说AI',
-                    script_tts_text: '大家好，我是小元，欢迎收听今天的硅基生存指南。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI 的公众号和视频号。',
-                    wechat_copy: '【硅基生存指南】2026.03.18，企业 AI 开始争抢入口，每天听10分钟AI故事，悦读生存智慧。#小元说AI',
+                    script_markdown: '# 小元说 AI日报',
+                    script_tts_text: '大家好，我是小元，欢迎收听今天的小元说 AI日报。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI日报的公众号和视频号。',
+                    wechat_copy: '【小元说 AI日报】2026.03.18，企业 AI 开始争抢入口，每天听10分钟AI故事，悦读生存智慧。#小元说 AI日报',
                     excluded_items: ['旧闻示例'],
                     selected_titles: ['企业 AI 开始争抢入口']
                 };
@@ -207,7 +207,7 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
         fetchImpl: async (url, options = {}) => {
             if (url === 'https://tts.example.com/v1/t2a_async_v2') {
                 const body = JSON.parse(options.body || '{}');
-                assert.equal(body.text, '大家好，我是小元，欢迎收听今天的硅基生存指南。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI 的公众号和视频号。');
+                assert.equal(body.text, '大家好，我是小元，欢迎收听今天的小元说 AI日报。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI日报的公众号和视频号。');
                 return new Response(JSON.stringify({
                     task_id: 'task-123',
                     base_resp: {
@@ -273,8 +273,8 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
 
     const ready = service.getCurrentMetadata('2026-03-18');
     assert.equal(ready.status, 'ready');
-    assert.equal(ready.transcript, '大家好，我是小元，欢迎收听今天的硅基生存指南。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI 的公众号和视频号。');
-    assert.equal(ready.script_markdown, '# 小元说AI');
+    assert.equal(ready.transcript, '大家好，我是小元，欢迎收听今天的小元说 AI日报。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI日报的公众号和视频号。');
+    assert.equal(ready.script_markdown, '# 小元说 AI日报');
     assert.equal(ready.script_tts_text, ready.transcript);
     assert.equal(ready.tts_provider, 'minimax');
     assert.equal(ready.tts_voice_type, 'system_default');
@@ -348,8 +348,8 @@ test('generateNewsPodcast triggers podcast email after ready metadata persists',
         podcastScriptService: {
             async generateScript() {
                 return {
-                    script_markdown: '# 小元说AI',
-                    script_tts_text: '大家好，我是小元，欢迎收听今天的硅基生存指南。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI 的公众号和视频号。',
+                    script_markdown: '# 小元说 AI日报',
+                    script_tts_text: '大家好，我是小元，欢迎收听今天的小元说 AI日报。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI日报的公众号和视频号。',
                     wechat_copy: '',
                     excluded_items: [],
                     selected_titles: ['企业 AI 开始争抢入口']
@@ -483,8 +483,8 @@ test('generateNewsPodcast keeps ready metadata when podcast email send fails', a
             podcastScriptService: {
                 async generateScript() {
                     return {
-                        script_markdown: '# 小元说AI',
-                        script_tts_text: '大家好，我是小元，欢迎收听今天的硅基生存指南。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI 的公众号和视频号。',
+                        script_markdown: '# 小元说 AI日报',
+                        script_tts_text: '大家好，我是小元，欢迎收听今天的小元说 AI日报。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI日报的公众号和视频号。',
                         wechat_copy: '',
                         excluded_items: [],
                         selected_titles: ['企业 AI 开始争抢入口']

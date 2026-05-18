@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const WECHAT_PODCAST_TITLE = '硅基生存指南';
+const WECHAT_PODCAST_TITLE = '小元说 AI日报';
 
 function padDatePart(value) {
     return String(value || '').padStart(2, '0');

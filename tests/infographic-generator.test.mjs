@@ -7,7 +7,7 @@ const { createInfographicGenerator, buildImagePromptSystemMessage } = require('.
 
 test('buildImagePromptSystemMessage 使用直给式图片指令', () => {
     const msg = buildImagePromptSystemMessage();
-    assert.equal(msg, '请基于下面播客文字稿画一幅 AI 资讯日报图片。');
+    assert.equal(msg, '请基于下面播客文字稿画一幅《小元说 AI日报》图片。');
 });
 
 test('generateInfographic 直接把固定指令和播客稿发给 gpt-image-2', async () => {
@@ -34,7 +34,7 @@ test('generateInfographic 直接把固定指令和播客稿发给 gpt-image-2', 
     assert.equal(calls.length, 1);
     assert.match(calls[0].url, /\/v1\/images\/generations/);
     assert.equal(calls[0].body.model, 'gpt-image-2');
-    assert.equal(calls[0].body.prompt, '请基于下面播客文字稿画一幅 AI 资讯日报图片。\n\n## 今日播客\n三大AI新闻...');
+    assert.equal(calls[0].body.prompt, '请基于下面播客文字稿画一幅《小元说 AI日报》图片。\n\n## 今日播客\n三大AI新闻...');
     assert.equal(calls[0].body.n, 1);
     assert.equal(calls[0].body.size, '1024x1024');
     assert.equal(calls[0].body.quality, 'medium');

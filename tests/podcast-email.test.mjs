@@ -73,7 +73,7 @@ test('sendReadyPodcastEmail sends once and skips duplicate same fingerprint', as
 
     const metadata = {
         status: 'ready',
-        title: 'AI资讯日报播客',
+        title: '小元说 AI日报',
         summary: '今天的摘要',
         script_tts_text: '今天的完整口播稿。',
         audio_storage: 'local',
@@ -129,7 +129,7 @@ test('sendReadyPodcastEmail records error when mail send fails', async () => {
 
     const metadata = {
         status: 'ready',
-        title: 'AI资讯日报播客',
+        title: '小元说 AI日报',
         summary: '今天的摘要',
         script_tts_text: '今天的完整口播稿。',
         audio_storage: 'oss',
@@ -177,7 +177,7 @@ test('sendReadyPodcastEmail keeps audio url in email body when remote attachment
 
     const metadata = {
         status: 'ready',
-        title: 'AI资讯日报播客',
+        title: '小元说 AI日报',
         summary: '今天的摘要',
         script_tts_text: '今天的完整口播稿。',
         audio_storage: 'oss',
