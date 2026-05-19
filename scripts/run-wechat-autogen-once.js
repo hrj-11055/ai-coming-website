@@ -30,6 +30,7 @@ const DEFAULT_TIMEZONE = process.env.WECHAT_AUTOGEN_TIMEZONE || 'Asia/Shanghai';
 const DEFAULT_START_HOUR = Number(process.env.WECHAT_AUTOGEN_START_HOUR || 9);
 const DEFAULT_START_MINUTE = Number(process.env.WECHAT_AUTOGEN_START_MINUTE || 5);
 const DEFAULT_SITE_BASE_URL = process.env.WECHAT_AUTOGEN_SITE_BASE_URL || '';
+const DEFAULT_ORIGINAL_ARTICLE_URL = process.env.WECHAT_AUTOGEN_ORIGINAL_ARTICLE_URL || 'https://aicoming.cn/news.html';
 const DEFAULT_ENABLED = isFeatureEnabled(process.env.WECHAT_AUTOGEN_ENABLED, false);
 const DEFAULT_REQUIRE_INFOGRAPHIC = isFeatureEnabled(process.env.WECHAT_AUTOGEN_REQUIRE_INFOGRAPHIC, false);
 const DEFAULT_ENABLED_TYPES = String(process.env.WECHAT_AUTOGEN_ENABLED_TYPES || 'podcast,markdown')
@@ -106,7 +107,7 @@ function createFileFingerprint(filePath) {
     return [filePath, stats.size, stats.mtimeMs].join(':');
 }
 
-function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '', podcastPageUrl = '') {
+function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '', podcastPageUrl = '', originalArticleUrl = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
@@ -115,7 +116,8 @@ function createPodcastFingerprint(date, metadata, formatterFingerprint = '', inf
         wechat_podcast_title: formatWechatPodcastTitle(date),
         formatter_fingerprint: formatterFingerprint || '',
         infographic_fingerprint: infographicFingerprint || '',
-        podcast_page_url: podcastPageUrl || ''
+        podcast_page_url: podcastPageUrl || '',
+        original_article_url: originalArticleUrl || ''
     }));
 }
 
@@ -233,7 +235,8 @@ async function maybePublishPodcast({
     infographicGenerator,
     requireInfographic,
     enabledTypes,
-    siteBaseUrl
+    siteBaseUrl,
+    originalArticleUrl
 }) {
     if (!enabledTypes.has('podcast')) {
         return normalizeResult('skip', 'podcast_disabled');
@@ -254,7 +257,7 @@ async function maybePublishPodcast({
         : '';
     const infographicFingerprint = requireInfographic ? 'required-v1' : 'optional-v1';
     const podcastPageUrl = buildPodcastLandingPageUrl({ date, siteBaseUrl });
-    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint, podcastPageUrl);
+    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint, podcastPageUrl, originalArticleUrl);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
@@ -310,7 +313,7 @@ async function maybePublishPodcast({
         title: podcastTitle,
         markdown,
         digest,
-        contentSourceUrl: podcastPageUrl
+        contentSourceUrl: originalArticleUrl
     });
 
     return normalizeResult('uploaded', 'podcast_ready_today', {
@@ -320,6 +323,7 @@ async function maybePublishPodcast({
         mediaId: publishResult.media_id || null,
         formatterFallbackReason,
         podcastPageUrl,
+        originalArticleUrl,
         infographicUrl,
         infographicError
     });
@@ -415,6 +419,7 @@ async function runWechatAutogenOnce(options = {}) {
     const startHour = Number(options.startHour ?? getArg('--start-hour') ?? DEFAULT_START_HOUR);
     const startMinute = Number(options.startMinute ?? getArg('--start-minute') ?? DEFAULT_START_MINUTE);
     const siteBaseUrl = options.siteBaseUrl || getArg('--site-base-url') || DEFAULT_SITE_BASE_URL;
+    const originalArticleUrl = options.originalArticleUrl || getArg('--original-article-url') || DEFAULT_ORIGINAL_ARTICLE_URL;
     const enabled = isFeatureEnabled(options.enabled ?? getArg('--enabled') ?? DEFAULT_ENABLED, DEFAULT_ENABLED);
     const requireInfographic = isFeatureEnabled(options.requireInfographic ?? getArg('--require-infographic') ?? DEFAULT_REQUIRE_INFOGRAPHIC, DEFAULT_REQUIRE_INFOGRAPHIC);
     const enabledTypes = new Set((options.enabledTypes || DEFAULT_ENABLED_TYPES).map((value) => String(value).toLowerCase()));
@@ -527,7 +532,8 @@ async function runWechatAutogenOnce(options = {}) {
         },
         requireInfographic,
         enabledTypes,
-        siteBaseUrl
+        siteBaseUrl,
+        originalArticleUrl
     });
     const podcastAudioResult = await maybePublishPodcastAudio({
         date: dateInfo.date,
