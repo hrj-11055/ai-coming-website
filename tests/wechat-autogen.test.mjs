@@ -213,6 +213,57 @@ test('runWechatAutogenOnce republishes podcast when formatter fingerprint change
     assert.equal(result.podcast.action, 'uploaded');
 });
 
+test('runWechatAutogenOnce republishes podcast when cover image changes', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-cover-'));
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const stateFile = path.join(root, 'state.json');
+    const coverImagePath = path.join(root, 'cover.jpg');
+    const uploads = [];
+
+    writeJson(path.join(podcastMetadataDir, '2026-04-02.json'), {
+        status: 'ready',
+        summary: '今播播客摘要',
+        script_markdown: '今播播客正文'
+    });
+    fs.writeFileSync(coverImagePath, 'cover-v1');
+
+    const baseOptions = {
+        now: new Date('2026-04-02T02:00:00.000Z'),
+        reportDir: path.join(root, 'report'),
+        podcastMetadataDir,
+        stateFile,
+        stagingDir: path.join(root, 'staging'),
+        coverImagePath,
+        enabled: true,
+        enabledTypes: ['podcast'],
+        podcastFormatter: {
+            async formatForWechat({ title, scriptMarkdown }) {
+                return {
+                    markdown: `# ${title}\n\n${scriptMarkdown}`,
+                    digest: '今播播客摘要'
+                };
+            }
+        },
+        publisher: {
+            async publishMarkdownDraft(payload) {
+                uploads.push(payload);
+                return { media_id: `podcast-draft-${uploads.length}` };
+            }
+        }
+    };
+
+    const first = await runWechatAutogenOnce(baseOptions);
+    const second = await runWechatAutogenOnce(baseOptions);
+    fs.writeFileSync(coverImagePath, 'cover-v2');
+    const third = await runWechatAutogenOnce(baseOptions);
+
+    assert.equal(first.podcast.action, 'uploaded');
+    assert.equal(second.podcast.action, 'skip');
+    assert.equal(second.podcast.reason, 'same_fingerprint');
+    assert.equal(third.podcast.action, 'uploaded');
+    assert.equal(uploads.length, 2);
+});
+
 test('runWechatAutogenOnce skips podcast draft when required infographic fails', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-infographic-fail-'));
     const podcastMetadataDir = path.join(root, 'podcasts');

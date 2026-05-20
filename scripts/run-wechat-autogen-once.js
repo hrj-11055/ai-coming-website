@@ -107,7 +107,16 @@ function createFileFingerprint(filePath) {
     return [filePath, stats.size, stats.mtimeMs].join(':');
 }
 
-function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '', podcastPageUrl = '', originalArticleUrl = '') {
+function createOptionalFileFingerprint(filePath) {
+    const normalizedPath = String(filePath || '').trim();
+    if (!normalizedPath || !fs.existsSync(normalizedPath)) {
+        return normalizedPath;
+    }
+
+    return createFileFingerprint(normalizedPath);
+}
+
+function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '', podcastPageUrl = '', originalArticleUrl = '', coverFingerprint = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
@@ -117,7 +126,8 @@ function createPodcastFingerprint(date, metadata, formatterFingerprint = '', inf
         formatter_fingerprint: formatterFingerprint || '',
         infographic_fingerprint: infographicFingerprint || '',
         podcast_page_url: podcastPageUrl || '',
-        original_article_url: originalArticleUrl || ''
+        original_article_url: originalArticleUrl || '',
+        cover_fingerprint: coverFingerprint || ''
     }));
 }
 
@@ -236,7 +246,8 @@ async function maybePublishPodcast({
     requireInfographic,
     enabledTypes,
     siteBaseUrl,
-    originalArticleUrl
+    originalArticleUrl,
+    coverImagePath
 }) {
     if (!enabledTypes.has('podcast')) {
         return normalizeResult('skip', 'podcast_disabled');
@@ -257,7 +268,8 @@ async function maybePublishPodcast({
         : '';
     const infographicFingerprint = requireInfographic ? 'required-v1' : 'optional-v1';
     const podcastPageUrl = buildPodcastLandingPageUrl({ date, siteBaseUrl });
-    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint, podcastPageUrl, originalArticleUrl);
+    const coverFingerprint = createOptionalFileFingerprint(coverImagePath);
+    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint, podcastPageUrl, originalArticleUrl, coverFingerprint);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
@@ -324,6 +336,7 @@ async function maybePublishPodcast({
         formatterFallbackReason,
         podcastPageUrl,
         originalArticleUrl,
+        coverImagePath,
         infographicUrl,
         infographicError
     });
@@ -420,6 +433,7 @@ async function runWechatAutogenOnce(options = {}) {
     const startMinute = Number(options.startMinute ?? getArg('--start-minute') ?? DEFAULT_START_MINUTE);
     const siteBaseUrl = options.siteBaseUrl || getArg('--site-base-url') || DEFAULT_SITE_BASE_URL;
     const originalArticleUrl = options.originalArticleUrl || getArg('--original-article-url') || DEFAULT_ORIGINAL_ARTICLE_URL;
+    const coverImagePath = options.coverImagePath || getArg('--cover-image') || process.env.WECHAT_AUTOGEN_DEFAULT_COVER_IMAGE || '';
     const enabled = isFeatureEnabled(options.enabled ?? getArg('--enabled') ?? DEFAULT_ENABLED, DEFAULT_ENABLED);
     const requireInfographic = isFeatureEnabled(options.requireInfographic ?? getArg('--require-infographic') ?? DEFAULT_REQUIRE_INFOGRAPHIC, DEFAULT_REQUIRE_INFOGRAPHIC);
     const enabledTypes = new Set((options.enabledTypes || DEFAULT_ENABLED_TYPES).map((value) => String(value).toLowerCase()));
@@ -533,7 +547,8 @@ async function runWechatAutogenOnce(options = {}) {
         requireInfographic,
         enabledTypes,
         siteBaseUrl,
-        originalArticleUrl
+        originalArticleUrl,
+        coverImagePath
     });
     const podcastAudioResult = await maybePublishPodcastAudio({
         date: dateInfo.date,
