@@ -264,7 +264,7 @@ test('runWechatAutogenOnce republishes podcast when cover image changes', async 
     assert.equal(uploads.length, 2);
 });
 
-test('runWechatAutogenOnce skips podcast draft when required infographic fails', async () => {
+test('runWechatAutogenOnce uploads podcast draft when required infographic fails', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-infographic-fail-'));
     const podcastMetadataDir = path.join(root, 'podcasts');
     const stateFile = path.join(root, 'state.json');
@@ -312,15 +312,18 @@ test('runWechatAutogenOnce skips podcast draft when required infographic fails',
         }
     });
 
-    assert.equal(uploads.length, 0);
-    assert.equal(result.podcast.action, 'skip');
-    assert.equal(result.podcast.reason, 'infographic_failed');
+    assert.equal(uploads.length, 1);
+    assert.equal(uploads[0].kind, 'podcast');
+    assert.equal(uploads[0].markdown.includes('今播播客正文'), true);
+    assert.equal(uploads[0].markdown.includes('小元说 AI日报图片'), false);
+    assert.equal(result.podcast.action, 'uploaded');
+    assert.equal(result.podcast.reason, 'podcast_ready_today');
     assert.match(result.podcast.infographicError, /image timeout/);
 
     const savedState = JSON.parse(fs.readFileSync(stateFile, 'utf8'));
-    assert.equal(savedState.podcast.last_uploaded_fingerprint, null);
-    assert.equal(savedState.podcast.last_result, 'skip');
-    assert.equal(savedState.podcast.last_reason, 'infographic_failed');
+    assert.equal(typeof savedState.podcast.last_uploaded_fingerprint, 'string');
+    assert.equal(savedState.podcast.last_result, 'uploaded');
+    assert.equal(savedState.podcast.last_reason, 'podcast_ready_today');
     assert.match(savedState.podcast.last_error, /image timeout/);
 });
 

@@ -307,14 +307,6 @@ async function maybePublishPodcast({
         } catch (err) {
             infographicError = err?.message || String(err);
             console.warn(`[wechat-autogen] infographic generation failed: ${infographicError}`);
-            if (requireInfographic) {
-                return normalizeResult('skip', 'infographic_failed', {
-                    metadataPath,
-                    fingerprint,
-                    formatterFallbackReason,
-                    infographicError
-                });
-            }
         }
     }
     const stagingPath = path.join(stagingDir, `${date}-podcast.md`);
