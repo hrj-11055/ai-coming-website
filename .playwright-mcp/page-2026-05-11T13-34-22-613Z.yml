@@ -1,0 +1,520 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - link "AIcoming - 让一部分人先用起来" [ref=e7] [cursor=pointer]:
+          - /url: index.html
+          - img "AIcoming - 让一部分人先用起来" [ref=e8]
+        - generic [ref=e10]:
+          - link "首页" [ref=e11] [cursor=pointer]:
+            - /url: index.html
+          - link "AI资讯" [ref=e12] [cursor=pointer]:
+            - /url: news.html
+          - link "AI工具集" [ref=e13] [cursor=pointer]:
+            - /url: tools.html
+          - link "AI 能力库" [ref=e14] [cursor=pointer]:
+            - /url: skills.html
+          - link "关于我们" [ref=e15] [cursor=pointer]:
+            - /url: about.html
+        - text: 
+    - text: 
+  - generic [ref=e16]:
+    - generic [ref=e18]:
+      - generic: 近期热点
+      - generic [ref=e19] [cursor=pointer]: AI模型
+      - generic [ref=e20] [cursor=pointer]: GPT-5.3-Codex
+      - generic [ref=e21] [cursor=pointer]: Claude Opus 4.6
+      - generic [ref=e22] [cursor=pointer]: GLM-5
+      - generic [ref=e23] [cursor=pointer]: 通义千问3.5
+      - generic [ref=e24] [cursor=pointer]: AI Agent
+      - generic [ref=e25] [cursor=pointer]: OpenClaw
+      - generic [ref=e26] [cursor=pointer]: AI编程
+      - generic [ref=e27] [cursor=pointer]: 开源
+      - generic [ref=e28] [cursor=pointer]: 推理加速
+      - generic [ref=e29] [cursor=pointer]: 具身智能
+      - generic [ref=e30] [cursor=pointer]: 投融资
+      - generic [ref=e31] [cursor=pointer]: Gemini 3.1 Pro
+      - generic [ref=e32] [cursor=pointer]: Steerling-8B
+      - generic [ref=e33] [cursor=pointer]: ArcFlow
+      - generic [ref=e34] [cursor=pointer]: Ring-2.5-1T
+      - generic [ref=e35] [cursor=pointer]: AI安全
+      - generic [ref=e36] [cursor=pointer]: 多模态
+      - generic [ref=e37] [cursor=pointer]: AI芯片
+      - generic [ref=e38] [cursor=pointer]: 数据存储
+      - generic [ref=e39] [cursor=pointer]: AI应用
+      - generic [ref=e40] [cursor=pointer]: AI战略
+      - generic [ref=e41] [cursor=pointer]: AI基准测试
+      - generic [ref=e42] [cursor=pointer]: AI对齐
+      - generic [ref=e43] [cursor=pointer]: AI招聘
+      - generic [ref=e44] [cursor=pointer]: AI编译器
+      - generic [ref=e45] [cursor=pointer]: AI检索架构
+      - generic [ref=e46] [cursor=pointer]: AI仿真平台
+      - generic [ref=e47] [cursor=pointer]: AI歌单
+      - generic [ref=e48] [cursor=pointer]: AI网课
+    - generic [ref=e51]:
+      - complementary [ref=e52]:
+        - generic [ref=e53]:
+          - heading " 历史文章" [level=3] [ref=e54]:
+            - generic [ref=e55]: 
+            - text: 历史文章
+          - combobox [ref=e57]:
+            - option "全部月份" [selected]
+          - generic [ref=e58]:
+            - generic [ref=e59] [cursor=pointer]:
+              - generic [ref=e60]: 5月11日 (今天)
+              - generic [ref=e61]: 20 篇文章
+            - generic [ref=e62]: 历史日期加载中...
+      - main [ref=e63]:
+        - heading "今日快讯" [level=2] [ref=e66]
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: AI资讯日报播客
+              - generic [ref=e72]: 2026-05-11 · 时长生成后可见
+            - generic [ref=e73]: 未生成
+          - paragraph [ref=e74]: 当前日期暂无可用于生成播客的新闻内容。
+        - generic [ref=e76]:
+          - generic [ref=e77]: 地区：
+          - generic [ref=e78]:
+            - button "全部" [ref=e79] [cursor=pointer]
+            - button "中国" [ref=e80] [cursor=pointer]
+            - button "全球" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - article [ref=e83]:
+            - generic [ref=e85]:
+              - generic [ref=e87]: 
+              - generic [ref=e89]:
+                - generic [ref=e90]: 技术
+                - generic [ref=e91]: 大模型
+            - heading "英伟达发布通用机器人基础模型 Eureka 2，支持多模态输入与跨平台部署" [level=3] [ref=e92]:
+              - link "英伟达发布通用机器人基础模型 Eureka 2，支持多模态输入与跨平台部署" [ref=e93] [cursor=pointer]:
+                - /url: https://mp.weixin.qq.com/s/Lxs9FvEkc5dC5MGNsj-8Cg
+            - paragraph [ref=e95]:
+              - generic [ref=e96]: 
+              - generic [ref=e97]: 英伟达发布机器人世界模型 Eureka 2，模型参数 10B，支持文本、图像、视频、点云等多模态输入，在 10 种不同机器人平台上完成超过 30 项复杂任务，训练效率较前代提升 100 倍。
+            - paragraph [ref=e98]: 英伟达发布通用机器人基础模型 Eureka 2，旨在实现单一模型驱动多种形态的机器人。此举标志着机器人领域正从专用、碎片化的模型开发，向基于统一世界模型的通用智能体范式转移。其核心信号在于，英伟达正试图将 AI 领域的“基础模型”逻辑复制到机器人产业，通过提供统一的软件层（Eureka 2）来巩固其硬件（如 Jetson、Isaac Sim）的生态护城河。这将对依赖专用解决方案的机器人公司构成降维打击，并加速行业整合。真正的瓶颈在于物理世界数据的规模、质量和仿真到现实的迁移效率。
+            - link "阅读原文 " [ref=e100] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/s/Lxs9FvEkc5dC5MGNsj-8Cg
+              - text: 阅读原文
+              - generic [ref=e101]: 
+          - article [ref=e102]:
+            - generic [ref=e104]:
+              - generic [ref=e106]: 
+              - generic [ref=e108]:
+                - generic [ref=e109]: 技术
+                - generic [ref=e110]: 大模型
+            - heading "快手披露万人研发组织AI范式升级：从平台化到智能化" [level=3] [ref=e111]:
+              - link "快手披露万人研发组织AI范式升级：从平台化到智能化" [ref=e112] [cursor=pointer]:
+                - /url: https://www.infoq.cn/article/9rX1Ov951gKtaTmQb8Jq
+            - paragraph [ref=e114]:
+              - generic [ref=e115]: 
+              - generic [ref=e116]: 快手首次系统性披露其自2023年以来的AI研发范式升级历程，涉及万人技术团队，通过平台化、数字化、精益化三阶段建设，使工具渗透率超过95%，流程自动化超过94%，人均需求吞吐量提升41.57%。
+            - paragraph [ref=e117]: 快手披露的AI研发范式升级，核心信号在于揭示了大型科技公司AI转型的真正瓶颈：从提升个人效率（Copilot）到提升组织整体效能（Agentic）的鸿沟。其经验表明，单纯提升个人编码效率（如AI代码生成率超过30%）无法直接转化为组织需求交付效率的提升。这为所有进行AI转型的企业提供了关键洞见：组织流程、协作模式和文化变革是AI价值释放的必要条件，否则技术投入将陷入局部优化的陷阱。
+            - link "阅读原文 " [ref=e119] [cursor=pointer]:
+              - /url: https://www.infoq.cn/article/9rX1Ov951gKtaTmQb8Jq
+              - text: 阅读原文
+              - generic [ref=e120]: 
+          - article [ref=e121]:
+            - generic [ref=e123]:
+              - generic [ref=e125]: 
+              - generic [ref=e127]:
+                - generic [ref=e128]: 技术
+                - generic [ref=e129]: 计算机视觉
+            - heading "华为天才少年发布全球首个实时虚实融合视频交互模型" [level=3] [ref=e130]:
+              - link "华为天才少年发布全球首个实时虚实融合视频交互模型" [ref=e131] [cursor=pointer]:
+                - /url: https://mp.weixin.qq.com/s/xnaOGvC5_EVYxsJYxVE_xQ
+            - paragraph [ref=e133]:
+              - generic [ref=e134]: 
+              - generic [ref=e135]: 华为天才少年创业项目发布全球首个支持实时虚实融合交互的视频生成模型，可在10秒内生成视频，并实现用户与生成内容的实时互动。
+            - paragraph [ref=e136]: 该模型实现了视频生成与实时交互的结合，标志着AI生成内容从单向输出向双向互动演进。其技术核心在于解决了生成内容与用户指令的实时对齐难题。从商业竞争看，它直接挑战了Runway、Pika等现有视频生成工具的单向模式，可能开辟互动娱乐、虚拟社交、实时营销等新应用场景。真正的瓶颈在于交互的稳定性和复杂场景下的实时性，这决定了其从技术演示到规模化应用的路径长度。
+            - link "阅读原文 " [ref=e138] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/s/xnaOGvC5_EVYxsJYxVE_xQ
+              - text: 阅读原文
+              - generic [ref=e139]: 
+          - article [ref=e140]:
+            - generic [ref=e142]:
+              - generic [ref=e144]: 
+              - generic [ref=e146]:
+                - generic [ref=e147]: 技术
+                - generic [ref=e148]: 大模型
+            - heading "神秘模型Pony Alpha在OpenRouter走红，实测显示编程与智能体能力突出" [level=3] [ref=e149]:
+              - link "神秘模型Pony Alpha在OpenRouter走红，实测显示编程与智能体能力突出" [ref=e150] [cursor=pointer]:
+                - /url: https://www.36kr.com/p/3675822130012802
+            - paragraph [ref=e152]:
+              - generic [ref=e153]: 
+              - generic [ref=e154]: 一款名为Pony Alpha的未公开厂商模型在OpenRouter平台引发关注，用户实测其能连续编程3小时生成可游玩的Pokemon Ruby游戏，并在SVG生成等任务中表现优异。
+            - paragraph [ref=e155]: 一款匿名厂商的下一代基础模型Pony Alpha凭借在编程、推理和智能体工作流上的实测表现，在开发者社区引发热议。其核心信号在于：1）技术层面，模型在复杂、长周期编程任务上的完成度，可能标志着AI辅助软件开发的实用化门槛进一步降低。2）商业层面，匿名发布且性能对标顶级模型，可能预示着新玩家正以“产品实测”而非“品牌营销”的方式切入竞争激烈的编程AI市场，或将加剧该领域的性能与价格压力。
+            - link "阅读原文 " [ref=e157] [cursor=pointer]:
+              - /url: https://www.36kr.com/p/3675822130012802
+              - text: 阅读原文
+              - generic [ref=e158]: 
+          - article [ref=e159]:
+            - generic [ref=e161]:
+              - generic [ref=e163]: 
+              - generic [ref=e165]:
+                - generic [ref=e166]: 技术
+                - generic [ref=e167]: 大模型
+            - heading "OpenAI发布Open Responses规范，统一智能体工作流标准" [level=3] [ref=e168]:
+              - link "OpenAI发布Open Responses规范，统一智能体工作流标准" [ref=e169] [cursor=pointer]:
+                - /url: https://www.infoq.cn/article/dyVRzxpkuoWbdHrEKoC4
+            - paragraph [ref=e171]:
+              - generic [ref=e172]: 
+              - generic [ref=e173]: OpenAI发布Open Responses规范，旨在统一智能体式AI工作流标准，获得Hugging Face、Vercel及多家本地推理服务商支持，规范定义了条目、推理可观测性、工具执行模型等概念，支持多模态输入、流式事件和跨服务商工具调用。
+            - paragraph [ref=e174]: OpenAI联合多家服务商推出Open Responses规范，旨在成为智能体工作流的“通用API接口”。此举核心是定义编排层标准，将模型能力与工作流逻辑解耦。其影响在于：1）技术层面，通过标准化条目和工具调用，降低开发者在不同模型间切换的适配成本，加速开源模型在复杂应用中的落地。2）商业层面，OpenAI试图从模型提供商升级为生态规则制定者，此举可能削弱依赖私有API或自建编排框架的云服务商（如AWS Bedrock Agents）的差异化优势，将竞争焦点重新拉回模型能力本身。长期看，这是智能体应用从探索走向规模化部署的关键基础设施准备。
+            - link "阅读原文 " [ref=e176] [cursor=pointer]:
+              - /url: https://www.infoq.cn/article/dyVRzxpkuoWbdHrEKoC4
+              - text: 阅读原文
+              - generic [ref=e177]: 
+          - article [ref=e178]:
+            - generic [ref=e180]:
+              - generic [ref=e182]: 
+              - generic [ref=e184]:
+                - generic [ref=e185]: 技术
+                - generic [ref=e186]: 大模型
+            - heading "Anthropic发布新版Claude宪法：结构化原则与情境化指南结合" [level=3] [ref=e187]:
+              - link "Anthropic发布新版Claude宪法：结构化原则与情境化指南结合" [ref=e188] [cursor=pointer]:
+                - /url: https://www.infoq.cn/article/TG6vTDfYS6OIMRefSZ4S
+            - paragraph [ref=e190]:
+              - generic [ref=e191]: 
+              - generic [ref=e192]: Anthropic发布新版Claude宪法，为模型行为、推理和训练提供结构化框架，强调理解原则背后的理念以增强适应性，并用于生成合成数据指导模型更新。
+            - paragraph [ref=e193]: Anthropic发布新版Claude宪法，标志着AI对齐从静态规则列表向动态原则框架的范式转移。其核心在于将明确原则与情境化推理结合，旨在提升模型在模糊场景下的可靠性与适应性。此举不仅是技术迭代，更是对AI治理模式的探索。它试图在确保安全可控的前提下，赋予模型一定的自主判断能力，以应对复杂多变的现实世界。这为行业提供了可参考的治理框架，可能推动AI安全标准从“黑盒”测试向“白盒”原则演进。
+            - link "阅读原文 " [ref=e195] [cursor=pointer]:
+              - /url: https://www.infoq.cn/article/TG6vTDfYS6OIMRefSZ4S
+              - text: 阅读原文
+              - generic [ref=e196]: 
+          - article [ref=e197]:
+            - generic [ref=e199]:
+              - generic [ref=e201]: 
+              - generic [ref=e203]:
+                - generic [ref=e204]: 观点
+                - generic [ref=e205]: 伦理讨论
+            - heading "人形机器人商业化面临恐怖谷效应挑战，特斯拉Optimus计划年产百万台" [level=3] [ref=e206]:
+              - link "人形机器人商业化面临恐怖谷效应挑战，特斯拉Optimus计划年产百万台" [ref=e207] [cursor=pointer]:
+                - /url: https://www.36kr.com/p/3675816257971080
+            - paragraph [ref=e209]:
+              - generic [ref=e210]: 
+              - generic [ref=e211]: 特斯拉宣布第三代Optimus即将亮相，并设定年产百万台目标，马斯克确认以德州为核心推进制造，并视中国为主要竞争对手。
+            - paragraph [ref=e212]: 特斯拉宣布第三代Optimus量产计划，标志着人形机器人从实验室走向规模化制造的关键节点。然而，文章指出，技术参数之外的“恐怖谷效应”可能成为商业化的核心瓶颈。这揭示了行业当前对技术瓶颈（如续航、算力）的过度关注，而低估了社会心理接受度这一隐形成本。对于投资者而言，评估人形机器人公司时，除技术路线和供应链外，必须将用户心理接受度、产品设计如何跨越恐怖谷纳入决策模型，这可能是决定消费级产品成败的关键变量。
+            - link "阅读原文 " [ref=e214] [cursor=pointer]:
+              - /url: https://www.36kr.com/p/3675816257971080
+              - text: 阅读原文
+              - generic [ref=e215]: 
+          - article [ref=e216]:
+            - generic [ref=e218]:
+              - generic [ref=e220]: 
+              - generic [ref=e222]:
+                - generic [ref=e223]: 研究
+                - generic [ref=e224]: 数据集发布
+            - heading "CMU开源首份Agentic Search日志数据集，含1.6万次交互" [level=3] [ref=e225]:
+              - link "CMU开源首份Agentic Search日志数据集，含1.6万次交互" [ref=e226] [cursor=pointer]:
+                - /url: https://mp.weixin.qq.com/s/uRWHomOqZmOVfVRkx1l2fw
+            - paragraph [ref=e228]:
+              - generic [ref=e229]: 
+              - generic [ref=e230]: 卡内基梅隆大学开源首个大型Agentic Search日志数据集AgentSearch，包含超过1.6万次人机交互、4.6万次API调用及2.8万次思考步骤，为理解智能体行为提供了基础数据。
+            - paragraph [ref=e231]: CMU开源AgentSearch数据集，首次大规模公开智能体在复杂任务中的搜索、思考与API调用日志。此举为学术界提供了分析智能体决策过程、失败模式及优化方向的宝贵资源，将加速对Agent“黑箱”的理解。从技术落地看，当前智能体的瓶颈在于可靠性和可预测性，该数据集有助于建立评估基准，推动从“黑盒”到“白盒”的调试与优化，是迈向更稳健、可解释智能体的关键一步。
+            - link "阅读原文 " [ref=e233] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/s/uRWHomOqZmOVfVRkx1l2fw
+              - text: 阅读原文
+              - generic [ref=e234]: 
+          - article [ref=e235]:
+            - generic [ref=e237]:
+              - generic [ref=e239]: 
+              - generic [ref=e241]:
+                - generic [ref=e242]: 商业
+                - generic [ref=e243]: 融资并购
+            - heading "Crypto.com 以 7000 万美元收购 AI.com 域名" [level=3] [ref=e244]:
+              - link "Crypto.com 以 7000 万美元收购 AI.com 域名" [ref=e245] [cursor=pointer]:
+                - /url: https://techcrunch.com/2026/02/08/crypto-com-places-70m-bet-on-ai-com-domain-ahead-of-super-bowl/
+            - paragraph [ref=e247]:
+              - generic [ref=e248]: 
+              - generic [ref=e249]: 加密货币交易平台 Crypto.com 以 7000 万美元的价格收购了 AI.com 域名，刷新了域名交易记录。
+            - paragraph [ref=e250]: Crypto.com 斥资 7000 万美元收购顶级域名 AI.com，远超此前 3000 万美元的域名交易纪录。此举并非单纯品牌升级，而是加密货币资本强势介入 AI 品牌竞争的信号。它表明，拥有强大现金流的加密企业正试图通过收购稀缺的顶级数字资产（域名），在 AI 赛道建立品牌制高点，以弥补其在技术积累上的不足。这或将引发科技巨头对核心数字资产的防御性收购，并推高相关资产价格。
+            - link "阅读原文 " [ref=e252] [cursor=pointer]:
+              - /url: https://techcrunch.com/2026/02/08/crypto-com-places-70m-bet-on-ai-com-domain-ahead-of-super-bowl/
+              - text: 阅读原文
+              - generic [ref=e253]: 
+          - article [ref=e254]:
+            - generic [ref=e256]:
+              - generic [ref=e258]: 
+              - generic [ref=e260]:
+                - generic [ref=e261]: 商业
+                - generic [ref=e262]: 市场竞争
+            - heading "超级碗广告首现AI生成内容，Anthropic借势营销引发行业关注" [level=3] [ref=e263]:
+              - link "超级碗广告首现AI生成内容，Anthropic借势营销引发行业关注" [ref=e264] [cursor=pointer]:
+                - /url: https://techcrunch.com/2026/02/08/super-bowl-60-ai-ads-svedka-anthropic-brands-commercials/
+            - paragraph [ref=e266]:
+              - generic [ref=e267]: 
+              - generic [ref=e268]: 在超级碗LX广告中，Svedka推出首个AI生成广告，Anthropic投放广告影射OpenAI，单条广告位成本约700万美元。
+            - paragraph [ref=e269]: 超级碗广告首次出现AI生成内容（Svedka），标志着AI技术正从生产力工具向大众消费文化符号渗透。Anthropic斥巨资投放广告，直接影射行业龙头OpenAI，此举并非单纯品牌宣传，而是向投资者和潜在客户展示其市场挑战者姿态与资金实力。这反映了AI行业竞争已从技术研发延伸至品牌心智与公众认知的争夺，顶级营销资源成为巨头博弈的新战场。
+            - link "阅读原文 " [ref=e271] [cursor=pointer]:
+              - /url: https://techcrunch.com/2026/02/08/super-bowl-60-ai-ads-svedka-anthropic-brands-commercials/
+              - text: 阅读原文
+              - generic [ref=e272]: 
+          - article [ref=e273]:
+            - generic [ref=e275]:
+              - generic [ref=e277]: 
+              - generic [ref=e279]:
+                - generic [ref=e280]: 研究
+                - generic [ref=e281]: 基准测试
+            - heading "学术研究揭示AI新闻摘要可靠性问题：63%回答存在缺陷" [level=3] [ref=e282]:
+              - link "学术研究揭示AI新闻摘要可靠性问题：63%回答存在缺陷" [ref=e283] [cursor=pointer]:
+                - /url: https://www.36kr.com/p/3675772717491072
+            - paragraph [ref=e285]:
+              - generic [ref=e286]: 
+              - generic [ref=e287]: 魁北克大学教授为期一月的测试显示，AI聊天机器人提供的839条新闻摘要中，63%存在事实错误、来源缺失或虚构链接等问题。
+            - paragraph [ref=e288]: 该研究揭示了当前生成式AI作为信息获取工具的核心瓶颈：幻觉问题与可信度验证。尽管AI能生成结构清晰、看似专业的摘要，但其事实准确性和来源可靠性远未达到可独立信赖的程度。这为AI搜索/新闻聚合产品的商业化落地敲响警钟，表明技术成熟度与用户信任建立之间存在巨大鸿沟。短期内，AI更适合作为信息处理的辅助工具，而非独立信源。
+            - link "阅读原文 " [ref=e290] [cursor=pointer]:
+              - /url: https://www.36kr.com/p/3675772717491072
+              - text: 阅读原文
+              - generic [ref=e291]: 
+          - article [ref=e292]:
+            - generic [ref=e294]:
+              - generic [ref=e296]: 
+              - generic [ref=e298]:
+                - generic [ref=e299]: 商业
+                - generic [ref=e300]: 市场竞争
+            - heading "Crypto.com 以 7000 万美元收购 AI.com 域名" [level=3] [ref=e301]:
+              - link "Crypto.com 以 7000 万美元收购 AI.com 域名" [ref=e302] [cursor=pointer]:
+                - /url: https://techcrunch.com/2026/02/08/crypto-com-places-70m-bet-on-ai-com-domain-ahead-of-super-bowl/
+            - paragraph [ref=e304]:
+              - generic [ref=e305]: 
+              - generic [ref=e306]: 加密货币交易平台 Crypto.com 在超级碗前以 7000 万美元的价格收购了 AI.com 域名，刷新了域名交易记录。
+            - paragraph [ref=e307]: Crypto.com 斥资 7000 万美元收购顶级域名 AI.com，其意图远超一次营销事件。此举释放出两个关键信号：第一，加密资本正以前所未有的力度和速度，通过品牌绑定方式抢占 AI 赛道的心智入口，域名即战略资产。第二，这反映了加密行业在熊市后寻求新叙事和增长点的迫切性，AI 被视为核心驱动力。然而，天价收购也凸显了当前 AI 领域品牌竞争的泡沫化倾向，巨额资金流向营销而非底层技术，值得警惕。
+            - link "阅读原文 " [ref=e309] [cursor=pointer]:
+              - /url: https://techcrunch.com/2026/02/08/crypto-com-places-70m-bet-on-ai-com-domain-ahead-of-super-bowl/
+              - text: 阅读原文
+              - generic [ref=e310]: 
+          - article [ref=e311]:
+            - generic [ref=e313]:
+              - generic [ref=e315]: 
+              - generic [ref=e317]:
+                - generic [ref=e318]: 研究
+                - generic [ref=e319]: 伦理讨论
+            - heading "Anthropic 披露 Claude 宪法细节：80页准则塑造模型拒绝行为" [level=3] [ref=e320]:
+              - link "Anthropic 披露 Claude 宪法细节：80页准则塑造模型拒绝行为" [ref=e321] [cursor=pointer]:
+                - /url: https://mp.weixin.qq.com/s/jgcWHXB2PqoD5Wbm9Ix3yQ
+            - paragraph [ref=e323]:
+              - generic [ref=e324]: 
+              - generic [ref=e325]: Anthropic 公开其 Claude 模型遵循的 80 页 AI 宪法文件，该文件包含 100 余条具体准则，旨在通过强化学习从人类反馈中引导模型行为，使其在特定场景下拒绝用户指令。
+            - paragraph [ref=e326]: Anthropic 公开其 AI 宪法，此举揭示了头部 AI 公司如何通过系统性规则（而非单纯指令微调）来塑造模型的安全与价值观对齐。这标志着 AI 治理从黑箱走向透明化、可审计的重要一步，为行业提供了可参考的框架。从商业竞争看，这巩固了 Anthropic 在“负责任 AI”领域的品牌护城河，但也可能因规则过于严格而限制其应用场景的灵活性。长期来看，公开治理框架可能成为 AI 公司获取监管与市场信任的新竞争维度。
+            - link "阅读原文 " [ref=e328] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/s/jgcWHXB2PqoD5Wbm9Ix3yQ
+              - text: 阅读原文
+              - generic [ref=e329]: 
+          - article [ref=e330]:
+            - generic [ref=e332]:
+              - generic [ref=e334]: 
+              - generic [ref=e336]:
+                - generic [ref=e337]: 商业
+                - generic [ref=e338]: 市场竞争
+            - heading "AI.com域名以4.85亿元成交，创历史最高纪录" [level=3] [ref=e339]:
+              - link "AI.com域名以4.85亿元成交，创历史最高纪录" [ref=e340] [cursor=pointer]:
+                - /url: https://mp.weixin.qq.com/s/WXT_RR7JXrB37viNlxYVHQ
+            - paragraph [ref=e342]:
+              - generic [ref=e343]: 
+              - generic [ref=e344]: AI.com域名以1100万美元（约合人民币4.85亿元）的价格成交，刷新公开市场域名交易纪录。
+            - paragraph [ref=e345]: AI.com域名以1100万美元成交，买家身份未公开。此交易远超此前360.com的1700万美元纪录，凸显了“AI”作为顶级商业符号的稀缺价值。这并非单纯的技术或产品新闻，而是AI浪潮资本化与品牌争夺进入白热化的标志性信号。高价收购行为本身，反映了资本对AI作为未来核心基础设施的长期押注，以及头部玩家对顶级心智入口的争夺。
+            - link "阅读原文 " [ref=e347] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/s/WXT_RR7JXrB37viNlxYVHQ
+              - text: 阅读原文
+              - generic [ref=e348]: 
+          - article [ref=e349]:
+            - generic [ref=e351]:
+              - generic [ref=e353]: 
+              - generic [ref=e355]:
+                - generic [ref=e356]: 产品
+                - generic [ref=e357]: 消费应用
+            - heading "智元机器人举办全球首场机器人表演活动，展示人形机器人协同能力" [level=3] [ref=e358]:
+              - link "智元机器人举办全球首场机器人表演活动，展示人形机器人协同能力" [ref=e359] [cursor=pointer]:
+                - /url: https://mp.weixin.qq.com/s/ep0BYT-aXnYeAYEHZPrQFg
+            - paragraph [ref=e361]:
+              - generic [ref=e362]: 
+              - generic [ref=e363]: 智元机器人公司举办全球首场机器人表演活动，展示其研发的多台人形机器人协同完成舞蹈、乐器演奏等复杂任务。
+            - paragraph [ref=e364]: 智元机器人举办全球首次机器人表演活动，其核心信号在于，该公司正通过公开、高难度、娱乐化的场景，系统性验证其人形机器人的运动控制、多机协同与任务执行能力。这超越了实验室演示，是技术向复杂现实场景落地的重要压力测试。此举旨在向市场展示其技术成熟度与产品化潜力，为后续商业化（如工业、服务场景）铺路。当前瓶颈在于非结构化环境下的任务泛化能力与成本控制，该活动是技术自信的体现，也是面向资本与客户的营销。
+            - link "阅读原文 " [ref=e366] [cursor=pointer]:
+              - /url: https://mp.weixin.qq.com/s/ep0BYT-aXnYeAYEHZPrQFg
+              - text: 阅读原文
+              - generic [ref=e367]: 
+          - article [ref=e368]:
+            - generic [ref=e370]:
+              - generic [ref=e372]: 
+              - generic [ref=e374]:
+                - generic [ref=e375]: 观点
+                - generic [ref=e376]: 伦理讨论
+            - heading "AI项目《伟大的安巴逊》引发争议：技术伦理与版权边界再受审视" [level=3] [ref=e377]:
+              - link "AI项目《伟大的安巴逊》引发争议：技术伦理与版权边界再受审视" [ref=e378] [cursor=pointer]:
+                - /url: https://techcrunch.com/2026/02/08/okay-im-slightly-less-mad-about-that-magnificent-ambersons-ai-project/
+            - paragraph [ref=e380]:
+              - generic [ref=e381]: 
+              - generic [ref=e382]: TechCrunch AI报道一项利用AI技术重构经典电影《伟大的安巴逊》的项目，该项目因涉及对已故导演奥逊·威尔斯作品的修改而引发广泛争议。
+            - paragraph [ref=e383]: 该事件的核心并非单一项目，而是揭示了生成式AI在内容创作领域引发的根本性冲突。它触及了技术伦理、版权法边界以及文化遗产的数字化诠释权等深层问题。对于投资决策而言，信号在于：AI内容生成工具的商业化进程将面临比技术更复杂的法律与伦理审查。短期内，涉及经典IP或已故艺术家作品的AI应用将面临极高的合规风险与舆论压力。长期看，这加速了行业对数字版权、AI生成内容标识及使用授权的标准化需求，相关法律与平台政策将成为影响赛道发展的关键变量。
+            - link "阅读原文 " [ref=e385] [cursor=pointer]:
+              - /url: https://techcrunch.com/2026/02/08/okay-im-slightly-less-mad-about-that-magnificent-ambersons-ai-project/
+              - text: 阅读原文
+              - generic [ref=e386]: 
+          - article [ref=e387]:
+            - generic [ref=e389]:
+              - generic [ref=e391]: 
+              - generic [ref=e393]:
+                - generic [ref=e394]: 产品
+                - generic [ref=e395]: 消费应用
+            - heading "宏碁 27 英寸 QD-OLED 显示器价格降至 399.99 美元" [level=3] [ref=e396]:
+              - link "宏碁 27 英寸 QD-OLED 显示器价格降至 399.99 美元" [ref=e397] [cursor=pointer]:
+                - /url: https://www.digitaltrends.com/home-theater/acer-predator-oled-deal/
+            - paragraph [ref=e399]:
+              - generic [ref=e400]: 
+              - generic [ref=e401]: 宏碁 Predator X27U 27 英寸 WQHD QD-OLED 显示器（刷新率 280Hz）价格从 649.99 美元降至 399.99 美元，降幅 250 美元。
+            - paragraph [ref=e402]: 高端 QD-OLED 显示器价格首次下探至 400 美元区间，标志着该技术正加速从高端利基市场向主流消费市场渗透。此举将直接冲击传统 IPS 和 VA 面板在高端电竞及专业显示领域的市场份额，并可能迫使三星、LG 等面板制造商调整定价策略。对于 AI 及高性能计算用户而言，高刷新率 OLED 面板的普及将提升多任务处理与数据可视化的效率，是硬件生态成熟的重要信号。
+            - link "阅读原文 " [ref=e404] [cursor=pointer]:
+              - /url: https://www.digitaltrends.com/home-theater/acer-predator-oled-deal/
+              - text: 阅读原文
+              - generic [ref=e405]: 
+          - article [ref=e406]:
+            - generic [ref=e408]:
+              - generic [ref=e410]: 
+              - generic [ref=e412]:
+                - generic [ref=e413]: 商业
+                - generic [ref=e414]: 价格策略
+            - heading "Sonance 高端嵌入式音响套装降价至1499美元，折扣力度达67%" [level=3] [ref=e415]:
+              - link "Sonance 高端嵌入式音响套装降价至1499美元，折扣力度达67%" [ref=e416] [cursor=pointer]:
+                - /url: https://www.digitaltrends.com/home-theater/sonance-surround-sound-system-deal/
+            - paragraph [ref=e418]:
+              - generic [ref=e419]: 
+              - generic [ref=e420]: Sonance MAG5.1 PREMIUM 嵌入式5.1环绕声系统在总统日促销中价格降至1499美元，相比4499美元的参考价折扣3000美元。
+            - paragraph [ref=e421]: 高端家庭影院品牌Sonance将其嵌入式音响套装价格大幅下调67%，此举旨在通过节日促销清理库存或刺激需求。信号在于，高端消费电子市场正面临增长压力，品牌方开始采用激进的价格策略以维持市场份额和现金流。这反映了在宏观经济不确定性下，即使是定位高端的品牌也不得不调整定价模型，以应对消费者支出趋于谨慎的趋势。对于行业而言，这可能预示着高端影音设备的价格体系将出现松动。
+            - link "阅读原文 " [ref=e423] [cursor=pointer]:
+              - /url: https://www.digitaltrends.com/home-theater/sonance-surround-sound-system-deal/
+              - text: 阅读原文
+              - generic [ref=e424]: 
+          - article [ref=e425]:
+            - generic [ref=e427]:
+              - generic [ref=e429]: 
+              - generic [ref=e431]:
+                - generic [ref=e432]: 商业
+                - generic [ref=e433]: 市场竞争
+            - heading "亚马逊纪录片《梅拉尼娅》次周票房下跌67%" [level=3] [ref=e434]:
+              - link "亚马逊纪录片《梅拉尼娅》次周票房下跌67%" [ref=e435] [cursor=pointer]:
+                - /url: https://techcrunch.com/2026/02/08/amazons-melania-documentary-stumbles-in-second-weekend/
+            - paragraph [ref=e437]:
+              - generic [ref=e438]: 
+              - generic [ref=e439]: 亚马逊发行的纪录片《梅拉尼娅》在首周末票房超预期后，次周票房环比下跌67%。
+            - paragraph [ref=e440]: 亚马逊影业发行的纪录片《梅拉尼娅》在首周表现超预期后，次周票房出现67%的断崖式下跌。这并非孤立事件，而是流媒体巨头进军传统院线内容制作时面临的普遍挑战。信号在于，流媒体平台的算法驱动和快速消费模式，与院线电影需要长期口碑发酵和话题热度的商业逻辑存在根本冲突。亚马逊此举的试水效果不佳，可能使其在未来的高预算、长周期院线内容投资上更为审慎，转而巩固其在流媒体和中小成本内容上的优势。
+            - link "阅读原文 " [ref=e442] [cursor=pointer]:
+              - /url: https://techcrunch.com/2026/02/08/amazons-melania-documentary-stumbles-in-second-weekend/
+              - text: 阅读原文
+              - generic [ref=e443]: 
+          - article [ref=e444]:
+            - generic [ref=e446]:
+              - generic [ref=e448]: 
+              - generic [ref=e450]:
+                - generic [ref=e451]: 观点
+                - generic [ref=e452]: 技术争议
+            - heading "AI项目《安伯森家族》引发争议：技术可行性存疑" [level=3] [ref=e453]:
+              - link "AI项目《安伯森家族》引发争议：技术可行性存疑" [ref=e454] [cursor=pointer]:
+                - /url: https://techcrunch.com/2026/02/08/okay-im-slightly-less-mad-about-that-magnificent-ambersons-ai-project/
+            - paragraph [ref=e456]:
+              - generic [ref=e457]: 
+              - generic [ref=e458]: TechCrunch报道一项利用AI技术复原经典电影《安伯森家族》被删减片段的项目，该项目在技术方法上有所调整，但核心目标仍被评论认为存在根本性问题。
+            - paragraph [ref=e459]: 该事件的核心信号在于，AI技术（特别是生成式视频）在文化遗产修复领域的应用正从概念走向实践，但面临技术与伦理的双重瓶颈。技术层面，当前模型对历史影像风格、演员表演的还原度尚不足以支撑严肃的艺术复原。伦理层面，由AI“创作”或“补全”已故意大利导演奥逊·威尔斯作品的版权归属与艺术完整性引发巨大争议。这反映了AI应用从通用场景向高敏感度、高专业壁垒领域渗透时，技术能力与行业规范之间的脱节，短期内此类项目更可能停留在营销噱头或实验阶段，难以获得主流艺术界认可。
+            - link "阅读原文 " [ref=e461] [cursor=pointer]:
+              - /url: https://techcrunch.com/2026/02/08/okay-im-slightly-less-mad-about-that-magnificent-ambersons-ai-project/
+              - text: 阅读原文
+              - generic [ref=e462]: 
+      - complementary [ref=e463]:
+        - generic [ref=e464]:
+          - heading " 内容大纲" [level=3] [ref=e465]:
+            - generic [ref=e466]: 
+            - text: 内容大纲
+          - generic [ref=e468]:
+            - link "英伟达发布通用机器人基础模型 Eureka 2，支持多模态输入与跨平台部署" [ref=e469] [cursor=pointer]:
+              - /url: "#article-0"
+              - generic [ref=e470]: 英伟达发布通用机器人基础模型 Eureka 2，支持多模态输入与跨平台部署
+            - link "快手披露万人研发组织AI范式升级：从平台化到智能化" [ref=e471] [cursor=pointer]:
+              - /url: "#article-1"
+              - generic [ref=e472]: 快手披露万人研发组织AI范式升级：从平台化到智能化
+            - link "华为天才少年发布全球首个实时虚实融合视频交互模型" [ref=e473] [cursor=pointer]:
+              - /url: "#article-2"
+              - generic [ref=e474]: 华为天才少年发布全球首个实时虚实融合视频交互模型
+            - link "神秘模型Pony Alpha在OpenRouter走红，实测显示编程与智能体能力突出" [ref=e475] [cursor=pointer]:
+              - /url: "#article-3"
+              - generic [ref=e476]: 神秘模型Pony Alpha在OpenRouter走红，实测显示编程与智能体能力突出
+            - link "OpenAI发布Open Responses规范，统一智能体工作流标准" [ref=e477] [cursor=pointer]:
+              - /url: "#article-4"
+              - generic [ref=e478]: OpenAI发布Open Responses规范，统一智能体工作流标准
+            - link "Anthropic发布新版Claude宪法：结构化原则与情境化指南结合" [ref=e479] [cursor=pointer]:
+              - /url: "#article-5"
+              - generic [ref=e480]: Anthropic发布新版Claude宪法：结构化原则与情境化指南结合
+            - link "人形机器人商业化面临恐怖谷效应挑战，特斯拉Optimus计划年产百万台" [ref=e481] [cursor=pointer]:
+              - /url: "#article-6"
+              - generic [ref=e482]: 人形机器人商业化面临恐怖谷效应挑战，特斯拉Optimus计划年产百万台
+            - link "CMU开源首份Agentic Search日志数据集，含1.6万次交互" [ref=e483] [cursor=pointer]:
+              - /url: "#article-7"
+              - generic [ref=e484]: CMU开源首份Agentic Search日志数据集，含1.6万次交互
+            - link "Crypto.com 以 7000 万美元收购 AI.com 域名" [ref=e485] [cursor=pointer]:
+              - /url: "#article-8"
+              - generic [ref=e486]: Crypto.com 以 7000 万美元收购 AI.com 域名
+            - link "超级碗广告首现AI生成内容，Anthropic借势营销引发行业关注" [ref=e487] [cursor=pointer]:
+              - /url: "#article-9"
+              - generic [ref=e488]: 超级碗广告首现AI生成内容，Anthropic借势营销引发行业关注
+            - link "学术研究揭示AI新闻摘要可靠性问题：63%回答存在缺陷" [ref=e489] [cursor=pointer]:
+              - /url: "#article-10"
+              - generic [ref=e490]: 学术研究揭示AI新闻摘要可靠性问题：63%回答存在缺陷
+            - link "Crypto.com 以 7000 万美元收购 AI.com 域名" [ref=e491] [cursor=pointer]:
+              - /url: "#article-11"
+              - generic [ref=e492]: Crypto.com 以 7000 万美元收购 AI.com 域名
+            - link "Anthropic 披露 Claude 宪法细节：80页准则塑造模型拒绝行为" [ref=e493] [cursor=pointer]:
+              - /url: "#article-12"
+              - generic [ref=e494]: Anthropic 披露 Claude 宪法细节：80页准则塑造模型拒绝行为
+            - link "AI.com域名以4.85亿元成交，创历史最高纪录" [ref=e495] [cursor=pointer]:
+              - /url: "#article-13"
+              - generic [ref=e496]: AI.com域名以4.85亿元成交，创历史最高纪录
+            - link "智元机器人举办全球首场机器人表演活动，展示人形机器人协同能力" [ref=e497] [cursor=pointer]:
+              - /url: "#article-14"
+              - generic [ref=e498]: 智元机器人举办全球首场机器人表演活动，展示人形机器人协同能力
+            - link "AI项目《伟大的安巴逊》引发争议：技术伦理与版权边界再受审视" [ref=e499] [cursor=pointer]:
+              - /url: "#article-15"
+              - generic [ref=e500]: AI项目《伟大的安巴逊》引发争议：技术伦理与版权边界再受审视
+            - link "宏碁 27 英寸 QD-OLED 显示器价格降至 399.99 美元" [ref=e501] [cursor=pointer]:
+              - /url: "#article-16"
+              - generic [ref=e502]: 宏碁 27 英寸 QD-OLED 显示器价格降至 399.99 美元
+            - link "Sonance 高端嵌入式音响套装降价至1499美元，折扣力度达67%" [ref=e503] [cursor=pointer]:
+              - /url: "#article-17"
+              - generic [ref=e504]: Sonance 高端嵌入式音响套装降价至1499美元，折扣力度达67%
+            - link "亚马逊纪录片《梅拉尼娅》次周票房下跌67%" [ref=e505] [cursor=pointer]:
+              - /url: "#article-18"
+              - generic [ref=e506]: 亚马逊纪录片《梅拉尼娅》次周票房下跌67%
+            - link "AI项目《安伯森家族》引发争议：技术可行性存疑" [ref=e507] [cursor=pointer]:
+              - /url: "#article-19"
+              - generic [ref=e508]: AI项目《安伯森家族》引发争议：技术可行性存疑
+          - generic [ref=e509]:
+            - heading " 今日统计" [level=4] [ref=e510]:
+              - generic [ref=e511]: 
+              - text: 今日统计
+            - generic [ref=e512]:
+              - generic [ref=e513]:
+                - generic [ref=e514]:
+                  - generic [ref=e515]: 
+                  - generic [ref=e516]: 技术
+                - generic [ref=e517]: "6"
+              - generic [ref=e518]:
+                - generic [ref=e519]:
+                  - generic [ref=e520]: 
+                  - generic [ref=e521]: 观点
+                - generic [ref=e522]: "3"
+              - generic [ref=e523]:
+                - generic [ref=e524]:
+                  - generic [ref=e525]: 
+                  - generic [ref=e526]: 研究
+                - generic [ref=e527]: "3"
+              - generic [ref=e528]:
+                - generic [ref=e529]:
+                  - generic [ref=e530]: 
+                  - generic [ref=e531]: 商业
+                - generic [ref=e532]: "6"
+              - generic [ref=e533]:
+                - generic [ref=e534]:
+                  - generic [ref=e535]: 
+                  - generic [ref=e536]: 产品
+                - generic [ref=e537]: "2"
+    - contentinfo [ref=e539]:
+      - paragraph [ref=e542]: © 2025 AIcoming. 保留所有权利。让一部分人先用起来。

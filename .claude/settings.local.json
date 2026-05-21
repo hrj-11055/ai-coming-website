@@ -33,7 +33,25 @@
       "Bash(git stash:*)",
       "Bash(git pull:*)",
       "Bash(git rebase:*)",
-      "Bash(GIT_EDITOR=true git rebase --continue)"
+      "Bash(GIT_EDITOR=true git rebase --continue)",
+      "Read(//Users/MarkHuang/Desktop/**)",
+      "Bash(bash *)",
+      "Bash(npx skills *)",
+      "Bash(convert --version)",
+      "Bash(JWT_SECRET=dev-secret-local npm start)",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__new_page",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__take_screenshot",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__navigate_page",
+      "Bash(STATIC_ROOT=. JWT_SECRET=dev-secret npm start)",
+      "Bash(pkill -f \"node server-json.js\")",
+      "mcp__plugin_chrome-devtools-mcp_chrome-devtools__list_pages",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "Bash(/usr/bin/curl --version)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(cp '/Users/MarkHuang/Library/Application Support/CleanShot/media/media_L8RsLFxAeH/CleanShot 2026-05-12 at 09.55.03@2x.png' /Users/MarkHuang/Desktop/ai-coming-website/pic/skills-guides/claude-code/nodejs-homepage.png)",
+      "Bash(cp '/Users/MarkHuang/Library/Application Support/CleanShot/media/media_wjUlJzQ4H2/CleanShot 2026-05-12 at 09.56.02@2x.png' /Users/MarkHuang/Desktop/ai-coming-website/pic/skills-guides/claude-code/nodejs-download.png)"
     ]
   }
 }

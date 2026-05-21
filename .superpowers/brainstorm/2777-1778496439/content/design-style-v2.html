@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIcoming 新 UI 风格选择</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, sans-serif;
+  background: #0e1018;
+  color: #b0aaa4;
+  padding: 48px 32px 80px;
+  min-height: 100vh;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+.page-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #f2ede6;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.page-header p {
+  font-size: 13px;
+  color: #3a3a50;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  max-width: 1380px;
+  margin: 0 auto;
+}
+
+.card {
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.24s cubic-bezier(.22,.61,.36,1), box-shadow 0.24s ease;
+  border: 2px solid rgba(255,255,255,0.05);
+  position: relative;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 60px rgba(0,0,0,0.5);
+}
+.card.selected {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 4px rgba(34,211,238,0.15), 0 28px 60px rgba(0,0,0,0.5);
+}
+.card.selected .design-label::before {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mockup-preview {
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-body.design-label {
+  padding: 20px 22px 18px;
+  position: relative;
+}
+.card-body.design-label::before {
+  content: "✓  已选择";
+  position: absolute;
+  top: -15px;
+  right: 18px;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #050a10;
+  background: #22d3ee;
+  padding: 4px 14px;
+  border-radius: 999px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.22s, transform 0.22s;
+}
+.card-body.design-label h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.card-body.design-label p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* ══════════════════════════════════
+   DESIGN A · 暗夜编辑室
+   Deep ink · Amber accents · Serif editorial
+══════════════════════════════════ */
+.design-a .mockup-preview { background: #04040a; }
+.design-a .card-body.design-label { background: #07070e; border-top: 1px solid #15151f; }
+.design-a .card-body.design-label h3 { color: #e8a428; }
+.design-a .card-body.design-label p  { color: #2e2e44; }
+
+.da-nav {
+  display: flex; align-items: center;
+  height: 42px; padding: 0 16px;
+  background: #04040a;
+  border-bottom: 1px solid #13131c;
+}
+.da-logo {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px; font-weight: 900;
+  color: #ede8dc; letter-spacing: 0.5px;
+}
+.da-logo em { font-style: normal; color: #e8a428; }
+.da-navlinks { display: flex; gap: 20px; margin-left: 22px; }
+.da-navlink {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: #2a2a3c;
+  text-transform: uppercase; letter-spacing: 1.2px;
+}
+.da-navlink.on { color: #e8a428; }
+.da-live {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #3dba6c; letter-spacing: 1.2px;
+}
+.da-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #3dba6c; box-shadow: 0 0 7px #3dba6c;
+  animation: blink 1.5s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
+
+.da-story-block {
+  display: flex; height: 192px;
+  border-bottom: 1px solid #10101a;
+}
+.da-lead {
+  flex: 1.55; padding: 16px 14px;
+  border-right: 1px solid #10101a;
+}
+.da-lead-tag {
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 9px;
+}
+.da-lead-tag::before {
+  content: ''; display: block;
+  width: 18px; height: 1px; background: #e8a428;
+}
+.da-lead-tag span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #e8a428;
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.da-lead-hl {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px; font-weight: 700;
+  color: #ede8d8; line-height: 1.75;
+  margin-bottom: 10px;
+}
+.da-lead-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #25253a; letter-spacing: .4px;
+}
+.da-sidelist { flex: 1; display: flex; flex-direction: column; }
+.da-sideitem {
+  flex: 1; padding: 10px 12px;
+  border-bottom: 1px solid #10101a;
+  border-left: 2px solid transparent;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.da-sideitem:last-child { border-bottom: none; }
+.da-sideitem:first-child { border-left-color: #e8a428; }
+.da-side-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: #e8a42870;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 3px;
+}
+.da-side-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 11px; font-weight: 600;
+  color: #6a6480; line-height: 1.55;
+}
+
+.da-tools {
+  padding: 12px 16px;
+  border-bottom: 1px solid #10101a;
+}
+.da-tools-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: #22223a;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 9px;
+}
+.da-tools-row { display: flex; gap: 7px; }
+.da-tool {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px;
+  background: #0b0b14; border: 1px solid #1a1a28; border-radius: 5px;
+}
+.da-tool-dot { width: 5px; height: 5px; border-radius: 50%; background: #e8a428; flex-shrink: 0; }
+.da-tool-name { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #404060; }
+
+.da-stats { display: flex; }
+.da-stat {
+  flex: 1; padding: 10px 0; text-align: center;
+  border-right: 1px solid #10101a;
+}
+.da-stat:last-child { border-right: none; }
+.da-stat-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px; font-weight: 500; color: #e8a428;
+}
+.da-stat-l {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: #1e1e30;
+  text-transform: uppercase; letter-spacing: 1px; margin-top: 1px;
+}
+
+/* ══════════════════════════════════
+   DESIGN B · 宣纸工坊
+   Warm parchment · Vermilion · Serif warmth
+══════════════════════════════════ */
+.design-b .mockup-preview { background: #f3ede2; }
+.design-b .card-body.design-label { background: #ede7dc; border-top: 1px solid #d8d0c2; }
+.design-b .card-body.design-label h3 { color: #ba3f14; }
+.design-b .card-body.design-label p  { color: #8a7a68; }
+
+.db-nav {
+  display: flex; align-items: center;
+  height: 46px; padding: 0 18px;
+  background: #f8f4ec;
+  border-bottom: 2.5px solid #1c1510;
+}
+.db-logo {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px; font-weight: 900;
+  color: #1c1510; letter-spacing: -.5px;
+}
+.db-logo em { font-style: normal; color: #ba3f14; }
+.db-navlinks { display: flex; gap: 24px; margin-left: 28px; }
+.db-navlink { font-size: 12px; font-weight: 500; color: #5a4a3a; }
+.db-navlink.on { color: #ba3f14; border-bottom: 2px solid #ba3f14; padding-bottom: 1px; }
+.db-date {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: #a89880;
+}
+
+.db-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1px; background: #d8d0c2;
+  height: 210px;
+}
+.db-feat-main, .db-feat-sub { background: #f8f4ec; padding: 15px; }
+.db-cat {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 9px; font-weight: 700; color: #ba3f14;
+  text-transform: uppercase; letter-spacing: 1.8px;
+  margin-bottom: 8px;
+}
+.db-cat::before { content: ''; display: block; width: 14px; height: 2px; background: #ba3f14; }
+.db-hl {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px; font-weight: 700;
+  color: #1c1510; line-height: 1.75; margin-bottom: 7px;
+}
+.db-feat-main .db-hl { font-size: 15px; }
+.db-excerpt { font-size: 10px; color: #6a5a4a; line-height: 1.65; }
+.db-ts {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #b0a090; margin-top: 8px;
+}
+
+.db-tools { padding: 12px 18px; display: flex; flex-direction: column; gap: 9px; }
+.db-sec-hd { display: flex; align-items: center; gap: 8px; }
+.db-sec-ttl {
+  font-size: 9px; font-weight: 700; color: #9a8a78;
+  text-transform: uppercase; letter-spacing: 2px;
+  white-space: nowrap;
+}
+.db-sec-line { flex: 1; height: 1px; background: #d8d0c2; }
+.db-tools-row { display: flex; gap: 8px; }
+.db-tool {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  background: #f8f4ec; border: 1px solid #e0d8ca; border-radius: 6px;
+}
+.db-bar { width: 3px; height: 22px; background: #ba3f14; border-radius: 2px; flex-shrink: 0; }
+.db-tname { font-size: 11px; font-weight: 600; color: #281e16; }
+.db-tsub  { font-size: 9px; color: #b0a090; margin-top: 1px; }
+
+.db-stats { display: flex; border-top: 1px solid #d8d0c2; }
+.db-stat {
+  flex: 1; padding: 9px 0; text-align: center;
+  border-right: 1px solid #d8d0c2;
+}
+.db-stat:last-child { border-right: none; }
+.db-stat-n {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px; font-weight: 700; color: #ba3f14;
+}
+.db-stat-l { font-size: 9px; color: #9a8a78; margin-top: 1px; }
+
+/* ══════════════════════════════════
+   DESIGN C · 流光协议
+   Space dark · Cyan glow · Frosted glass
+══════════════════════════════════ */
+.design-c .mockup-preview { background: #05080f; overflow: hidden; }
+.design-c .card-body.design-label { background: #060810; border-top: 1px solid #121824; }
+.design-c .card-body.design-label h3 { color: #22d3ee; }
+.design-c .card-body.design-label p  { color: #1e2e44; }
+
+.dc-bg {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+}
+.dc-glow1 {
+  position: absolute; top: -60px; right: -50px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,211,238,.2) 0%, transparent 65%);
+  filter: blur(24px);
+}
+.dc-glow2 {
+  position: absolute; bottom: -50px; left: -30px;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,.15) 0%, transparent 65%);
+  filter: blur(22px);
+}
+.dc-grid-overlay {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(34,211,238,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.dc-nav {
+  display: flex; align-items: center;
+  height: 44px; padding: 0 16px;
+  background: rgba(5,8,15,.92);
+  border-bottom: 1px solid rgba(34,211,238,.1);
+  position: relative; z-index: 2;
+  backdrop-filter: blur(12px);
+}
+.dc-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 800;
+  color: #deeeff; letter-spacing: .5px;
+}
+.dc-logo em { font-style: normal; color: #22d3ee; }
+.dc-navlinks { display: flex; gap: 20px; margin-left: 22px; }
+.dc-navlink {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 600;
+  color: #1e2e40; letter-spacing: .3px;
+}
+.dc-navlink.on { color: #22d3ee; }
+.dc-pill {
+  margin-left: auto;
+  background: rgba(34,211,238,.1);
+  border: 1px solid rgba(34,211,238,.22);
+  border-radius: 999px; padding: 3px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: #22d3ee;
+}
+
+.dc-body {
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 9px;
+  position: relative; z-index: 2;
+}
+
+.dc-glass {
+  background: rgba(255,255,255,.033);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 11px; padding: 12px 14px;
+  backdrop-filter: blur(8px);
+}
+.dc-card-row {
+  display: flex; align-items: flex-start; gap: 10px; margin-bottom: 6px;
+}
+.dc-icon {
+  width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(34,211,238,.25), rgba(139,92,246,.18));
+  border: 1px solid rgba(34,211,238,.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.dc-hl {
+  flex: 1;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px; font-weight: 600;
+  color: #a8c8e0; line-height: 1.65;
+}
+.dc-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: #22d3ee;
+  background: rgba(34,211,238,.1);
+  border: 1px solid rgba(34,211,238,.2);
+  border-radius: 3px; padding: 2px 6px;
+  flex-shrink: 0; letter-spacing: .3px;
+}
+.dc-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: #182030;
+}
+
+.dc-tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+.dc-tcell {
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.055);
+  border-radius: 9px; padding: 10px 8px; text-align: center;
+}
+.dc-ticon { font-size: 17px; margin-bottom: 4px; }
+.dc-tname {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px; font-weight: 600; color: #1e3040;
+}
+
+.dc-stats-row { display: flex; gap: 7px; }
+.dc-sbox {
+  flex: 1;
+  background: rgba(255,255,255,.022);
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 8px; padding: 8px 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dc-sn {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px; font-weight: 800; color: #22d3ee;
+}
+.dc-sl {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px; font-weight: 600; color: #1a2c3c;
+}
+
+/* hint */
+.hint {
+  text-align: center; margin-top: 36px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: #25253a; letter-spacing: .5px;
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>选择 AIcoming 新 UI 风格</h1>
+  <p>三种截然不同的设计语言 · 点击选择你的方向</p>
+</div>
+
+<div class="cards">
+
+  <!-- ── A 暗夜编辑室 ── -->
+  <div class="card design-a" data-choice="a" onclick="toggleSelect(this)">
+    <div class="mockup-preview">
+      <div class="da-nav">
+        <div class="da-logo">AI<em>coming</em></div>
+        <div class="da-navlinks">
+          <span class="da-navlink on">资讯</span>
+          <span class="da-navlink">工具</span>
+          <span class="da-navlink">能力库</span>
+        </div>
+        <div class="da-live"><div class="da-dot"></div>LIVE · 07:34</div>
+      </div>
+
+      <div class="da-story-block">
+        <div class="da-lead">
+          <div class="da-lead-tag"><span>头条</span></div>
+          <div class="da-lead-hl">Anthropic 推出 Claude 4，支持 200K 上下文，推理能力全面超越前代</div>
+          <div class="da-lead-meta">2026-05-11 · 07:32 · AI 模型 · 大事件</div>
+        </div>
+        <div class="da-sidelist">
+          <div class="da-sideitem">
+            <div class="da-side-cat">OpenAI</div>
+            <div class="da-side-title">GPT-5 正式开放 API，定价大幅下调</div>
+          </div>
+          <div class="da-sideitem">
+            <div class="da-side-cat">Google</div>
+            <div class="da-side-title">Gemini 2.5 Pro 多模态评测结果出炉</div>
+          </div>
+          <div class="da-sideitem">
+            <div class="da-side-cat">国内</div>
+            <div class="da-side-title">边缘 AI 芯片量产，算力达 200TOPS</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="da-tools">
+        <div class="da-tools-lbl">精选工具</div>
+        <div class="da-tools-row">
+          <div class="da-tool"><div class="da-tool-dot"></div><span class="da-tool-name">Claude</span></div>
+          <div class="da-tool"><div class="da-tool-dot"></div><span class="da-tool-name">ChatGPT</span></div>
+          <div class="da-tool"><div class="da-tool-dot"></div><span class="da-tool-name">Midjourney</span></div>
+          <div class="da-tool"><div class="da-tool-dot"></div><span class="da-tool-name">Cursor</span></div>
+        </div>
+      </div>
+
+      <div class="da-stats">
+        <div class="da-stat"><div class="da-stat-n">12</div><div class="da-stat-l">今日更新</div></div>
+        <div class="da-stat"><div class="da-stat-n">120+</div><div class="da-stat-l">工具收录</div></div>
+        <div class="da-stat"><div class="da-stat-n">19</div><div class="da-stat-l">AI 能力</div></div>
+        <div class="da-stat"><div class="da-stat-n">∞</div><div class="da-stat-l">持续更新</div></div>
+      </div>
+    </div>
+    <div class="card-body design-label">
+      <h3>暗夜编辑室</h3>
+      <p>深墨底色 · 琥珀点缀 · 衬线字重。报业排版美感，信息密度高，适合重度资讯读者。</p>
+    </div>
+  </div>
+
+  <!-- ── B 宣纸工坊 ── -->
+  <div class="card design-b" data-choice="b" onclick="toggleSelect(this)">
+    <div class="mockup-preview">
+      <div class="db-nav">
+        <div class="db-logo">AI<em>coming</em></div>
+        <div class="db-navlinks">
+          <span class="db-navlink on">资讯</span>
+          <span class="db-navlink">工具</span>
+          <span class="db-navlink">能力库</span>
+        </div>
+        <div class="db-date">2026·05·11</div>
+      </div>
+
+      <div class="db-grid">
+        <div class="db-feat-main">
+          <div class="db-cat">头条</div>
+          <div class="db-hl">Anthropic 推出 Claude 4，支持 200K 上下文窗口，推理突破前代</div>
+          <div class="db-excerpt">新模型代码生成、数学推理及中文理解均有显著提升，多项测试刷新记录……</div>
+          <div class="db-ts">07:32</div>
+        </div>
+        <div class="db-feat-sub">
+          <div class="db-cat">深度</div>
+          <div class="db-hl">GPT-5 开放 API，开发者成本骤降 60%</div>
+          <div class="db-excerpt">OpenAI 宣布大幅调整定价……</div>
+          <div class="db-ts">06:14</div>
+        </div>
+      </div>
+
+      <div class="db-tools">
+        <div class="db-sec-hd">
+          <span class="db-sec-ttl">精选工具</span>
+          <div class="db-sec-line"></div>
+        </div>
+        <div class="db-tools-row">
+          <div class="db-tool"><div class="db-bar"></div><div><div class="db-tname">Claude</div><div class="db-tsub">AI 助手</div></div></div>
+          <div class="db-tool"><div class="db-bar"></div><div><div class="db-tname">ChatGPT</div><div class="db-tsub">对话模型</div></div></div>
+          <div class="db-tool"><div class="db-bar"></div><div><div class="db-tname">Cursor</div><div class="db-tsub">AI 编程</div></div></div>
+        </div>
+      </div>
+
+      <div class="db-stats">
+        <div class="db-stat"><div class="db-stat-n">12</div><div class="db-stat-l">今日更新</div></div>
+        <div class="db-stat"><div class="db-stat-n">120+</div><div class="db-stat-l">工具收录</div></div>
+        <div class="db-stat"><div class="db-stat-n">19</div><div class="db-stat-l">AI 能力</div></div>
+      </div>
+    </div>
+    <div class="card-body design-label">
+      <h3>宣纸工坊</h3>
+      <p>暖白底色 · 朱砂红线 · 衬线字重。温润有质感，易读性极佳，适合职场日常浏览。</p>
+    </div>
+  </div>
+
+  <!-- ── C 流光协议 ── -->
+  <div class="card design-c" data-choice="c" onclick="toggleSelect(this)">
+    <div class="mockup-preview">
+      <div class="dc-bg">
+        <div class="dc-glow1"></div>
+        <div class="dc-glow2"></div>
+        <div class="dc-grid-overlay"></div>
+      </div>
+
+      <div class="dc-nav">
+        <div class="dc-logo">AI<em>coming</em></div>
+        <div class="dc-navlinks">
+          <span class="dc-navlink on">资讯</span>
+          <span class="dc-navlink">工具</span>
+          <span class="dc-navlink">能力库</span>
+        </div>
+        <div class="dc-pill">12 条更新</div>
+      </div>
+
+      <div class="dc-body">
+        <div class="dc-glass">
+          <div class="dc-card-row">
+            <div class="dc-icon">📡</div>
+            <div class="dc-hl">Anthropic 推出 Claude 4，支持 200K 上下文窗口</div>
+            <div class="dc-chip">头条</div>
+          </div>
+          <div class="dc-meta">07:32 · AI 模型 · 2 min read</div>
+        </div>
+
+        <div class="dc-glass">
+          <div class="dc-card-row">
+            <div class="dc-icon">⚡</div>
+            <div class="dc-hl">GPT-5 正式开放 API 接口，定价大幅下调</div>
+            <div class="dc-chip">动态</div>
+          </div>
+          <div class="dc-meta">06:14 · OpenAI · 1 min read</div>
+        </div>
+
+        <div class="dc-tools-grid">
+          <div class="dc-tcell"><div class="dc-ticon">🤖</div><div class="dc-tname">Claude</div></div>
+          <div class="dc-tcell"><div class="dc-ticon">⚡</div><div class="dc-tname">ChatGPT</div></div>
+          <div class="dc-tcell"><div class="dc-ticon">✨</div><div class="dc-tname">能力库</div></div>
+        </div>
+
+        <div class="dc-stats-row">
+          <div class="dc-sbox"><div class="dc-sn">12</div><div class="dc-sl">今日更新</div></div>
+          <div class="dc-sbox"><div class="dc-sn">120+</div><div class="dc-sl">工具</div></div>
+          <div class="dc-sbox"><div class="dc-sn">19</div><div class="dc-sl">能力</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body design-label">
+      <h3>流光协议</h3>
+      <p>深海蓝底 · 青色高光 · 磨砂玻璃卡片。科技感强，视觉层次丰富，适合技术爱好者。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="hint">↑ 点击卡片选择风格，然后在终端告诉我你的选择</div>
+
+</body>
+</html>

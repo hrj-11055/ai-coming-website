@@ -1,0 +1,639 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e3]:
+    - generic [ref=e5]:
+      - link "AIcoming - 让一部分人先用起来" [ref=e7] [cursor=pointer]:
+        - /url: index.html
+        - img "AIcoming - 让一部分人先用起来" [ref=e8]
+      - generic [ref=e10]:
+        - link "首页" [ref=e11] [cursor=pointer]:
+          - /url: index.html
+        - link "AI资讯" [ref=e12] [cursor=pointer]:
+          - /url: news.html
+        - link "AI工具集" [ref=e13] [cursor=pointer]:
+          - /url: tools.html
+        - link "AI 能力库" [ref=e14] [cursor=pointer]:
+          - /url: skills.html
+        - link "关于我们" [ref=e15] [cursor=pointer]:
+          - /url: about.html
+      - text: 
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - complementary [ref=e18]:
+        - generic [ref=e19]: AI工具分类
+        - generic [ref=e20]:
+          - link "PPT创作" [ref=e21] [cursor=pointer]:
+            - /url: "#ai-ppt"
+            - generic [ref=e23]: 
+            - generic [ref=e24]: PPT创作
+          - link "创意写作" [ref=e25] [cursor=pointer]:
+            - /url: "#ai-writing"
+            - generic [ref=e27]: 
+            - generic [ref=e28]: 创意写作
+          - link "图片生成" [ref=e29] [cursor=pointer]:
+            - /url: "#ai-image"
+            - generic [ref=e31]: 
+            - generic [ref=e32]: 图片生成
+          - link "视频生成" [ref=e33] [cursor=pointer]:
+            - /url: "#ai-video"
+            - generic [ref=e35]: 
+            - generic [ref=e36]: 视频生成
+          - link "VibeCoding" [ref=e37] [cursor=pointer]:
+            - /url: "#vibecoding"
+            - generic [ref=e39]: 
+            - generic [ref=e40]: VibeCoding
+          - link "AI 数据分析" [ref=e41] [cursor=pointer]:
+            - /url: "#ai-data-analysis"
+            - generic [ref=e43]: 
+            - generic [ref=e44]: AI 数据分析
+          - link "AI 深度搜索" [ref=e45] [cursor=pointer]:
+            - /url: "#ai-search"
+            - generic [ref=e47]: 
+            - generic [ref=e48]: AI 深度搜索
+          - link "会议纪要" [ref=e49] [cursor=pointer]:
+            - /url: "#meeting-notes"
+            - generic [ref=e51]: 
+            - generic [ref=e52]: 会议纪要
+          - link "知识库" [ref=e53] [cursor=pointer]:
+            - /url: "#knowledge-base"
+            - generic [ref=e55]: 
+            - generic [ref=e56]: 知识库
+          - link "AI 协作" [ref=e57] [cursor=pointer]:
+            - /url: "#ai-collab"
+            - img [ref=e59]
+            - generic [ref=e65]: AI 协作
+          - link "数字人" [ref=e66] [cursor=pointer]:
+            - /url: "#digital-human"
+            - generic [ref=e68]: 
+            - generic [ref=e69]: 数字人
+          - link "声音克隆与TTS" [ref=e70] [cursor=pointer]:
+            - /url: "#tts"
+            - generic [ref=e72]: 
+            - generic [ref=e73]: 声音克隆与TTS
+          - link "Agent 流" [ref=e74] [cursor=pointer]:
+            - /url: "#agent-workflow"
+            - generic [ref=e76]: 
+            - generic [ref=e77]: Agent 流
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]: 国内工具区
+          - generic [ref=e82]: 国际工具区
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - generic [ref=e85]:
+              - heading "PPT创作" [level=2] [ref=e86]
+              - generic [ref=e87]: 国际 3 · 国内 3
+            - generic [ref=e89]:
+              - generic [ref=e90]:
+                - link "Canva Canva 模板驱动设计" [ref=e91] [cursor=pointer]:
+                  - /url: https://www.canva.cn/templates/
+                  - img "Canva" [ref=e93]
+                  - generic [ref=e94]:
+                    - generic [ref=e95]: Canva
+                    - generic "模板驱动设计" [ref=e96]
+                - link "AiPPT AiPPT 中文PPT智能生成" [ref=e97] [cursor=pointer]:
+                  - /url: https://www.aippt.cn
+                  - img "AiPPT" [ref=e99]
+                  - generic [ref=e100]:
+                    - generic [ref=e101]: AiPPT
+                    - generic "中文PPT智能生成" [ref=e102]
+                - link "WPS AI WPS AI 国产办公套件AI" [ref=e103] [cursor=pointer]:
+                  - /url: https://www.wps.cn
+                  - img "WPS AI" [ref=e105]
+                  - generic [ref=e106]:
+                    - generic [ref=e107]: WPS AI
+                    - generic "国产办公套件AI" [ref=e108]
+              - generic [ref=e110]:
+                - link "Gamma Gamma 一句话成演示稿" [ref=e111] [cursor=pointer]:
+                  - /url: https://gamma.app
+                  - img "Gamma" [ref=e113]
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: Gamma
+                    - generic "一句话成演示稿" [ref=e116]
+                - link "Beautiful.ai Beautiful.ai 自动排版美学PPT" [ref=e117] [cursor=pointer]:
+                  - /url: https://www.beautiful.ai
+                  - img "Beautiful.ai" [ref=e119]
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: Beautiful.ai
+                    - generic "自动排版美学PPT" [ref=e122]
+                - link "NotebookLM NotebookLM 资料驱动摘要播客" [ref=e123] [cursor=pointer]:
+                  - /url: https://notebooklm.google.com
+                  - img "NotebookLM" [ref=e125]
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: NotebookLM
+                    - generic "资料驱动摘要播客" [ref=e128]
+          - generic [ref=e129]:
+            - generic [ref=e130]:
+              - heading "创意写作" [level=2] [ref=e131]
+              - generic [ref=e132]: 国际 3 · 国内 3
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - link "DeepSeek DeepSeek 高性价比推理" [ref=e136] [cursor=pointer]:
+                  - /url: https://www.deepseek.com
+                  - img "DeepSeek" [ref=e138]
+                  - generic [ref=e139]:
+                    - generic [ref=e140]: DeepSeek
+                    - generic "高性价比推理" [ref=e141]
+                - link "Kimi Kimi 超长上下文阅读" [ref=e142] [cursor=pointer]:
+                  - /url: https://kimi.moonshot.cn
+                  - img "Kimi" [ref=e144]
+                  - generic [ref=e145]:
+                    - generic [ref=e146]: Kimi
+                    - generic "超长上下文阅读" [ref=e147]
+                - link "豆包 豆包 字节通用助手" [ref=e148] [cursor=pointer]:
+                  - /url: https://www.doubao.com
+                  - img "豆包" [ref=e150]
+                  - generic [ref=e151]:
+                    - generic [ref=e152]: 豆包
+                    - generic "字节通用助手" [ref=e153]
+              - generic [ref=e155]:
+                - link "ChatGPT ChatGPT 通用多模态助手" [ref=e156] [cursor=pointer]:
+                  - /url: https://chatgpt.com
+                  - img "ChatGPT" [ref=e158]
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: ChatGPT
+                    - generic "通用多模态助手" [ref=e161]
+                - link "Claude Claude 长文深度推理" [ref=e162] [cursor=pointer]:
+                  - /url: https://claude.ai
+                  - img "Claude" [ref=e164]
+                  - generic [ref=e165]:
+                    - generic [ref=e166]: Claude
+                    - generic "长文深度推理" [ref=e167]
+                - link "Gemini Gemini Google生态联动" [ref=e168] [cursor=pointer]:
+                  - /url: https://gemini.google.com
+                  - img "Gemini" [ref=e170]
+                  - generic [ref=e171]:
+                    - generic [ref=e172]: Gemini
+                    - generic "Google生态联动" [ref=e173]
+          - generic [ref=e174]:
+            - generic [ref=e175]:
+              - heading "图片生成" [level=2] [ref=e176]
+              - generic [ref=e177]: 国际 3 · 国内 3
+            - generic [ref=e179]:
+              - generic [ref=e180]:
+                - link "即梦AI 即梦AI 抖音生态图像生成" [ref=e181] [cursor=pointer]:
+                  - /url: https://jimeng.jianying.com
+                  - img "即梦AI" [ref=e183]
+                  - generic [ref=e184]:
+                    - generic [ref=e185]: 即梦AI
+                    - generic "抖音生态图像生成" [ref=e186]
+                - link "可灵 可灵 快手视频生成" [ref=e187] [cursor=pointer]:
+                  - /url: https://klingai.kuaishou.com
+                  - img "可灵" [ref=e189]
+                  - generic [ref=e190]:
+                    - generic [ref=e191]: 可灵
+                    - generic "快手视频生成" [ref=e192]
+                - link "通义万相 通义万相 阿里文生图平台" [ref=e193] [cursor=pointer]:
+                  - /url: https://tongyi.aliyun.com/wan/generate/image
+                  - img "通义万相" [ref=e195]
+                  - generic [ref=e196]:
+                    - generic [ref=e197]: 通义万相
+                    - generic "阿里文生图平台" [ref=e198]
+              - generic [ref=e200]:
+                - link "Midjourney Midjourney 艺术风格图像生成" [ref=e201] [cursor=pointer]:
+                  - /url: https://www.midjourney.com
+                  - img "Midjourney" [ref=e203]
+                  - generic [ref=e204]:
+                    - generic [ref=e205]: Midjourney
+                    - generic "艺术风格图像生成" [ref=e206]
+                - link "FLUX FLUX 高质感文生图" [ref=e207] [cursor=pointer]:
+                  - /url: https://blackforestlabs.ai
+                  - img "FLUX" [ref=e209]
+                  - generic [ref=e210]:
+                    - generic [ref=e211]: FLUX
+                    - generic "高质感文生图" [ref=e212]
+                - link "Nano Banana Nano Banana Gemini图像实验" [ref=e213] [cursor=pointer]:
+                  - /url: https://gemini.google/overview/image-generation/
+                  - img "Nano Banana" [ref=e215]
+                  - generic [ref=e216]:
+                    - generic [ref=e217]: Nano Banana
+                    - generic "Gemini图像实验" [ref=e218]
+          - generic [ref=e219]:
+            - generic [ref=e220]:
+              - heading "视频生成" [level=2] [ref=e221]
+              - generic [ref=e222]: 国际 3 · 国内 3
+            - generic [ref=e224]:
+              - generic [ref=e225]:
+                - link "可灵 可灵 快手视频生成" [ref=e226] [cursor=pointer]:
+                  - /url: https://klingai.kuaishou.com
+                  - img "可灵" [ref=e228]
+                  - generic [ref=e229]:
+                    - generic [ref=e230]: 可灵
+                    - generic "快手视频生成" [ref=e231]
+                - link "即梦 即梦 抖音生态视频生成" [ref=e232] [cursor=pointer]:
+                  - /url: https://jimeng.jianying.com
+                  - img "即梦" [ref=e234]
+                  - generic [ref=e235]:
+                    - generic [ref=e236]: 即梦
+                    - generic "抖音生态视频生成" [ref=e237]
+                - link "海螺 海螺 MiniMax视频生成" [ref=e238] [cursor=pointer]:
+                  - /url: https://hailuoai.com
+                  - img "海螺" [ref=e240]
+                  - generic [ref=e241]:
+                    - generic [ref=e242]: 海螺
+                    - generic "MiniMax视频生成" [ref=e243]
+              - generic [ref=e245]:
+                - link "Sora Sora 文本直出长视频" [ref=e246] [cursor=pointer]:
+                  - /url: https://openai.com/sora
+                  - img "Sora" [ref=e248]
+                  - generic [ref=e249]:
+                    - generic [ref=e250]: Sora
+                    - generic "文本直出长视频" [ref=e251]
+                - link "Veo Veo Google视频模型" [ref=e252] [cursor=pointer]:
+                  - /url: https://gemini.google/overview/video-generation
+                  - img "Veo" [ref=e254]
+                  - generic [ref=e255]:
+                    - generic [ref=e256]: Veo
+                    - generic "Google视频模型" [ref=e257]
+                - link "Luma Luma 电影感视频生成" [ref=e258] [cursor=pointer]:
+                  - /url: https://lumalabs.ai/dream-machine
+                  - img "Luma" [ref=e260]
+                  - generic [ref=e261]:
+                    - generic [ref=e262]: Luma
+                    - generic "电影感视频生成" [ref=e263]
+          - generic [ref=e264]:
+            - generic [ref=e265]:
+              - heading "VibeCoding" [level=2] [ref=e266]
+              - generic [ref=e267]: 国际 3 · 国内 3
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - link "QwenCode QwenCode 代码专项模型" [ref=e271] [cursor=pointer]:
+                  - /url: https://chat.qwen.ai
+                  - img "QwenCode" [ref=e273]
+                  - generic [ref=e274]:
+                    - generic [ref=e275]: QwenCode
+                    - generic "代码专项模型" [ref=e276]
+                - link "智谱 智谱 GLM对话平台" [ref=e277] [cursor=pointer]:
+                  - /url: https://chatglm.cn
+                  - img "智谱" [ref=e279]
+                  - generic [ref=e280]:
+                    - generic [ref=e281]: 智谱
+                    - generic "GLM对话平台" [ref=e282]
+                - link "Trae Trae 国产AI编程IDE" [ref=e283] [cursor=pointer]:
+                  - /url: https://www.trae.ai/
+                  - img "Trae" [ref=e285]
+                  - generic [ref=e286]:
+                    - generic [ref=e287]: Trae
+                    - generic "国产AI编程IDE" [ref=e288]
+              - generic [ref=e290]:
+                - link "Cursor Cursor AI原生IDE" [ref=e291] [cursor=pointer]:
+                  - /url: https://cursor.com
+                  - img "Cursor" [ref=e293]
+                  - generic [ref=e294]:
+                    - generic [ref=e295]: Cursor
+                    - generic "AI原生IDE" [ref=e296]
+                - link "Windsurf Windsurf Agent式编程流" [ref=e297] [cursor=pointer]:
+                  - /url: https://codeium.com/windsurf
+                  - img "Windsurf" [ref=e299]
+                  - generic [ref=e300]:
+                    - generic [ref=e301]: Windsurf
+                    - generic "Agent式编程流" [ref=e302]
+                - link "Claude Claude 长文深度推理" [ref=e303] [cursor=pointer]:
+                  - /url: https://claude.com/product/claude-code
+                  - img "Claude" [ref=e305]
+                  - generic [ref=e306]:
+                    - generic [ref=e307]: Claude
+                    - generic "长文深度推理" [ref=e308]
+          - generic [ref=e309]:
+            - generic [ref=e310]:
+              - heading "AI 数据分析" [level=2] [ref=e311]
+              - generic [ref=e312]: 国际 3 · 国内 3
+            - generic [ref=e314]:
+              - generic [ref=e315]:
+                - link "DeepSeek DeepSeek 高性价比推理" [ref=e316] [cursor=pointer]:
+                  - /url: https://www.deepseek.com
+                  - img "DeepSeek" [ref=e318]
+                  - generic [ref=e319]:
+                    - generic [ref=e320]: DeepSeek
+                    - generic "高性价比推理" [ref=e321]
+                - link "Qwen Qwen 阿里通义对话" [ref=e322] [cursor=pointer]:
+                  - /url: https://chat.qwen.ai
+                  - img "Qwen" [ref=e324]
+                  - generic [ref=e325]:
+                    - generic [ref=e326]: Qwen
+                    - generic "阿里通义对话" [ref=e327]
+                - link "ChatExcel ChatExcel 自然语言做表格" [ref=e328] [cursor=pointer]:
+                  - /url: https://www.chatexcel.com/
+                  - img "ChatExcel" [ref=e330]
+                  - generic [ref=e331]:
+                    - generic [ref=e332]: ChatExcel
+                    - generic "自然语言做表格" [ref=e333]
+              - generic [ref=e335]:
+                - link "ChatGPT Data Analyst ChatGPT Data Analyst 对话式数据分析" [ref=e336] [cursor=pointer]:
+                  - /url: https://chatgpt.com
+                  - img "ChatGPT Data Analyst" [ref=e338]
+                  - generic [ref=e339]:
+                    - generic [ref=e340]: ChatGPT Data Analyst
+                    - generic "对话式数据分析" [ref=e341]
+                - link "Gemini Gemini Google生态联动" [ref=e342] [cursor=pointer]:
+                  - /url: https://gemini.google.com
+                  - img "Gemini" [ref=e344]
+                  - generic [ref=e345]:
+                    - generic [ref=e346]: Gemini
+                    - generic "Google生态联动" [ref=e347]
+                - link "Google Colab Google Colab 云端Notebook训练" [ref=e348] [cursor=pointer]:
+                  - /url: https://colab.research.google.com
+                  - img "Google Colab" [ref=e350]
+                  - generic [ref=e351]:
+                    - generic [ref=e352]: Google Colab
+                    - generic "云端Notebook训练" [ref=e353]
+          - generic [ref=e354]:
+            - generic [ref=e355]:
+              - heading "AI 深度搜索" [level=2] [ref=e356]
+              - generic [ref=e357]: 国际 3 · 国内 3
+            - generic [ref=e359]:
+              - generic [ref=e360]:
+                - link "Qwen Qwen 阿里通义对话" [ref=e361] [cursor=pointer]:
+                  - /url: https://chat.qwen.ai
+                  - img "Qwen" [ref=e363]
+                  - generic [ref=e364]:
+                    - generic [ref=e365]: Qwen
+                    - generic "阿里通义对话" [ref=e366]
+                - link "秘塔 秘塔 中文学术检索" [ref=e367] [cursor=pointer]:
+                  - /url: https://metaso.cn
+                  - img "秘塔" [ref=e369]
+                  - generic [ref=e370]:
+                    - generic [ref=e371]: 秘塔
+                    - generic "中文学术检索" [ref=e372]
+                - link "豆包 豆包 字节通用助手" [ref=e373] [cursor=pointer]:
+                  - /url: https://www.doubao.com
+                  - img "豆包" [ref=e375]
+                  - generic [ref=e376]:
+                    - generic [ref=e377]: 豆包
+                    - generic "字节通用助手" [ref=e378]
+              - generic [ref=e380]:
+                - link "Perplexity Perplexity 带引用答案搜索" [ref=e381] [cursor=pointer]:
+                  - /url: https://www.perplexity.ai
+                  - img "Perplexity" [ref=e383]
+                  - generic [ref=e384]:
+                    - generic [ref=e385]: Perplexity
+                    - generic "带引用答案搜索" [ref=e386]
+                - link "Gemini Gemini Google生态联动" [ref=e387] [cursor=pointer]:
+                  - /url: https://gemini.google.com
+                  - img "Gemini" [ref=e389]
+                  - generic [ref=e390]:
+                    - generic [ref=e391]: Gemini
+                    - generic "Google生态联动" [ref=e392]
+                - link "OpenAI OpenAI 旗舰模型入口" [ref=e393] [cursor=pointer]:
+                  - /url: https://chatgpt.com
+                  - img "OpenAI" [ref=e395]
+                  - generic [ref=e396]:
+                    - generic [ref=e397]: OpenAI
+                    - generic "旗舰模型入口" [ref=e398]
+          - generic [ref=e399]:
+            - generic [ref=e400]:
+              - heading "会议纪要" [level=2] [ref=e401]
+              - generic [ref=e402]: 国际 3 · 国内 3
+            - generic [ref=e404]:
+              - generic [ref=e405]:
+                - link "飞书妙记 飞书妙记 音视频转纪要" [ref=e406] [cursor=pointer]:
+                  - /url: https://www.feishu.cn/product/minutes
+                  - img "飞书妙记" [ref=e408]
+                  - generic [ref=e409]:
+                    - generic [ref=e410]: 飞书妙记
+                    - generic "音视频转纪要" [ref=e411]
+                - link "讯飞听见 讯飞听见 中文会议速记" [ref=e412] [cursor=pointer]:
+                  - /url: https://www.iflyrec.com
+                  - img "讯飞听见" [ref=e414]
+                  - generic [ref=e415]:
+                    - generic [ref=e416]: 讯飞听见
+                    - generic "中文会议速记" [ref=e417]
+                - link "通义听悟 通义听悟 会议音视频智能纪要" [ref=e418] [cursor=pointer]:
+                  - /url: https://tingwu.aliyun.com/
+                  - img "通义听悟" [ref=e420]
+                  - generic [ref=e421]:
+                    - generic [ref=e422]: 通义听悟
+                    - generic "会议音视频智能纪要" [ref=e423]
+              - generic [ref=e425]:
+                - link "Zoom Zoom 远程会议标准" [ref=e426] [cursor=pointer]:
+                  - /url: https://zoom.us
+                  - img "Zoom" [ref=e428]
+                  - generic [ref=e429]:
+                    - generic [ref=e430]: Zoom
+                    - generic "远程会议标准" [ref=e431]
+                - link "Otter Pilot Otter Pilot 会议实时转写" [ref=e432] [cursor=pointer]:
+                  - /url: https://otter.ai
+                  - img "Otter Pilot" [ref=e434]
+                  - generic [ref=e435]:
+                    - generic [ref=e436]: Otter Pilot
+                    - generic "会议实时转写" [ref=e437]
+                - link "Descript Descript 播客剪辑一体化" [ref=e438] [cursor=pointer]:
+                  - /url: https://www.descript.com/
+                  - img "Descript" [ref=e440]
+                  - generic [ref=e441]:
+                    - generic [ref=e442]: Descript
+                    - generic "播客剪辑一体化" [ref=e443]
+          - generic [ref=e444]:
+            - generic [ref=e445]:
+              - heading "知识库" [level=2] [ref=e446]
+              - generic [ref=e447]: 国际 3 · 国内 3
+            - generic [ref=e449]:
+              - generic [ref=e450]:
+                - link "ima ima 腾讯轻量知识库" [ref=e451] [cursor=pointer]:
+                  - /url: https://ima.qq.com/
+                  - img "ima" [ref=e453]
+                  - generic [ref=e454]:
+                    - generic [ref=e455]: ima
+                    - generic "腾讯轻量知识库" [ref=e456]
+                - link "Get笔记 Get笔记 网页剪藏笔记" [ref=e457] [cursor=pointer]:
+                  - /url: https://www.biji.com/
+                  - img "Get笔记" [ref=e459]
+                  - generic [ref=e460]:
+                    - generic [ref=e461]: Get笔记
+                    - generic "网页剪藏笔记" [ref=e462]
+                - link "飞书 飞书 企业协同平台" [ref=e463] [cursor=pointer]:
+                  - /url: https://www.feishu.cn/
+                  - img "飞书" [ref=e465]
+                  - generic [ref=e466]:
+                    - generic [ref=e467]: 飞书
+                    - generic "企业协同平台" [ref=e468]
+              - generic [ref=e470]:
+                - link "Notion Notion 文档数据库一体" [ref=e471] [cursor=pointer]:
+                  - /url: https://www.notion.so
+                  - img "Notion" [ref=e473]
+                  - generic [ref=e474]:
+                    - generic [ref=e475]: Notion
+                    - generic "文档数据库一体" [ref=e476]
+                - link "Obsidian Obsidian 双链知识图谱" [ref=e477] [cursor=pointer]:
+                  - /url: https://obsidian.md
+                  - img "Obsidian" [ref=e479]
+                  - generic [ref=e480]:
+                    - generic [ref=e481]: Obsidian
+                    - generic "双链知识图谱" [ref=e482]
+                - link "LM Studio LM Studio 本地大模型调试" [ref=e483] [cursor=pointer]:
+                  - /url: https://lmstudio.ai
+                  - img "LM Studio" [ref=e485]
+                  - generic [ref=e486]:
+                    - generic [ref=e487]: LM Studio
+                    - generic "本地大模型调试" [ref=e488]
+          - generic [ref=e489]:
+            - generic [ref=e490]:
+              - heading "AI 协作" [level=2] [ref=e491]
+              - generic [ref=e492]: 国际 3 · 国内 3
+            - generic [ref=e494]:
+              - generic [ref=e495]:
+                - link "飞书 飞书 企业协同平台" [ref=e496] [cursor=pointer]:
+                  - /url: https://www.feishu.cn
+                  - img "飞书" [ref=e498]
+                  - generic [ref=e499]:
+                    - generic [ref=e500]: 飞书
+                    - generic "企业协同平台" [ref=e501]
+                - link "钉钉 钉钉 组织协同中台" [ref=e502] [cursor=pointer]:
+                  - /url: https://www.dingtalk.com
+                  - img "钉钉" [ref=e504]
+                  - generic [ref=e505]:
+                    - generic [ref=e506]: 钉钉
+                    - generic "组织协同中台" [ref=e507]
+                - link "我来 我来 国产协作文档" [ref=e508] [cursor=pointer]:
+                  - /url: https://www.wolai.com
+                  - img "我来" [ref=e510]
+                  - generic [ref=e511]:
+                    - generic [ref=e512]: 我来
+                    - generic "国产协作文档" [ref=e513]
+              - generic [ref=e515]:
+                - link "Microsoft Microsoft Office生产力Copilot" [ref=e516] [cursor=pointer]:
+                  - /url: https://www.microsoft.com/copilot
+                  - img "Microsoft" [ref=e518]
+                  - generic [ref=e519]:
+                    - generic [ref=e520]: Microsoft
+                    - generic "Office生产力Copilot" [ref=e521]
+                - link "Notion Notion 文档数据库一体" [ref=e522] [cursor=pointer]:
+                  - /url: https://www.notion.so
+                  - img "Notion" [ref=e524]
+                  - generic [ref=e525]:
+                    - generic [ref=e526]: Notion
+                    - generic "文档数据库一体" [ref=e527]
+                - link "Slack Slack 团队消息中枢" [ref=e528] [cursor=pointer]:
+                  - /url: https://slack.com
+                  - img "Slack" [ref=e530]
+                  - generic [ref=e531]:
+                    - generic [ref=e532]: Slack
+                    - generic "团队消息中枢" [ref=e533]
+          - generic [ref=e534]:
+            - generic [ref=e535]:
+              - heading "数字人" [level=2] [ref=e536]
+              - generic [ref=e537]: 国际 3 · 国内 3
+            - generic [ref=e539]:
+              - generic [ref=e540]:
+                - link "腾讯智影 腾讯智影 腾讯数字人制作" [ref=e541] [cursor=pointer]:
+                  - /url: https://zenvideo.qq.com
+                  - img "腾讯智影" [ref=e543]
+                  - generic [ref=e544]:
+                    - generic [ref=e545]: 腾讯智影
+                    - generic "腾讯数字人制作" [ref=e546]
+                - link "火山引擎 火山引擎 字节云AI服务" [ref=e547] [cursor=pointer]:
+                  - /url: https://www.volcengine.com
+                  - img "火山引擎" [ref=e549]
+                  - generic [ref=e550]:
+                    - generic [ref=e551]: 火山引擎
+                    - generic "字节云AI服务" [ref=e552]
+                - link "百度曦灵 百度曦灵 百度数字人平台" [ref=e553] [cursor=pointer]:
+                  - /url: https://xiling.cloud.baidu.com/
+                  - img "百度曦灵" [ref=e555]
+                  - generic [ref=e556]:
+                    - generic [ref=e557]: 百度曦灵
+                    - generic "百度数字人平台" [ref=e558]
+              - generic [ref=e560]:
+                - link "HeyGen HeyGen 营销级数字人" [ref=e561] [cursor=pointer]:
+                  - /url: https://www.heygen.com
+                  - img "HeyGen" [ref=e563]
+                  - generic [ref=e564]:
+                    - generic [ref=e565]: HeyGen
+                    - generic "营销级数字人" [ref=e566]
+                - link "D-ID D-ID 照片口播数字人" [ref=e567] [cursor=pointer]:
+                  - /url: https://www.d-id.com
+                  - img "D-ID" [ref=e569]
+                  - generic [ref=e570]:
+                    - generic [ref=e571]: D-ID
+                    - generic "照片口播数字人" [ref=e572]
+                - link "Synthesia Synthesia 企业培训数字人" [ref=e573] [cursor=pointer]:
+                  - /url: https://www.synthesia.io
+                  - img "Synthesia" [ref=e575]
+                  - generic [ref=e576]:
+                    - generic [ref=e577]: Synthesia
+                    - generic "企业培训数字人" [ref=e578]
+          - generic [ref=e579]:
+            - generic [ref=e580]:
+              - heading "声音克隆与TTS" [level=2] [ref=e581]
+              - generic [ref=e582]: 国际 3 · 国内 3
+            - generic [ref=e584]:
+              - generic [ref=e585]:
+                - link "Fish Audio Fish Audio 中文音色克隆" [ref=e586] [cursor=pointer]:
+                  - /url: https://fish.audio
+                  - img "Fish Audio" [ref=e588]
+                  - generic [ref=e589]:
+                    - generic [ref=e590]: Fish Audio
+                    - generic "中文音色克隆" [ref=e591]
+                - link "IndexTTS-2 IndexTTS-2 开源中文语音克隆" [ref=e592] [cursor=pointer]:
+                  - /url: https://index-tts-2.com/
+                  - img "IndexTTS-2" [ref=e594]
+                  - generic [ref=e595]:
+                    - generic [ref=e596]: IndexTTS-2
+                    - generic "开源中文语音克隆" [ref=e597]
+                - link "豆包声音复刻大模型 豆包声音复刻大模型 豆包官方声音克隆" [ref=e598] [cursor=pointer]:
+                  - /url: https://www.volcengine.com/product/voicecloning
+                  - img "豆包声音复刻大模型" [ref=e600]
+                  - generic [ref=e601]:
+                    - generic [ref=e602]: 豆包声音复刻大模型
+                    - generic "豆包官方声音克隆" [ref=e603]
+              - generic [ref=e605]:
+                - link "ElevenLabs ElevenLabs 拟真英文配音" [ref=e606] [cursor=pointer]:
+                  - /url: https://elevenlabs.io
+                  - img "ElevenLabs" [ref=e608]
+                  - generic [ref=e609]:
+                    - generic [ref=e610]: ElevenLabs
+                    - generic "拟真英文配音" [ref=e611]
+                - link "Whisper Whisper 开源语音识别" [ref=e612] [cursor=pointer]:
+                  - /url: https://github.com/openai/whisper
+                  - img "Whisper" [ref=e614]
+                  - generic [ref=e615]:
+                    - generic [ref=e616]: Whisper
+                    - generic "开源语音识别" [ref=e617]
+                - link "MiniMax MiniMax 多语种语音合成" [ref=e618] [cursor=pointer]:
+                  - /url: https://www.minimaxi.com/
+                  - img "MiniMax" [ref=e620]
+                  - generic [ref=e621]:
+                    - generic [ref=e622]: MiniMax
+                    - generic "多语种语音合成" [ref=e623]
+          - generic [ref=e624]:
+            - generic [ref=e625]:
+              - heading "Agent 流" [level=2] [ref=e626]
+              - generic [ref=e627]: 国际 3 · 国内 3
+            - generic [ref=e629]:
+              - generic [ref=e630]:
+                - link "Coze Coze 零代码Agent搭建" [ref=e631] [cursor=pointer]:
+                  - /url: https://www.coze.cn
+                  - img "Coze" [ref=e633]
+                  - generic [ref=e634]:
+                    - generic [ref=e635]: Coze
+                    - generic "零代码Agent搭建" [ref=e636]
+                - link "LangChain LangChain LLM应用编排框架" [ref=e637] [cursor=pointer]:
+                  - /url: https://www.langchain.com/
+                  - img "LangChain" [ref=e639]
+                  - generic [ref=e640]:
+                    - generic [ref=e641]: LangChain
+                    - generic "LLM应用编排框架" [ref=e642]
+                - link "Dify Dify 企业级应用编排" [ref=e643] [cursor=pointer]:
+                  - /url: https://dify.ai
+                  - img "Dify" [ref=e645]
+                  - generic [ref=e646]:
+                    - generic [ref=e647]: Dify
+                    - generic "企业级应用编排" [ref=e648]
+              - generic [ref=e650]:
+                - link "n8n n8n 可视化自动化流" [ref=e651] [cursor=pointer]:
+                  - /url: https://n8n.io
+                  - img "n8n" [ref=e653]
+                  - generic [ref=e654]:
+                    - generic [ref=e655]: n8n
+                    - generic "可视化自动化流" [ref=e656]
+                - link "Zapier Zapier SaaS自动化连接" [ref=e657] [cursor=pointer]:
+                  - /url: https://zapier.com
+                  - img "Zapier" [ref=e659]
+                  - generic [ref=e660]:
+                    - generic [ref=e661]: Zapier
+                    - generic "SaaS自动化连接" [ref=e662]
+                - link "Manus Manus 自主执行型Agent" [ref=e663] [cursor=pointer]:
+                  - /url: https://manus.im/
+                  - img "Manus" [ref=e665]
+                  - generic [ref=e666]:
+                    - generic [ref=e667]: Manus
+                    - generic "自主执行型Agent" [ref=e668]

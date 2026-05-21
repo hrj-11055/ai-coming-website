@@ -1,0 +1,397 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e3]:
+    - generic [ref=e5]:
+      - link "AIcoming - 让一部分人先用起来" [ref=e7] [cursor=pointer]:
+        - /url: index.html
+        - img "AIcoming - 让一部分人先用起来" [ref=e8]
+      - generic [ref=e10]:
+        - link "首页" [ref=e11] [cursor=pointer]:
+          - /url: index.html
+        - link "AI资讯" [ref=e12] [cursor=pointer]:
+          - /url: news.html
+        - link "AI工具集" [ref=e13] [cursor=pointer]:
+          - /url: tools.html
+        - link "AI 能力库" [ref=e14] [cursor=pointer]:
+          - /url: skills.html
+        - link "关于我们" [ref=e15] [cursor=pointer]:
+          - /url: about.html
+      - text: 
+  - generic [ref=e17]:
+    - paragraph [ref=e18]: 关于元说科技
+    - heading "让 AI 真落地" [level=1] [ref=e19]
+    - paragraph [ref=e20]: 深圳元说科技是一家聚焦"AI + 业务增长"的咨询与产品公司。我们不兜售技术概念，我们进入企业的真实业务流程，用实战培训、驻场咨询和产品实践帮助团队把 AI 真正用起来。
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e24]: 
+        - generic [ref=e25]:
+          - paragraph [ref=e26]: 联系人
+          - paragraph [ref=e27]: 黄老师
+      - generic [ref=e29]:
+        - generic [ref=e31]: 
+        - generic [ref=e32]:
+          - paragraph [ref=e33]: 手机号码
+          - link "15800565566" [ref=e34] [cursor=pointer]:
+            - /url: tel:15800565566
+  - generic [ref=e36]:
+    - separator [ref=e37]
+    - generic [ref=e38]:
+      - heading "为什么做这件事" [level=2] [ref=e40]
+      - generic [ref=e41]:
+        - paragraph [ref=e42]: 在 AI 浪潮中，绝大多数企业面临的不是"要不要用 AI"的问题，而是"从哪里开始、谁来推进、怎么验证效果"。
+        - paragraph [ref=e43]: 我们不卖一份报告就离场，而是陪企业走完从判断、试点到组织落地的关键几步。
+  - generic [ref=e45]:
+    - separator [ref=e46]
+    - generic [ref=e47]:
+      - heading "我们怎么做" [level=2] [ref=e49]
+      - paragraph [ref=e51]: 培训建组织、咨询定战略、产品做落地。三件事不是三条产品线，而是同一个项目里的三个阶段。
+    - generic [ref=e52]:
+      - link "跳转到培训实践" [ref=e53] [cursor=pointer]:
+        - /url: "#training-section"
+        - generic [ref=e54]:
+          - generic [ref=e56]: 
+          - heading "培训：建组织" [level=3] [ref=e57]
+          - paragraph [ref=e58]: 围绕真实岗位做讲练结合，让团队不只听懂 AI，而是真的在工作里用起来。
+      - link "跳转到咨询方案" [ref=e59] [cursor=pointer]:
+        - /url: "#consulting-section"
+        - generic [ref=e60]:
+          - generic [ref=e62]: 
+          - heading "咨询：定战略" [level=3] [ref=e63]
+          - paragraph [ref=e64]: 帮企业看清从哪里切入、谁来推进、怎样把 AI 变成组织动作。
+      - link "跳转到产品案例" [ref=e65] [cursor=pointer]:
+        - /url: "#product-section"
+        - generic [ref=e66]:
+          - generic [ref=e68]: 
+          - heading "产品：做落地" [level=3] [ref=e69]
+          - paragraph [ref=e70]: 把想法做成真实产品与工作流，重点不是炫技，而是能长期运行、持续迭代、真正被使用。
+  - generic [ref=e72]:
+    - separator [ref=e73]
+    - generic [ref=e74]:
+      - paragraph [ref=e75]: 培训实践
+      - heading "把 AI 带进业务团队，而不是停留在课堂里" [level=2] [ref=e76]
+      - paragraph [ref=e77]: 培训的目标不是"听懂就散场"，而是让关键岗位在真实工作里把 AI 用起来，并尽快把个人尝试变成团队里的共同能力。
+      - generic [ref=e78]:
+        - generic [ref=e79]: 培训目标
+        - generic [ref=e80]: 让团队在真实业务问题里学会用 AI，减少试错成本，把方法、模板和内部样板留在组织里。
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - generic [ref=e83]: 常见形式
+          - list [ref=e84]:
+            - listitem [ref=e85]: 企业内训
+            - listitem [ref=e86]: 业务场景工作坊
+            - listitem [ref=e87]: AI 实战营与部门陪练
+        - generic [ref=e88]:
+          - generic [ref=e89]: 交付结果
+          - list [ref=e90]:
+            - listitem [ref=e91]: 部门场景清单与优先级
+            - listitem [ref=e92]: 岗位实操模板与提示词资产
+            - listitem [ref=e93]: 训练营成果与后续推广建议
+            - listitem [ref=e94]: 可持续复用的内部培训素材与方法包
+      - generic [ref=e95]:
+        - generic [ref=e96]:
+          - generic [ref=e97]: Step 1
+          - generic [ref=e98]: 统一认知
+          - generic [ref=e99]: 先让管理层和骨干看清 AI 的边界与优先级。
+        - generic [ref=e100]:
+          - generic [ref=e101]: Step 2
+          - generic [ref=e102]: 真实上手
+          - generic [ref=e103]: 围绕真实岗位任务做讲练结合，不做脱离现场的演示。
+        - generic [ref=e104]:
+          - generic [ref=e105]: Step 3
+          - generic [ref=e106]: 沉淀方法
+          - generic [ref=e107]: 把提示词、模板和部门经验留下来，方便继续扩散。
+      - generic [ref=e108]:
+        - generic [ref=e109]: 企业内训
+        - generic [ref=e110]: 业务工作坊
+        - generic [ref=e111]: 讲练结合
+        - generic [ref=e112]: 组织落地
+    - generic [ref=e113]:
+      - generic [ref=e114]:
+        - img "佛山数字化转型培训" [ref=e115]
+        - generic [ref=e116]:
+          - generic [ref=e117]: 佛山数字化转型培训
+          - generic [ref=e118]: 佛山市中小企业数字化转型城市试点人才培训，覆盖多家企业。
+      - generic [ref=e119]:
+        - img "企业转型趋势讲座" [ref=e120]
+        - generic [ref=e121]:
+          - generic [ref=e122]: 企业转型趋势讲座
+          - generic [ref=e123]: 三浪并发时代下，企业从传统模式到智能商业的进化路径。
+      - generic [ref=e124]:
+        - img "AI 演进历史讲座" [ref=e125]
+        - generic [ref=e126]:
+          - generic [ref=e127]: AI 演进历史讲座
+          - generic [ref=e128]: 从中美博弈到 ChatGPT，帮助学员看清 AI 发展脉络。
+      - generic [ref=e129]:
+        - img "用户洞察与决策者画像培训" [ref=e130]
+        - generic [ref=e131]:
+          - generic [ref=e132]: 用户洞察与决策者画像
+          - generic [ref=e133]: 决策者洞察五环模型，帮助团队理解关键用户与业务决策逻辑。
+      - generic [ref=e134]:
+        - img "工业企业数字化重构讲座" [ref=e135]
+        - generic [ref=e136]:
+          - generic [ref=e137]: 工业企业数字化重构
+          - generic [ref=e138]: 用生物学隐喻讲解工业互联网：数据是血液，网络是血管，AI 是大脑。
+  - generic [ref=e140]:
+    - separator [ref=e141]
+    - generic [ref=e142]:
+      - generic [ref=e143]:
+        - paragraph [ref=e144]: 咨询方案
+        - heading "把 AI 从想法，推进到组织动作" [level=2] [ref=e145]
+      - paragraph [ref=e147]: 我们的咨询聚焦 3 件事：先把切入点找准，再把组织带动起来，最后把经验沉淀成能力资产。
+    - generic [ref=e148]:
+      - img "企业 AI 转型三步走全景图" [ref=e150]
+      - paragraph [ref=e151]: 先摸清岗位与部门的 AI 渗透家底，再通过 AI 先锋队把真实案例跑出来，最后把成熟经验沉淀成可对外输出的能力。
+    - generic [ref=e152]:
+      - generic [ref=e153]:
+        - text: "01"
+        - heading "员工的一天" [level=3] [ref=e154]
+        - paragraph [ref=e155]: 岗位 AI 渗透全景诊断
+      - generic [ref=e156]:
+        - paragraph [ref=e157]: 从员工真实的一天入手，把岗位任务拆到可分析的颗粒度，帮企业看清 AI 该先投向哪里、哪些岗位最值得优先重构。
+        - paragraph [ref=e158]: 价值在于先把企业的 AI 家底看清楚，再决定预算投向、试点顺序和岗位调整节奏，避免在错误的地方先投入。
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - generic [ref=e161]: 它能帮你什么
+            - generic [ref=e162]: 看清 AI 该先从哪个岗位、任务和部门切入；找到最值得优先投预算、做试点和做培训的战场；提前识别人机协作的临界岗位，为未来 12 个月的岗位调整、转型准备和编制规划留出时间。
+          - generic [ref=e163]:
+            - generic [ref=e164]: 交付结果
+            - generic [ref=e165]: 岗位 AI 光谱分析报告、部门 AI 渗透热力图、公司 AI 全景透视图、AI 投资优先级建议与行动路径。
+    - generic [ref=e166]:
+      - generic [ref=e167]:
+        - text: "02"
+        - heading "AI 先锋队陪跑" [level=3] [ref=e168]
+        - paragraph [ref=e169]: 企业内部 AI 推广引擎
+      - generic [ref=e170]:
+        - paragraph [ref=e171]: 不是做一次培训，而是用 6 个月陪企业搭起一支跨部门 AI 先锋队，把零散的个人尝试变成可复制、可扩散的组织动作。
+        - paragraph [ref=e172]: 价值在于把"有人会用 AI"升级成"组织会持续推广 AI"，让内部真正长出一批能带头、能复制、能扩散的节点。
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - generic [ref=e175]: 它能帮你什么
+            - generic [ref=e176]: 解决工具已经引入、但员工不会持续用，或者用了也跑不出真实业务结果的问题；在多个部门同时跑出经过验证的 AI 场景，减少组织内部的观望、抵触和"没人带头"的状态；建立一批内部 AI 接口人和推广节点，让后续扩散不再完全依赖外部顾问。
+          - generic [ref=e177]:
+            - generic [ref=e178]: 交付结果
+            - generic [ref=e179]: 20-30 份部门 AI 应用案例、公司 AI 应用地图、先锋队运营手册与陪跑机制、可持续自运转的内部推广网络、AI 使用率提升数据报告。
+    - generic [ref=e180]:
+      - generic [ref=e181]:
+        - text: "03"
+        - heading "行业 AI 能力输出" [level=3] [ref=e182]
+        - paragraph [ref=e183]: 从使用者到赋能者的跨越
+      - generic [ref=e184]:
+        - paragraph [ref=e185]: 当企业内部已经跑通 AI，我们帮助把经验整理成课程、工具和可复制的输出方案。
+        - paragraph [ref=e186]: 价值在于把内部已经验证过的 AI 能力，从成本中心升级成对外可复制、可赋能、可形成生态壁垒的业务能力。
+        - generic [ref=e187]:
+          - generic [ref=e188]:
+            - generic [ref=e189]: 它能帮你什么
+            - generic [ref=e190]: 适合内部已有稳定 AI 实践、希望进一步放大价值的企业；也适合需要带动供应链、渠道或生态伙伴提升能力，把内部经验沉淀成外部赋能产品的团队。
+          - generic [ref=e191]:
+            - generic [ref=e192]: 交付结果
+            - generic [ref=e193]: 内部 AI 能力资产盘点报告、行业 AI 赋能产品包、2-3 家试点输出执行报告、商业模式与定价框架。
+  - generic [ref=e195]:
+    - separator [ref=e196]
+    - generic [ref=e197]:
+      - generic [ref=e198]:
+        - paragraph [ref=e199]: 产品案例
+        - heading "AI资讯日报" [level=2] [ref=e200]
+        - paragraph [ref=e201]: AI资讯日报是一款持续更新的 AI 信息产品，帮助用户更快浏览当天值得关注的动态。
+        - paragraph [ref=e202]: 核心不是"搬新闻"，而是把信源聚合、AI 提炼和多形态分发做成一条稳定的内容链路。这套能力并不只适用于 AI 行业，也可以复制到制造、汽车、消费、医药、金融等任何行业，做成对应行业的资讯日报与情报产品。
+        - generic [ref=e203]:
+          - generic [ref=e204]: 一句话定位
+          - generic [ref=e205]: 帮忙碌的从业者在更短时间内完成当天动态的「看一遍、抓重点、顺手听完」，也能延展成任何行业的专属情报入口。
+        - generic [ref=e206]:
+          - img "AI资讯日报从信源采集到多形态输出的产品流程图" [ref=e208]
+          - paragraph [ref=e209]: 这张图对应 AI资讯日报的完整产品链路：信源采集、AI 提炼、阅读页、关键词和播客输出，以及它对信息消费效率带来的价值。
+        - generic [ref=e210]:
+          - generic [ref=e211]:
+            - generic [ref=e212]: 它能带来什么价值
+            - list [ref=e213]:
+              - listitem [ref=e214]: 把分散在多个站点、公众号和信源里的行业动态，压缩成一个更高效的消费入口。
+              - listitem [ref=e215]: 降低管理者、销售、产品和研究岗位每天获取信息的时间成本，让团队把注意力放回判断和行动。
+              - listitem [ref=e216]: 同一套能力可以延伸为某个行业、某条赛道或某家企业自己的日报、关键词和音频情报产品。
+          - generic [ref=e217]:
+            - generic [ref=e218]: 适合谁用
+            - list [ref=e219]:
+              - listitem [ref=e220]: 持续关注 AI 行业变化的从业者与创业者。
+              - listitem [ref=e221]: 需要快速同步团队信息的管理者和业务负责人。
+              - listitem [ref=e222]: 想用低成本建立 AI 情报输入机制的企业与内容团队。
+        - generic [ref=e223]:
+          - generic [ref=e224]: 每日 AI 资讯
+          - generic [ref=e225]: 热点关键词
+          - generic [ref=e226]: 今日播客
+          - generic [ref=e227]: 稳定内容生产链路
+        - link "查看 AI资讯日报" [ref=e229] [cursor=pointer]:
+          - /url: news.html
+      - generic [ref=e230]:
+        - generic [ref=e231]: Product Snapshot
+        - heading "把海量 AI 动态，压缩成一个可消费入口" [level=3] [ref=e232]
+        - list [ref=e233]:
+          - listitem [ref=e234]:
+            - generic [ref=e235]: 定位
+            - generic [ref=e236]: 面向高密度信息消费者的 AI 每日情报产品
+          - listitem [ref=e237]:
+            - generic [ref=e238]: 输入
+            - generic [ref=e239]: 国内外 AI 信源聚合，规划上以 RSS 作为主要采集层
+          - listitem [ref=e240]:
+            - generic [ref=e241]: 处理
+            - generic [ref=e242]: AI 筛选、摘要提炼、结构化整理、关键词归纳
+          - listitem [ref=e243]:
+            - generic [ref=e244]: 输出
+            - generic [ref=e245]: 日报阅读页、热点关键词、播客音频版本
+          - listitem [ref=e246]:
+            - generic [ref=e247]: 场景
+            - generic [ref=e248]: 晨间浏览、午间速读、通勤收听、团队同步
+          - listitem [ref=e249]:
+            - generic [ref=e250]: 延展
+            - generic [ref=e251]: 可复制到任意行业，形成该行业的资讯日报、关键词摘要与音频情报产品
+          - listitem [ref=e252]:
+            - generic [ref=e253]: 当前
+            - generic [ref=e254]:
+              - generic [ref=e255]: 已验证
+              - text: 日报阅读页、热点关键词、今日播客
+          - listitem [ref=e256]:
+            - generic [ref=e257]: 规划
+            - generic [ref=e258]:
+              - generic [ref=e259]: 下一步
+              - text: 信源池扩展、栏目化分发、公众号/邮件/企业内参
+        - generic [ref=e260]:
+          - generic [ref=e261]: RSS 聚合
+          - generic [ref=e262]: AI 摘要
+          - generic [ref=e263]: 关键词提炼
+          - generic [ref=e264]: 播客生成
+        - paragraph [ref=e265]: 这也是我们"产品：做落地"的一个样本：不只展示功能，而是把内容采集、处理与分发做成一条可持续运行的产品链路。
+  - generic [ref=e267]:
+    - separator [ref=e268]
+    - generic [ref=e269]:
+      - heading "团队" [level=2] [ref=e271]
+      - generic [ref=e272]:
+        - paragraph [ref=e273]: 一支集商业判断力与技术纵深于一身的团队。核心成员来自国内外知名院校及头部科技企业与咨询公司，硕博学历占比超过 65%。
+        - paragraph [ref=e274]: 我们不是纯技术团队，也不是纯咨询团队。我们的人既能读懂财务报表和组织架构，也能写 Prompt、搭 Agent、调模型。这种"两条腿走路"的能力，让我们在企业现场能同时跟管理层对话，也能跟技术团队协作。
+    - generic [ref=e275]:
+      - generic [ref=e276]:
+        - generic [ref=e277]: 65%
+        - generic [ref=e278]: 硕博学历占比
+      - generic [ref=e279]:
+        - generic [ref=e280]: 30+
+        - generic [ref=e281]: 已服务企业与机构
+      - generic [ref=e282]:
+        - generic [ref=e283]: 6+
+        - generic [ref=e284]: 覆盖行业领域
+      - generic [ref=e285]:
+        - generic [ref=e286]: "100"
+        - generic [ref=e287]: 目标深度服务企业数
+  - generic [ref=e289]:
+    - separator [ref=e290]
+    - generic [ref=e291]:
+      - heading "我们信什么" [level=2] [ref=e293]
+      - paragraph [ref=e295]: 这几条原则决定了我们接什么项目、怎么交付、以及如何跟客户建立长期关系。
+    - generic [ref=e296]:
+      - generic [ref=e297]:
+        - text: "01"
+        - heading "用结果说话，不用 PPT 说话。" [level=3] [ref=e298]
+        - paragraph [ref=e299]: 不看 AI 用了多少工具，只看它是否让业务变好。决策更快、效率更高、增长更可持续——每一个方案的价值都必须可衡量。
+      - generic [ref=e300]:
+        - text: "02"
+        - heading "简单有效，胜过复杂炫技。" [level=3] [ref=e301]
+        - paragraph [ref=e302]: 如果一个简单的规则引擎就能解决问题，我们不会去搭一个大模型系统。技术服务于业务，不是反过来。
+      - generic [ref=e303]:
+        - text: "03"
+        - heading "目标是让客户不再需要我们。" [level=3] [ref=e304]
+        - paragraph [ref=e305]: 每一次培训和交付都在向"客户可以自己跑"这个终局靠近。我们帮企业建的是自主能力，不是对外部顾问的依赖。
+      - generic [ref=e306]:
+        - text: "04"
+        - heading "该说不的时候会说不。" [level=3] [ref=e307]
+        - paragraph [ref=e308]: AI 不是万能的。我们会告诉客户什么场景适合 AI、什么场景不适合，会拒绝不合理的需求。诚实是长期合作的前提。
+  - generic [ref=e310]:
+    - separator [ref=e311]
+    - paragraph [ref=e312]: 客户与合作伙伴
+    - heading "他们选择了我们" [level=2] [ref=e313]
+    - paragraph [ref=e314]: 以下为部分服务客户，覆盖央国企、金融保险、通信运营商、地产物业、能源化工、智能制造、消费零售与企业服务等多个行业。
+    - generic [ref=e315]:
+      - generic [ref=e316]:
+        - img "招商局集团"
+      - generic [ref=e317]:
+        - img "华润集团"
+      - generic [ref=e318]:
+        - img "中海物业"
+      - generic [ref=e319]:
+        - img "中国移动"
+      - generic [ref=e320]:
+        - img "中国联通"
+      - generic [ref=e321]:
+        - img "东风汽车"
+      - generic [ref=e322]:
+        - img "比亚迪"
+      - generic [ref=e323]:
+        - img "周大福"
+      - generic [ref=e324]:
+        - img "德赛西威"
+      - generic [ref=e325]:
+        - img "得力集团"
+      - generic [ref=e326]:
+        - img "中国工商银行"
+      - generic [ref=e327]:
+        - img "中国石油"
+      - generic [ref=e328]:
+        - img "中国人寿"
+      - generic [ref=e329]:
+        - img "广汽集团"
+      - generic [ref=e330]:
+        - img "招商局港口"
+      - generic [ref=e331]:
+        - img "中外运"
+      - generic [ref=e332]:
+        - img "广发银行"
+      - generic [ref=e333]:
+        - img "中国民生银行"
+      - generic [ref=e334]:
+        - img "海尔"
+      - generic [ref=e335]:
+        - img "中国邮政"
+      - generic [ref=e336]:
+        - img "中国建设银行"
+      - generic [ref=e337]:
+        - img "平安证券"
+      - generic [ref=e338]:
+        - img "辽港集团"
+      - generic [ref=e339]:
+        - img "中国南山"
+      - generic [ref=e340]:
+        - img "中信证券"
+      - generic [ref=e341]:
+        - img "印力"
+      - generic [ref=e342]:
+        - img "精一"
+      - generic [ref=e343]:
+        - img "五征集团"
+      - generic [ref=e344]:
+        - img "维谛技术"
+      - generic [ref=e345]:
+        - img "海纳云"
+  - generic [ref=e347]:
+    - separator [ref=e348]
+    - generic [ref=e349]:
+      - heading "愿景" [level=2] [ref=e351]
+      - generic [ref=e352]:
+        - paragraph [ref=e353]:
+          - text: 影响中国百万职场人，
+          - text: 深度服务 100 家企业。
+        - paragraph [ref=e354]:
+          - text: 在AI时代，我们一起成为跑赢全场的人
+          - text: 在AI时代，我们一起成为那个最懂业务的人
+          - text: 在AI时代，我们一起成为最能将新技术应用在业务中的人
+  - generic [ref=e356]:
+    - heading "聊聊你的业务场景， 看看 AI 能帮什么忙" [level=2] [ref=e357]:
+      - text: 聊聊你的业务场景，
+      - text: 看看 AI 能帮什么忙
+    - paragraph [ref=e358]: 无论你是在规划 AI 战略、寻找落地场景，还是想给团队做一次实战培训，我们都可以先聊聊。
+    - generic [ref=e359]:
+      - generic [ref=e360]:
+        - generic [ref=e361]: 
+        - generic [ref=e362]:
+          - paragraph [ref=e363]: 联系人
+          - paragraph [ref=e364]: 黄老师
+      - link " 手机号码 15800565566" [ref=e365] [cursor=pointer]:
+        - /url: tel:15800565566
+        - generic [ref=e366]: 
+        - generic [ref=e367]:
+          - paragraph [ref=e368]: 手机号码
+          - paragraph [ref=e369]: "15800565566"
+  - text:    

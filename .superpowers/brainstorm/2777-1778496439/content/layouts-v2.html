@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宣纸工坊 · 布局预览 v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #f3ede2;
+  --surface: #f8f4ec;
+  --s2:      #fdfaf6;
+  --ink:     #1c1510;
+  --ink2:    #3d3028;
+  --ink3:    #6a5a4a;
+  --ink4:    #a89880;
+  --rule:    #d8d0c2;
+  --red:     #ba3f14;
+  --red-dim: #f3e0d8;
+  --f-serif: 'Noto Serif SC', Georgia, serif;
+  --f-sans:  'Noto Sans SC', sans-serif;
+  --f-mono:  'JetBrains Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: #1a1208;
+  font-family: var(--f-sans);
+  padding: 28px 24px 56px;
+  min-height: 100vh;
+}
+
+/* ── 标签切换 ── */
+.tab-bar {
+  display: flex; gap: 0;
+  margin: 0 auto 24px;
+  max-width: 1100px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  padding: 4px;
+}
+.tab {
+  flex: 1; padding: 9px 0; text-align: center;
+  font-family: var(--f-mono); font-size: 11px;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  border-radius: 7px; cursor: pointer;
+  transition: background .18s, color .18s;
+}
+.tab.active { background: var(--bg); color: var(--red); font-weight: 500; }
+
+/* ── 浏览器外框 ── */
+.browser {
+  max-width: 1100px; margin: 0 auto;
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,.6);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.browser-chrome {
+  background: #2a2218;
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.dot { width:10px; height:10px; border-radius:50%; }
+.dot-r{background:#ff5f57} .dot-y{background:#febc2e} .dot-g{background:#28c840}
+.addr-bar {
+  flex:1; margin-left:8px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 6px; padding: 5px 12px;
+  font-family: var(--f-mono); font-size: 11px;
+  color: rgba(255,255,255,.3); letter-spacing: .3px;
+}
+
+.page { display:none; }
+.page.active { display:block; }
+
+/* ══════════════════════════
+   SHARED NAV
+══════════════════════════ */
+.site-nav {
+  display: flex; align-items: center;
+  height: 52px; padding: 0 28px;
+  background: var(--s2);
+  border-bottom: 2.5px solid var(--ink);
+}
+.site-logo {
+  font-family: var(--f-serif);
+  font-size: 17px; font-weight: 900;
+  color: var(--ink); letter-spacing: -.3px;
+}
+.site-logo em { font-style:normal; color: var(--red); }
+.site-links { display:flex; gap:26px; margin-left:32px; }
+.site-link {
+  font-size: 13px; font-weight: 500; color: var(--ink3);
+  padding-bottom: 2px; border-bottom: 2px solid transparent;
+}
+.site-link.on { color: var(--red); border-bottom-color: var(--red); }
+.site-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+.site-date { font-family: var(--f-mono); font-size: 11px; color: var(--ink4); }
+.site-admin {
+  font-size: 12px; font-weight: 500; color: var(--ink3);
+  padding: 5px 12px; border: 1px solid var(--rule); border-radius: 5px;
+}
+
+/* ══════════════════════════
+   PAGE 1: 首页（提示词生成）
+   与现有版本保持相同交互布局
+   只换视觉风格
+══════════════════════════ */
+#page-home {
+  background: var(--bg);
+  /* 保留原版背景浮动圆点动画，用纸色调重新配色 */
+  position: relative; overflow: hidden;
+}
+
+/* 极淡背景纹路（仿宣纸纤维感） */
+#page-home::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(186,63,20,.025) 28px,
+      rgba(186,63,20,.025) 29px
+    );
+  pointer-events: none; z-index: 0;
+}
+
+.home-inner {
+  position: relative; z-index: 1;
+  width: min(100%, 700px);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Logo 区（与原版对应：居中 logo 图片） */
+.home-logo-area {
+  text-align: center;
+  padding: 56px 0 24px;
+  animation: fadeUp .8s ease both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+
+.home-logo-text {
+  font-family: var(--f-serif);
+  font-size: 30px; font-weight: 900;
+  color: var(--ink); letter-spacing: -.5px;
+  display: block; margin-bottom: 6px;
+}
+.home-logo-text em { font-style:normal; color: var(--red); }
+.home-tagline {
+  font-family: var(--f-mono);
+  font-size: 11px; color: var(--ink4);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+
+/* 提示词图标行（保留原版的 prompt-icon-row 位置） */
+.prompt-icon-row {
+  display: flex; justify-content: flex-end;
+  position: relative; left: -32px;
+  margin: -8px 0 12px;
+}
+.prompt-icon-placeholder {
+  width: 88px; height: 88px;
+  border-radius: 16px;
+  background: var(--red-dim);
+  border: 1px solid rgba(186,63,20,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; opacity: .8;
+}
+
+/* 输入框（对应原版 .search-box，保持 min-height 和 textarea 结构） */
+.prompt-box-wrap {
+  animation: fadeUp .8s ease .15s both;
+  margin-bottom: 20px;
+}
+.prompt-box {
+  width: 100%;
+  background: var(--s2);
+  border: 2px solid var(--red);
+  border-radius: 16px;
+  padding: 18px 18px 14px;
+  min-height: 130px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 4px 24px rgba(186,63,20,.14);
+  transition: box-shadow .2s;
+}
+.prompt-box:focus-within {
+  box-shadow: 0 6px 32px rgba(186,63,20,.22);
+}
+.prompt-textarea {
+  flex: 1; border: none; outline: none; resize: none;
+  font-family: var(--f-sans); font-size: 15px;
+  color: var(--ink2); background: transparent;
+  line-height: 1.65; min-height: 80px;
+}
+.prompt-textarea::placeholder { color: var(--ink4); font-weight: 300; }
+.prompt-actions {
+  display: flex; align-items: center;
+  justify-content: flex-end; gap: 8px;
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px solid var(--rule);
+}
+.prompt-hint {
+  font-family: var(--f-mono); font-size: 10px;
+  color: var(--ink4); margin-right: auto;
+  letter-spacing: .3px;
+}
+.model-badge {
+  font-family: var(--f-mono); font-size: 10px;
+  color: var(--ink3);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  padding: 4px 10px; border-radius: 4px;
+}
+.send-btn {
+  width: 38px; height: 38px; border-radius: 9px;
+  background: var(--ink); color: var(--s2);
+  border: none; cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .1s;
+}
+.send-btn:hover { background: var(--red); }
+.send-btn:active { transform: scale(.94); }
+
+/* 示例意图提示 */
+.example-hints {
+  display: flex; gap: 7px; flex-wrap: wrap;
+  margin-bottom: 28px;
+  animation: fadeUp .8s ease .25s both;
+}
+.eg-chip {
+  font-family: var(--f-sans); font-size: 12px; color: var(--ink3);
+  padding: 5px 12px;
+  background: var(--surface); border: 1px solid var(--rule);
+  border-radius: 999px; cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.eg-chip:hover { border-color: var(--red); color: var(--red); }
+
+/* 结果区（对应原版 .results-container，结构保持一致） */
+.result-card {
+  background: var(--s2);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 2px 12px rgba(28,21,16,.07);
+  animation: fadeUp .5s ease both;
+  margin-bottom: 16px;
+}
+.result-header {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 14px; margin-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+.result-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--red);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 15px; flex-shrink: 0;
+}
+.result-title {
+  font-family: var(--f-serif); font-size: 14px; font-weight: 700;
+  color: var(--ink); flex: 1;
+}
+.copy-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 7px;
+  border: 1.5px solid var(--rule);
+  background: var(--surface); color: var(--ink3);
+  font-family: var(--f-sans); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all .15s;
+}
+.copy-btn:hover { border-color: var(--red); color: var(--red); }
+.result-body {
+  font-size: 14px; color: var(--ink2); line-height: 1.8;
+  white-space: pre-wrap;
+}
+.result-body strong { color: var(--ink); font-weight: 700; }
+
+/* ══════════════════════════
+   PAGE 2: 资讯页
+══════════════════════════ */
+#page-news { background: var(--bg); }
+
+.news-layout {
+  display: grid; grid-template-columns: 196px 1fr;
+  gap: 16px; padding: 20px 24px; align-items: start;
+}
+
+.sidebar { display:flex; flex-direction:column; gap:12px; position:sticky; top:16px; }
+.sb-block {
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; overflow:hidden;
+}
+.sb-hd {
+  padding: 9px 14px; background: var(--s2); border-bottom: 1px solid var(--rule);
+  font-family: var(--f-mono); font-size: 9px; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: 1.5px;
+}
+.date-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 8px 14px; border-bottom: 1px solid var(--rule); cursor:pointer;
+}
+.date-row:last-child { border-bottom:none; }
+.date-row.on { background: var(--red-dim); }
+.dr-txt { font-family: var(--f-mono); font-size: 11px; color: var(--ink3); }
+.date-row.on .dr-txt { color: var(--red); font-weight:500; }
+.dr-cnt {
+  font-family: var(--f-mono); font-size: 9px; color: var(--ink4);
+  background: rgba(28,21,16,.05); padding: 1px 6px; border-radius: 999px;
+}
+.date-row.on .dr-cnt { background: rgba(186,63,20,.12); color: var(--red); }
+.tags { display:flex; flex-wrap:wrap; gap:5px; padding:10px; }
+.tag-chip {
+  font-family: var(--f-mono); font-size: 9px; color: var(--ink3);
+  padding: 3px 8px; border: 1px solid var(--rule); border-radius: 3px; cursor:pointer;
+}
+.tag-chip.on { background: var(--red-dim); color: var(--red); border-color: rgba(186,63,20,.25); }
+
+.news-main { display:flex; flex-direction:column; gap:1px; }
+
+.news-feature {
+  background: var(--s2); border: 1px solid var(--rule);
+  border-top: 3px solid var(--red); border-radius: 10px 10px 0 0;
+  padding: 18px 20px; margin-bottom: 1px;
+}
+.nf-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.nf-badge {
+  font-family: var(--f-mono); font-size: 9px; color: var(--red);
+  background: var(--red-dim); border: 1px solid rgba(186,63,20,.2);
+  padding: 3px 8px; border-radius: 3px; letter-spacing:.5px; text-transform:uppercase;
+}
+.nf-ts { font-family: var(--f-mono); font-size: 10px; color: var(--ink4); }
+.nf-title {
+  font-family: var(--f-serif); font-size: 16px; font-weight: 700;
+  color: var(--ink); line-height: 1.75; margin-bottom: 8px;
+}
+.nf-desc { font-size: 12px; color: var(--ink3); line-height: 1.7; }
+
+.news-item {
+  background: var(--surface); border: 1px solid var(--rule); border-top:none;
+  padding: 13px 20px; display:flex; gap:14px; align-items:flex-start;
+}
+.news-item:last-child { border-radius: 0 0 10px 10px; }
+.ni-num { font-family: var(--f-mono); font-size: 12px; color: var(--rule); min-width:20px; flex-shrink:0; padding-top:2px; }
+.ni-body { flex:1; display:flex; flex-direction:column; gap:4px; }
+.ni-title { font-family: var(--f-serif); font-size: 13px; font-weight:700; color: var(--ink); line-height:1.65; }
+.ni-meta { display:flex; align-items:center; gap:7px; font-family: var(--f-mono); font-size:9px; color: var(--ink4); }
+.ni-tag {
+  font-family: var(--f-mono); font-size: 9px; color: var(--ink3);
+  padding: 1px 6px; border: 1px solid var(--rule); border-radius: 2px;
+}
+.ni-tag.hot { color: var(--red); border-color: rgba(186,63,20,.2); background: var(--red-dim); }
+</style>
+</head>
+<body>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="sw('home',this)">首页 · 提示词生成</div>
+  <div class="tab" onclick="sw('news',this)">资讯页</div>
+</div>
+
+<div class="browser">
+  <div class="browser-chrome">
+    <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+    <div class="addr-bar" id="addr">aicoming.com</div>
+  </div>
+
+  <!-- ── 首页 ── -->
+  <div class="page active" id="page-home">
+    <nav class="site-nav">
+      <div class="site-logo">AI<em>coming</em></div>
+      <div class="site-links">
+        <span class="site-link on">首页</span>
+        <span class="site-link">资讯</span>
+        <span class="site-link">工具</span>
+        <span class="site-link">能力库</span>
+      </div>
+      <div class="site-right">
+        <span class="site-date">2026·05·11</span>
+        <span class="site-admin">管理</span>
+      </div>
+    </nav>
+
+    <div class="home-inner">
+      <!-- Logo（对应原版居中 logo 图片区域） -->
+      <div class="home-logo-area">
+        <span class="home-logo-text">AI<em>coming</em></span>
+        <div class="home-tagline">让一部分人先用起来</div>
+      </div>
+
+      <!-- prompt-icon-row（保留原版图标位置） -->
+      <div class="prompt-icon-row">
+        <div class="prompt-icon-placeholder">🪄</div>
+      </div>
+
+      <!-- 提示词输入框（对应原版 .search-box） -->
+      <div class="prompt-box-wrap">
+        <div class="prompt-box">
+          <div class="prompt-textarea" style="color:var(--ink4);">
+            描述你的意图，AI 将帮你生成高质量提示词…
+          </div>
+          <div class="prompt-actions">
+            <span class="prompt-hint">Ctrl + Enter 发送</span>
+            <span class="model-badge">DeepSeek V3</span>
+            <button class="send-btn">↑</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 示例意图（类似原版快捷提示） -->
+      <div class="example-hints">
+        <span class="eg-chip">帮我写一份商业计划书</span>
+        <span class="eg-chip">分析竞品并给出建议</span>
+        <span class="eg-chip">优化这段代码</span>
+        <span class="eg-chip">生成产品说明文案</span>
+      </div>
+
+      <!-- 生成结果（对应原版 .search-result） -->
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-icon">✦</div>
+          <div class="result-title">已为你生成高质量提示词</div>
+          <button class="copy-btn">📋 复制</button>
+        </div>
+        <div class="result-body">你是一位经验丰富的商业顾问，擅长制定清晰、有说服力的商业计划。
+
+请为以下业务方向撰写一份完整的商业计划书：
+
+<strong>业务方向：</strong>[请填写你的业务方向]
+
+要求包含：
+1. 执行摘要（200字以内）
+2. 市场分析与竞争格局
+3. 产品/服务详细描述
+4. 商业模式与盈利路径
+5. 三年财务预测
+6. 风险识别与应对策略
+
+语气专业、数据驱动，适合呈现给投资人或合伙人。</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 资讯页 ── -->
+  <div class="page" id="page-news">
+    <nav class="site-nav">
+      <div class="site-logo">AI<em>coming</em></div>
+      <div class="site-links">
+        <span class="site-link">首页</span>
+        <span class="site-link on">资讯</span>
+        <span class="site-link">工具</span>
+        <span class="site-link">能力库</span>
+      </div>
+      <div class="site-right">
+        <span class="site-date">2026·05·11</span>
+        <span class="site-admin">管理</span>
+      </div>
+    </nav>
+
+    <div class="news-layout">
+      <div class="sidebar">
+        <div class="sb-block">
+          <div class="sb-hd">日期</div>
+          <div class="date-row on"><span class="dr-txt">05-11</span><span class="dr-cnt">12</span></div>
+          <div class="date-row"><span class="dr-txt">05-10</span><span class="dr-cnt">9</span></div>
+          <div class="date-row"><span class="dr-txt">05-09</span><span class="dr-cnt">14</span></div>
+          <div class="date-row"><span class="dr-txt">05-08</span><span class="dr-cnt">7</span></div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-hd">标签筛选</div>
+          <div class="tags">
+            <span class="tag-chip on">全部</span>
+            <span class="tag-chip">AI 模型</span>
+            <span class="tag-chip">工具</span>
+            <span class="tag-chip">OpenAI</span>
+            <span class="tag-chip">国内</span>
+            <span class="tag-chip">研究</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="news-main">
+        <div class="news-feature">
+          <div class="nf-top">
+            <span class="nf-badge">头条</span>
+            <span class="nf-ts">07:32 · AI 模型</span>
+          </div>
+          <div class="nf-title">Anthropic 推出 Claude 4，支持 200K 上下文窗口，推理能力全面超越前代</div>
+          <div class="nf-desc">新模型在代码生成、数学推理及中文理解方面均有显著提升，多项基准测试刷新历史纪录。Anthropic 表示将在未来数周内逐步向所有用户开放，企业版已率先上线……</div>
+        </div>
+        <div class="news-item">
+          <div class="ni-num">02</div>
+          <div class="ni-body">
+            <div class="ni-title">GPT-5 正式开放 API 接口，定价大幅下调 60%，吸引更多开发者入局</div>
+            <div class="ni-meta"><span class="ni-tag hot">热</span><span class="ni-tag">OpenAI</span><span>06:14</span></div>
+          </div>
+        </div>
+        <div class="news-item">
+          <div class="ni-num">03</div>
+          <div class="ni-body">
+            <div class="ni-title">Gemini 2.5 Pro 多模态评测出炉，图像理解与代码能力大幅领先</div>
+            <div class="ni-meta"><span class="ni-tag">Google</span><span>05:55</span></div>
+          </div>
+        </div>
+        <div class="news-item">
+          <div class="ni-num">04</div>
+          <div class="ni-body">
+            <div class="ni-title">国内首款边缘 AI 芯片宣布量产，算力达 200TOPS，面向终端设备</div>
+            <div class="ni-meta"><span class="ni-tag">国内</span><span>04:30</span></div>
+          </div>
+        </div>
+        <div class="news-item">
+          <div class="ni-num">05</div>
+          <div class="ni-body">
+            <div class="ni-title">Cursor 发布 1.0 正式版，AI 代码补全准确率提升至 94%</div>
+            <div class="ni-meta"><span class="ni-tag">工具</span><span>03:12</span></div>
+          </div>
+        </div>
+        <div class="news-item">
+          <div class="ni-num">06</div>
+          <div class="ni-body">
+            <div class="ni-title">Meta 开源 Llama 4，多语言支持，中文能力显著增强</div>
+            <div class="ni-meta"><span class="ni-tag">开源</span><span>02:45</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function sw(id, tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  tab.classList.add('active');
+  document.getElementById('addr').textContent = id === 'home' ? 'aicoming.com' : 'aicoming.com/news';
+}
+</script>
+</body>
+</html>

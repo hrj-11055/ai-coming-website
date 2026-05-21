@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "id": 1778505247115,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:07.115Z",
+    "eventType": "nav_click",
+    "eventLabel": "AI资讯",
+    "target": "news.html",
+    "pagePath": "/index.html",
+    "referrer": "",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  },
+  {
+    "id": 1778505262120,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:22.120Z",
+    "eventType": "nav_click",
+    "eventLabel": "AI工具集",
+    "target": "tools.html",
+    "pagePath": "/news.html",
+    "referrer": "http://localhost:3000/index.html",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  },
+  {
+    "id": 1778505266817,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:26.817Z",
+    "eventType": "nav_click",
+    "eventLabel": "AI 能力库",
+    "target": "skills.html",
+    "pagePath": "/tools.html",
+    "referrer": "http://localhost:3000/news.html",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  },
+  {
+    "id": 1778505275950,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:35.950Z",
+    "eventType": "nav_click",
+    "eventLabel": "关于我们",
+    "target": "about.html",
+    "pagePath": "/skills.html",
+    "referrer": "http://localhost:3000/tools.html",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  },
+  {
+    "id": 1778505277916,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:37.916Z",
+    "eventType": "nav_click",
+    "eventLabel": "AI 能力库",
+    "target": "skills.html",
+    "pagePath": "/about.html",
+    "referrer": "http://localhost:3000/skills.html",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  },
+  {
+    "id": 1778505282317,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:42.317Z",
+    "eventType": "nav_click",
+    "eventLabel": "AI工具集",
+    "target": "tools.html",
+    "pagePath": "/skills.html",
+    "referrer": "http://localhost:3000/about.html",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  },
+  {
+    "id": 1778505293596,
+    "date": "2026-05-11",
+    "createdAt": "2026-05-11T13:14:53.596Z",
+    "eventType": "nav_click",
+    "eventLabel": "首页",
+    "target": "index.html",
+    "pagePath": "/tools.html",
+    "referrer": "http://localhost:3000/skills.html",
+    "ip": "127.0.0.1",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+  }
+]

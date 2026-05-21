@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宣纸工坊 · 设计令牌预览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper-bg:           #f3ede2;
+  --paper-surface:      #f8f4ec;
+  --paper-surface-2:    #fdfaf6;
+  --paper-ink:          #1c1510;
+  --paper-ink-2:        #3d3028;
+  --paper-ink-3:        #6a5a4a;
+  --paper-ink-4:        #a89880;
+  --paper-rule:         #d8d0c2;
+  --paper-rule-strong:  #b8a898;
+  --paper-vermilion:    #ba3f14;
+  --paper-vermilion-dim:#f3e0d8;
+  --f-serif: 'Noto Serif SC', Georgia, serif;
+  --f-sans:  'Noto Sans SC', sans-serif;
+  --f-mono:  'JetBrains Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--paper-bg);
+  color: var(--paper-ink);
+  font-family: var(--f-sans);
+  padding: 40px 32px 64px;
+  min-height: 100vh;
+}
+
+/* ── 页头 ── */
+.page-title {
+  font-family: var(--f-serif);
+  font-size: 22px; font-weight: 900;
+  color: var(--paper-ink);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-family: var(--f-mono);
+  font-size: 11px; color: var(--paper-ink-4);
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+/* ── 区块标题 ── */
+.section {
+  margin-bottom: 40px;
+}
+.sec-label {
+  font-family: var(--f-mono);
+  font-size: 10px; font-weight: 500;
+  color: var(--paper-vermilion);
+  text-transform: uppercase; letter-spacing: 2px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+.sec-label::after {
+  content: '';
+  flex: 1; height: 1px; background: var(--paper-rule);
+}
+
+/* ── 色板 ── */
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+.swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--paper-rule);
+}
+.swatch-color {
+  height: 56px;
+}
+.swatch-info {
+  padding: 8px 10px;
+  background: var(--paper-surface-2);
+  border-top: 1px solid var(--paper-rule);
+}
+.swatch-name {
+  font-family: var(--f-mono);
+  font-size: 9px; color: var(--paper-ink-3);
+  letter-spacing: .3px; margin-bottom: 2px;
+}
+.swatch-hex {
+  font-family: var(--f-mono);
+  font-size: 11px; font-weight: 500;
+  color: var(--paper-ink-2);
+}
+
+/* ── 字体展示 ── */
+.type-samples {
+  display: flex; flex-direction: column; gap: 16px;
+  background: var(--paper-surface);
+  border: 1px solid var(--paper-rule);
+  border-radius: 12px;
+  padding: 24px 28px;
+}
+.type-row {
+  display: flex; align-items: baseline; gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.type-row:last-child { border-bottom: none; padding-bottom: 0; }
+.type-meta {
+  font-family: var(--f-mono);
+  font-size: 9px; color: var(--paper-ink-4);
+  letter-spacing: .5px; text-transform: uppercase;
+  width: 90px; flex-shrink: 0;
+  line-height: 1.6;
+}
+.type-sample-serif-xl {
+  font-family: var(--f-serif);
+  font-size: 28px; font-weight: 900;
+  color: var(--paper-ink); line-height: 1.4;
+}
+.type-sample-serif-lg {
+  font-family: var(--f-serif);
+  font-size: 18px; font-weight: 700;
+  color: var(--paper-ink); line-height: 1.5;
+}
+.type-sample-sans {
+  font-family: var(--f-sans);
+  font-size: 14px; font-weight: 400;
+  color: var(--paper-ink-2); line-height: 1.7;
+}
+.type-sample-mono {
+  font-family: var(--f-mono);
+  font-size: 12px; color: var(--paper-ink-3);
+  letter-spacing: .5px;
+}
+
+/* ── UI 组件预览 ── */
+.components {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start;
+}
+
+/* 标签 */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 4px;
+  font-family: var(--f-mono);
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .5px; text-transform: uppercase;
+}
+.tag-red {
+  background: var(--paper-vermilion-dim);
+  color: var(--paper-vermilion);
+  border: 1px solid rgba(186,63,20,.2);
+}
+.tag-ink {
+  background: rgba(28,21,16,.06);
+  color: var(--paper-ink-3);
+  border: 1px solid var(--paper-rule);
+}
+.tag-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* 按钮 */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border-radius: 6px;
+  font-family: var(--f-sans); font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: transform .15s, box-shadow .15s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary {
+  background: var(--paper-vermilion);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(186,63,20,.3);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--paper-vermilion);
+  border: 1.5px solid var(--paper-vermilion);
+}
+
+/* 分割线 */
+.divider-demo {
+  display: flex; flex-direction: column; gap: 8px;
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--paper-surface);
+  border: 1px solid var(--paper-rule);
+  border-radius: 10px;
+}
+.divider-label {
+  font-family: var(--f-mono); font-size: 9px; color: var(--paper-ink-4);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.divider-label::after { content:''; flex:1; height:1px; background: var(--paper-rule); }
+.divider-label.strong::after { background: var(--paper-ink); height: 2px; }
+
+/* 卡片预览 */
+.card-demo {
+  background: var(--paper-surface);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--paper-vermilion);
+  border-radius: 10px;
+  padding: 16px 18px;
+  max-width: 300px;
+}
+.card-cat {
+  font-family: var(--f-mono); font-size: 9px;
+  color: var(--paper-vermilion); text-transform: uppercase;
+  letter-spacing: 1.8px; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.card-cat::before { content:''; display:block; width:12px; height:2px; background: var(--paper-vermilion); }
+.card-title {
+  font-family: var(--f-serif);
+  font-size: 14px; font-weight: 700;
+  color: var(--paper-ink); line-height: 1.7;
+  margin-bottom: 7px;
+}
+.card-body-text {
+  font-size: 12px; color: var(--paper-ink-3); line-height: 1.65;
+}
+.card-ts {
+  font-family: var(--f-mono); font-size: 10px;
+  color: var(--paper-ink-4); margin-top: 10px;
+}
+
+/* 导航预览 */
+.nav-demo {
+  width: 100%;
+  display: flex; align-items: center;
+  height: 50px; padding: 0 20px;
+  background: var(--paper-surface-2);
+  border-bottom: 2.5px solid var(--paper-ink);
+  border-radius: 10px;
+  gap: 0;
+}
+.nav-logo {
+  font-family: var(--f-serif);
+  font-size: 16px; font-weight: 900;
+  color: var(--paper-ink);
+}
+.nav-logo em { font-style:normal; color: var(--paper-vermilion); }
+.nav-links { display:flex; gap:22px; margin-left:28px; }
+.nav-link {
+  font-size: 13px; font-weight: 500;
+  color: var(--paper-ink-3);
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+.nav-link.active {
+  color: var(--paper-vermilion);
+  border-bottom-color: var(--paper-vermilion);
+}
+</style>
+</head>
+<body>
+
+<div class="page-title">宣纸工坊 · 设计系统</div>
+<div class="page-sub">AIcoming UI v2 · Design Tokens Preview</div>
+
+<!-- 颜色 -->
+<div class="section">
+  <div class="sec-label">色彩系统</div>
+  <div class="swatches">
+    <div class="swatch">
+      <div class="swatch-color" style="background:#f3ede2;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-bg</div><div class="swatch-hex">#f3ede2</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#f8f4ec;border-bottom:1px solid #d8d0c2;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-surface</div><div class="swatch-hex">#f8f4ec</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#fdfaf6;border-bottom:1px solid #d8d0c2;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-surface-2</div><div class="swatch-hex">#fdfaf6</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#1c1510;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-ink</div><div class="swatch-hex">#1c1510</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#3d3028;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-ink-2</div><div class="swatch-hex">#3d3028</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#6a5a4a;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-ink-3</div><div class="swatch-hex">#6a5a4a</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#a89880;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-ink-4</div><div class="swatch-hex">#a89880</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#d8d0c2;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-rule</div><div class="swatch-hex">#d8d0c2</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#ba3f14;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-vermilion</div><div class="swatch-hex">#ba3f14</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:#f3e0d8;border-bottom:1px solid #d8d0c2;"></div>
+      <div class="swatch-info"><div class="swatch-name">paper-vermilion-dim</div><div class="swatch-hex">#f3e0d8</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 字体 -->
+<div class="section">
+  <div class="sec-label">字体系统</div>
+  <div class="type-samples">
+    <div class="type-row">
+      <div class="type-meta">Serif XL<br>标题 / Hero</div>
+      <div class="type-sample-serif-xl">让一部分人先用起来</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">Serif LG<br>卡片标题</div>
+      <div class="type-sample-serif-lg">Anthropic 推出 Claude 4，推理能力全面超越前代</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">Sans<br>正文 / 说明</div>
+      <div class="type-sample-sans">新模型在代码生成、数学推理及中文理解方面均有显著提升，多项基准测试刷新历史记录，已向所有用户开放使用。</div>
+    </div>
+    <div class="type-row">
+      <div class="type-meta">Mono<br>时间 / 分类</div>
+      <div class="type-sample-mono">2026-05-11 · 07:32 · AI 模型 · 大事件</div>
+    </div>
+  </div>
+</div>
+
+<!-- 组件 -->
+<div class="section">
+  <div class="sec-label">基础组件</div>
+
+  <!-- 导航 -->
+  <div style="margin-bottom:16px;">
+    <div class="nav-demo">
+      <div class="nav-logo">AI<em>coming</em></div>
+      <div class="nav-links">
+        <span class="nav-link active">资讯</span>
+        <span class="nav-link">工具</span>
+        <span class="nav-link">能力库</span>
+        <span class="nav-link">关于</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 标签 + 按钮 -->
+  <div class="components" style="margin-bottom:16px;">
+    <span class="tag tag-red"><span class="tag-dot"></span>头条</span>
+    <span class="tag tag-red">深度</span>
+    <span class="tag tag-ink">AI 模型</span>
+    <span class="tag tag-ink">OpenAI</span>
+    <span class="tag tag-ink">工具推荐</span>
+    <button class="btn btn-primary">立即搜索</button>
+    <button class="btn btn-ghost">查看更多</button>
+  </div>
+
+  <!-- 分割线 -->
+  <div class="divider-demo" style="margin-bottom:16px;">
+    <div class="divider-label strong">精选工具</div>
+    <div class="divider-label">今日资讯</div>
+  </div>
+
+  <!-- 卡片 -->
+  <div class="card-demo">
+    <div class="card-cat">头条</div>
+    <div class="card-title">Anthropic 推出 Claude 4，支持 200K 上下文窗口</div>
+    <div class="card-body-text">新模型代码生成、数学推理及中文理解均显著提升，多项基准测试刷新纪录……</div>
+    <div class="card-ts">2026-05-11 · 07:32</div>
+  </div>
+</div>
+
+</body>
+</html>

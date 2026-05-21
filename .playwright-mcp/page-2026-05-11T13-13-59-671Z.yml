@@ -1,0 +1,55 @@
+- generic [ref=e1]:
+  - navigation [ref=e14]:
+    - generic [ref=e16]:
+      - link "AIcoming - 让一部分人先用起来" [ref=e18] [cursor=pointer]:
+        - /url: index.html
+        - img "AIcoming - 让一部分人先用起来" [ref=e19]
+      - generic [ref=e21]:
+        - link "首页" [ref=e22] [cursor=pointer]:
+          - /url: index.html
+        - link "AI资讯" [ref=e23] [cursor=pointer]:
+          - /url: news.html
+        - link "AI工具集" [ref=e24] [cursor=pointer]:
+          - /url: tools.html
+        - link "AI 能力库" [ref=e25] [cursor=pointer]:
+          - /url: skills.html
+        - link "关于我们" [ref=e26] [cursor=pointer]:
+          - /url: about.html
+      - text: 
+  - generic [ref=e28]:
+    - img "AIcoming - 让一部分人先用起来" [ref=e31]
+    - img "提示词生成专家" [ref=e33]
+    - generic [ref=e35]:
+      - textbox "请输入您的需求、目标或场景，我来帮您生成专家提示词" [active] [ref=e36]
+      - button "" [ref=e38] [cursor=pointer]:
+        - generic [ref=e39]: 
+  - generic [ref=e40]:
+    - complementary "首页新手引导" [ref=e41]:
+      - paragraph [ref=e42]: 新手引导
+      - list [ref=e43]:
+        - listitem [ref=e44]:
+          - generic [ref=e45]: 步骤 1
+          - generic [ref=e46]: 输入您的需求、目标或具体场景。
+        - listitem [ref=e47]:
+          - generic [ref=e48]: 步骤 2
+          - generic [ref=e49]: AIcoming 会自动为您拆解需求并生成更专业的提示词。
+        - listitem [ref=e50]:
+          - generic [ref=e51]: 步骤 3
+          - generic [ref=e52]: 复制生成结果，粘贴到豆包 / 千问等模型中继续使用。
+      - paragraph [ref=e53]: 先描述需求，再生成提示词，最后复制到目标模型中使用。
+    - region "示例案例" [ref=e54]:
+      - generic [ref=e55]:
+        - paragraph [ref=e56]: 使用案例
+        - generic [ref=e57]: 先将下面的提示词发送到对话框，再将生成结果复制到豆包 / 千问中使用。
+      - generic [ref=e58]:
+        - article [ref=e59]:
+          - paragraph [ref=e61]: 专家角色提示词
+          - paragraph [ref=e62]: 请帮我生成一份适用于互联网高级产品经理场景的专家角色提示词。
+        - article [ref=e63]:
+          - paragraph [ref=e65]: 行业研究提示词
+          - paragraph [ref=e66]: 请帮我研究中国新能源汽车产业链，重点分析整车厂的发展现状与竞争格局。
+        - article [ref=e67]:
+          - paragraph [ref=e69]: 职业成长提示词
+          - paragraph [ref=e70]: 我工作 2 年，目前是初级产品经理，希望成长为资深产品经理并进入大厂，请帮我制定成长路径。
+  - generic:
+    - paragraph: ©深圳元说科技有限公司 版权所有 粤ICP备2026015462号-1

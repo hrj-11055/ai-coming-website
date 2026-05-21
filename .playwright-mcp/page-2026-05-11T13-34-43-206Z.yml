@@ -1,0 +1,425 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e3]:
+    - generic [ref=e5]:
+      - link "AIcoming - 让一部分人先用起来" [ref=e7] [cursor=pointer]:
+        - /url: index.html
+        - img "AIcoming - 让一部分人先用起来" [ref=e8]
+      - generic [ref=e10]:
+        - link "首页" [ref=e11] [cursor=pointer]:
+          - /url: index.html
+        - link "AI资讯" [ref=e12] [cursor=pointer]:
+          - /url: news.html
+        - link "AI工具集" [ref=e13] [cursor=pointer]:
+          - /url: tools.html
+        - link "AI 能力库" [ref=e14] [cursor=pointer]:
+          - /url: skills.html
+        - link "关于我们" [ref=e15] [cursor=pointer]:
+          - /url: about.html
+      - text: 
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]: AI 能力库
+        - heading "一次安装，长期复用" [level=1] [ref=e20]
+        - paragraph [ref=e21]: 精选经过验证的 AI 能力入口，涵盖常用 Skill、实用 MCP 扩展和 AI 编程助手配置教程。每个都附带安装命令、提示词和使用说明，打开即用。
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e25]: 
+          - generic [ref=e26]:
+            - strong [ref=e27]: 11+
+            - generic [ref=e28]: 精选 Skill
+        - generic [ref=e29]:
+          - generic [ref=e31]: 
+          - generic [ref=e32]:
+            - strong [ref=e33]: "5"
+            - generic [ref=e34]: 实用 MCP 扩展
+        - generic [ref=e35]:
+          - generic [ref=e37]: 
+          - generic [ref=e38]:
+            - strong [ref=e39]: "5"
+            - generic [ref=e40]: 按场景分组
+        - generic [ref=e41]:
+          - generic [ref=e43]: 
+          - generic [ref=e44]:
+            - strong [ref=e45]: 完整
+            - generic [ref=e46]: 每个都有上手教程
+    - generic [ref=e47]:
+      - complementary [ref=e48]:
+        - generic [ref=e49]:
+          - heading "AI 能力库" [level=2] [ref=e50]
+          - generic [ref=e51]: 含星级推荐
+        - generic [ref=e52]:
+          - link " 星级推荐" [ref=e53] [cursor=pointer]:
+            - /url: "#star-recommendation"
+            - generic [ref=e55]: 
+            - strong [ref=e57]: 星级推荐
+          - link " AI 编程助手" [ref=e59] [cursor=pointer]:
+            - /url: "#ai-coding-assistant"
+            - generic [ref=e61]: 
+            - strong [ref=e63]: AI 编程助手
+          - link " 文档处理" [ref=e65] [cursor=pointer]:
+            - /url: "#document-processing"
+            - generic [ref=e67]: 
+            - strong [ref=e69]: 文档处理
+          - link " 效率工具" [ref=e71] [cursor=pointer]:
+            - /url: "#efficiency-tools"
+            - generic [ref=e73]: 
+            - strong [ref=e75]: 效率工具
+          - link " 研究与内容" [ref=e77] [cursor=pointer]:
+            - /url: "#research-content"
+            - generic [ref=e79]: 
+            - strong [ref=e81]: 研究与内容
+          - link " MCP 入门" [ref=e83] [cursor=pointer]:
+            - /url: "#mcp-starter"
+            - generic [ref=e85]: 
+            - strong [ref=e87]: MCP 入门
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e95]: 
+                - strong [ref=e96]: 星级推荐
+              - heading "两个值得优先装的 Skill 仓库" [level=2] [ref=e97]
+              - paragraph [ref=e98]: 根据你的使用场景选一组，快速开始。
+            - generic [ref=e99]:
+              - generic [ref=e101]: 
+              - generic [ref=e102]:
+                - strong [ref=e103]: 优先推荐
+                - generic [ref=e104]: 先用好一组，比同时装很多更有效。
+          - generic [ref=e105]:
+            - generic [ref=e106]:
+              - generic [ref=e107]: 
+              - text: 日常高频协作首选
+            - generic [ref=e108]:
+              - generic [ref=e109]: 
+              - text: 按场景推荐安装顺序
+            - generic [ref=e110]:
+              - generic [ref=e111]: 
+              - text: 根据任务类型选择合适的一组
+          - generic [ref=e112]:
+            - link "Superpowers 更适合日常高频协作   推荐 更偏向把模糊任务快速收敛成可执行结果，适合每天都在和 Agent 配合做需求澄清、调试、评审和交付收口的人。 这个专题页里会重点讲这些更好用的 Skill 深度头脑风暴 系统化调试 代码评审 完成前验证 多 Agent 并行拆分 适合需求澄清、问题定位、交付前收口这类每天都会遇到的任务。 查看完整专题页 " [ref=e113] [cursor=pointer]:
+              - /url: skill-detail.html?slug=superpowers-guide
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: Superpowers
+                  - generic [ref=e117]:
+                    - strong [ref=e118]: 更适合日常高频协作
+                    - generic [ref=e119]: 
+                - generic [ref=e120]:
+                  - generic [ref=e121]: 
+                  - generic [ref=e122]: 推荐
+              - paragraph [ref=e123]: 更偏向把模糊任务快速收敛成可执行结果，适合每天都在和 Agent 配合做需求澄清、调试、评审和交付收口的人。
+              - generic [ref=e124]:
+                - strong [ref=e125]: 这个专题页里会重点讲这些更好用的 Skill
+                - generic [ref=e126]:
+                  - generic [ref=e127]: 深度头脑风暴
+                  - generic [ref=e128]: 系统化调试
+                  - generic [ref=e129]: 代码评审
+                  - generic [ref=e130]: 完成前验证
+                  - generic [ref=e131]: 多 Agent 并行拆分
+              - generic [ref=e132]:
+                - generic [ref=e133]: 适合需求澄清、问题定位、交付前收口这类每天都会遇到的任务。
+                - generic [ref=e134]:
+                  - text: 查看完整专题页
+                  - generic [ref=e135]: 
+            - link "Everything Claude Code 更适合工程型与研究型任务   推荐 更适合中长链路的开发、分析和研究工作，覆盖面完整，适合想从一个仓库里同时拿到工程型和业务型能力的人。 这个专题页里会重点讲这些更好用的 Skill 前端模式 后端模式 编码规范 市场调研 内容引擎 部署模式 安全审查 适合开发实现、方案分析、研究输出和部署交付这类中长链路任务。 查看完整专题页 " [ref=e136] [cursor=pointer]:
+              - /url: skill-detail.html?slug=everything-claude-code-guide
+              - generic [ref=e137]:
+                - generic [ref=e138]:
+                  - generic [ref=e139]: Everything Claude Code
+                  - generic [ref=e140]:
+                    - strong [ref=e141]: 更适合工程型与研究型任务
+                    - generic [ref=e142]: 
+                - generic [ref=e143]:
+                  - generic [ref=e144]: 
+                  - generic [ref=e145]: 推荐
+              - paragraph [ref=e146]: 更适合中长链路的开发、分析和研究工作，覆盖面完整，适合想从一个仓库里同时拿到工程型和业务型能力的人。
+              - generic [ref=e147]:
+                - strong [ref=e148]: 这个专题页里会重点讲这些更好用的 Skill
+                - generic [ref=e149]:
+                  - generic [ref=e150]: 前端模式
+                  - generic [ref=e151]: 后端模式
+                  - generic [ref=e152]: 编码规范
+                  - generic [ref=e153]: 市场调研
+                  - generic [ref=e154]: 内容引擎
+                  - generic [ref=e155]: 部署模式
+                  - generic [ref=e156]: 安全审查
+              - generic [ref=e157]:
+                - generic [ref=e158]: 适合开发实现、方案分析、研究输出和部署交付这类中长链路任务。
+                - generic [ref=e159]:
+                  - text: 查看完整专题页
+                  - generic [ref=e160]: 
+        - generic [ref=e161]:
+          - generic [ref=e162]:
+            - generic [ref=e164]:
+              - generic [ref=e166]: 
+              - generic [ref=e167]:
+                - heading "AI 编程助手" [level=2] [ref=e168]
+                - paragraph [ref=e169]: Claude Code 安装配置教程：从零开始，把终端 AI 编程助手接入 MiniMax，覆盖安装、CC-Switch 配置和首次验证。
+            - article [ref=e171] [cursor=pointer]:
+              - generic [ref=e172]:
+                - generic [ref=e173]:
+                  - generic [ref=e174]: AI 编程助手
+                  - generic [ref=e175]: 已实测
+                - heading "Claude Code + MiniMax 安装配置" [level=3] [ref=e176]
+              - generic [ref=e177]:
+                - paragraph [ref=e178]: Windows 用户从零安装 Claude Code CLI，通过 CC-Switch 接入 MiniMax，预计耗时 30-60 分钟。
+                - paragraph [ref=e179]: 适合第一次在 Windows 上安装 Claude Code，希望用 MiniMax Coding Plan 替代官方账号的用户。
+                - paragraph [ref=e180]: 附安装命令、可复制提示词和结果说明。
+              - link "查看上手教程 " [ref=e181]:
+                - /url: skill-detail.html?slug=claude-code-config
+                - generic [ref=e182]: 查看上手教程
+                - generic [ref=e183]: 
+          - generic [ref=e184]:
+            - generic [ref=e186]:
+              - generic [ref=e188]: 
+              - generic [ref=e189]:
+                - heading "文档处理" [level=2] [ref=e190]
+                - paragraph [ref=e191]: 5 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。
+            - generic [ref=e192]:
+              - article [ref=e193] [cursor=pointer]:
+                - generic [ref=e194]:
+                  - generic [ref=e195]:
+                    - generic [ref=e196]: 文档处理
+                    - generic [ref=e197]: 已实测
+                  - heading "Word 文档生成" [level=3] [ref=e198]
+                - generic [ref=e199]:
+                  - paragraph [ref=e200]: "面向 `.docx` 的高保真创建、编辑与结构化排版，覆盖目录、页码、表格、图片和修订痕迹处理。"
+                  - paragraph [ref=e201]: 适合正式报告、合同、制度文件、模板、公函，以及任何需要认真维护版式的 Word 文档场景。
+                  - paragraph [ref=e202]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e203]:
+                  - /url: skill-detail.html?slug=docx
+                  - generic [ref=e204]: 查看上手教程
+                  - generic [ref=e205]: 
+              - article [ref=e206] [cursor=pointer]:
+                - generic [ref=e207]:
+                  - generic [ref=e208]:
+                    - generic [ref=e209]: 文档处理
+                    - generic [ref=e210]: 已实测
+                  - heading "PPT 演示文稿生成" [level=3] [ref=e211]
+                - generic [ref=e212]:
+                  - paragraph [ref=e213]: 支持从零创建、基于模板生成或深度编辑现有 PowerPoint，并覆盖版式、备注、批注与结构分析。
+                  - paragraph [ref=e214]: "适合提案、路演、课件、模板化汇报，以及任何需要读写 `.pptx` 文件的场景。"
+                  - paragraph [ref=e215]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e216]:
+                  - /url: skill-detail.html?slug=pptx
+                  - generic [ref=e217]: 查看上手教程
+                  - generic [ref=e218]: 
+              - article [ref=e219] [cursor=pointer]:
+                - generic [ref=e220]:
+                  - generic [ref=e221]:
+                    - generic [ref=e222]: 文档处理
+                    - generic [ref=e223]: 已收录
+                  - heading "PowerPoint 读取与改稿" [level=3] [ref=e224]
+                - generic [ref=e225]:
+                  - paragraph [ref=e226]: "偏重读取、分析和批量改稿的 PowerPoint 工作流，适合直接处理现有 `.pptx`，并保留讲者备注与整套幻灯结构。"
+                  - paragraph [ref=e227]: 适合复盘现有 deck、抽取讲稿、批量替换文案、整理 speaker notes，或把已有 PowerPoint 重新组织成可继续编辑的版本。
+                  - paragraph [ref=e228]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e229]:
+                  - /url: skill-detail.html?slug=powerpoint
+                  - generic [ref=e230]: 查看上手教程
+                  - generic [ref=e231]: 
+              - article [ref=e232] [cursor=pointer]:
+                - generic [ref=e233]:
+                  - generic [ref=e234]:
+                    - generic [ref=e235]: 文档处理
+                    - generic [ref=e236]: 已实测
+                  - heading "PDF 文档生成" [level=3] [ref=e237]
+                - generic [ref=e238]:
+                  - paragraph [ref=e239]: 围绕 PDF 的读取、生成、合并、拆分、抽取、OCR 与版式校验，覆盖最常见的文档处理链路。
+                  - paragraph [ref=e240]: 适合扫描件处理、PDF 报告生成、表格与文本抽取、文档合并拆分，以及任何版式重要的 PDF 任务。
+                  - paragraph [ref=e241]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e242]:
+                  - /url: skill-detail.html?slug=pdf
+                  - generic [ref=e243]: 查看上手教程
+                  - generic [ref=e244]: 
+              - article [ref=e245] [cursor=pointer]:
+                - generic [ref=e246]:
+                  - generic [ref=e247]:
+                    - generic [ref=e248]: 文档处理
+                    - generic [ref=e249]: 已实测
+                  - heading "Excel 表格生成" [level=3] [ref=e250]
+                - generic [ref=e251]:
+                  - paragraph [ref=e252]: "围绕 `.xlsx` 的创建、清洗、公式写入、格式整理与多表协作输出，让表格保持可继续编辑而不是一次性结果。"
+                  - paragraph [ref=e253]: 适合财务表、运营表、清单整理、数据补列、格式清洗，以及需要输出正式 Excel 文件的任务。
+                  - paragraph [ref=e254]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e255]:
+                  - /url: skill-detail.html?slug=xlsx
+                  - generic [ref=e256]: 查看上手教程
+                  - generic [ref=e257]: 
+          - generic [ref=e258]:
+            - generic [ref=e260]:
+              - generic [ref=e262]: 
+              - generic [ref=e263]:
+                - heading "效率工具" [level=2] [ref=e264]
+                - paragraph [ref=e265]: 先把需求想清楚、把资料查清楚，再把高频经验沉淀成可复用 Skill，会比直接硬做更稳。
+            - generic [ref=e266]:
+              - article [ref=e267] [cursor=pointer]:
+                - generic [ref=e268]:
+                  - generic [ref=e269]:
+                    - generic [ref=e270]: 效率工具
+                    - generic [ref=e271]: 已实测
+                  - heading "深度头脑风暴" [level=3] [ref=e272]
+                - generic [ref=e273]:
+                  - paragraph [ref=e274]: 把模糊想法打磨成可执行设计，而不是直接开写。
+                  - paragraph [ref=e275]: 适合做新页面、新功能、新流程时先把方向和边界聊清楚。
+                  - paragraph [ref=e276]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e277]:
+                  - /url: skill-detail.html?slug=brainstorming
+                  - generic [ref=e278]: 查看上手教程
+                  - generic [ref=e279]: 
+              - article [ref=e280] [cursor=pointer]:
+                - generic [ref=e281]:
+                  - generic [ref=e282]:
+                    - generic [ref=e283]: 效率工具
+                    - generic [ref=e284]: 已实测
+                  - heading "先搜索再动手" [level=3] [ref=e285]
+                - generic [ref=e286]:
+                  - paragraph [ref=e287]: 先查现成方案，再决定要不要自己造。
+                  - paragraph [ref=e288]: 适合准备写新能力、新脚本或新组件之前做快速研究。
+                  - paragraph [ref=e289]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e290]:
+                  - /url: skill-detail.html?slug=search-first
+                  - generic [ref=e291]: 查看上手教程
+                  - generic [ref=e292]: 
+              - article [ref=e293] [cursor=pointer]:
+                - generic [ref=e294]:
+                  - generic [ref=e295]:
+                    - generic [ref=e296]: 效率工具
+                    - generic [ref=e297]: 已收录
+                  - heading "Skill 创建助手" [level=3] [ref=e298]
+                - generic [ref=e299]:
+                  - paragraph [ref=e300]: 把你反复使用的工作方法整理成可安装、可触发、可测试的 AI Skill。
+                  - paragraph [ref=e301]: 适合想创建个人 Skill、团队工作流 Skill、项目专用 Skill，或把已有提示词升级成长期可复用能力的人。
+                  - paragraph [ref=e302]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e303]:
+                  - /url: skill-detail.html?slug=creator-skill
+                  - generic [ref=e304]: 查看上手教程
+                  - generic [ref=e305]: 
+          - generic [ref=e306]:
+            - generic [ref=e308]:
+              - generic [ref=e310]: 
+              - generic [ref=e311]:
+                - heading "研究与内容" [level=2] [ref=e312]
+                - paragraph [ref=e313]: 从调研、内容拆分到素材获取，围绕真实业务场景挑出最常用的 3 个 Skill。
+            - generic [ref=e314]:
+              - article [ref=e315] [cursor=pointer]:
+                - generic [ref=e316]:
+                  - generic [ref=e317]:
+                    - generic [ref=e318]: 研究与内容
+                    - generic [ref=e319]: 已实测
+                  - heading "市场调研与竞品分析" [level=3] [ref=e320]
+                - generic [ref=e321]:
+                  - paragraph [ref=e322]: 把市场信息、竞品和趋势整理成有判断价值的结论。
+                  - paragraph [ref=e323]: 适合做新业务调研、竞品分析、投资准备和行业扫描。
+                  - paragraph [ref=e324]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e325]:
+                  - /url: skill-detail.html?slug=market-research
+                  - generic [ref=e326]: 查看上手教程
+                  - generic [ref=e327]: 
+              - article [ref=e328] [cursor=pointer]:
+                - generic [ref=e329]:
+                  - generic [ref=e330]:
+                    - generic [ref=e331]: 研究与内容
+                    - generic [ref=e332]: 已实测
+                  - heading "多平台内容改写" [level=3] [ref=e333]
+                - generic [ref=e334]:
+                  - paragraph [ref=e335]: 把一份核心内容拆成适合不同平台发布的版本。
+                  - paragraph [ref=e336]: 适合做多平台分发、账号矩阵、品牌内容生产。
+                  - paragraph [ref=e337]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e338]:
+                  - /url: skill-detail.html?slug=content-engine
+                  - generic [ref=e339]: 查看上手教程
+                  - generic [ref=e340]: 
+              - article [ref=e341] [cursor=pointer]:
+                - generic [ref=e342]:
+                  - generic [ref=e343]:
+                    - generic [ref=e344]: 研究与内容
+                    - generic [ref=e345]: 已实测
+                  - heading "抖音无水印视频下载" [level=3] [ref=e346]
+                - generic [ref=e347]:
+                  - paragraph [ref=e348]: 把抖音分享口令或短链接解析成可直接保存的无水印视频文件，适合快速存档和素材整理。
+                  - paragraph [ref=e349]: 适合案例收集、短视频素材整理、竞品拆解和二次剪辑前的下载动作。
+                  - paragraph [ref=e350]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e351]:
+                  - /url: skill-detail.html?slug=douyin-video-downloader
+                  - generic [ref=e352]: 查看上手教程
+                  - generic [ref=e353]: 
+          - generic [ref=e354]:
+            - generic [ref=e356]:
+              - generic [ref=e358]: 
+              - generic [ref=e359]:
+                - heading "MCP 入门" [level=2] [ref=e360]
+                - paragraph [ref=e361]: 先把文件、文档、网页、流程图和搜索这 5 类最常用的外部能力接进来，AI 才会真正开始帮你干活。
+            - generic [ref=e362]:
+              - article [ref=e363] [cursor=pointer]:
+                - generic [ref=e364]:
+                  - generic [ref=e365]:
+                    - generic [ref=e366]: MCP 入门
+                    - generic [ref=e367]: 已实测
+                  - heading "文件系统操作（MCP）" [level=3] [ref=e368]
+                - generic [ref=e369]:
+                  - paragraph [ref=e370]: 先把工作目录接进 AI，再让它真正处理文件。
+                  - paragraph [ref=e371]: 适合本地文件整理和目录级批量处理。
+                  - paragraph [ref=e372]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e373]:
+                  - /url: mcp-detail.html?slug=filesystem-mcp
+                  - generic [ref=e374]: 查看上手教程
+                  - generic [ref=e375]: 
+              - article [ref=e376] [cursor=pointer]:
+                - generic [ref=e377]:
+                  - generic [ref=e378]:
+                    - generic [ref=e379]: MCP 入门
+                    - generic [ref=e380]: 已实测
+                  - heading "PDF 文档解析（MCP）" [level=3] [ref=e381]
+                - generic [ref=e382]:
+                  - paragraph [ref=e383]: 先把 PDF 读懂，再交给 AI 继续整理。
+                  - paragraph [ref=e384]: 适合长 PDF、扫描件和重点提取任务。
+                  - paragraph [ref=e385]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e386]:
+                  - /url: mcp-detail.html?slug=pdf-reader-mcp
+                  - generic [ref=e387]: 查看上手教程
+                  - generic [ref=e388]: 
+              - article [ref=e389] [cursor=pointer]:
+                - generic [ref=e390]:
+                  - generic [ref=e391]:
+                    - generic [ref=e392]: MCP 入门
+                    - generic [ref=e393]: 已实测
+                  - heading "网页自动化（MCP）" [level=3] [ref=e394]
+                - generic [ref=e395]:
+                  - paragraph [ref=e396]: 控制浏览器跑点击、输入和截图流程。
+                  - paragraph [ref=e397]: 适合前端测试、登录复现和页面巡检。
+                  - paragraph [ref=e398]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e399]:
+                  - /url: mcp-detail.html?slug=playwright-mcp
+                  - generic [ref=e400]: 查看上手教程
+                  - generic [ref=e401]: 
+              - article [ref=e402] [cursor=pointer]:
+                - generic [ref=e403]:
+                  - generic [ref=e404]:
+                    - generic [ref=e405]: MCP 入门
+                    - generic [ref=e406]: 已实测
+                  - heading "流程图生成（MCP）" [level=3] [ref=e407]
+                - generic [ref=e408]:
+                  - paragraph [ref=e409]: 把文字流程直接变成可复用的流程图。
+                  - paragraph [ref=e410]: 适合流程表达、SOP 和结构图说明。
+                  - paragraph [ref=e411]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e412]:
+                  - /url: mcp-detail.html?slug=mermaid-mcp
+                  - generic [ref=e413]: 查看上手教程
+                  - generic [ref=e414]: 
+              - article [ref=e415] [cursor=pointer]:
+                - generic [ref=e416]:
+                  - generic [ref=e417]:
+                    - generic [ref=e418]: MCP 入门
+                    - generic [ref=e419]: 已实测
+                  - heading "Tavily 实时网络搜索（MCP）" [level=3] [ref=e420]
+                - generic [ref=e421]:
+                  - paragraph [ref=e422]: 给 Claude Code 补实时联网搜索能力。
+                  - paragraph [ref=e423]: 适合实时搜索、资料初筛和事实核验。
+                  - paragraph [ref=e424]: 附安装命令、可复制提示词和结果说明。
+                - link "查看上手教程 " [ref=e425]:
+                  - /url: mcp-detail.html?slug=free-web-search-mcp
+                  - generic [ref=e426]: 查看上手教程
+                  - generic [ref=e427]: 
