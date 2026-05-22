@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+import './setup-env.mjs';
 import autogenModule from '../scripts/run-wechat-autogen-once.js';
 
 const {
