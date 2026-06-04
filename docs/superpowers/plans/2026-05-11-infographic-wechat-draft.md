@@ -6,7 +6,7 @@
 
 **Architecture:** 新建 `infographic-generator.js` 服务：先调 DeepSeek 将播客文字稿压缩为中文图片提示词，再调 gpt-image-2 生成图片返回 Buffer。`wechat-publisher.js` 新增 `uploadNewsImage` 和 `uploadNewsImageForContent` 方法。`run-wechat-autogen-once.js` 的 `maybePublishPodcast` 中在发布前注入信息图，失败时降级跳过。
 
-**Tech Stack:** Node.js (CommonJS), DeepSeek API, gpt-image-2 via 中转站 (`https://www.bytecatcode.org`), 微信 uploadimg API
+**Tech Stack:** Node.js (CommonJS), DeepSeek API, gpt-image-2 via 中转站 (`https://ai.ssgoo.net`), 微信 uploadimg API
 
 ---
 
@@ -596,13 +596,14 @@ DEEPSEEK_MODEL=deepseek-v4-flash
 # 图片生成 API (gpt-image-2 中转站)
 # =====================================================
 GPT_IMAGE_API_KEY=sk-your-key-here
-GPT_IMAGE_API_BASE_URL=https://www.bytecatcode.org
+GPT_IMAGE_API_BASE_URL=https://ai.ssgoo.net
+GPT_IMAGE_MODEL=gpt-image-2
 ```
 
 - [ ] **Step 2: 在服务器 `.env` 中追加真实 key**
 
 ```bash
-ssh root@8.135.37.159 "echo 'GPT_IMAGE_API_KEY=sk-1eo48hSKonZmjtnh2Rmz6DauxdPxl46P31TnT45pdpZSpxhl' >> /var/www/ai-coming-website/.env && echo 'GPT_IMAGE_API_BASE_URL=https://www.bytecatcode.org' >> /var/www/ai-coming-website/.env"
+ssh root@8.135.37.159 "set the GPT_IMAGE_API_KEY secret in /var/www/ai-coming-website/.env, then set GPT_IMAGE_API_BASE_URL=https://ai.ssgoo.net and GPT_IMAGE_MODEL=gpt-image-2"
 ```
 
 - [ ] **Step 3: Commit `.env.example` 并推送**
