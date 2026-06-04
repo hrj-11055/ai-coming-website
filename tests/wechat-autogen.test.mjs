@@ -16,6 +16,128 @@ function writeJson(filePath, value) {
     fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
 }
 
+test('runWechatAutogenOnce publishes one newspic draft with three report-driven core items', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-newspic-'));
+    const reportDir = path.join(root, 'report');
+    const podcastMetadataDir = path.join(root, 'podcasts');
+    const generatedPrompts = [];
+    const uploads = [];
+
+    writeJson(path.join(reportDir, '2026-06-04.json'), {
+        articles: [
+            {
+                title: 'Anthropic 提交 IPO 申请，年化收入 470 亿美元',
+                key_point: 'Anthropic 已秘密提交 IPO 申请。',
+                importance_score: 9
+            },
+            {
+                title: 'Anthropic 秘密提交 IPO 招股书，最快 Q4 上市',
+                key_point: 'Anthropic 向 SEC 秘密提交 S-1 表格。',
+                importance_score: 9
+            },
+            {
+                title: 'MiniMax 启动 A 股 IPO',
+                key_point: 'MiniMax 商业化速度加快。',
+                importance_score: 8
+            },
+            {
+                title: 'OpenAI 推出企业级 Agent',
+                key_point: 'OpenAI 面向复杂工作流推出新 Agent。',
+                importance_score: 7
+            },
+            {
+                title: '不应出现的第四条',
+                key_point: '不应出现。',
+                importance_score: 6
+            }
+        ]
+    });
+    writeJson(path.join(podcastMetadataDir, '2026-06-04.json'), {
+        status: 'error',
+        script_markdown: '这段播客口播稿绝不能被上传到贴图草稿。'
+    });
+
+    const result = await runWechatAutogenOnce({
+        now: new Date('2026-06-04T02:00:00.000Z'),
+        reportDir,
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabled: true,
+        enabledTypes: ['newspic'],
+        infographicGenerator: {
+            async generateInfographic({ prompt }) {
+                generatedPrompts.push(prompt);
+                return Buffer.from('generated-daily-image');
+            }
+        },
+        publisher: {
+            async publishNewspicDraft(payload) {
+                uploads.push(payload);
+                return {
+                    media_id: 'newspic-draft-1',
+                    image_media_id: 'image-media-1'
+                };
+            }
+        }
+    });
+
+    assert.equal(generatedPrompts.length, 1);
+    assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图/);
+    assert.doesNotMatch(generatedPrompts[0], /这段播客口播稿/);
+    assert.equal(uploads.length, 1);
+    assert.equal(uploads[0].title, '06月04日AI资讯早报');
+    assert.deepEqual(uploads[0].imageBuffer, Buffer.from('generated-daily-image'));
+    assert.match(uploads[0].content, /Anthropic 提交 IPO/);
+    assert.match(uploads[0].content, /MiniMax 启动 A 股 IPO/);
+    assert.match(uploads[0].content, /OpenAI 推出企业级 Agent/);
+    assert.doesNotMatch(uploads[0].content, /Anthropic 秘密提交 IPO 招股书/);
+    assert.doesNotMatch(uploads[0].content, /不应出现的第四条/);
+    assert.equal(result.newspic.action, 'uploaded');
+    assert.equal(result.newspic.reason, 'newspic_ready_today');
+    assert.equal(result.podcast.reason, 'podcast_disabled');
+
+    const savedState = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8'));
+    assert.equal(savedState.newspic.last_media_id, 'newspic-draft-1');
+    assert.equal(savedState.newspic.last_image_media_id, 'image-media-1');
+});
+
+test('runWechatAutogenOnce never publishes a text-only newspic draft when image generation fails', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-newspic-image-fail-'));
+    const reportDir = path.join(root, 'report');
+    let publishCalls = 0;
+
+    writeJson(path.join(reportDir, '2026-06-04.json'), {
+        articles: [
+            { title: '第一条', key_point: '一', importance_score: 9 },
+            { title: '第二条', key_point: '二', importance_score: 8 },
+            { title: '第三条', key_point: '三', importance_score: 7 }
+        ]
+    });
+
+    await assert.rejects(() => runWechatAutogenOnce({
+        now: new Date('2026-06-04T02:00:00.000Z'),
+        reportDir,
+        podcastMetadataDir: path.join(root, 'podcasts'),
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabled: true,
+        enabledTypes: ['newspic'],
+        infographicGenerator: {
+            async generateInfographic() {
+                throw new Error('image generation unavailable');
+            }
+        },
+        publisher: {
+            async publishNewspicDraft() {
+                publishCalls += 1;
+            }
+        }
+    }), /image generation unavailable/);
+
+    assert.equal(publishCalls, 0);
+});
+
 test('runWechatAutogenOnce skips report upload when today report json is missing', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-missing-'));
     const result = await runWechatAutogenOnce({

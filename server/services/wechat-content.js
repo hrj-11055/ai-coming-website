@@ -173,6 +173,89 @@ function buildHighlightItems(articles, limit = 5) {
         .map((article) => sanitizeInlineText(article.title) || '无标题');
 }
 
+function buildTitleBigrams(value) {
+    const normalized = sanitizeInlineText(value)
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, '');
+    const bigrams = new Set();
+
+    for (let index = 0; index < normalized.length - 1; index += 1) {
+        bigrams.add(normalized.slice(index, index + 2));
+    }
+
+    return bigrams;
+}
+
+function getTitleSimilarity(left, right) {
+    const leftBigrams = buildTitleBigrams(left);
+    const rightBigrams = buildTitleBigrams(right);
+    if (leftBigrams.size === 0 || rightBigrams.size === 0) {
+        return 0;
+    }
+
+    let overlap = 0;
+    leftBigrams.forEach((bigram) => {
+        if (rightBigrams.has(bigram)) {
+            overlap += 1;
+        }
+    });
+
+    return (2 * overlap) / (leftBigrams.size + rightBigrams.size);
+}
+
+function selectCoreNewsItems(report, limit = 3) {
+    const ranked = normalizeArticles(report)
+        .map((article, index) => ({ article, index }))
+        .sort((left, right) => {
+            const scoreDelta = (Number(right.article.importance_score) || 0) - (Number(left.article.importance_score) || 0);
+            return scoreDelta || left.index - right.index;
+        });
+    const selected = [];
+
+    for (const { article } of ranked) {
+        const title = sanitizeInlineText(article.title);
+        if (!title || selected.some((item) => getTitleSimilarity(item.title, title) >= 0.36)) {
+            continue;
+        }
+
+        selected.push({
+            title,
+            keyPoint: sanitizeInlineText(article.key_point || article.summary || title),
+            sourceName: sanitizeInlineText(article.source_name),
+            sourceUrl: sanitizeInlineText(article.source_url),
+            importanceScore: Number(article.importance_score) || 0
+        });
+
+        if (selected.length >= limit) {
+            break;
+        }
+    }
+
+    return selected;
+}
+
+function buildDailyNewspicContent({ coreItems }) {
+    return (coreItems || [])
+        .slice(0, 3)
+        .map((item, index) => `${index + 1}. ${sanitizeInlineText(item.title)}：${sanitizeInlineText(item.keyPoint)}`)
+        .join('\n\n');
+}
+
+function buildDailyNewspicImagePrompt({ date, coreItems }) {
+    const coreLines = (coreItems || [])
+        .slice(0, 3)
+        .map((item, index) => `${index + 1}. ${sanitizeInlineText(item.title)}：${sanitizeInlineText(item.keyPoint)}`)
+        .join('\n');
+
+    return [
+        `生成一张 ${date} 的高质量中文 AI 日报一览图，竖版 2:3 构图。`,
+        '图片是微信公众号贴图日报的主要展示内容，只展示以下 3 条核心信息，不添加其他新闻：',
+        coreLines,
+        '',
+        '视觉要求：高级、克制、清晰，深蓝与紫色科技背景，使用信息图卡片表现三条内容；标题使用“小元说 AI日报”，日期清楚；中文文字准确易读，层级分明，移动端观看友好；不要添加二维码、外部 Logo、水印、网址或无关文字。'
+    ].join('\n');
+}
+
 function buildNewsMarkdown({ date, report }) {
     const title = formatWechatTitle(date);
     const articles = normalizeArticles(report);
@@ -337,6 +420,8 @@ function hashText(value) {
 }
 
 module.exports = {
+    buildDailyNewspicContent,
+    buildDailyNewspicImagePrompt,
     buildNewsMarkdown,
     appendPodcastListenCta,
     buildPodcastMarkdown,
@@ -348,5 +433,6 @@ module.exports = {
     formatWechatTitle,
     hashText,
     normalizeArticles,
-    padDatePart
+    padDatePart,
+    selectCoreNewsItems
 };

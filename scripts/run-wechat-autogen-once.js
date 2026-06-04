@@ -7,6 +7,8 @@ const path = require('path');
 
 const {
     appendPodcastListenCta,
+    buildDailyNewspicContent,
+    buildDailyNewspicImagePrompt,
     buildPodcastLandingPageUrl,
     buildNewsMarkdown,
     buildPodcastMarkdown,
@@ -14,7 +16,8 @@ const {
     buildWechatDigest,
     formatWechatPodcastTitle,
     formatWechatTitle,
-    hashText
+    hashText,
+    selectCoreNewsItems
 } = require('../server/services/wechat-content');
 const { createMinimaxAudioClient, createMinimaxTtsClient } = require('../server/services/minimax-audio');
 const { createWechatPodcastFormatter } = require('../server/services/wechat-podcast-formatter');
@@ -33,7 +36,7 @@ const DEFAULT_SITE_BASE_URL = process.env.WECHAT_AUTOGEN_SITE_BASE_URL || '';
 const DEFAULT_ORIGINAL_ARTICLE_URL = process.env.WECHAT_AUTOGEN_ORIGINAL_ARTICLE_URL || 'https://aicoming.cn/news.html';
 const DEFAULT_ENABLED = isFeatureEnabled(process.env.WECHAT_AUTOGEN_ENABLED, false);
 const DEFAULT_REQUIRE_INFOGRAPHIC = isFeatureEnabled(process.env.WECHAT_AUTOGEN_REQUIRE_INFOGRAPHIC, false);
-const DEFAULT_ENABLED_TYPES = String(process.env.WECHAT_AUTOGEN_ENABLED_TYPES || 'podcast,markdown')
+const DEFAULT_ENABLED_TYPES = String(process.env.WECHAT_AUTOGEN_ENABLED_TYPES || 'newspic')
     .split(',')
     .map((value) => value.trim().toLowerCase())
     .filter(Boolean);
@@ -58,6 +61,11 @@ function writeJsonFile(filePath, value) {
 function writeTextFile(filePath, value) {
     ensureParentDir(filePath);
     fs.writeFileSync(filePath, value, 'utf8');
+}
+
+function writeBufferFile(filePath, value) {
+    ensureParentDir(filePath);
+    fs.writeFileSync(filePath, value);
 }
 
 function getArg(flag) {
@@ -187,6 +195,67 @@ function normalizeResult(action, reason, extra = {}) {
     };
 }
 
+async function maybePublishNewspic({
+    date,
+    reportDir,
+    stagingDir,
+    state,
+    publisher,
+    infographicGenerator,
+    enabledTypes
+}) {
+    if (!enabledTypes.has('newspic')) {
+        return normalizeResult('skip', 'newspic_disabled');
+    }
+
+    const reportPath = path.join(reportDir, `${date}.json`);
+    if (!fs.existsSync(reportPath)) {
+        return normalizeResult('skip', 'report_missing_today');
+    }
+
+    const report = readJsonFileSafe(reportPath, null);
+    const coreItems = selectCoreNewsItems(report, 3);
+    if (coreItems.length < 3) {
+        return normalizeResult('skip', 'report_insufficient_core_items', {
+            reportPath,
+            coreItemCount: coreItems.length
+        });
+    }
+
+    const fingerprint = hashText(JSON.stringify({
+        version: 'daily-newspic-v1',
+        date,
+        coreItems
+    }));
+    if (state?.newspic?.last_uploaded_fingerprint === fingerprint) {
+        return normalizeResult('skip', 'same_fingerprint', { reportPath, fingerprint });
+    }
+
+    const content = buildDailyNewspicContent({ date, coreItems });
+    const prompt = buildDailyNewspicImagePrompt({ date, coreItems });
+    const imageBuffer = await infographicGenerator.generateInfographic({ prompt });
+    const stagingPath = path.join(stagingDir, `${date}-newspic.txt`);
+    const imagePath = path.join(stagingDir, `${date}-newspic.jpg`);
+    writeTextFile(stagingPath, content);
+    writeBufferFile(imagePath, imageBuffer);
+
+    const publishResult = await publisher.publishNewspicDraft({
+        title: formatWechatTitle(date),
+        content,
+        imageBuffer
+    });
+
+    return normalizeResult('uploaded', 'newspic_ready_today', {
+        reportPath,
+        fingerprint,
+        stagingPath,
+        imagePath,
+        coreItems,
+        mediaId: publishResult.media_id || null,
+        imageMediaId: publishResult.image_media_id || null
+    });
+}
+
 async function maybePublishReport({
     date,
     reportDir,
@@ -300,6 +369,7 @@ async function maybePublishPodcast({
     if (infographicGenerator) {
         try {
             const imageBuffer = await infographicGenerator.generateInfographic({
+                date,
                 scriptMarkdown: metadata.script_markdown || ''
             });
             infographicUrl = await publisher.uploadNewsImageForContent({ imageBuffer });
@@ -444,6 +514,7 @@ async function runWechatAutogenOnce(options = {}) {
             action: 'skip',
             reason: 'disabled',
             date: dateInfo.date,
+            newspic: normalizeResult('skip', 'disabled'),
             report: normalizeResult('skip', 'disabled'),
             podcast: normalizeResult('skip', 'disabled'),
             podcastAudio: normalizeResult('skip', 'disabled')
@@ -496,6 +567,23 @@ async function runWechatAutogenOnce(options = {}) {
         }
         return podcastAudioSynthesizer;
     }
+    const newspicResult = await maybePublishNewspic({
+        date: dateInfo.date,
+        reportDir,
+        stagingDir,
+        state,
+        publisher: {
+            publishNewspicDraft(payload) {
+                return getPublisher().publishNewspicDraft(payload);
+            }
+        },
+        infographicGenerator: {
+            generateInfographic(payload) {
+                return getInfographicGenerator().generateInfographic(payload);
+            }
+        },
+        enabledTypes
+    });
     const reportResult = await maybePublishReport({
         date: dateInfo.date,
         reportDir,
@@ -571,6 +659,15 @@ async function runWechatAutogenOnce(options = {}) {
     });
 
     state.last_skip_reason = null;
+    state.newspic = {
+        last_attempted_date: dateInfo.date,
+        last_uploaded_fingerprint: newspicResult.action === 'uploaded' ? newspicResult.fingerprint : (state.newspic?.last_uploaded_fingerprint || null),
+        last_result: newspicResult.action,
+        last_reason: newspicResult.reason,
+        last_media_id: newspicResult.mediaId || null,
+        last_image_media_id: newspicResult.imageMediaId || null,
+        last_error: null
+    };
     state.markdown = {
         last_attempted_date: dateInfo.date,
         last_uploaded_fingerprint: reportResult.action === 'uploaded' ? reportResult.fingerprint : (state.markdown?.last_uploaded_fingerprint || null),
@@ -603,6 +700,7 @@ async function runWechatAutogenOnce(options = {}) {
     return {
         ok: true,
         date: dateInfo.date,
+        newspic: newspicResult,
         report: reportResult,
         podcast: podcastResult,
         podcastAudio: podcastAudioResult
@@ -630,5 +728,6 @@ module.exports = {
     getCurrentDateInfo,
     isFeatureEnabled,
     isWithinScanWindow,
+    maybePublishNewspic,
     runWechatAutogenOnce
 };

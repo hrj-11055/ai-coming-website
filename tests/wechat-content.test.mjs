@@ -12,8 +12,62 @@ const {
     buildPodcastMarkdown,
     buildPodcastLandingPageUrl,
     appendPodcastListenCta,
-    buildPodcastVoiceMessageText
+    buildPodcastVoiceMessageText,
+    buildDailyNewspicContent,
+    buildDailyNewspicImagePrompt,
+    selectCoreNewsItems
 } = require('../server/services/wechat-content.js');
+
+test('selectCoreNewsItems returns exactly three distinct highest-value stories', () => {
+    const report = {
+        articles: [
+            {
+                title: 'Anthropic 提交 IPO 申请，年化收入 470 亿美元',
+                key_point: 'Anthropic 已秘密提交 IPO 申请，估值达到 9000 亿美元。',
+                importance_score: 9
+            },
+            {
+                title: 'Anthropic 秘密提交 IPO 招股书，最快 Q4 上市',
+                key_point: 'Anthropic 向 SEC 秘密提交 S-1 表格。',
+                importance_score: 9
+            },
+            {
+                title: 'MiniMax 启动 A 股 IPO',
+                key_point: 'MiniMax 启动 A 股 IPO，商业化速度加快。',
+                importance_score: 8
+            },
+            {
+                title: 'OpenAI 推出企业级 Agent',
+                key_point: 'OpenAI 推出企业级 Agent，面向复杂工作流。',
+                importance_score: 7
+            }
+        ]
+    };
+
+    const items = selectCoreNewsItems(report);
+
+    assert.equal(items.length, 3);
+    assert.equal(items[0].title, 'Anthropic 提交 IPO 申请，年化收入 470 亿美元');
+    assert.equal(items[1].title, 'MiniMax 启动 A 股 IPO');
+    assert.equal(items[2].title, 'OpenAI 推出企业级 Agent');
+});
+
+test('daily newspic content contains only three core items and image prompt is visual-first', () => {
+    const coreItems = [
+        { title: '第一条', keyPoint: '第一条核心信息。' },
+        { title: '第二条', keyPoint: '第二条核心信息。' },
+        { title: '第三条', keyPoint: '第三条核心信息。' }
+    ];
+
+    const content = buildDailyNewspicContent({ date: '2026-06-04', coreItems });
+    const prompt = buildDailyNewspicImagePrompt({ date: '2026-06-04', coreItems });
+
+    assert.equal(content, '1. 第一条：第一条核心信息。\n\n2. 第二条：第二条核心信息。\n\n3. 第三条：第三条核心信息。');
+    assert.match(prompt, /高质量中文 AI 日报一览图/);
+    assert.match(prompt, /只展示以下 3 条/);
+    assert.match(prompt, /第一条核心信息/);
+    assert.doesNotMatch(prompt, /播客口播稿/);
+});
 
 test('buildNewsMarkdown renders fixed title and structured sections for today report json', () => {
     const markdown = buildNewsMarkdown({

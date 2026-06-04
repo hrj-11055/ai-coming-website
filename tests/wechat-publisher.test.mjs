@@ -8,9 +8,11 @@ const {
     createWechatPublisher,
     fetchAccessToken,
     publishDraft,
+    publishNewspicDraft,
     publishPreviewVoice,
     publishSendAllVoice,
     renderMarkdownToHtml,
+    uploadImageBuffer,
     uploadVoice
 } = require('../server/services/wechat-publisher.js');
 
@@ -85,6 +87,58 @@ test('publishDraft includes content_source_url for reading-original audio landin
         requestBody.articles[0].content_source_url,
         'https://ai-coming.example.com/podcast.html?date=2026-04-02'
     );
+});
+
+test('publishNewspicDraft sends one permanent image as a newspic draft', async () => {
+    let requestBody = null;
+
+    const result = await publishNewspicDraft({
+        accessToken: 'token-123',
+        title: '06月04日AI资讯早报',
+        content: '1. 核心信息一\n\n2. 核心信息二\n\n3. 核心信息三',
+        imageMediaId: 'image-media-1',
+        fetchImpl: async (_url, options) => {
+            requestBody = JSON.parse(options.body);
+            return {
+                ok: true,
+                json: async () => ({ media_id: 'newspic-draft-1' })
+            };
+        }
+    });
+
+    assert.equal(result.media_id, 'newspic-draft-1');
+    assert.equal(requestBody.articles.length, 1);
+    assert.deepEqual(requestBody.articles[0], {
+        article_type: 'newspic',
+        title: '06月04日AI资讯早报',
+        content: '1. 核心信息一\n\n2. 核心信息二\n\n3. 核心信息三',
+        need_open_comment: 1,
+        only_fans_can_comment: 0,
+        image_info: {
+            image_list: [
+                { image_media_id: 'image-media-1' }
+            ]
+        }
+    });
+});
+
+test('uploadImageBuffer uploads generated image as permanent WeChat material', async () => {
+    const calls = [];
+    const result = await uploadImageBuffer({
+        accessToken: 'token-123',
+        imageBuffer: Buffer.from([0xff, 0xd8, 0xff, 0x00]),
+        fetchImpl: async (url, options) => {
+            calls.push({ url, options });
+            return {
+                ok: true,
+                json: async () => ({ media_id: 'image-media-1' })
+            };
+        }
+    });
+
+    assert.equal(result.media_id, 'image-media-1');
+    assert.match(calls[0].url, /material\/add_material/);
+    assert.match(calls[0].url, /type=image/);
 });
 
 test('renderMarkdownToHtml keeps the WeChat news template styles with leading images', async () => {

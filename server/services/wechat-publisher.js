@@ -290,6 +290,35 @@ async function uploadImage({ accessToken, imagePath, fetchImpl = fetch }) {
     return data;
 }
 
+async function uploadImageBuffer({ accessToken, imageBuffer, fetchImpl = fetch }) {
+    if (!Buffer.isBuffer(imageBuffer) || imageBuffer.length === 0) {
+        throw new Error('上传永久图片素材失败: 图片 Buffer 为空');
+    }
+
+    const imageType = detectImageUploadType(imageBuffer);
+    const response = await uploadMultipartMedia({
+        url: `${UPLOAD_URL}?access_token=${encodeURIComponent(accessToken)}&type=image`,
+        fileName: imageType.fileName,
+        mimeType: imageType.mimeType,
+        fileBuffer: imageBuffer,
+        fetchImpl
+    });
+
+    if (!response.ok) {
+        throw new Error(`上传永久图片素材失败: HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.errcode) {
+        throw new Error(`上传永久图片素材失败: ${data.errmsg || data.errcode}`);
+    }
+    if (!data.media_id) {
+        throw new Error('上传永久图片素材成功但缺少 media_id');
+    }
+
+    return data;
+}
+
 async function uploadVoice({
     accessToken,
     audioPath,
@@ -416,6 +445,48 @@ async function publishDraft({ accessToken, article, fetchImpl = fetch }) {
     const data = await response.json();
     if (data.errcode) {
         throw new Error(`发布草稿失败: ${data.errmsg || data.errcode}`);
+    }
+
+    return data;
+}
+
+async function publishNewspicDraft({
+    accessToken,
+    title,
+    content,
+    imageMediaId,
+    fetchImpl = fetch
+}) {
+    const response = await fetchImpl(`${DRAFT_URL}?access_token=${encodeURIComponent(accessToken)}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            articles: [
+                {
+                    article_type: 'newspic',
+                    title,
+                    content,
+                    need_open_comment: 1,
+                    only_fans_can_comment: 0,
+                    image_info: {
+                        image_list: [
+                            { image_media_id: imageMediaId }
+                        ]
+                    }
+                }
+            ]
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`发布贴图草稿失败: HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.errcode) {
+        throw new Error(`发布贴图草稿失败: ${data.errmsg || data.errcode}`);
     }
 
     return data;
@@ -556,6 +627,27 @@ function createWechatPublisher(options = {}) {
                 fetchImpl
             });
         },
+        async publishNewspicDraft(payload) {
+            const accessToken = await fetchAccessToken({ appId, appSecret, fetchImpl });
+            const imageUpload = await uploadImageBuffer({
+                accessToken,
+                imageBuffer: payload.imageBuffer,
+                fetchImpl
+            });
+
+            const draft = await publishNewspicDraft({
+                accessToken,
+                title: payload.title,
+                content: payload.content,
+                imageMediaId: imageUpload.media_id,
+                fetchImpl
+            });
+
+            return {
+                ...draft,
+                image_media_id: imageUpload.media_id
+            };
+        },
         async publishPodcastAudio(payload) {
             const accessToken = await fetchAccessToken({ appId, appSecret, fetchImpl });
             const voiceUpload = await uploadVoice({
@@ -603,11 +695,13 @@ module.exports = {
     createWechatPublisher,
     fetchAccessToken,
     publishDraft,
+    publishNewspicDraft,
     publishPreviewVoice,
     publishSendAllVoice,
     renderMarkdownToHtml,
     renderMarkdownToHtmlLegacy,
     uploadImage,
+    uploadImageBuffer,
     uploadNewsImage,
     uploadVoice
 };
