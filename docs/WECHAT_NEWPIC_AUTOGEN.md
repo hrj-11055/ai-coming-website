@@ -4,7 +4,7 @@
 
 1. 读取当天日报 JSON。
 2. 按重要性筛选并去重，只保留 3 条核心信息。
-3. 通过官方 OpenAI Images API 的 `gpt-image-2` 生成高质量竖版日报一览图。
+3. 通过 TokenGo Images API 的 `gpt-image-2` 生成高质量竖版日报一览图。
 4. 将图片上传为微信永久图片素材。
 5. 调用微信 `draft/add`，使用 `article_type: "newspic"` 创建贴图草稿。
 
@@ -13,12 +13,14 @@
 ## 必需配置
 
 ```dotenv
-OPENAI_API_KEY=
-OPENAI_IMAGE_MODEL=gpt-image-2
-OPENAI_IMAGE_SIZE=1024x1536
-OPENAI_IMAGE_QUALITY=high
-OPENAI_IMAGE_OUTPUT_FORMAT=jpeg
-OPENAI_IMAGE_OUTPUT_COMPRESSION=80
+TOKENGO_API_KEY=
+TOKENGO_API_BASE_URL=https://ai.ssgoo.net
+TOKENGO_IMAGE_MODEL=gpt-image-2
+TOKENGO_IMAGE_SIZE=1024x1536
+TOKENGO_IMAGE_QUALITY=high
+TOKENGO_IMAGE_OUTPUT_FORMAT=jpeg
+TOKENGO_IMAGE_OUTPUT_COMPRESSION=80
+TOKENGO_IMAGE_RESPONSE_FORMAT=url
 
 WECHAT_APP_ID=
 WECHAT_APP_SECRET=
