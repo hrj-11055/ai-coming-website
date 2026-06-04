@@ -214,8 +214,8 @@ async function maybePublishNewspic({
     }
 
     const report = readJsonFileSafe(reportPath, null);
-    const coreItems = selectCoreNewsItems(report, 3);
-    if (coreItems.length < 3) {
+    const coreItems = selectCoreNewsItems(report, 10);
+    if (coreItems.length < 10) {
         return normalizeResult('skip', 'report_insufficient_core_items', {
             reportPath,
             coreItemCount: coreItems.length
@@ -223,7 +223,7 @@ async function maybePublishNewspic({
     }
 
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v1',
+        version: 'daily-newspic-v3-square-ten',
         date,
         coreItems
     }));

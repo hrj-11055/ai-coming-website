@@ -203,7 +203,7 @@ function getTitleSimilarity(left, right) {
     return (2 * overlap) / (leftBigrams.size + rightBigrams.size);
 }
 
-function selectCoreNewsItems(report, limit = 3) {
+function selectCoreNewsItems(report, limit = 10) {
     const ranked = normalizeArticles(report)
         .map((article, index) => ({ article, index }))
         .sort((left, right) => {
@@ -234,25 +234,34 @@ function selectCoreNewsItems(report, limit = 3) {
     return selected;
 }
 
+function formatNewspicChineseDate(date) {
+    const match = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+        return sanitizeInlineText(date);
+    }
+
+    return `${match[1]}年${Number(match[2])}月${Number(match[3])}日`;
+}
+
 function buildDailyNewspicContent({ coreItems }) {
     return (coreItems || [])
-        .slice(0, 3)
+        .slice(0, 10)
         .map((item, index) => `${index + 1}. ${sanitizeInlineText(item.title)}：${sanitizeInlineText(item.keyPoint)}`)
         .join('\n\n');
 }
 
 function buildDailyNewspicImagePrompt({ date, coreItems }) {
     const coreLines = (coreItems || [])
-        .slice(0, 3)
+        .slice(0, 10)
         .map((item, index) => `${index + 1}. ${sanitizeInlineText(item.title)}：${sanitizeInlineText(item.keyPoint)}`)
         .join('\n');
 
     return [
-        `生成一张 ${date} 的高质量中文 AI 日报一览图，竖版 2:3 构图。`,
-        '图片是微信公众号贴图日报的主要展示内容，只展示以下 3 条核心信息，不添加其他新闻：',
+        `生成一张 ${formatNewspicChineseDate(date)} 的高质量中文 AI 日报一览图，方形 1:1 构图。`,
+        '图片是微信公众号贴图日报的主要展示内容，只展示以下 10 条核心信息，不添加其他新闻：',
         coreLines,
         '',
-        '视觉要求：高级、克制、清晰，深蓝与紫色科技背景，使用信息图卡片表现三条内容；标题使用“小元说 AI日报”，日期清楚；中文文字准确易读，层级分明，移动端观看友好；不要添加二维码、外部 Logo、水印、网址或无关文字。'
+        '视觉要求：高级、克制、清晰，深蓝与紫色科技背景，使用信息图卡片表现十条内容；标题使用“小元说 AI日报”，日期清楚；中文文字准确易读，层级分明，移动端观看友好；不要添加二维码、外部 Logo、水印、网址或无关文字。'
     ].join('\n');
 }
 

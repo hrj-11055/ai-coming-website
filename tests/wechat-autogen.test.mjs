@@ -16,7 +16,7 @@ function writeJson(filePath, value) {
     fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
 }
 
-test('runWechatAutogenOnce publishes one newspic draft with three report-driven core items', async () => {
+test('runWechatAutogenOnce publishes one newspic draft with ten report-driven core items', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-newspic-'));
     const reportDir = path.join(root, 'report');
     const podcastMetadataDir = path.join(root, 'podcasts');
@@ -46,10 +46,17 @@ test('runWechatAutogenOnce publishes one newspic draft with three report-driven 
                 importance_score: 7
             },
             {
-                title: '不应出现的第四条',
-                key_point: '不应出现。',
+                title: '谷歌发布新一代 TPU',
+                key_point: '谷歌发布面向推理和训练的新芯片。',
                 importance_score: 6
-            }
+            },
+            { title: '微软发布推理模型', key_point: '办公场景推理能力继续增强。', importance_score: 5 },
+            { title: '苹果扩展端侧 AI', key_point: '隐私计算成为产品卖点。', importance_score: 4 },
+            { title: '英伟达开源世界模型', key_point: '物理 AI 训练效率提升。', importance_score: 3 },
+            { title: 'Meta 调整 AI 组织', key_point: '基础模型团队进入重组期。', importance_score: 2 },
+            { title: '亚马逊发布企业 AI 芯片服务', key_point: '云厂商继续争夺 AI 基础设施。', importance_score: 1 },
+            { title: '百度升级智能体开发平台', key_point: '国产 Agent 工具链继续完善。', importance_score: 0 },
+            { title: '第十一条不应出现', key_point: '超过十条。', importance_score: -1 }
         ]
     });
     writeJson(path.join(podcastMetadataDir, '2026-06-04.json'), {
@@ -84,6 +91,9 @@ test('runWechatAutogenOnce publishes one newspic draft with three report-driven 
 
     assert.equal(generatedPrompts.length, 1);
     assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图/);
+    assert.match(generatedPrompts[0], /只展示以下 10 条核心信息/);
+    assert.match(generatedPrompts[0], /百度升级智能体开发平台/);
+    assert.doesNotMatch(generatedPrompts[0], /第十一条不应出现/);
     assert.doesNotMatch(generatedPrompts[0], /这段播客口播稿/);
     assert.equal(uploads.length, 1);
     assert.equal(uploads[0].title, '06月04日AI资讯早报');
@@ -91,8 +101,10 @@ test('runWechatAutogenOnce publishes one newspic draft with three report-driven 
     assert.match(uploads[0].content, /Anthropic 提交 IPO/);
     assert.match(uploads[0].content, /MiniMax 启动 A 股 IPO/);
     assert.match(uploads[0].content, /OpenAI 推出企业级 Agent/);
-    assert.doesNotMatch(uploads[0].content, /Anthropic 秘密提交 IPO 招股书/);
-    assert.doesNotMatch(uploads[0].content, /不应出现的第四条/);
+    assert.match(uploads[0].content, /谷歌发布新一代 TPU/);
+    assert.match(uploads[0].content, /百度升级智能体开发平台/);
+    assert.doesNotMatch(uploads[0].content, /第十一条不应出现/);
+    assert.doesNotMatch(uploads[0].content, /这段播客口播稿/);
     assert.equal(result.newspic.action, 'uploaded');
     assert.equal(result.newspic.reason, 'newspic_ready_today');
     assert.equal(result.podcast.reason, 'podcast_disabled');
@@ -111,7 +123,14 @@ test('runWechatAutogenOnce never publishes a text-only newspic draft when image 
         articles: [
             { title: '第一条', key_point: '一', importance_score: 9 },
             { title: '第二条', key_point: '二', importance_score: 8 },
-            { title: '第三条', key_point: '三', importance_score: 7 }
+            { title: '第三条', key_point: '三', importance_score: 7 },
+            { title: '第四条', key_point: '四', importance_score: 6 },
+            { title: '第五条', key_point: '五', importance_score: 5 },
+            { title: '第六条', key_point: '六', importance_score: 4 },
+            { title: '第七条', key_point: '七', importance_score: 3 },
+            { title: '第八条', key_point: '八', importance_score: 2 },
+            { title: '第九条', key_point: '九', importance_score: 1 },
+            { title: '第十条', key_point: '十', importance_score: 0 }
         ]
     });
 

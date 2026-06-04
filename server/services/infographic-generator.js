@@ -4,14 +4,14 @@ const sharp = require('sharp');
 
 const DEFAULT_TOKENGO_BASE_URL = 'https://ai.ssgoo.net';
 const DEFAULT_IMAGE_MODEL = 'gpt-image-2';
-const DEFAULT_IMAGE_SIZE = '1024x1536';
+const DEFAULT_IMAGE_SIZE = '1024x1024';
 const DEFAULT_IMAGE_QUALITY = 'high';
 const DEFAULT_OUTPUT_FORMAT = 'jpeg';
 const DEFAULT_OUTPUT_COMPRESSION = 80;
 const DEFAULT_RESPONSE_FORMAT = 'url';
 const DEFAULT_TIMEOUT_MS = 600000;
 const MAX_WECHAT_IMAGE_BYTES = 1024 * 1024;
-const IMAGE_PROMPT_PREFIX = '请生成一幅高质量中文 AI 日报一览图，图片为主要展示内容。';
+const IMAGE_PROMPT_PREFIX = '请生成一幅高质量中文 AI 日报一览图，图片为主要展示内容，方形 1:1 构图。';
 
 function buildImagePromptSystemMessage() {
     return IMAGE_PROMPT_PREFIX;

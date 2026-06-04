@@ -7,8 +7,8 @@ const { createInfographicGenerator, buildImagePromptSystemMessage } = require('.
 
 test('buildImagePromptSystemMessage 使用日报一览图指令', () => {
     const msg = buildImagePromptSystemMessage();
-    assert.match(msg, /日报一览图/);
-    assert.doesNotMatch(msg, /播客文字稿/);
+    assert.match(msg, /高质量中文 AI 日报一览图/);
+    assert.match(msg, /方形 1:1/);
 });
 
 test('generateInfographic calls TokenGo Images API and downloads the returned URL', async () => {
@@ -38,7 +38,7 @@ test('generateInfographic calls TokenGo Images API and downloads the returned UR
     });
 
     const buffer = await generator.generateInfographic({
-        prompt: '画一张只有三条核心信息的日报一览图'
+        prompt: '生成一张 2026年6月4日 的高质量中文 AI 日报一览图，只展示以下 10 条核心信息。'
     });
 
     assert.equal(calls.length, 2);
@@ -46,9 +46,10 @@ test('generateInfographic calls TokenGo Images API and downloads the returned UR
     assert.equal(calls[0].url, 'https://ai.ssgoo.net/v1/images/generations');
     assert.equal(calls[0].authorization, 'Bearer tokengo-key');
     assert.equal(calls[0].body.model, 'gpt-image-2');
-    assert.match(calls[0].body.prompt, /只有三条核心信息/);
+    assert.match(calls[0].body.prompt, /高质量中文 AI 日报一览图/);
+    assert.match(calls[0].body.prompt, /只展示以下 10 条核心信息/);
     assert.equal(calls[0].body.n, 1);
-    assert.equal(calls[0].body.size, '1024x1536');
+    assert.equal(calls[0].body.size, '1024x1024');
     assert.equal(calls[0].body.quality, 'high');
     assert.equal(calls[0].body.output_format, 'jpeg');
     assert.equal(calls[0].body.output_compression, 80);

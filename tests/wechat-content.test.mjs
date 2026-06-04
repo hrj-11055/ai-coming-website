@@ -18,7 +18,7 @@ const {
     selectCoreNewsItems
 } = require('../server/services/wechat-content.js');
 
-test('selectCoreNewsItems returns exactly three distinct highest-value stories', () => {
+test('selectCoreNewsItems returns ten distinct highest-value stories when available', () => {
     const report = {
         articles: [
             {
@@ -40,32 +40,52 @@ test('selectCoreNewsItems returns exactly three distinct highest-value stories',
                 title: 'OpenAI 推出企业级 Agent',
                 key_point: 'OpenAI 推出企业级 Agent，面向复杂工作流。',
                 importance_score: 7
-            }
+            },
+            { title: '谷歌发布新一代 TPU', key_point: '算力基础设施竞争升温。', importance_score: 6 },
+            { title: '微软发布推理模型', key_point: '办公场景增强。', importance_score: 5 },
+            { title: '苹果扩展端侧 AI', key_point: '隐私计算强化。', importance_score: 4 },
+            { title: '英伟达开源世界模型', key_point: '物理 AI 训练提升。', importance_score: 3 },
+            { title: 'Meta 调整 AI 组织', key_point: '团队进入重组期。', importance_score: 2 },
+            { title: '第九条核心新闻', key_point: '补足九条。', importance_score: 1 },
+            { title: '第十条末位新闻', key_point: '补足去重后的第十条。', importance_score: 0 },
+            { title: '第十一条不应出现', key_point: '超过十条。', importance_score: -1 }
         ]
     };
 
     const items = selectCoreNewsItems(report);
 
-    assert.equal(items.length, 3);
+    assert.equal(items.length, 10);
     assert.equal(items[0].title, 'Anthropic 提交 IPO 申请，年化收入 470 亿美元');
     assert.equal(items[1].title, 'MiniMax 启动 A 股 IPO');
     assert.equal(items[2].title, 'OpenAI 推出企业级 Agent');
+    assert.equal(items[9].title, '第十条末位新闻');
+    assert.equal(items.some((item) => item.title === '第十一条不应出现'), false);
 });
 
-test('daily newspic content contains only three core items and image prompt is visual-first', () => {
+test('daily newspic content contains only ten core items and image prompt is visual-first', () => {
     const coreItems = [
         { title: '第一条', keyPoint: '第一条核心信息。' },
         { title: '第二条', keyPoint: '第二条核心信息。' },
-        { title: '第三条', keyPoint: '第三条核心信息。' }
+        { title: '第三条', keyPoint: '第三条核心信息。' },
+        { title: '第四条', keyPoint: '第四条核心信息。' },
+        { title: '第五条', keyPoint: '第五条核心信息。' },
+        { title: '第六条', keyPoint: '第六条核心信息。' },
+        { title: '第七条', keyPoint: '第七条核心信息。' },
+        { title: '第八条', keyPoint: '第八条核心信息。' },
+        { title: '第九条', keyPoint: '第九条核心信息。' },
+        { title: '第十条', keyPoint: '第十条核心信息。' },
+        { title: '第十一条', keyPoint: '第十一条核心信息。' }
     ];
 
     const content = buildDailyNewspicContent({ date: '2026-06-04', coreItems });
     const prompt = buildDailyNewspicImagePrompt({ date: '2026-06-04', coreItems });
 
-    assert.equal(content, '1. 第一条：第一条核心信息。\n\n2. 第二条：第二条核心信息。\n\n3. 第三条：第三条核心信息。');
-    assert.match(prompt, /高质量中文 AI 日报一览图/);
-    assert.match(prompt, /只展示以下 3 条/);
+    assert.equal(content.split('\n\n').length, 10);
     assert.match(prompt, /第一条核心信息/);
+    assert.match(prompt, /第十条核心信息/);
+    assert.match(prompt, /高质量中文 AI 日报一览图/);
+    assert.match(prompt, /只展示以下 10 条/);
+    assert.doesNotMatch(prompt, /第十一条核心信息/);
     assert.doesNotMatch(prompt, /播客口播稿/);
 });
 
