@@ -21,6 +21,7 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
     const reportDir = path.join(root, 'report');
     const podcastMetadataDir = path.join(root, 'podcasts');
     const generatedPrompts = [];
+    const composedImages = [];
     const uploads = [];
 
     writeJson(path.join(reportDir, '2026-06-04.json'), {
@@ -75,8 +76,14 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
         infographicGenerator: {
             async generateInfographic({ prompt }) {
                 generatedPrompts.push(prompt);
-                return Buffer.from('generated-daily-image');
+                return Buffer.from('generated-daily-background');
             }
+        },
+        imageComposer: async ({ backgroundBuffer, content }) => {
+            assert.deepEqual(backgroundBuffer, Buffer.from('generated-daily-background'));
+            assert.match(content, /Anthropic 提交 IPO/);
+            composedImages.push(content);
+            return Buffer.from('composed-daily-image');
         },
         publisher: {
             async publishNewspicDraft(payload) {
@@ -86,19 +93,20 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
                     image_media_id: 'image-media-1'
                 };
             }
-        }
+        },
     });
 
     assert.equal(generatedPrompts.length, 1);
-    assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图/);
-    assert.match(generatedPrompts[0], /图片文字清单/);
-    assert.match(generatedPrompts[0], /不得新增、替换、改写/);
+    assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图底图/);
+    assert.match(generatedPrompts[0], /内容主题清单/);
+    assert.match(generatedPrompts[0], /后期准确排版/);
     assert.match(generatedPrompts[0], /百度升级智能体开发平台/);
     assert.doesNotMatch(generatedPrompts[0], /第十一条不应出现/);
     assert.doesNotMatch(generatedPrompts[0], /这段播客口播稿/);
+    assert.equal(composedImages.length, 1);
     assert.equal(uploads.length, 1);
     assert.equal(uploads[0].title, '06月04日AI资讯早报');
-    assert.deepEqual(uploads[0].imageBuffer, Buffer.from('generated-daily-image'));
+    assert.deepEqual(uploads[0].imageBuffer, Buffer.from('composed-daily-image'));
     assert.match(uploads[0].content, /Anthropic 提交 IPO/);
     assert.match(uploads[0].content, /MiniMax 启动 A 股 IPO/);
     assert.match(uploads[0].content, /OpenAI 推出企业级 Agent/);

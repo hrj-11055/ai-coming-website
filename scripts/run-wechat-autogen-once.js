@@ -22,7 +22,10 @@ const {
 const { createMinimaxAudioClient, createMinimaxTtsClient } = require('../server/services/minimax-audio');
 const { createWechatPodcastFormatter } = require('../server/services/wechat-podcast-formatter');
 const { createWechatPublisher } = require('../server/services/wechat-publisher');
-const { createInfographicGenerator } = require('../server/services/infographic-generator');
+const {
+    composeDailyNewspicImage,
+    createInfographicGenerator
+} = require('../server/services/infographic-generator');
 
 const ROOT_DIR = path.join(__dirname, '..');
 const DEFAULT_REPORT_DIR = process.env.WECHAT_AUTOGEN_REPORT_DIR || '/var/www/json/report';
@@ -202,6 +205,7 @@ async function maybePublishNewspic({
     state,
     publisher,
     infographicGenerator,
+    imageComposer = composeDailyNewspicImage,
     enabledTypes
 }) {
     if (!enabledTypes.has('newspic')) {
@@ -223,7 +227,7 @@ async function maybePublishNewspic({
     }
 
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v4-square-ten-verbatim-image-text',
+        version: 'daily-newspic-v5-ai-background-exact-text-overlay',
         date,
         coreItems
     }));
@@ -233,7 +237,13 @@ async function maybePublishNewspic({
 
     const content = buildDailyNewspicContent({ date, coreItems });
     const prompt = buildDailyNewspicImagePrompt({ date, coreItems, content });
-    const imageBuffer = await infographicGenerator.generateInfographic({ prompt });
+    const backgroundBuffer = await infographicGenerator.generateInfographic({ prompt });
+    const imageBuffer = await imageComposer({
+        backgroundBuffer,
+        date,
+        content,
+        coreItems
+    });
     const stagingPath = path.join(stagingDir, `${date}-newspic.txt`);
     const imagePath = path.join(stagingDir, `${date}-newspic.jpg`);
     writeTextFile(stagingPath, content);
@@ -582,6 +592,7 @@ async function runWechatAutogenOnce(options = {}) {
                 return getInfographicGenerator().generateInfographic(payload);
             }
         },
+        imageComposer: options.imageComposer || composeDailyNewspicImage,
         enabledTypes
     });
     const reportResult = await maybePublishReport({

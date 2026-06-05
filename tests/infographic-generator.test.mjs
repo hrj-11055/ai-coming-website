@@ -3,7 +3,12 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { createInfographicGenerator, buildImagePromptSystemMessage } = require('../server/services/infographic-generator.js');
+const {
+    buildDailyNewspicOverlaySvg,
+    buildImagePromptSystemMessage,
+    composeDailyNewspicImage,
+    createInfographicGenerator
+} = require('../server/services/infographic-generator.js');
 
 test('buildImagePromptSystemMessage 使用日报一览图指令', () => {
     const msg = buildImagePromptSystemMessage();
@@ -47,7 +52,7 @@ test('generateInfographic calls TokenGo Images API and downloads the returned UR
     assert.equal(calls[0].authorization, 'Bearer tokengo-key');
     assert.equal(calls[0].body.model, 'gpt-image-2');
     assert.match(calls[0].body.prompt, /高质量中文 AI 日报一览图/);
-    assert.match(calls[0].body.prompt, /只展示以下 10 条核心信息/);
+    assert.match(calls[0].body.prompt, /10 条核心信息/);
     assert.equal(calls[0].body.n, 1);
     assert.equal(calls[0].body.size, '1024x1024');
     assert.equal(calls[0].body.quality, 'high');
@@ -74,6 +79,31 @@ test('generateInfographic supports TokenGo b64_json responses', async () => {
 
     const buffer = await generator.generateInfographic({ prompt: 'test' });
     assert.deepEqual(buffer, Buffer.from('fake-image-bytes'));
+});
+
+test('composeDailyNewspicImage overlays exact newspic text onto the final image', async () => {
+    const onePixelPng = Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=',
+        'base64'
+    );
+    const content = Array.from({ length: 10 }, (_, index) => (
+        `${index + 1}. 第${index + 1}条标题：这是第${index + 1}条来自文章正文的核心信息。`
+    )).join('\n\n');
+
+    const overlaySvg = buildDailyNewspicOverlaySvg({ date: '2026-06-05', content }).toString('utf8');
+    assert.match(overlaySvg, /小元说 AI日报/);
+    assert.match(overlaySvg, /2026\.06\.05/);
+    assert.match(overlaySvg, /第1条标题/);
+    assert.match(overlaySvg, /第10条标题/);
+
+    const buffer = await composeDailyNewspicImage({
+        backgroundBuffer: onePixelPng,
+        date: '2026-06-05',
+        content
+    });
+    assert.ok(Buffer.isBuffer(buffer));
+    assert.equal(buffer.subarray(0, 2).toString('hex'), 'ffd8');
+    assert.ok(buffer.length <= 1024 * 1024);
 });
 
 test('generateInfographic 在缺少 TOKENGO_API_KEY 时抛出', async () => {

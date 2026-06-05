@@ -251,18 +251,25 @@ function buildDailyNewspicContent({ coreItems }) {
 }
 
 function buildDailyNewspicImagePrompt({ date, coreItems, content }) {
-    const imageText = String(content || buildDailyNewspicContent({ coreItems })).trim();
+    const topicLines = (coreItems || [])
+        .slice(0, 10)
+        .map((item, index) => `${index + 1}. ${sanitizeInlineText(item.title)}`)
+        .join('\n');
+    const contentReference = String(content || buildDailyNewspicContent({ coreItems })).trim();
 
     return [
-        `生成一张 ${formatNewspicChineseDate(date)} 的高质量中文 AI 日报一览图，方形 1:1 构图。`,
-        '核心要求：图片中的新闻文字必须来自下面【图片文字清单】，逐条呈现，不得新增、替换、改写新闻事实，不得生成与清单无关的标题、公司、数字或摘要。',
-        '排版要求：使用 10 个信息卡片或清晰分栏展示；每条保留编号、标题和冒号后的核心内容；若空间不足，可以压缩字号和行距，但不要删掉条目。',
-        '标题文字固定使用“小元说 AI日报”；日期使用外部提供日期；不要添加二维码、外部 Logo、水印、网址或无关宣传语。',
+        `生成一张 ${formatNewspicChineseDate(date)} 的高质量中文 AI 日报一览图底图，方形 1:1 构图。`,
+        '内容主题必须来自下面【内容主题清单】，用科技视觉元素和信息卡片氛围体现这些主题，不要引入清单之外的公司、人物、数字或新闻。',
+        '重要：不要在图中渲染大段正文或细小中文，正文会由系统后期准确排版；请预留 10 个清晰的信息卡片区域，背景高级、克制、留白充足。',
+        '标题区域预留给“小元说 AI日报”和日期；不要添加二维码、外部 Logo、水印、网址或无关宣传语。',
         '',
-        '【图片文字清单】',
-        imageText,
+        '【内容主题清单】',
+        topicLines,
         '',
-        '【视觉风格】高级、克制、清晰，深蓝与紫色科技背景，信息图卡片风格，中文文字优先可读。'
+        '【最终排版文字参考】',
+        contentReference,
+        '',
+        '【视觉风格】深蓝与紫色科技背景，半透明卡片，移动端可读，适合微信公众号贴图日报。'
     ].join('\n');
 }
 

@@ -46,9 +46,9 @@ test('newspic image prompt uses the same ten items as the primary display', () =
     });
 
     assert.match(prompt, /小元说 AI日报/);
-    assert.match(prompt, /图片文字清单/);
-    assert.match(prompt, /逐条呈现/);
-    assert.match(prompt, /不得新增、替换、改写/);
+    assert.match(prompt, /内容主题清单/);
+    assert.match(prompt, /后期准确排版/);
+    assert.match(prompt, /不要引入清单之外/);
     assert.match(prompt, /方形 1:1/);
     assert.match(prompt, new RegExp(content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(prompt, /Anthropic 提交 IPO/);

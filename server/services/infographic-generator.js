@@ -12,6 +12,8 @@ const DEFAULT_RESPONSE_FORMAT = 'url';
 const DEFAULT_TIMEOUT_MS = 600000;
 const MAX_WECHAT_IMAGE_BYTES = 1024 * 1024;
 const IMAGE_PROMPT_PREFIX = '请生成一幅高质量中文 AI 日报一览图，图片为主要展示内容，方形 1:1 构图。';
+const NEWS_IMAGE_WIDTH = 1024;
+const NEWS_IMAGE_HEIGHT = 1024;
 
 function buildImagePromptSystemMessage() {
     return IMAGE_PROMPT_PREFIX;
@@ -19,6 +21,148 @@ function buildImagePromptSystemMessage() {
 
 function buildImagePrompt(prompt) {
     return `${IMAGE_PROMPT_PREFIX}\n\n${String(prompt || '').trim()}`;
+}
+
+function escapeXml(value) {
+    return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+
+function formatOverlayDate(date) {
+    const match = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+        return String(date || '').trim();
+    }
+    return `${match[1]}.${match[2]}.${match[3]}`;
+}
+
+function measureDisplayUnits(text) {
+    return Array.from(String(text || '')).reduce((total, char) => total + (/[\x00-\x7F]/.test(char) ? 1 : 2), 0);
+}
+
+function wrapDisplayText(text, maxUnits, maxLines) {
+    const words = Array.from(String(text || '').replace(/\s+/g, ' ').trim());
+    const lines = [];
+    let current = '';
+
+    for (const char of words) {
+        const next = `${current}${char}`;
+        if (current && measureDisplayUnits(next) > maxUnits) {
+            lines.push(current);
+            current = char;
+            if (lines.length >= maxLines) {
+                break;
+            }
+        } else {
+            current = next;
+        }
+    }
+
+    if (current && lines.length < maxLines) {
+        lines.push(current);
+    }
+
+    if (lines.length > 0 && words.join('').length > lines.join('').length) {
+        const lastIndex = lines.length - 1;
+        lines[lastIndex] = `${lines[lastIndex].replace(/[，。；、:：,.!?！？\s]+$/g, '')}...`;
+    }
+
+    return lines;
+}
+
+function parseNewspicContent(content) {
+    return String(content || '')
+        .split(/\n\s*\n/)
+        .map((block) => block.replace(/\s+/g, ' ').trim())
+        .filter(Boolean)
+        .slice(0, 10)
+        .map((block, index) => {
+            const match = block.match(/^(\d+)\.\s*(.*?)[：:]\s*(.+)$/);
+            if (!match) {
+                return {
+                    number: String(index + 1),
+                    title: block,
+                    keyPoint: ''
+                };
+            }
+            return {
+                number: match[1],
+                title: match[2].trim(),
+                keyPoint: match[3].trim()
+            };
+        });
+}
+
+function renderTextLines(lines, { x, y, fontSize, lineHeight, fill, weight = 400 }) {
+    const tspans = lines.map((line, index) => (
+        `<tspan x="${x}" dy="${index === 0 ? 0 : lineHeight}">${escapeXml(line)}</tspan>`
+    )).join('');
+    return `<text x="${x}" y="${y}" font-size="${fontSize}" font-weight="${weight}" fill="${fill}">${tspans}</text>`;
+}
+
+function buildDailyNewspicOverlaySvg({ date, content }) {
+    const items = parseNewspicContent(content);
+    const cards = items.map((item, index) => {
+        const column = index % 2;
+        const row = Math.floor(index / 2);
+        const x = 54 + column * 468;
+        const y = 150 + row * 162;
+        const titleLines = wrapDisplayText(item.title, 34, 2);
+        const keyPointLines = wrapDisplayText(item.keyPoint, 40, titleLines.length > 1 ? 2 : 3);
+
+        return [
+            `<rect x="${x}" y="${y}" width="448" height="146" rx="24" fill="rgba(8,14,36,0.72)" stroke="rgba(160,190,255,0.36)" stroke-width="1.2"/>`,
+            `<circle cx="${x + 35}" cy="${y + 36}" r="20" fill="#7c3aed"/>`,
+            `<text x="${x + 35}" y="${y + 43}" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">${escapeXml(item.number)}</text>`,
+            renderTextLines(titleLines, {
+                x: x + 68,
+                y: y + 34,
+                fontSize: 21,
+                lineHeight: 26,
+                fill: '#ffffff',
+                weight: 800
+            }),
+            renderTextLines(keyPointLines, {
+                x: x + 26,
+                y: y + 88,
+                fontSize: 17,
+                lineHeight: 23,
+                fill: '#dbeafe',
+                weight: 500
+            })
+        ].join('\n');
+    }).join('\n');
+
+    return Buffer.from(`
+<svg width="${NEWS_IMAGE_WIDTH}" height="${NEWS_IMAGE_HEIGHT}" viewBox="0 0 ${NEWS_IMAGE_WIDTH} ${NEWS_IMAGE_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", Arial, sans-serif; }
+  </style>
+  <rect width="1024" height="1024" fill="rgba(3,7,18,0.42)"/>
+  <rect x="34" y="32" width="956" height="960" rx="38" fill="rgba(4,10,28,0.38)" stroke="rgba(255,255,255,0.18)" stroke-width="1.4"/>
+  <text x="58" y="88" font-size="44" font-weight="900" fill="#ffffff">小元说 AI日报</text>
+  <text x="58" y="122" font-size="22" font-weight="600" fill="#bfdbfe">${escapeXml(formatOverlayDate(date))}</text>
+  <text x="810" y="92" font-size="20" font-weight="700" fill="#c4b5fd">10 条核心信息</text>
+  <line x1="58" y1="132" x2="966" y2="132" stroke="rgba(191,219,254,0.42)" stroke-width="1"/>
+  ${cards}
+</svg>`);
+}
+
+async function composeDailyNewspicImage({ backgroundBuffer, date, content, compressImage = compressImageForWechat }) {
+    const overlaySvg = buildDailyNewspicOverlaySvg({ date, content });
+    const composed = await sharp(backgroundBuffer)
+        .rotate()
+        .resize(NEWS_IMAGE_WIDTH, NEWS_IMAGE_HEIGHT, { fit: 'cover' })
+        .modulate({ brightness: 0.64, saturation: 0.9 })
+        .composite([{ input: overlaySvg, top: 0, left: 0 }])
+        .jpeg({ quality: 84, mozjpeg: true })
+        .toBuffer();
+
+    return ensureWechatImageSize(composed, compressImage);
 }
 
 async function compressImageForWechat(imageBuffer) {
@@ -146,5 +290,7 @@ function createInfographicGenerator({ config = {}, fetchImpl = fetch, compressIm
 module.exports = {
     buildImagePrompt,
     buildImagePromptSystemMessage,
+    buildDailyNewspicOverlaySvg,
+    composeDailyNewspicImage,
     createInfographicGenerator
 };
