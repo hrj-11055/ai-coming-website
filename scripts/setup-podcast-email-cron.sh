@@ -7,6 +7,14 @@ LOG_FILE="$ROOT_DIR/logs/podcast-email-cron.log"
 ERR_FILE="$ROOT_DIR/logs/podcast-email-cron.err.log"
 CRON_EXPR="*/10 * * * *"
 MARKER="# ai-coming podcast email retry job"
+FEATURE_FLAG="$(printf '%s' "${PODCAST_EMAIL_CRON_ENABLED:-false}" | tr '[:upper:]' '[:lower:]')"
+
+if [ "$FEATURE_FLAG" != "true" ]; then
+  echo "Podcast email cron is legacy and disabled by default." >&2
+  echo "The current downstream workflow is the WeChat daily newspic draft cron." >&2
+  echo "Set PODCAST_EMAIL_CRON_ENABLED=true only if you explicitly need the legacy retry job." >&2
+  exit 1
+fi
 
 mkdir -p "$ROOT_DIR/logs"
 
