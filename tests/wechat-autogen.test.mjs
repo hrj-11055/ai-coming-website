@@ -91,7 +91,8 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
 
     assert.equal(generatedPrompts.length, 1);
     assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图/);
-    assert.match(generatedPrompts[0], /只展示以下 10 条核心信息/);
+    assert.match(generatedPrompts[0], /图片文字清单/);
+    assert.match(generatedPrompts[0], /不得新增、替换、改写/);
     assert.match(generatedPrompts[0], /百度升级智能体开发平台/);
     assert.doesNotMatch(generatedPrompts[0], /第十一条不应出现/);
     assert.doesNotMatch(generatedPrompts[0], /这段播客口播稿/);

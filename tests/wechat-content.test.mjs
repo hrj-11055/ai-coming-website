@@ -84,7 +84,9 @@ test('daily newspic content contains only ten core items and image prompt is vis
     assert.match(prompt, /第一条核心信息/);
     assert.match(prompt, /第十条核心信息/);
     assert.match(prompt, /高质量中文 AI 日报一览图/);
-    assert.match(prompt, /只展示以下 10 条/);
+    assert.match(prompt, /图片文字清单/);
+    assert.match(prompt, /逐条呈现/);
+    assert.match(prompt, /不得新增、替换、改写/);
     assert.doesNotMatch(prompt, /第十一条核心信息/);
     assert.doesNotMatch(prompt, /播客口播稿/);
 });

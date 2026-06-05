@@ -35,14 +35,22 @@ test('newspic copy contains exactly ten concise core items', () => {
 });
 
 test('newspic image prompt uses the same ten items as the primary display', () => {
-    const prompt = buildDailyNewspicImagePrompt({
+    const content = buildDailyNewspicContent({
         date: '2026-06-04',
         coreItems: CORE_ITEMS
     });
+    const prompt = buildDailyNewspicImagePrompt({
+        date: '2026-06-04',
+        coreItems: CORE_ITEMS,
+        content
+    });
 
     assert.match(prompt, /小元说 AI日报/);
-    assert.match(prompt, /只展示以下 10 条核心信息/);
+    assert.match(prompt, /图片文字清单/);
+    assert.match(prompt, /逐条呈现/);
+    assert.match(prompt, /不得新增、替换、改写/);
     assert.match(prompt, /方形 1:1/);
+    assert.match(prompt, new RegExp(content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(prompt, /Anthropic 提交 IPO/);
     assert.match(prompt, /Meta 调整 AI 组织/);
     assert.doesNotMatch(prompt, /第十一条不应出现/);

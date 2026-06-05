@@ -223,7 +223,7 @@ async function maybePublishNewspic({
     }
 
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v3-square-ten',
+        version: 'daily-newspic-v4-square-ten-verbatim-image-text',
         date,
         coreItems
     }));
@@ -232,7 +232,7 @@ async function maybePublishNewspic({
     }
 
     const content = buildDailyNewspicContent({ date, coreItems });
-    const prompt = buildDailyNewspicImagePrompt({ date, coreItems });
+    const prompt = buildDailyNewspicImagePrompt({ date, coreItems, content });
     const imageBuffer = await infographicGenerator.generateInfographic({ prompt });
     const stagingPath = path.join(stagingDir, `${date}-newspic.txt`);
     const imagePath = path.join(stagingDir, `${date}-newspic.jpg`);
