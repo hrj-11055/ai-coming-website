@@ -7,6 +7,7 @@ const {
     buildDailyNewspicOverlaySvg,
     buildImagePromptSystemMessage,
     composeDailyNewspicImage,
+    createDailyNewspicFallbackBackground,
     createInfographicGenerator
 } = require('../server/services/infographic-generator.js');
 
@@ -101,6 +102,13 @@ test('composeDailyNewspicImage overlays exact newspic text onto the final image'
         date: '2026-06-05',
         content
     });
+    assert.ok(Buffer.isBuffer(buffer));
+    assert.equal(buffer.subarray(0, 2).toString('hex'), 'ffd8');
+    assert.ok(buffer.length <= 1024 * 1024);
+});
+
+test('createDailyNewspicFallbackBackground creates a WeChat-sized JPEG background', async () => {
+    const buffer = await createDailyNewspicFallbackBackground();
     assert.ok(Buffer.isBuffer(buffer));
     assert.equal(buffer.subarray(0, 2).toString('hex'), 'ffd8');
     assert.ok(buffer.length <= 1024 * 1024);

@@ -147,10 +147,10 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
     assert.equal(savedAfterSkip.newspic.last_image_media_id, 'image-media-1');
 });
 
-test('runWechatAutogenOnce never publishes a text-only newspic draft when image generation fails', async () => {
+test('runWechatAutogenOnce falls back to a composed image when TokenGo image generation fails', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-newspic-image-fail-'));
     const reportDir = path.join(root, 'report');
-    let publishCalls = 0;
+    const uploads = [];
 
     writeJson(path.join(reportDir, '2026-06-04.json'), {
         articles: [
@@ -167,7 +167,7 @@ test('runWechatAutogenOnce never publishes a text-only newspic draft when image 
         ]
     });
 
-    await assert.rejects(() => runWechatAutogenOnce({
+    const result = await runWechatAutogenOnce({
         now: new Date('2026-06-04T02:00:00.000Z'),
         reportDir,
         podcastMetadataDir: path.join(root, 'podcasts'),
@@ -180,14 +180,31 @@ test('runWechatAutogenOnce never publishes a text-only newspic draft when image 
                 throw new Error('image generation unavailable');
             }
         },
+        fallbackBackgroundCreator: async ({ content }) => {
+            assert.match(content, /第一条/);
+            return Buffer.from('fallback-background');
+        },
+        imageComposer: async ({ backgroundBuffer, content }) => {
+            assert.deepEqual(backgroundBuffer, Buffer.from('fallback-background'));
+            assert.match(content, /第十条/);
+            return Buffer.from('fallback-composed-image');
+        },
         publisher: {
-            async publishNewspicDraft() {
-                publishCalls += 1;
+            async publishNewspicDraft(payload) {
+                uploads.push(payload);
+                return {
+                    media_id: 'fallback-draft-1',
+                    image_media_id: 'fallback-image-1'
+                };
             }
         }
-    }), /image generation unavailable/);
+    });
 
-    assert.equal(publishCalls, 0);
+    assert.equal(result.newspic.action, 'uploaded');
+    assert.equal(result.newspic.imageSource, 'fallback');
+    assert.equal(result.newspic.imageError, 'image generation unavailable');
+    assert.equal(uploads.length, 1);
+    assert.deepEqual(uploads[0].imageBuffer, Buffer.from('fallback-composed-image'));
 });
 
 test('runWechatAutogenOnce skips report upload when today report json is missing', async () => {

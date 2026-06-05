@@ -24,6 +24,7 @@ const { createWechatPodcastFormatter } = require('../server/services/wechat-podc
 const { createWechatPublisher } = require('../server/services/wechat-publisher');
 const {
     composeDailyNewspicImage,
+    createDailyNewspicFallbackBackground,
     createInfographicGenerator
 } = require('../server/services/infographic-generator');
 
@@ -206,6 +207,7 @@ async function maybePublishNewspic({
     publisher,
     infographicGenerator,
     imageComposer = composeDailyNewspicImage,
+    fallbackBackgroundCreator = createDailyNewspicFallbackBackground,
     enabledTypes
 }) {
     if (!enabledTypes.has('newspic')) {
@@ -227,7 +229,7 @@ async function maybePublishNewspic({
     }
 
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v5-ai-background-exact-text-overlay',
+        version: 'daily-newspic-v6-fallback-background-exact-text-overlay',
         date,
         coreItems
     }));
@@ -237,7 +239,17 @@ async function maybePublishNewspic({
 
     const content = buildDailyNewspicContent({ date, coreItems });
     const prompt = buildDailyNewspicImagePrompt({ date, coreItems, content });
-    const backgroundBuffer = await infographicGenerator.generateInfographic({ prompt });
+    let imageSource = 'tokengo';
+    let imageError = null;
+    let backgroundBuffer;
+    try {
+        backgroundBuffer = await infographicGenerator.generateInfographic({ prompt });
+    } catch (error) {
+        imageSource = 'fallback';
+        imageError = error.message;
+        console.warn(`[wechat-autogen] newspic TokenGo image failed, using fallback background: ${error.message}`);
+        backgroundBuffer = await fallbackBackgroundCreator({ date, content, coreItems });
+    }
     const imageBuffer = await imageComposer({
         backgroundBuffer,
         date,
@@ -261,6 +273,8 @@ async function maybePublishNewspic({
         stagingPath,
         imagePath,
         coreItems,
+        imageSource,
+        imageError,
         mediaId: publishResult.media_id || null,
         imageMediaId: publishResult.image_media_id || null
     });
@@ -593,6 +607,7 @@ async function runWechatAutogenOnce(options = {}) {
             }
         },
         imageComposer: options.imageComposer || composeDailyNewspicImage,
+        fallbackBackgroundCreator: options.fallbackBackgroundCreator || createDailyNewspicFallbackBackground,
         enabledTypes
     });
     const reportResult = await maybePublishReport({

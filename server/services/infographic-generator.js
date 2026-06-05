@@ -149,7 +149,49 @@ function buildDailyNewspicOverlaySvg({ date, content }) {
   <text x="810" y="92" font-size="20" font-weight="700" fill="#c4b5fd">10 条核心信息</text>
   <line x1="58" y1="132" x2="966" y2="132" stroke="rgba(191,219,254,0.42)" stroke-width="1"/>
   ${cards}
+    </svg>`);
+}
+
+async function createDailyNewspicFallbackBackground({ compressImage = compressImageForWechat } = {}) {
+    const svg = Buffer.from(`
+<svg width="${NEWS_IMAGE_WIDTH}" height="${NEWS_IMAGE_HEIGHT}" viewBox="0 0 ${NEWS_IMAGE_WIDTH} ${NEWS_IMAGE_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06112f"/>
+      <stop offset="48%" stop-color="#27135f"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="22%" cy="18%" r="58%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.62"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="82%" cy="30%" r="54%">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.54"/>
+      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect width="1024" height="1024" fill="url(#glow1)"/>
+  <rect width="1024" height="1024" fill="url(#glow2)"/>
+  <g opacity="0.16" stroke="#bfdbfe" stroke-width="1">
+    <path d="M80 220 C260 80 410 250 570 120 S850 100 970 210" fill="none"/>
+    <path d="M30 770 C220 620 360 840 540 690 S820 650 990 800" fill="none"/>
+    <path d="M120 110 L910 910" />
+    <path d="M930 130 L120 920" />
+  </g>
+  <g opacity="0.22" fill="#ffffff">
+    <circle cx="150" cy="180" r="3"/>
+    <circle cx="860" cy="180" r="4"/>
+    <circle cx="760" cy="780" r="3"/>
+    <circle cx="270" cy="850" r="4"/>
+    <circle cx="520" cy="120" r="2.5"/>
+    <circle cx="920" cy="610" r="2.5"/>
+  </g>
 </svg>`);
+    const buffer = await sharp(svg)
+        .jpeg({ quality: 90, mozjpeg: true })
+        .toBuffer();
+    return ensureWechatImageSize(buffer, compressImage);
 }
 
 async function composeDailyNewspicImage({ backgroundBuffer, date, content, compressImage = compressImageForWechat }) {
@@ -292,5 +334,6 @@ module.exports = {
     buildImagePromptSystemMessage,
     buildDailyNewspicOverlaySvg,
     composeDailyNewspicImage,
+    createDailyNewspicFallbackBackground,
     createInfographicGenerator
 };
