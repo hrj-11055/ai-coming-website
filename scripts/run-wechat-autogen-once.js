@@ -664,8 +664,8 @@ async function runWechatAutogenOnce(options = {}) {
         last_uploaded_fingerprint: newspicResult.action === 'uploaded' ? newspicResult.fingerprint : (state.newspic?.last_uploaded_fingerprint || null),
         last_result: newspicResult.action,
         last_reason: newspicResult.reason,
-        last_media_id: newspicResult.mediaId || null,
-        last_image_media_id: newspicResult.imageMediaId || null,
+        last_media_id: newspicResult.mediaId || state.newspic?.last_media_id || null,
+        last_image_media_id: newspicResult.imageMediaId || state.newspic?.last_image_media_id || null,
         last_error: null
     };
     state.markdown = {
@@ -710,7 +710,11 @@ async function runWechatAutogenOnce(options = {}) {
 if (require.main === module) {
     runWechatAutogenOnce()
         .then((result) => {
-            if (result.action === 'skip' || hasFlag('--verbose')) {
+            const hasUpload = result.newspic?.action === 'uploaded'
+                || result.report?.action === 'uploaded'
+                || result.podcast?.action === 'uploaded'
+                || result.podcastAudio?.action === 'sent';
+            if (result.action === 'skip' || hasUpload || hasFlag('--verbose')) {
                 console.log(`[wechat-autogen] ${JSON.stringify(result)}`);
             }
             process.exit(0);

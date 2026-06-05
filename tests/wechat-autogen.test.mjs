@@ -112,6 +112,30 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
     const savedState = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8'));
     assert.equal(savedState.newspic.last_media_id, 'newspic-draft-1');
     assert.equal(savedState.newspic.last_image_media_id, 'image-media-1');
+
+    const second = await runWechatAutogenOnce({
+        now: new Date('2026-06-04T02:01:00.000Z'),
+        reportDir,
+        podcastMetadataDir,
+        stateFile: path.join(root, 'state.json'),
+        stagingDir: path.join(root, 'staging'),
+        enabled: true,
+        enabledTypes: ['newspic'],
+        infographicGenerator: {
+            async generateInfographic() {
+                throw new Error('should skip before generating image');
+            }
+        },
+        publisher: {
+            async publishNewspicDraft() {
+                throw new Error('should not publish duplicate newspic');
+            }
+        }
+    });
+    const savedAfterSkip = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8'));
+    assert.equal(second.newspic.reason, 'same_fingerprint');
+    assert.equal(savedAfterSkip.newspic.last_media_id, 'newspic-draft-1');
+    assert.equal(savedAfterSkip.newspic.last_image_media_id, 'image-media-1');
 });
 
 test('runWechatAutogenOnce never publishes a text-only newspic draft when image generation fails', async () => {
