@@ -10,9 +10,8 @@ const BAOYU_RELEASE_SKILL_URL = 'https://github.com/JimLiu/baoyu-skills/tree/mai
 const OPENAI_SKILLS_REPO_URL = 'https://github.com/openai/skills';
 const NOTEBOOKLM_REPO_URL = 'https://github.com/teng-lin/notebooklm-py';
 const NUTRIENT_MCP_REPO_URL = 'https://github.com/PSPDFKit/nutrient-dws-mcp-server';
-const HERMES_AGENT_REPO_URL = 'https://github.com/NousResearch/hermes-agent';
-const HERMES_AGENT_POWERPOINT_URL = 'https://skillsmp.com/zh/skills/nousresearch-hermes-agent-skills-productivity-powerpoint-skill-md';
 const PPT_MASTER_REPO_URL = 'https://github.com/hugohe3/ppt-master';
+const VERCEL_LABS_SKILLS_URL = 'https://github.com/vercel-labs/skills';
 
 const addSkillCommand = (url) => `npx add-skill ${url}`;
 const addSkillsRepoCommand = (repo) => `npx skills add ${repo}`;
@@ -138,6 +137,21 @@ const BASE_SKILL_MODULES = [
                 useCases: ['选库选型', '调研现成方案', '减少重复开发'],
                 gettingStarted: ['先写出任务边界', '明确是否接受第三方依赖', '优先比较成熟方案的维护成本'],
                 relatedSlugs: ['market-research', 'coding-standards']
+            },
+            {
+                name: 'find-skills',
+                slug: 'find-skills',
+                headline: '从开放 Skill 生态里发现、验证并安装适合当前任务的能力包。',
+                scenario: '适合你想扩展 Agent 能力、寻找特定领域 Skill，或判断某个常见任务是否已有成熟工作流时使用。',
+                overview: 'find-skills 是 Vercel Labs 提供的 Skill 发现入口。它会先理解任务领域和具体目标，再从 skills.sh 排行榜或 Skills CLI 搜索候选项，并结合安装量、来源信誉和 GitHub stars 做质量判断。相比只返回一串搜索结果，它更重视推荐前验证，并会给出可直接使用的安装命令和详情链接。',
+                useCases: ['查找适合特定任务的 Skill', '比较候选 Skill 的质量和可信度', '生成可直接运行的安装命令', '在没有合适 Skill 时判断是否应该创建一个新 Skill'],
+                gettingStarted: ['先说明任务领域和具体目标，避免只给一个过宽关键词', '优先查看 skills.sh 排行榜，再使用 `npx skills find` 做关键词搜索', '推荐前核查安装量、来源信誉和 GitHub stars', '确认来源可靠后，再执行全局安装命令'],
+                installCommand: 'npx skills add vercel-labs/skills --skill "find-skills" --yes',
+                installHint: '安装后，当你询问“有没有能做某件事的 Skill”时，Agent 可以按这套流程搜索、验证并推荐。',
+                skillDocPurpose: '这个 SKILL.md 把 Skill 发现过程整理成一套可复用工作流：先理解需求，再看排行榜和 CLI 搜索结果，随后检查安装量、来源信誉与 GitHub stars，最后才推荐或安装。它能避免 Agent 只凭名称推荐未经验证的 Skill。',
+                relatedSlugs: ['search-first', 'skill-creator'],
+                sourceUrl: `${VERCEL_LABS_SKILLS_URL}/tree/main/skills/find-skills`,
+                sourceLabel: 'GitHub'
             },
             {
                 name: 'continuous-learning-v2',
@@ -295,7 +309,7 @@ const BASE_SKILL_MODULES = [
                 overview: '它更偏演示内容生成，帮助你从故事线、页序到页面内容密度一次成型。',
                 useCases: ['演示稿生成', '课程幻灯片', '路演视觉材料'],
                 gettingStarted: ['先写一版目录型提纲', '每页只保留一个主信息点', '给封面和结尾页留足识别度'],
-                relatedSlugs: ['pptx', 'baoyu-infographic']
+                relatedSlugs: ['ppt-master', 'baoyu-infographic']
             },
             {
                 name: 'speech',
@@ -502,7 +516,7 @@ const BASE_SKILL_MODULES = [
                 overview: '它帮助你保持 deck、数据表和 narrative 一致，避免“PPT 一个说法、邮件另一个说法”。',
                 useCases: ['融资 deck', '募资 memo', '商业故事梳理'],
                 gettingStarted: ['先统一一句话故事线', '把关键数字固定为同一口径', '确保材料之间前后不打架'],
-                relatedSlugs: ['investor-outreach', 'pptx']
+                relatedSlugs: ['investor-outreach', 'ppt-master']
             },
             {
                 name: 'baoyu-post-to-wechat',
@@ -560,19 +574,6 @@ const BASE_SKILL_MODULES = [
                 relatedSlugs: ['docx', 'nutrient-document-processing']
             },
             {
-                name: 'pptx',
-                slug: 'pptx',
-                headline: '支持从零创建、基于模板生成或深度编辑现有 PowerPoint，并覆盖版式、备注、批注与结构分析。',
-                scenario: '适合提案、路演、课件、模板化汇报，以及任何需要读写 `.pptx` 文件的场景。',
-                overview: '这个 Skill 的重点不是“帮你随便做几页 PPT”，而是把 `.pptx` 当成一个可以分析和编辑的正式文档格式来处理。它既能从零生成演示稿，也能基于模板快速改稿，还能直接处理现有演示文稿里的文本、布局、主题配色、讲者备注和批注等内容。如果任务已经涉及 `.pptx` 文件，这个 Skill 会明显比通用写作式提示更靠谱。',
-                useCases: ['从零创建新的 PowerPoint 演示稿', '基于现有模板批量替换内容', '编辑已有 `.pptx` 的文案、布局、备注或批注', '提取演示文稿中的文本、讲稿和结构信息', '分析主题配色、字体和母版结构'],
-                gettingStarted: ['如果只是读取内容，先把 `.pptx` 转成 markdown，快速看清文本层结构', '如果要处理备注、批注、布局、母版或复杂格式，优先解包 OOXML 再编辑', '如果要生成新的 PPT，先定设计方向，再走 HTML 转 PPT 和最终缩略图校验流程'],
-                installCommand: 'npx skills add anthropics/skills --skill "pptx" --yes',
-                installHint: '复制到终端安装后，Agent 在遇到 `.pptx`、slides、presentation、deck 等任务时，就更容易走对 PowerPoint 专项工作流。',
-                skillDocPurpose: 'Skills.md（有些仓库里也会写成 SKILL.md）主要是给 AI Agent 看的技能说明文件。它的作用是告诉 Agent：什么时候应该调用这个 pptx Skill、先读哪些辅助文档、优先走哪套 PowerPoint 工作流，以及在读写 `.pptx` 时要遵守哪些边界。对 pptx 这种强流程型 Skill 来说，Skills.md 的价值就在于让 Agent 不只是“会生成内容”，而是知道该怎么正确读取、编辑、生成并校验演示文稿。',
-                relatedSlugs: ['baoyu-slide-deck', 'investor-materials']
-            },
-            {
                 name: 'PPT Master',
                 slug: 'ppt-master',
                 headline: '把 PDF、DOCX、图片或粘贴文本变成真正可编辑的 PowerPoint，支持原生形状、动画、讲者备注、音频旁白和模板填充。',
@@ -586,24 +587,9 @@ const BASE_SKILL_MODULES = [
                 ),
                 installHint: '先用 cross-agent CLI 安装 PPT Master skill；如果你是从 GitHub 克隆完整仓库，也可以直接在仓库根目录执行依赖安装。',
                 skillDocPurpose: 'PPT Master 的 SKILL.md 负责把“材料输入 -> 设计规格确认 -> SVG/视觉生成 -> 原生 PPTX 导出 -> 结果校验”的流程固定下来。它的价值在于让 Agent 不只是写一份大纲，而是按可复检、可编辑、可归档的方式交付真正的 PowerPoint 文件。',
-                relatedSlugs: ['pptx', 'powerpoint', 'docx'],
+                relatedSlugs: ['docx', 'pdf', 'investor-materials'],
                 sourceUrl: PPT_MASTER_REPO_URL,
                 sourceLabel: 'GitHub'
-            },
-            {
-                name: 'powerpoint',
-                slug: 'powerpoint',
-                headline: '偏重读取、分析和批量改稿的 PowerPoint 工作流，适合直接处理现有 `.pptx`，并保留讲者备注与整套幻灯结构。',
-                scenario: '适合复盘现有 deck、抽取讲稿、批量替换文案、整理 speaker notes，或把已有 PowerPoint 重新组织成可继续编辑的版本。',
-                overview: '这个 Skill 更像一个“PowerPoint 深加工入口”，重点不是从零做一套新 PPT，而是围绕现有 `.pptx` 做提取、分析、批量修改和结构整理。结合上游文档里对 `python-pptx` 与 speaker notes 的强调，它特别适合你已经拿到演示稿文件，需要快速读出每页内容、备注和结构，再继续重写或重排的场景。',
-                useCases: ['读取现有 `.pptx` 的标题、正文和讲者备注', '批量改写演示稿中的文案与页序', '把现有 deck 提炼成结构提纲或会议讲稿', '从演示文稿中抽取表格、图片占位和页面信息', '为已有 PPT 做信息重组，而不是从零生成'],
-                gettingStarted: ['先明确你是要“读内容”、还是要“改稿”，这会直接影响处理路径', '如果手里已经有 `.pptx` 文件，先抽取每页标题、正文和备注，快速确认结构', '开始批量改动前，先定义哪些内容必须保留，例如页序、品牌页、备注或固定结论页'],
-                installCommand: addSkillsRepoCommand('NousResearch/hermes-agent'),
-                installHint: 'SkillsMP 页面给出的安装入口是整仓安装 `NousResearch/hermes-agent`。装完之后，再按 `powerpoint` 相关指令进入 PowerPoint 专项流程。',
-                skillDocPurpose: '这个 Skill 的说明文件更像一张 PowerPoint 处理路线图：它会把任务识别成“读取现有 deck / 提取 speaker notes / 批量编辑演示稿”的文档型工作，而不是泛泛地生成几页新 PPT。它的价值在于让 Agent 优先用对 `.pptx` 和备注结构的处理方式，再去做内容改写。',
-                relatedSlugs: ['pptx', 'docx', 'investor-materials'],
-                sourceUrl: HERMES_AGENT_POWERPOINT_URL,
-                sourceLabel: 'SkillsMP'
             },
             {
                 name: 'xlsx',
@@ -1201,13 +1187,6 @@ const SKILL_DETAIL_OVERRIDES = {
         ],
         examplePrompt: '帮我把 report1.pdf 和 report2.pdf 合并成一个文件，然后提取里面的表格数据导出到 Excel。'
     },
-    pptx: {
-        sourceUrl: `${ANTHROPIC_SKILLS_BASE_URL}/pptx`,
-        screenshots: [
-            { src: '/pic/skills/pptx-output.png', caption: '从零生成的演示文稿效果' }
-        ],
-        examplePrompt: '帮我基于这份市场调研材料，创建一个 5 页的幻灯片，配色用深蓝色主题，每页包含一个核心观点和配图。'
-    },
     'ppt-master': {
         sourceUrl: PPT_MASTER_REPO_URL,
         sourceLabel: 'GitHub',
@@ -1220,25 +1199,6 @@ const SKILL_DETAIL_OVERRIDES = {
             { src: '/pic/skills/ppt-master-indie-bookstore-zine.png', caption: '官方示例：Risograph Zine 风，适合文化和生活方式内容' }
         ],
         examplePrompt: '请用 PPT Master 根据 projects/q3-report/sources/report.pdf 生成一份 8-10 页 16:9 可编辑 PPTX，风格偏数据新闻，每页一个核心观点，并补充 speaker notes。'
-    },
-    powerpoint: {
-        installCommand: addSkillsRepoCommand('NousResearch/hermes-agent'),
-        installHint: '上游 SkillsMP 页面展示的是整仓安装 `NousResearch/hermes-agent`；这个 PowerPoint skill 属于其中的 productivity 目录能力。',
-        sourceUrl: HERMES_AGENT_POWERPOINT_URL,
-        sourceLabel: 'SkillsMP',
-        screenshots: [
-            { src: '/pic/skills/powerpoint-01.webp', caption: 'PowerPoint Skill 实操截图 01' },
-            { src: '/pic/skills/powerpoint-02.webp', caption: 'PowerPoint Skill 实操截图 02' },
-            { src: '/pic/skills/powerpoint-03.webp', caption: 'PowerPoint Skill 实操截图 03' },
-            { src: '/pic/skills/powerpoint-04.webp', caption: 'PowerPoint Skill 实操截图 04' },
-            { src: '/pic/skills/powerpoint-05.webp', caption: 'PowerPoint Skill 实操截图 05' },
-            { src: '/pic/skills/powerpoint-06.webp', caption: 'PowerPoint Skill 实操截图 06' },
-            { src: '/pic/skills/powerpoint-07.webp', caption: 'PowerPoint Skill 实操截图 07' },
-            { src: '/pic/skills/powerpoint-08.webp', caption: 'PowerPoint Skill 实操截图 08' },
-            { src: '/pic/skills/powerpoint-09.webp', caption: 'PowerPoint Skill 实操截图 09' },
-            { src: '/pic/skills/powerpoint-10.webp', caption: 'PowerPoint Skill 实操截图 10' }
-        ],
-        examplePrompt: '帮我读取这份 quarterly-review.pptx，按“页码 / 标题 / 关键结论 / speaker notes”输出结构化摘要，然后把语气改得更适合董事会汇报。'
     },
     xlsx: {
         installCommand: 'npx skills add anthropics/skills --skill "xlsx" --yes',

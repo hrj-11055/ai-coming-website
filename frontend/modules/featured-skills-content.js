@@ -33,16 +33,16 @@ export const FEATURED_SKILL_GROUPS = [
         title: '文档处理',
         icon: 'fa-solid fa-file-lines',
         tone: 'orange',
-        description: '6 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。',
-        skillSlugs: ['docx', 'pptx', 'ppt-master', 'powerpoint', 'pdf', 'xlsx']
+        description: '4 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。',
+        skillSlugs: ['docx', 'ppt-master', 'pdf', 'xlsx']
     },
     {
         id: 'efficiency-tools',
         title: '效率工具',
         icon: 'fa-solid fa-bolt',
         tone: 'amber',
-        description: '先把需求想清楚、把资料查清楚，再把高频经验沉淀成可复用 Skill，会比直接硬做更稳。',
-        skillSlugs: ['brainstorming', 'search-first', 'creator-skill']
+        description: '先把需求想清楚、找到合适 Skill 和现成方案，再把高频经验沉淀成可复用能力。',
+        skillSlugs: ['brainstorming', 'find-skills', 'search-first', 'creator-skill']
     },
     {
         id: 'research-content',
@@ -89,32 +89,6 @@ export const FEATURED_SKILL_CONTENT = {
             '涉及复杂排版时，最后一定要做一次可视化复检。'
         ]
     },
-    pptx: {
-        name: 'PPT 演示文稿生成',
-        statusLabel: '已实测',
-        featuredBadge: '精选 16',
-        beginnerNote: '先用 5 页左右的小型演示稿试一次，确认标题页、正文页和数据页都能按预期生成。',
-        preparation: [
-            '先确定 PPT 的用途，是路演、汇报、培训还是提案。',
-            '提前想好页数范围和每页核心信息，不要让一次 prompt 想表达太多。',
-            '如果你有品牌色、模板或固定结构，直接写进提示词里。'
-        ],
-        promptExample: `使用 pptx 技能创建一份“2025 年度市场复盘”PPT：
-1. 首页：2025 市场表现年度总结。
-2. 核心指标页：展示用户增长、留存率、获客成本（CAC）。
-3. 渠道分析页：对比社媒、搜索和线下活动的转化率。
-4. 竞品对比页：突出我们的市场占有率优势。
-5. 2026 战略方向页：总结品牌升级与全球化布局。`,
-        resultSummary: 'Skill 会产出可继续编辑的 `.pptx` 演示文稿，适合后续再细调文案、顺序和样式。',
-        resultBullets: [
-            '适合先快速搭出结构完整的演示稿骨架。',
-            '如果每页要求写得清楚，生成效果会明显更稳。',
-            '生成后建议快速过一遍标题长度、图表占位和每页信息密度。'
-        ],
-        notes: [
-            '如果后续还要套品牌模板，先让 Skill 出内容版，再做模板迁移会更省力。'
-        ]
-    },
     'ppt-master': {
         name: 'PPT Master',
         statusLabel: '新增收录',
@@ -139,33 +113,7 @@ export const FEATURED_SKILL_CONTENT = {
         notes: [
             '上游明确强调它是 harness，不是“许愿池”；结果质量取决于模型、输入材料和后续打磨。',
             '通过 `npx skills add hugohe3/ppt-master` 安装时主要拉取 skill 文件，后处理脚本仍需要在安装位置补 `pip install -r requirements.txt`。',
-            '它和官方 `pptx` Skill 的区别是：PPT Master 更像一整套从材料分析、视觉设计、SVG 生成到 PPTX 导出的完整流水线。'
-        ]
-    },
-    powerpoint: {
-        name: 'PowerPoint 读取与改稿',
-        statusLabel: '已收录',
-        featuredBadge: '精选 16',
-        beginnerNote: '它更适合“先读懂现有 PPT，再继续改”，如果你手里已经有一份 deck，这个入口通常比从零生成更顺手。',
-        preparation: [
-            '先准备一份真实的 `.pptx` 文件，最好带标题页、正文页和讲者备注。',
-            '先想清楚你这次是要抽取结构、提炼讲稿，还是批量改写文案。',
-            '如果有不能动的页面、品牌页或备注内容，提前在提示词里明确写出来。'
-        ],
-        promptExample: `请用 powerpoint skill 读取这份 \`board-review-q2.pptx\`：
-1. 按页输出：页码、标题、3 条以内关键内容、speaker notes。
-2. 找出信息过载的页面，并标注哪些页更适合拆成两页。
-3. 保留原始结论不变，把整套语气改得更适合董事会汇报。
-4. 最后给我一版“建议保留 / 建议重写 / 建议删除”的改稿清单。`,
-        resultSummary: '这个 Skill 更偏向先把现有演示稿“读透”，再输出一份适合继续改稿和重组的结构化结果。',
-        resultBullets: [
-            '适合处理现成 `.pptx`，尤其是带讲者备注和固定页序的 deck。',
-            '相比纯生成型 PPT Skill，它更适合复盘、抽取和批量改稿。',
-            '如果提示词里写清“哪些页不能动”，输出会更接近真实审稿流程。'
-        ],
-        notes: [
-            '来源页被 Cloudflare 拦截，这里的文案是根据你给的 SkillsMP 链接、上游仓库信息，以及站内对该 skill 的交叉引用整理的。',
-            '如果你后面拿到这条 Skill 的完整 SKILL.md，我们可以再把细节补得更贴近原文。'
+            '它是一整套从材料分析、视觉设计、SVG 生成到 PPTX 导出的完整流水线。'
         ]
     },
     pdf: {
@@ -251,6 +199,32 @@ export const FEATURED_SKILL_CONTENT = {
         ],
         notes: [
             '如果你已经很确定要做什么，再用它就不一定划算；它最适合前期定方向。'
+        ]
+    },
+    'find-skills': {
+        name: 'Skill 搜索与安装',
+        statusLabel: '新增收录',
+        featuredBadge: 'Vercel Labs',
+        beginnerNote: '当你觉得某类任务可能已有成熟 Skill 时，先让它帮你查找、验证质量并给出安装命令。',
+        preparation: [
+            '先说清楚任务领域和具体目标，例如 React 性能优化、PR 评审或部署。',
+            '明确你更看重官方来源、安装量，还是某项特定能力。',
+            '安装前检查来源信誉、GitHub stars 和安装量，不要只看搜索结果标题。'
+        ],
+        promptExample: `请使用 find-skills 帮我找一个适合做 React 性能优化的 Skill：
+1. 优先查看 skills.sh 排行榜和官方来源。
+2. 对比候选 Skill 的安装量、来源信誉和 GitHub stars。
+3. 推荐最合适的一项，并给出安装命令和详情链接。
+4. 暂时不要安装，先让我确认。`,
+        resultSummary: '它会把模糊的能力需求转成 Skill 搜索，并在推荐前检查安装量、来源信誉和 GitHub stars。',
+        resultBullets: [
+            '优先从 skills.sh 排行榜和成熟来源寻找候选项。',
+            '会给出可直接运行的 `npx skills add` 安装命令。',
+            '找不到合适 Skill 时，会建议直接处理任务或创建新 Skill。'
+        ],
+        notes: [
+            '上游建议优先考虑安装量超过 1K 的 Skill，并谨慎评估安装量低于 100 的项目。',
+            '推荐 Skill 前仍需核查源仓库，避免安装来源不明或维护不足的能力包。'
         ]
     },
     'search-first': {

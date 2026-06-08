@@ -30,15 +30,15 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         })),
         [
             { id: 'ai-coding-assistant', title: '最强AI工具', count: 1 },
-            { id: 'document-processing', title: '文档处理', count: 6 },
-            { id: 'efficiency-tools', title: '效率工具', count: 3 },
+            { id: 'document-processing', title: '文档处理', count: 4 },
+            { id: 'efficiency-tools', title: '效率工具', count: 4 },
             { id: 'research-content', title: '研究与内容', count: 3 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 20, 'Expected twenty curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 19, 'Expected nineteen curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -67,12 +67,11 @@ test('skills catalog keeps the requested featured skill order', async () => {
         [
             'claude-code-config',
             'docx',
-            'pptx',
             'ppt-master',
-            'powerpoint',
             'pdf',
             'xlsx',
             'brainstorming',
+            'find-skills',
             'search-first',
             'creator-skill',
             'market-research',
@@ -98,12 +97,11 @@ test('featured skills expose user-facing Chinese names', async () => {
         [
             'Claude Code + MiniMax 安装配置',
             'Word 文档生成',
-            'PPT 演示文稿生成',
             'PPT Master',
-            'PowerPoint 读取与改稿',
             'PDF 文档生成',
             'Excel 表格生成',
             '深度头脑风暴',
+            'Skill 搜索与安装',
             '先搜索再动手',
             'Skill 创建助手',
             '市场调研与竞品分析',
@@ -119,6 +117,16 @@ test('featured skills expose user-facing Chinese names', async () => {
         ],
         'Expected featured skill cards to use Chinese names that explain the skill purpose'
     );
+});
+
+test('replaces duplicate PPT skills with the Vercel Labs find-skills entry', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const findSkills = getSkillBySlug('find-skills');
+
+    assert.equal(getSkillBySlug('pptx'), null);
+    assert.equal(getSkillBySlug('powerpoint'), null);
+    assert.equal(findSkills?.sourceUrl, 'https://github.com/vercel-labs/skills/tree/main/skills/find-skills');
+    assert.match(findSkills?.installCommand || '', /vercel-labs\/skills.+find-skills/);
 });
 
 test('featured skills expose install commands, prompt examples, and non-placeholder source links', async () => {
