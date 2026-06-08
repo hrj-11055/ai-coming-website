@@ -8,7 +8,7 @@ const {
 
 test('getPrimaryNavLabel maps primary html pages to user-facing labels', () => {
     assert.equal(getPrimaryNavLabel('index.html'), '首页');
-    assert.equal(getPrimaryNavLabel('/news.html'), 'AI资讯');
+    assert.equal(getPrimaryNavLabel('/news.html'), '提示生成专家');
     assert.equal(getPrimaryNavLabel('tools.html'), 'AI工具集');
     assert.equal(getPrimaryNavLabel('/skills.html?from=nav'), 'AI 能力库');
     assert.equal(getPrimaryNavLabel('/about.html'), '关于我们');

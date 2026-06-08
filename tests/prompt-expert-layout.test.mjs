@@ -2,14 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
+const html = readFileSync(new URL('../news.html', import.meta.url), 'utf8');
 const indexScript = readFileSync(new URL('../frontend/index-page.js', import.meta.url), 'utf8');
 
-test('homepage uses the shared nav container pattern', () => {
-    assert.match(html, /<div class="nav-container"[^>]*>/, 'Expected homepage to use nav-container markup');
+test('prompt expert uses the shared nav container pattern', () => {
+    assert.match(html, /<div class="nav-container"[^>]*>/, 'Expected prompt expert to use nav-container markup');
 });
 
-test('homepage right rail stacks onboarding above examples', () => {
+test('prompt expert right rail stacks onboarding above examples', () => {
     const rightRailMatch = html.match(/<div class="right-rail"[\s\S]*?<\/div>\s*<!-- 页脚 -->/);
 
     assert.ok(rightRailMatch, 'Expected a right-rail wrapper before the footer');
@@ -23,11 +23,11 @@ test('homepage right rail stacks onboarding above examples', () => {
     assert.ok(onboardingIndex < casesIndex, 'Expected onboarding panel to appear above the cases panel');
 });
 
-test('homepage onboarding panel no longer shows the old quick-start heading', () => {
-    assert.doesNotMatch(html, /3 步快速使用/, 'Expected the quick-start heading to be removed from the homepage onboarding panel');
+test('prompt expert onboarding panel no longer shows the old quick-start heading', () => {
+    assert.doesNotMatch(html, /3 步快速使用/, 'Expected the quick-start heading to be removed from the prompt expert onboarding panel');
 });
 
-test('homepage right rail uses the wider and higher desktop placement', () => {
+test('prompt expert right rail uses the wider and higher desktop placement', () => {
     const rightRailRuleMatch = html.match(/\.right-rail\s*\{[\s\S]*?\}/);
 
     assert.ok(rightRailRuleMatch, 'Expected a right-rail CSS rule');
@@ -38,22 +38,22 @@ test('homepage right rail uses the wider and higher desktop placement', () => {
     assert.match(rightRailRule, /width:\s*300px;/, 'Expected the right rail to be wider on desktop');
 });
 
-test('homepage footer keeps filing text without the shared dark footer treatment', () => {
-    assert.match(html, /<div class="footer footer-minimal">/, 'Expected homepage footer to opt into a minimal variant');
+test('prompt expert footer keeps filing text without the shared dark footer treatment', () => {
+    assert.match(html, /<div class="footer footer-minimal">/, 'Expected prompt expert footer to opt into a minimal variant');
 });
 
-test('homepage hero prompt area moves up by 30px on desktop', () => {
+test('prompt expert hero prompt area moves up by 30px on desktop', () => {
     const searchContainerRuleMatch = html.match(/\.search-container\s*\{[\s\S]*?\}/);
 
     assert.ok(searchContainerRuleMatch, 'Expected a search-container CSS rule');
     assert.match(
         searchContainerRuleMatch[0],
         /padding:\s*80px 0 28px;/,
-        'Expected the homepage hero area to move up by 30px on desktop'
+        'Expected the prompt expert hero area to move up by 30px on desktop'
     );
 });
 
-test('homepage minimal footer is fixed to the viewport bottom', () => {
+test('prompt expert minimal footer is fixed to the viewport bottom', () => {
     const minimalFooterRuleMatch = html.match(/\.footer\.footer-minimal\s*\{[\s\S]*?\}/);
 
     assert.ok(minimalFooterRuleMatch, 'Expected a minimal footer CSS rule');
@@ -66,21 +66,21 @@ test('homepage minimal footer is fixed to the viewport bottom', () => {
     assert.match(footerRule, /width:\s*100%;/, 'Expected the minimal footer to span the viewport width');
 });
 
-test('homepage logo moves down and prompt expert badge shifts left', () => {
+test('prompt expert logo moves down and prompt expert badge shifts left', () => {
     const logoRuleMatch = html.match(/\.logo-container\s*\{[\s\S]*?\}/);
     const promptRowRuleMatch = html.match(/\.prompt-icon-row\s*\{[\s\S]*?\}/);
 
     assert.ok(logoRuleMatch, 'Expected a logo-container CSS rule');
     assert.ok(promptRowRuleMatch, 'Expected a prompt-icon-row CSS rule');
 
-    assert.match(logoRuleMatch[0], /top:\s*20px;/, 'Expected the homepage logo container to move down by 20px');
+    assert.match(logoRuleMatch[0], /top:\s*20px;/, 'Expected the prompt expert logo container to move down by 20px');
     assert.match(promptRowRuleMatch[0], /left:\s*-40px;/, 'Expected the prompt expert badge row to move left by 40px');
 });
 
-test('homepage stream loading state sets a clear wait-time expectation', () => {
+test('prompt expert stream loading state sets a clear wait-time expectation', () => {
     assert.match(
         indexScript,
         /AI 正在思考中，预计 1 分钟内生成，请稍候\.\.\./,
-        'Expected the homepage compact loading state to explain the estimated generation time'
+        'Expected the prompt expert compact loading state to explain the estimated generation time'
     );
 });

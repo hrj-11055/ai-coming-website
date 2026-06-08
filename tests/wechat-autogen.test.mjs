@@ -319,7 +319,7 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
         stateFile: path.join(root, 'state.json'),
         stagingDir: path.join(root, 'staging'),
         siteBaseUrl: 'https://ai-coming.example.com',
-        originalArticleUrl: 'https://aicoming.cn/news.html',
+        originalArticleUrl: 'https://aicoming.cn/index.html',
         enabled: true,
         enabledTypes: ['markdown', 'podcast'],
         podcastFormatter: {
@@ -348,14 +348,14 @@ test('runWechatAutogenOnce uploads only todays ready podcast and never falls bac
     assert.equal(calls.length, 1);
     assert.equal(calls[0].kind, 'podcast');
     assert.equal(calls[0].title, '小元说 AI日报 2026.04.02.');
-    assert.equal(calls[0].contentSourceUrl, 'https://aicoming.cn/news.html');
+    assert.equal(calls[0].contentSourceUrl, 'https://aicoming.cn/index.html');
     assert.match(calls[0].markdown, /\[打开播客播放页\]\(https:\/\/ai-coming\.example\.com\/podcast\.html\?date=2026-04-02\)/);
     assert.equal(packagingCalls.length, 1);
     assert.equal(packagingCalls[0].title, '小元说 AI日报 2026.04.02.');
     assert.match(packagingCalls[0].scriptMarkdown, /今播播客正文/);
     assert.equal(result.podcast.action, 'uploaded');
     assert.equal(result.podcast.reason, 'podcast_ready_today');
-    assert.equal(result.podcast.originalArticleUrl, 'https://aicoming.cn/news.html');
+    assert.equal(result.podcast.originalArticleUrl, 'https://aicoming.cn/index.html');
     assert.equal(result.report.action, 'skip');
 });
 

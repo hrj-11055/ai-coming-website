@@ -2,7 +2,7 @@ const INTERACTION_TRACK_ENDPOINT = '/api/interaction/track';
 
 const PRIMARY_NAV_LABELS = new Map([
     ['index.html', '首页'],
-    ['news.html', 'AI资讯'],
+    ['news.html', '提示生成专家'],
     ['tools.html', 'AI工具集'],
     ['skills.html', 'AI 能力库'],
     ['about.html', '关于我们']

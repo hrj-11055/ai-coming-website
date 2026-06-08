@@ -3,1168 +3,680 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIcoming - 让一部分人先用起来</title>
-    <meta name="description" content="AIcoming - 让一部分人先用起来，基于硅基流动API的AI搜索工具">
+    <title>AI资讯 - AIcoming</title>
 
-    <!-- 禁用缓存 -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="AIcoming - 专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析，让一部分人先用起来">
+    <meta name="keywords" content="AI,人工智能,机器学习,深度学习,AI资讯,技术动态,行业趋势">
+    <meta name="author" content="AIcoming">
+    <meta name="robots" content="index, follow">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="/pic/logo-icon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/pic/logo-icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/pic/logo-icon.png">
 
-    <!-- Tailwind CSS -->
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="AIcoming - AI资讯中心">
+    <meta property="og:description" content="专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aicoming.com">
+    <meta property="og:image" content="https://aicoming.com/pic/AIcoming_zixunye.png">
+    <meta property="og:site_name" content="AIcoming">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AIcoming - AI资讯中心">
+    <meta name="twitter:description" content="专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析">
+    <meta name="twitter:image" content="https://aicoming.com/pic/AIcoming_zixunye.png">
     <script src="/vendor/tailwindcss-cdn.js"></script>
     <script src="/vendor/alpinejs-cdn.min.js" defer></script>
-
-    <!-- Font Awesome -->
     <link href="/vendor/fontawesome/css/all.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        (function() {
+            var probe = document.createElement('div');
+            probe.className = 'hidden';
+            probe.style.position = 'absolute';
+            probe.style.visibility = 'hidden';
+            document.documentElement.appendChild(probe);
+            var hiddenWorks = window.getComputedStyle(probe).display === 'none';
+            probe.remove();
+            if (!hiddenWorks) {
+                document.documentElement.classList.add('tw-fallback');
+            }
+        })();
+    </script>
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "AIcoming - AI资讯中心",
+        "description": "专业的AI资讯聚合平台，提供最新的AI技术动态、行业趋势和深度分析",
+        "url": "https://aicoming.com",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://aicoming.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "AIcoming",
+            "url": "https://aicoming.com",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://aicoming.com/pic/AIcoming_zixunye.png"
+            }
+        }
+    }
+    </script>
+
+    <!-- API服务层 -->
+    <script src="api.js?v=20260316-podcast-cachefix"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
             font-family: var(--f-sans);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
             background: var(--paper-bg);
             color: var(--paper-ink);
-            overflow-x: hidden;
-            padding-bottom: 52px;
+        }
+
+        /* 时间轴样式 */
+        .timeline-item {
             position: relative;
-        }
-
-        /* 背景动画 */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .bg-animation span {
-            position: absolute;
-            display: block;
-            width: 20px;
-            height: 20px;
-            background: rgba(186, 63, 20, 0.05);
-            animation: move 25s infinite;
-            bottom: -150px;
-            border-radius: 50%;
-        }
-
-        .bg-animation span:nth-child(1) { left: 25%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 20s; }
-        .bg-animation span:nth-child(2) { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 25s; }
-        .bg-animation span:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
-        .bg-animation span:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
-        .bg-animation span:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
-        .bg-animation span:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
-        .bg-animation span:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
-        .bg-animation span:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
-        .bg-animation span:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
-        .bg-animation span:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
-
-        @keyframes move {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        .main-column {
-            position: relative;
-            z-index: 10;
-            width: min(100%, 700px);
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .search-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 80px 0 28px;
-            margin-top: 0;
-            min-height: auto;
-            transition: all 0.5s ease;
-        }
-
-        /* 生成状态：输入框移动到顶部 */
-        .search-container.generating {
-            margin-top: 0;
-            padding-top: 96px;
-            justify-content: flex-start;
-            min-height: auto;
-        }
-
-        /* Logo样式 */
-        .logo-container {
-            position: relative;
-            top: 20px;
-            text-align: center;
-            margin-bottom: 28px;
-            animation: fadeInUp 1s ease-out both;
-            display: flex;
-            justify-content: center;
-        }
-
-        .logo-wrapper {
-            background: transparent;
-            border: none;
-            border-radius: 0;
-            padding: 0;
-            display: inline-block;
-            box-shadow: none;
-            transition: all 0.3s ease;
-        }
-
-        .logo-wrapper:hover {
-            background: transparent;
-            border-color: transparent;
-            transform: scale(1.02);
-            box-shadow: none;
-        }
-
-        .logo-wrapper img {
-            height: 50px;
-            width: auto;
-            display: block;
-            opacity: 1;
-        }
-
-        .prompt-icon-row {
-            position: relative;
-            left: -40px;
-            display: flex;
-            justify-content: flex-end;
-            width: 100%;
-            max-width: 700px;
-            margin: -10px auto 14px;
-        }
-
-        .prompt-icon {
-            width: 112px;
-            height: 112px;
-            object-fit: contain;
-            opacity: 0.86;
-            transition: opacity 0.3s;
-        }
-
-        .prompt-icon:hover {
-            opacity: 1;
-        }
-
-        .search-box-wrapper {
-            width: 100%;
-            max-width: 700px;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-
-        .search-box {
-            width: 100%;
-            background: var(--paper-surface-2);
-            border: 2px solid var(--paper-vermilion) !important;
-            outline: none !important;
-            box-shadow: 0 4px 24px rgba(186,63,20,.14);
-            border-radius: 16px;
-            display: flex;
-            align-items: flex-end;
-            padding: 16px;
-            transition: all 0.3s ease;
-            min-height: 120px;
-        }
-
-        .search-box:focus-within {
-            box-shadow: 0 6px 32px rgba(186,63,20,.22);
-            border: 2px solid var(--paper-vermilion) !important;
-        }
-
-        .search-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-            color: var(--paper-ink-2);
-            background: transparent;
-            font-weight: 400;
-            resize: none;
-            line-height: 1.6;
-            font-family: var(--f-sans);
-            min-height: 80px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .search-input::placeholder {
-            color: var(--paper-ink-4);
-            font-weight: 300;
-        }
-
-        .search-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 12px;
-        }
-
-        .search-btn {
-            background: var(--paper-ink);
-            color: var(--paper-surface-2);
-            border: none;
-            border-radius: var(--r-md);
-            width: 40px;
-            height: 40px;
+            padding: 12px 16px;
+            margin-left: 8px;
+            border-left: 3px solid var(--paper-rule);
+            border-radius: 0 var(--r-lg) var(--r-lg) 0;
+            background: var(--paper-surface);
             cursor: pointer;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        .search-btn:hover {
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -7.5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--paper-rule);
+            border: 2px solid var(--paper-bg);
+            transition: background .2s;
+        }
+        .timeline-item:hover {
+            border-left-color: var(--paper-vermilion);
+            background: var(--paper-surface-2);
+        }
+        .timeline-item:hover::before {
             background: var(--paper-vermilion);
         }
-
-        .search-btn:active {
-            transform: scale(0.95);
+        .timeline-item.active {
+            border-left-color: var(--paper-vermilion);
+            background: var(--paper-vermilion-dim);
+        }
+        .timeline-item.active::before {
+            background: var(--paper-vermilion);
+        }
+        .timeline-date {
+            font-weight: 600;
+            color: var(--paper-ink);
+            font-size: 0.9rem;
+        }
+        .timeline-count {
+            font-size: 0.75rem;
+            color: var(--paper-ink-4);
+            margin-top: 4px;
+        }
+        .timeline-item.active .timeline-date {
+            color: var(--paper-vermilion);
+        }
+        .timeline-item.active .timeline-count {
+            color: var(--paper-vermilion);
         }
 
-        .search-btn:disabled {
-            background: var(--paper-rule);
+        /* 自定义滚动条样式 */
+        #timelineContainer::-webkit-scrollbar {
+            width: 6px;
+        }
+        #timelineContainer::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        #timelineContainer::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        #timelineContainer::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 文章列表样式 */
+        .article-item {
+            background: var(--ai-bg-surface, white);
+            border-radius: var(--ai-radius-md, 12px);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--ai-shadow-sm, 0 1px 3px rgba(0,0,0,0.1));
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .article-item:hover {
+            box-shadow: var(--ai-shadow-md, 0 4px 12px rgba(0,0,0,0.15));
+            transform: translateY(-2px);
+        }
+        .article-item.tech {
+            border-left-color: #3b82f6;
+        }
+        .article-item.policy {
+            border-left-color: #10b981;
+        }
+        .article-item.business {
+            border-left-color: #f59e0b;
+        }
+        .article-item.product {
+            border-left-color: #8b5cf6;
+        }
+
+        .podcast-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(239, 246, 255, 0.96) 100%);
+            border: 1px solid rgba(191, 219, 254, 0.9);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+            margin-bottom: 24px;
+        }
+
+        .podcast-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .podcast-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .podcast-meta {
+            font-size: 0.85rem;
+            color: var(--ai-text-muted, #6b7280);
+            margin-top: 4px;
+        }
+
+        .podcast-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 999px;
+            padding: 6px 10px;
+            white-space: nowrap;
+        }
+
+        .podcast-status.ready {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .podcast-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .podcast-status.unavailable {
+            background: #e5e7eb;
+            color: #4b5563;
+        }
+
+        .podcast-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .podcast-summary {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #334155;
+            margin-bottom: 16px;
+        }
+
+        .podcast-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .podcast-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            background: var(--paper-vermilion);
+            box-shadow: 0 8px 24px rgba(186,63,20,.22);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .podcast-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 28px rgba(186,63,20,.28);
+        }
+
+        .podcast-btn:disabled {
             cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
         }
 
-        .search-btn i {
-            font-size: 1rem;
+        .podcast-player {
+            margin-top: 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            background: rgba(255, 255, 255, 0.78);
+            padding: 14px;
         }
 
-        /* 结果容器 */
-        .results-container {
-            width: 100%;
-            max-width: 700px;
-            margin: 20px auto 0;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        .results-container.hidden {
+        .podcast-audio-element {
             display: none;
         }
 
-        .search-result {
-            background: var(--paper-surface-2);
-            border: 1px solid var(--paper-rule);
-            border-radius: var(--r-xl);
-            padding: 24px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-header {
+        .podcast-player-row {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--paper-rule);
+            gap: 14px;
         }
 
-        .result-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--paper-vermilion);
-            border-radius: var(--r-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .result-title {
-            font-family: var(--f-serif);
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--paper-ink);
-            flex: 1;
-        }
-
-        .copy-btn-header {
-            background: var(--paper-surface);
-            border: 1.5px solid var(--paper-rule);
-            color: var(--paper-ink-3);
-            padding: 7px 14px;
-            border-radius: var(--r-md);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-left: 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .copy-btn-header:hover {
-            border-color: var(--paper-vermilion);
-            color: var(--paper-vermilion);
-            background: var(--paper-vermilion-dim);
-        }
-
-        .copy-btn-header i {
-            font-size: 1.1rem;
-        }
-
-        .copy-btn-header.copied {
-            background: #10b981;
-            border-color: #10b981;
-            color: white;
-        }
-
-        .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .external-link {
-            background: #f3f4f6;
-            border: 1px solid #e5e7eb;
-            color: #1a1a1a;
-            padding: 8px 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .external-link:hover {
-            background: var(--paper-vermilion-dim);
-            border-color: var(--paper-vermilion);
-            color: var(--paper-vermilion);
-            transform: translateY(-1px);
-        }
-
-        .external-link i {
+        .podcast-play-toggle {
+            min-width: 76px;
+            border: none;
+            border-radius: 999px;
+            padding: 10px 16px;
             font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
         }
 
-        .result-content {
-            font-size: 0.95rem;
-            color: var(--paper-ink-2);
-            line-height: 1.75;
-            margin-bottom: 16px;
-            white-space: pre-wrap;
-            font-family: var(--f-sans);
+        .podcast-progress-group {
+            flex: 1 1 240px;
+            min-width: 220px;
         }
 
-        .result-content h1,
-        .result-content h2,
-        .result-content h3,
-        .result-content h4,
-        .result-content h5,
-        .result-content h6 {
-            margin-top: 16px;
-            margin-bottom: 12px;
-            font-weight: 600;
-            line-height: 1.4;
-            color: #1a1a1a;
+        .podcast-progress-range,
+        .podcast-volume-range {
+            width: 100%;
+            accent-color: #2563eb;
         }
 
-        .result-content h1 { font-size: 1.15rem; }
-        .result-content h2 { font-size: 1.1rem; }
-        .result-content h3 { font-size: 1.05rem; }
-        .result-content h4 { font-size: 1rem; }
-        .result-content h5 { font-size: 0.95rem; }
-        .result-content h6 { font-size: 0.9rem; }
-
-        .result-content p {
-            margin-bottom: 12px;
+        .podcast-time-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 0.82rem;
+            color: #64748b;
         }
 
-        .result-content ul,
-        .result-content ol {
-            margin-bottom: 8px;
-            padding-left: 20px;
-        }
-
-        .result-content li {
-            margin-bottom: 4px;
-        }
-
-        .result-content code {
-            background: #f3f4f6;
-            padding: 2px 6px;
-            border-radius: 4px;
+        .podcast-volume-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
             font-size: 0.85rem;
-            font-family: 'Courier New', monospace;
-            color: #ef4444;
+            color: #334155;
         }
 
-        .result-content pre {
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin-bottom: 16px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .result-content pre code {
-            background: transparent;
-            padding: 0;
-            color: #1a1a1a;
-            font-size: 0.85rem;
-        }
-
-        .result-content blockquote {
-            border-left: 3px solid var(--paper-vermilion);
-            padding-left: 12px;
-            margin: 12px 0;
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .result-content strong {
+        .podcast-volume-label {
+            white-space: nowrap;
             font-weight: 600;
         }
 
-        .result-content em {
-            font-style: italic;
-        }
-
-        .result-content a {
-            color: var(--paper-vermilion);
+        .podcast-audio-link {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2563eb;
             text-decoration: none;
         }
 
-        .result-content a:hover {
+        .podcast-audio-link:hover {
             text-decoration: underline;
         }
 
-        .result-content table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-        }
-
-        .result-content th,
-        .result-content td {
-            border: 1px solid #e5e7eb;
-            padding: 8px 12px;
-            text-align: left;
-        }
-
-        .result-content th {
-            background: #f9fafb;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        .result-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .podcast-transcript {
+            margin-top: 14px;
+            border-top: 1px dashed rgba(148, 163, 184, 0.8);
             padding-top: 12px;
-            border-top: 1px solid #f0f0f0;
         }
 
-        .result-time {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            color: #9ca3af;
-        }
-
-        .result-time i {
-            margin-right: 6px;
-        }
-
-        .copy-btn {
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            border: none;
-            border-radius: 10px;
-            padding: 10px 18px;
+        .podcast-transcript summary {
             cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .podcast-transcript p {
+            white-space: pre-wrap;
             font-size: 0.9rem;
-            color: #4b5563;
-            font-weight: 500;
-        }
-
-        .copy-btn:hover {
-            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-            transform: translateY(-1px);
-        }
-
-        .copy-btn.copied {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-        }
-
-        .copy-btn i {
-            font-size: 0.95rem;
-        }
-
-        /* 加载动画 */
-        .loading {
-            text-align: center;
-            padding: 60px 40px;
-            color: #6b7280;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .loading.loading-compact {
-            padding: 20px;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .spinner {
-            border: 4px solid var(--paper-rule);
-            border-top-color: var(--paper-vermilion);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        .loading.loading-compact .spinner {
-            width: 40px;
-            height: 40px;
-            margin: 0;
-            border-width: 3px;
-            flex: 0 0 auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        .loading-text-compact {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: #4b5563;
-        }
-
-        /* 流式输出指示器 */
-        .streaming-indicator {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.85rem;
-            color: var(--paper-vermilion);
-            margin-left: auto;
-        }
-
-        .streaming-indicator .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--paper-vermilion);
-            border-radius: 50%;
-            animation: pulse 1.4s ease-in-out infinite;
-        }
-
-        .streaming-indicator .dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .streaming-indicator .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .streaming-indicator .dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(0.8);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-        }
-
-        /* 流式完成动画 */
-        .search-result.streaming-complete {
-            animation: completePulse 0.5s ease;
-        }
-
-        @keyframes completePulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.1);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
-            }
-        }
-
-        /* 错误提示 */
-        .error-message {
-            background: rgba(239, 68, 68, 0.9);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            border-radius: 16px;
-            padding: 24px;
-            color: white;
-            margin: 20px auto;
-            max-width: 640px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            animation: shake 0.5s ease;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .nav-shell {
-            position: relative;
-            z-index: 1000;
-        }
-
-        /* 页脚 */
-        .footer {
-            position: relative;
-            z-index: 10;
-            margin-top: auto;
-            text-align: center;
-            padding: 24px;
-            color: rgba(0,0,0,0.4);
-            font-size: 0.85rem;
-            font-weight: 300;
-        }
-
-        .footer.footer-minimal {
-            position: fixed;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            background: transparent;
-            box-shadow: none;
-            margin-top: 0;
-            padding: 12px 24px 14px;
-            color: rgba(15, 23, 42, 0.35);
-            background-color: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(6px);
-            pointer-events: none;
-        }
-
-        .footer a {
-            color: rgba(0,0,0,0.5);
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            color: var(--paper-vermilion);
-        }
-
-        /* 动画 */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* 响应式 */
-        @media (max-width: 640px) {
-            .logo-icon { font-size: 3rem; }
-            .logo-text { font-size: 2.2rem; }
-            .logo-subtitle { font-size: 0.95rem; }
-            .search-box-wrapper { max-width: 100%; }
-            .search-input { font-size: 1rem; }
-            .search-btn { width: 48px; height: 48px; }
-            .quick-prompts { gap: 8px; }
-            .prompt-tag { font-size: 0.8rem; padding: 6px 12px; }
-            .search-result { padding: 24px; }
-            .result-title { font-size: 1.1rem; }
-            .result-content { font-size: 0.95rem; }
-        }
-
-        /* 右侧说明栏 */
-        .right-rail {
-            position: fixed;
-            top: 92px;
-            right: 24px;
-            z-index: 30;
-            width: 300px;
-            display: grid;
-            gap: 18px;
-        }
-
-        .onboarding-panel,
-        .cases-panel {
-            position: relative;
-            width: 100%;
-            padding: 18px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(191, 219, 254, 0.9);
-            background:
-                radial-gradient(140% 120% at 0% 0%, rgba(96, 165, 250, 0.2) 0%, rgba(255, 255, 255, 0) 58%),
-                linear-gradient(160deg, rgba(255, 255, 255, 0.96) 0%, rgba(245, 250, 255, 0.95) 100%);
-            box-shadow: 0 16px 40px rgba(30, 64, 175, 0.1);
-            backdrop-filter: blur(8px);
-        }
-
-        .cases-panel {
-            margin: 0;
-        }
-
-        .onboarding-kicker {
-            font-size: 0.8rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #4f46e5;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .onboarding-title {
-            font-size: 1.3rem;
-            line-height: 1.25;
-            color: #0f172a;
-            margin-bottom: 12px;
-            font-weight: 700;
-        }
-
-        .onboarding-steps {
-            display: grid;
-            gap: 10px;
-            padding-left: 0;
-            list-style: none;
-            margin: 0;
-        }
-
-        .onboarding-steps li {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: start;
-            gap: 10px;
-            margin: 0;
-        }
-
-        .step-index {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 50px;
-            height: 22px;
-            border-radius: 999px;
-            background: #e0e7ff;
-            color: #1e40af;
-            font-size: 0.68rem;
-            font-weight: 700;
-        }
-
-        .step-copy {
-            color: #334155;
-            font-size: 0.84rem;
-            line-height: 1.45;
-        }
-
-        .onboarding-note {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #cbd5e1;
-            color: #64748b;
-            font-size: 0.76rem;
-            line-height: 1.42;
-        }
-
-        .cases-panel {
-            animation: fadeInUp 0.45s ease-out both;
-        }
-
-        .cases-header {
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .cases-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .cases-subtitle {
-            display: block;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #cbd5e1;
-            background: transparent;
-            border-radius: 0;
-            padding-left: 0;
-            padding-right: 0;
-            padding-bottom: 0;
-            font-size: 0.76rem;
-            color: #64748b;
-            line-height: 1.42;
-        }
-
-        .case-list {
-            display: grid;
-            gap: 10px;
-        }
-
-        .case-item {
-            border: 1px solid rgba(191, 219, 254, 0.9);
-            border-radius: 14px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.74);
-        }
-
-        .case-heading {
-            display: grid;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .case-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #1e3a8a;
-            margin: 0;
-        }
-
-        .case-demand {
-            font-size: 0.84rem;
-            color: #0f172a;
-            line-height: 1.45;
-            margin-bottom: 6px;
-        }
-
-        .case-usage {
-            font-size: 0.78rem;
+            line-height: 1.7;
             color: #475569;
-            line-height: 1.42;
-        }
-
-        @media (max-width: 1200px) {
-            .right-rail {
-                width: 340px;
-            }
-
-            .onboarding-panel,
-            .cases-panel {
-                padding: 16px 14px;
-            }
-        }
-
-        @media (max-width: 1080px) {
-            .right-rail {
-                position: relative;
-                top: auto;
-                width: min(860px, calc(100% - 32px));
-                right: auto;
-                margin: 18px auto 0;
-            }
-
-            .search-container {
-                padding-top: 24px;
-            }
+            margin-top: 10px;
         }
 
         @media (max-width: 768px) {
-            .right-rail {
-                width: auto;
-                margin: 18px 12px 0;
-                gap: 18px;
+            .podcast-player-row {
+                align-items: stretch;
             }
 
-            .onboarding-panel,
-            .cases-panel {
-                padding: 16px 14px;
-                border-radius: 16px;
+            .podcast-play-toggle {
+                width: 100%;
             }
 
-            .cases-panel {
-                margin-top: 0;
+            .podcast-volume-group {
+                width: 100%;
             }
+        }
 
-            .onboarding-title {
-                font-size: 1.25rem;
-            }
+        /* 大纲链接样式 */
+        .outline-link {
+            display: block;
+            padding: 8px 12px;
+            border-radius: var(--ai-radius-sm, 6px);
+            font-size: 0.875rem;
+            color: var(--ai-text-secondary, #4b5563);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 2px solid transparent;
+        }
+        .outline-link:hover {
+            background: #f3f4f6;
+            color: var(--ai-brand-700, #2563eb);
+            border-left-color: var(--ai-brand-700, #2563eb);
+        }
+        .outline-link.active {
+            background: #eff6ff;
+            color: var(--ai-brand-700, #2563eb);
+            border-left-color: var(--ai-brand-700, #2563eb);
+            font-weight: 500;
+        }
 
-            .step-index {
-                min-width: 48px;
-                height: 22px;
-                font-size: 0.7rem;
-            }
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
 
-            .search-container {
-                padding: 14px 12px 18px;
-            }
-
-            .search-container.generating {
-                padding-top: 14px;
-            }
-
-            .prompt-icon-row {
-                margin: -2px auto 10px;
-            }
-
-            .prompt-icon {
-                width: 88px;
-                height: 88px;
-            }
-
-            .cases-panel {
-                padding: 14px 12px;
-            }
-
-            .cases-header {
-                margin-bottom: 10px;
-            }
+        /* 回到顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            background: var(--paper-vermilion);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(186,63,20,.35);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(102, 126, 234, 0.35);
         }
     </style>
 </head>
-<body x-data="{ mobileMenuOpen: false }">
-    <!-- 背景动画 -->
-    <div class="bg-animation">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
+<body class="bg-gray-50">
+    <!-- 导航栏容器 -->
+    <div class="nav-container" id="navContainer">
+        <!-- 完整导航栏 -->
+        <nav class="bg-white shadow-lg" id="fullNav">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="index.html">
+                            <img src="./pic/AIcoming_zixunye_nobg.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
+                        </a>
+                    </div>
 
-    <div class="nav-shell">
-        <div class="nav-container" id="navContainer">
-            <nav class="bg-white shadow-lg" id="fullNav">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between items-center h-16">
-                        <div class="flex-shrink-0">
-                            <a href="index.html">
-                                <img src="./pic/AIcoming_zixunye_nobg.png" alt="AIcoming - 让一部分人先用起来" class="h-12 w-auto" style="max-height: 48px;" />
-                            </a>
-                        </div>
-
-                        <div class="hidden lg:block flex-1 flex justify-center">
-                            <div class="flex items-center space-x-2 modern-nav ml-16">
-                                <a href="index.html" class="nav-link active">首页</a>
-                                <a href="news.html" class="nav-link">AI资讯</a>
-                                <a href="tools.html" class="nav-link">AI工具集</a>
-                                <a href="skills.html" class="nav-link">AI 能力库</a>
-                                <a href="about.html" class="nav-link">关于我们</a>
-                            </div>
-                        </div>
-
-                        <div class="hidden md:block lg:hidden flex-1 flex justify-center">
-                            <div class="flex items-center space-x-1 modern-nav ml-8">
-                                <a href="index.html" class="nav-link active">首页</a>
-                                <a href="news.html" class="nav-link">AI资讯</a>
-                                <a href="tools.html" class="nav-link">AI工具集</a>
-                                <a href="skills.html" class="nav-link">AI 能力库</a>
-                                <a href="about.html" class="nav-link">关于我们</a>
-                            </div>
-                        </div>
-
-                        <div class="md:hidden">
-                            <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600" aria-label="切换导航菜单" :aria-expanded="mobileMenuOpen.toString()">
-                                <i class="fas fa-bars text-xl"></i>
-                            </button>
+                    <!-- 桌面端导航菜单 - 居中 -->
+                    <div class="hidden lg:block flex-1 flex justify-center">
+                        <div class="flex items-center space-x-2 modern-nav ml-16">
+                            <a href="index.html" class="nav-link active" onclick="setActiveNav(this)">首页</a>
+                            <a href="news.html" class="nav-link" onclick="setActiveNav(this)">提示生成专家</a>
+                            <a href="tools.html" class="nav-link" onclick="setActiveNav(this)">AI工具集</a>
+                            <a href="skills.html" class="nav-link" onclick="setActiveNav(this)">AI 能力库</a>
+                            <a href="about.html" class="nav-link" onclick="setActiveNav(this)">关于我们</a>
                         </div>
                     </div>
-                </div>
 
-                <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
-                    <div class="px-4 pt-2 pb-3 space-y-1">
-                        <a href="index.html" class="mobile-nav-link active">首页</a>
-                        <a href="news.html" class="mobile-nav-link">AI资讯</a>
-                        <a href="tools.html" class="mobile-nav-link">AI工具集</a>
-                        <a href="skills.html" class="mobile-nav-link">AI 能力库</a>
-                        <a href="about.html" class="mobile-nav-link">关于我们</a>
+                    <!-- 中等屏幕导航菜单 - 居中 -->
+                    <div class="hidden md:block lg:hidden flex-1 flex justify-center">
+                        <div class="flex items-center space-x-1 modern-nav ml-8">
+                            <a href="index.html" class="nav-link active" onclick="setActiveNav(this)">首页</a>
+                            <a href="news.html" class="nav-link" onclick="setActiveNav(this)">提示生成专家</a>
+                            <a href="tools.html" class="nav-link" onclick="setActiveNav(this)">AI工具集</a>
+                            <a href="skills.html" class="nav-link" onclick="setActiveNav(this)">AI 能力库</a>
+                            <a href="about.html" class="nav-link" onclick="setActiveNav(this)">关于我们</a>
+                        </div>
                     </div>
-                </div>
-            </nav>
-        </div>
-    </div>
 
-    <div class="main-column">
-        <!-- 主搜索区域 -->
-        <div class="search-container">
-            <!-- Logo -->
-            <div class="logo-container">
-                <div class="logo-wrapper">
-                    <img src="./pic/AIcoming_zixunye_nobg.png" alt="AIcoming - 让一部分人先用起来">
-                </div>
-            </div>
-
-            <!-- 提示词图标 -->
-            <div class="prompt-icon-row">
-                <img src="./pic/tishici.png" alt="提示词生成专家" class="prompt-icon" title="提示词生成专家">
-            </div>
-
-            <!-- 搜索框 -->
-            <div class="search-box-wrapper">
-                <div class="search-box">
-                    <textarea
-                        class="search-input"
-                        id="searchInput"
-                        placeholder="请输入您的需求、目标或场景，我来帮您生成专家提示词"
-                        rows="1"
-                        autocomplete="off"
-                    ></textarea>
-                    <div class="search-actions">
-                        <button class="search-btn" id="searchBtn" onclick="performSearch()">
-                            <i class="fas fa-arrow-up"></i>
+                    <!-- 移动端菜单按钮 -->
+                    <div class="md:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-gray-600">
+                            <i class="fas fa-bars text-xl"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 搜索结果区域 -->
-            <div class="results-container hidden" id="resultsContainer">
-                <!-- 搜索结果将动态插入这里 -->
+            <!-- 移动端菜单 -->
+            <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-t">
+                <div class="px-4 pt-2 pb-3 space-y-1">
+                    <a href="index.html" class="mobile-nav-link active" onclick="setActiveNav(this)">首页</a>
+                    <a href="news.html" class="mobile-nav-link" onclick="setActiveNav(this)">提示生成专家</a>
+                    <a href="tools.html" class="mobile-nav-link" onclick="setActiveNav(this)">AI工具集</a>
+                    <a href="skills.html" class="mobile-nav-link" onclick="setActiveNav(this)">AI 能力库</a>
+                    <a href="about.html" class="mobile-nav-link" onclick="setActiveNav(this)">关于我们</a>
+                </div>
             </div>
+        </nav>
 
-        </div>
+        <!-- 简化导航栏 -->
+        <nav class="nav-simplified hidden" id="simplifiedNav">
+            <div class="nav-content">
+                <button class="back-button" onclick="showFullNav()">
+                    <i class="fas fa-arrow-left mr-2"></i>返回
+                </button>
+                <div class="nav-tabs">
+                    <div class="nav-tab active" onclick="switchTab('today', event)">今日快讯</div>
+                </div>
+            </div>
+        </nav>
+
     </div>
 
-    <div class="right-rail">
-        <!-- 新手引导 -->
-        <aside class="onboarding-panel" aria-label="首页新手引导">
-            <p class="onboarding-kicker">新手引导</p>
-            <ol class="onboarding-steps">
-                <li>
-                    <span class="step-index">步骤 1</span>
-                    <span class="step-copy">输入您的需求、目标或具体场景。</span>
-                </li>
-                <li>
-                    <span class="step-index">步骤 2</span>
-                    <span class="step-copy">AIcoming 会自动为您拆解需求并生成更专业的提示词。</span>
-                </li>
-                <li>
-                    <span class="step-index">步骤 3</span>
-                    <span class="step-copy">复制生成结果，粘贴到豆包 / 千问等模型中继续使用。</span>
-                </li>
-            </ol>
-            <p class="onboarding-note">先描述需求，再生成提示词，最后复制到目标模型中使用。</p>
-        </aside>
-
-        <!-- 示例案例 -->
-        <section class="cases-panel" aria-label="示例案例">
-            <div class="cases-header">
-                <p class="onboarding-kicker">使用案例</p>
-                <span class="cases-subtitle">先将下面的提示词发送到对话框，再将生成结果复制到豆包 / 千问中使用。</span>
-            </div>
-            <div class="case-list">
-                <article class="case-item">
-                    <div class="case-heading">
-                        <p class="case-title">专家角色提示词</p>
-                    </div>
-                    <p class="case-demand">请帮我生成一份适用于互联网高级产品经理场景的专家角色提示词。</p>
-                </article>
-                <article class="case-item">
-                    <div class="case-heading">
-                        <p class="case-title">行业研究提示词</p>
-                    </div>
-                    <p class="case-demand">请帮我研究中国新能源汽车产业链，重点分析整车厂的发展现状与竞争格局。</p>
-                </article>
-                <article class="case-item">
-                    <div class="case-heading">
-                        <p class="case-title">职业成长提示词</p>
-                    </div>
-                    <p class="case-demand">我工作 2 年，目前是初级产品经理，希望成长为资深产品经理并进入大厂，请帮我制定成长路径。</p>
-                </article>
+    <!-- 主要内容区域 -->
+    <div x-data="{ mobileMenuOpen: false, currentTab: 'today' }" class="content-section">
+        <!-- 热点标签云 -->
+        <section class="hot-keywords" id="hotKeywords" itemscope itemtype="https://schema.org/ItemList">
+            <div class="keyword-wall" id="keywordWall" itemprop="itemListElement">
             </div>
         </section>
+
+        <!-- AI资讯展示区域 - 三段式布局 -->
+        <section class="py-8 bg-gray-50" id="newsSection" style="margin-top: 0px;">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- 三段式布局容器 -->
+                <div class="flex gap-8">
+                    <!-- 左侧：历史时间轴 -->
+                    <aside class="w-48 flex-shrink-0 hidden lg:block">
+                        <div class="sticky top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                <i class="far fa-calendar-alt mr-2 text-blue-600"></i>
+                                历史文章
+                            </h3>
+
+                            <!-- 月份选择器 -->
+                            <div class="mb-4">
+                                <select id="monthSelector" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                    <option value="all">全部月份</option>
+                                </select>
+                            </div>
+
+                            <!-- 时间轴容器 -->
+                            <div id="timelineContainer" class="space-y-2 max-h-[600px] overflow-y-auto pr-2">
+                                <!-- 时间轴将通过JavaScript动态生成 -->
+                                <div class="text-center py-8 text-gray-500 text-sm">
+                                    <i class="fas fa-spinner fa-spin mb-2"></i>
+                                    <p>加载中...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- 中间：文章内容 -->
+                    <main class="flex-1 min-w-0">
+                        <!-- 顶部控制栏 -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center space-x-4">
+                                <h2 class="text-2xl font-bold text-gray-900" id="sectionTitle">今日快讯</h2>
+                            </div>
+                        </div>
+
+                        <div id="podcastContainer">
+                            <div class="podcast-card">
+                                <div class="podcast-header">
+                                    <div>
+                                        <div class="podcast-title">今日播客</div>
+                                        <div class="podcast-meta">正在准备播客信息...</div>
+                                    </div>
+                                    <span class="podcast-status pending">加载中</span>
+                                </div>
+                                <p class="podcast-summary">系统会把当前日期的 AI 快讯整理成一段可点播的音频；已配置 OSS 时走对象存储分发，未配置时会自动切换为本地播放。</p>
+                            </div>
+                        </div>
+
+                        <!-- 地区筛选 -->
+                        <div class="mb-6">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-medium text-gray-500">地区：</span>
+                                <div class="flex space-x-2">
+                                    <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('all')" id="allFilter">全部</button>
+                                    <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('china')" id="chinaFilter">中国</button>
+                                    <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('global')" id="globalFilter">全球</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 文章列表容器 -->
+                        <div id="articlesContainer">
+                            <!-- 文章将通过JavaScript动态加载 -->
+                            <div class="text-center py-12">
+                                <div class="text-gray-500">
+                                    <i class="fas fa-newspaper text-4xl mb-4"></i>
+                                    <p class="text-lg">正在加载今日快讯...</p>
+                                    <p class="text-sm mt-2">如果没有内容，请先通过API导入新闻数据</p>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <!-- 右侧：内容大纲 -->
+                    <aside class="w-56 flex-shrink-0 hidden xl:block">
+                        <div class="sticky top-8">
+                            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                <i class="fas fa-list mr-2 text-blue-600"></i>
+                                内容大纲
+                            </h3>
+                            <div id="outlineContainer" class="bg-white rounded-lg shadow-md p-4">
+                                <!-- 大纲将通过JavaScript动态生成 -->
+                                <div class="text-sm text-gray-500 text-center py-4">
+                                    加载中...
+                                </div>
+                            </div>
+
+                            <!-- 统计信息 -->
+                            <div class="mt-6 bg-white rounded-lg shadow-md p-4">
+                                <h4 class="text-sm font-bold text-gray-900 mb-3">
+                                    <i class="fas fa-chart-bar mr-2 text-blue-600"></i>
+                                    今日统计
+                                </h4>
+                                <div id="statsContainer" class="space-y-2 text-sm">
+                                    <!-- 统计信息将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- 回到顶部按钮 -->
+        <div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+
+        <!-- 公共底部组件 -->
+        <div id="footer-container"></div>
     </div>
 
-    <!-- 页脚 -->
-    <div class="footer footer-minimal">
-        <p>
-            ©深圳元说科技有限公司 版权所有 粤ICP备2026015462号-1
-        </p>
-    </div>
+    <script type="module" src="frontend/bootstrap.js?v=20260316-podcast-cachefix"></script>
 
-    <!-- JavaScript -->
-    <script type="module" src="frontend/index-page.js"></script>
+    <!-- 加载公共底部组件 -->
+    <script>
+        // 加载公共底部组件
+        fetch('footer.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('footer-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('加载底部组件失败:', error);
+                // 如果加载失败，显示默认底部
+                document.getElementById('footer-container').innerHTML = `
+                    <footer class="py-4" style="background-color: #F2F2F2; color: #64696E; z-index: 1000; position: relative;">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="text-center">
+                                <p style="color: #64696E;">
+                                    © 2026 AIcoming. 保留所有权利。让一部分人先用起来。
+                                </p>
+                            </div>
+                        </div>
+                    </footer>
+                `;
+            });
+    </script>
 </body>
 </html>
