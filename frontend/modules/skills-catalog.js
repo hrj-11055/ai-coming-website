@@ -12,6 +12,7 @@ const NOTEBOOKLM_REPO_URL = 'https://github.com/teng-lin/notebooklm-py';
 const NUTRIENT_MCP_REPO_URL = 'https://github.com/PSPDFKit/nutrient-dws-mcp-server';
 const HERMES_AGENT_REPO_URL = 'https://github.com/NousResearch/hermes-agent';
 const HERMES_AGENT_POWERPOINT_URL = 'https://skillsmp.com/zh/skills/nousresearch-hermes-agent-skills-productivity-powerpoint-skill-md';
+const PPT_MASTER_REPO_URL = 'https://github.com/hugohe3/ppt-master';
 
 const addSkillCommand = (url) => `npx add-skill ${url}`;
 const addSkillsRepoCommand = (repo) => `npx skills add ${repo}`;
@@ -570,6 +571,24 @@ const BASE_SKILL_MODULES = [
                 installHint: '复制到终端安装后，Agent 在遇到 `.pptx`、slides、presentation、deck 等任务时，就更容易走对 PowerPoint 专项工作流。',
                 skillDocPurpose: 'Skills.md（有些仓库里也会写成 SKILL.md）主要是给 AI Agent 看的技能说明文件。它的作用是告诉 Agent：什么时候应该调用这个 pptx Skill、先读哪些辅助文档、优先走哪套 PowerPoint 工作流，以及在读写 `.pptx` 时要遵守哪些边界。对 pptx 这种强流程型 Skill 来说，Skills.md 的价值就在于让 Agent 不只是“会生成内容”，而是知道该怎么正确读取、编辑、生成并校验演示文稿。',
                 relatedSlugs: ['baoyu-slide-deck', 'investor-materials']
+            },
+            {
+                name: 'PPT Master',
+                slug: 'ppt-master',
+                headline: '把 PDF、DOCX、图片或粘贴文本变成真正可编辑的 PowerPoint，支持原生形状、动画、讲者备注、音频旁白和模板填充。',
+                scenario: '适合需要从材料生成完整 deck、又希望最后能在 PowerPoint 里继续逐元素修改的人。',
+                overview: 'PPT Master 是一个围绕 AI Agent 的本地 PPTX 生成工作流。它不是把每页做成一张图片塞进 PPT，而是尽量输出 PowerPoint 可编辑的原生形状、文本框和图表，并把内容分析、视觉设计、SVG 生成、PPTX 导出和结果归档串成一条完整流水线。对需要把文档、报告或素材快速转成可继续打磨的演示稿的人来说，它比单纯“生成几页幻灯片”的工具更接近真实交付。',
+                useCases: ['从 PDF、DOCX、图片或粘贴文本生成完整演示稿', '基于已有 `.pptx` 模板填充新内容', '生成带讲者备注的 deck，并进一步合成音频旁白', '用多种视觉风格快速探索 PPT 设计方向', '在本地保留文件和中间产物，便于二次编辑与归档'],
+                gettingStarted: ['先安装 Python 3.10+，再用 `npx skills add hugohe3/ppt-master` 安装 skill 文件', '进入安装后的 PPT Master 目录或克隆仓库，执行 `pip install -r requirements.txt` 补齐后处理脚本依赖', '把源材料放进 `projects/` 目录，向 Agent 说明文件路径、目标受众、页数、风格和是否使用模板', '先让 Agent 确认设计规格，再开始生成，避免一上来就把页数、风格和素材要求跑偏', '生成后打开 `.pptx` 检查可编辑性、标题长度、图表占位、讲者备注和整体信息密度'],
+                installCommand: multiLineCommand(
+                    'npx skills add hugohe3/ppt-master',
+                    'pip install -r requirements.txt'
+                ),
+                installHint: '先用 cross-agent CLI 安装 PPT Master skill；如果你是从 GitHub 克隆完整仓库，也可以直接在仓库根目录执行依赖安装。',
+                skillDocPurpose: 'PPT Master 的 SKILL.md 负责把“材料输入 -> 设计规格确认 -> SVG/视觉生成 -> 原生 PPTX 导出 -> 结果校验”的流程固定下来。它的价值在于让 Agent 不只是写一份大纲，而是按可复检、可编辑、可归档的方式交付真正的 PowerPoint 文件。',
+                relatedSlugs: ['pptx', 'powerpoint', 'docx'],
+                sourceUrl: PPT_MASTER_REPO_URL,
+                sourceLabel: 'GitHub'
             },
             {
                 name: 'powerpoint',
@@ -1188,6 +1207,19 @@ const SKILL_DETAIL_OVERRIDES = {
             { src: '/pic/skills/pptx-output.png', caption: '从零生成的演示文稿效果' }
         ],
         examplePrompt: '帮我基于这份市场调研材料，创建一个 5 页的幻灯片，配色用深蓝色主题，每页包含一个核心观点和配图。'
+    },
+    'ppt-master': {
+        sourceUrl: PPT_MASTER_REPO_URL,
+        sourceLabel: 'GitHub',
+        screenshots: [
+            { src: '/pic/skills/ppt-master-pritzker-2026.png', caption: '官方示例：杂志风建筑评论 deck，强调摄影和编辑排版' },
+            { src: '/pic/skills/ppt-master-global-ai-capital.png', caption: '官方示例：财经数据新闻风，深色仪表盘和图表驱动' },
+            { src: '/pic/skills/ppt-master-swiss-grid.png', caption: '官方示例：瑞士网格系统，严格栅格和红色点缀' },
+            { src: '/pic/skills/ppt-master-glassmorphism-demo.png', caption: '官方示例：毛玻璃 SaaS 风，适合产品和工程化主题' },
+            { src: '/pic/skills/ppt-master-sugar-rush-memphis.png', caption: '官方示例：孟菲斯波普风，高饱和色和几何图形' },
+            { src: '/pic/skills/ppt-master-indie-bookstore-zine.png', caption: '官方示例：Risograph Zine 风，适合文化和生活方式内容' }
+        ],
+        examplePrompt: '请用 PPT Master 根据 projects/q3-report/sources/report.pdf 生成一份 8-10 页 16:9 可编辑 PPTX，风格偏数据新闻，每页一个核心观点，并补充 speaker notes。'
     },
     powerpoint: {
         installCommand: addSkillsRepoCommand('NousResearch/hermes-agent'),

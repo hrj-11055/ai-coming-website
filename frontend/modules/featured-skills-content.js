@@ -33,8 +33,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '文档处理',
         icon: 'fa-solid fa-file-lines',
         tone: 'orange',
-        description: '5 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。',
-        skillSlugs: ['docx', 'pptx', 'powerpoint', 'pdf', 'xlsx']
+        description: '6 个最容易立刻产生交付结果的文档类 Skill，适合第一次体验 Skill 能力时直接上手。',
+        skillSlugs: ['docx', 'pptx', 'ppt-master', 'powerpoint', 'pdf', 'xlsx']
     },
     {
         id: 'efficiency-tools',
@@ -113,6 +113,33 @@ export const FEATURED_SKILL_CONTENT = {
         ],
         notes: [
             '如果后续还要套品牌模板，先让 Skill 出内容版，再做模板迁移会更省力。'
+        ]
+    },
+    'ppt-master': {
+        name: 'PPT Master',
+        statusLabel: '新增收录',
+        featuredBadge: '官方示例',
+        beginnerNote: '它更像一个本地 PPTX 生成工作流，不是一次性出图工具。第一次使用建议先用官方示例或一份短 PDF 跑通完整链路。',
+        preparation: [
+            '先安装 Python 3.10+，并准备一个能读写文件和执行命令的 Agent 环境，例如 Claude Code、Cursor、VS Code Copilot 或 Codex CLI。',
+            '把 PDF、DOCX、图片或其它源材料放进项目目录，最好按 `projects/<name>/sources/` 这类结构整理。',
+            '如果要追求高质量结果，提前准备模型与图片生成配置；上游推荐大上下文 Claude 搭配 `gpt-image-2`。'
+        ],
+        promptExample: `请使用 PPT Master，把 \`projects/q3-report/sources/report.pdf\` 做成一份 8-10 页、16:9 的可编辑 PowerPoint：
+1. 先确认设计规格，包括页数、受众、风格和是否套用模板。
+2. 每页只保留一个核心观点，避免信息过载。
+3. 输出原生可编辑的 \`.pptx\`，不要把整页压成图片。
+4. 为每页补 speaker notes，并告诉我最终文件保存路径。`,
+        resultSummary: 'PPT Master 会在本地生成原生形状、文本框和图表组成的 `.pptx`，重点是后续还能在 PowerPoint 里逐元素编辑。',
+        resultBullets: [
+            '适合把 PDF、DOCX、图片或粘贴文本转成完整演示稿。',
+            '支持从零设计，也支持把新内容填入已有 `.pptx` 模板。',
+            '可生成讲者备注，并支持进一步把备注合成为音频旁白。'
+        ],
+        notes: [
+            '上游明确强调它是 harness，不是“许愿池”；结果质量取决于模型、输入材料和后续打磨。',
+            '通过 `npx skills add hugohe3/ppt-master` 安装时主要拉取 skill 文件，后处理脚本仍需要在安装位置补 `pip install -r requirements.txt`。',
+            '它和官方 `pptx` Skill 的区别是：PPT Master 更像一整套从材料分析、视觉设计、SVG 生成到 PPTX 导出的完整流水线。'
         ]
     },
     powerpoint: {

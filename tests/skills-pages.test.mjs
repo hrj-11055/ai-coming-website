@@ -30,7 +30,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         })),
         [
             { id: 'ai-coding-assistant', title: '最强AI工具', count: 1 },
-            { id: 'document-processing', title: '文档处理', count: 5 },
+            { id: 'document-processing', title: '文档处理', count: 6 },
             { id: 'efficiency-tools', title: '效率工具', count: 3 },
             { id: 'research-content', title: '研究与内容', count: 3 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
@@ -38,7 +38,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 19, 'Expected nineteen curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 20, 'Expected twenty curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -68,6 +68,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'claude-code-config',
             'docx',
             'pptx',
+            'ppt-master',
             'powerpoint',
             'pdf',
             'xlsx',
@@ -98,6 +99,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             'Claude Code + MiniMax 安装配置',
             'Word 文档生成',
             'PPT 演示文稿生成',
+            'PPT Master',
             'PowerPoint 读取与改稿',
             'PDF 文档生成',
             'Excel 表格生成',
