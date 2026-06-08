@@ -229,7 +229,7 @@ async function maybePublishNewspic({
     }
 
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v6-fallback-background-exact-text-overlay',
+        version: 'daily-newspic-v7-image-edit-newspaper-reference-overlay',
         date,
         coreItems
     }));

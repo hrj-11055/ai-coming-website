@@ -1,19 +1,23 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
 const sharp = require('sharp');
 
 const DEFAULT_TOKENGO_BASE_URL = 'https://ai.ssgoo.net';
 const DEFAULT_IMAGE_MODEL = 'gpt-image-2';
-const DEFAULT_IMAGE_SIZE = '1024x1024';
+const DEFAULT_IMAGE_SIZE = '1024x1536';
 const DEFAULT_IMAGE_QUALITY = 'high';
-const DEFAULT_OUTPUT_FORMAT = 'jpeg';
+const DEFAULT_OUTPUT_FORMAT = 'png';
 const DEFAULT_OUTPUT_COMPRESSION = 80;
 const DEFAULT_RESPONSE_FORMAT = 'url';
+const DEFAULT_INPUT_FIDELITY = 'high';
 const DEFAULT_TIMEOUT_MS = 600000;
 const MAX_WECHAT_IMAGE_BYTES = 1024 * 1024;
-const IMAGE_PROMPT_PREFIX = '请生成一幅高质量中文 AI 日报一览图，图片为主要展示内容，方形 1:1 构图。';
+const DEFAULT_REFERENCE_IMAGE_PATH = path.join(__dirname, '..', 'assets', 'wechat-newspic-reference.png');
+const IMAGE_PROMPT_PREFIX = '请参考图中的报纸式日报样式，编辑生成一幅高质量中文 AI 日报一览图，采用竖版报纸版式、深蓝标题栏、黑白细线分栏和高信息密度。';
 const NEWS_IMAGE_WIDTH = 1024;
-const NEWS_IMAGE_HEIGHT = 1024;
+const NEWS_IMAGE_HEIGHT = 1536;
 
 function buildImagePromptSystemMessage() {
     return IMAGE_PROMPT_PREFIX;
@@ -40,20 +44,41 @@ function formatOverlayDate(date) {
     return `${match[1]}.${match[2]}.${match[3]}`;
 }
 
+function formatOverlayChineseDate(date) {
+    const match = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+        return String(date || '').trim();
+    }
+    return `${match[1]}年${Number(match[2])}月${Number(match[3])}日`;
+}
+
+function formatOverlayWeekday(date) {
+    const match = String(date || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) {
+        return '';
+    }
+    const weekday = new Date(`${match[1]}-${match[2]}-${match[3]}T00:00:00+08:00`).getDay();
+    return ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][weekday];
+}
+
 function measureDisplayUnits(text) {
     return Array.from(String(text || '')).reduce((total, char) => total + (/[\x00-\x7F]/.test(char) ? 1 : 2), 0);
 }
 
 function wrapDisplayText(text, maxUnits, maxLines) {
-    const words = Array.from(String(text || '').replace(/\s+/g, ' ').trim());
+    const words = String(text || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .match(/[A-Za-z0-9.+#/_-]+|[\u4e00-\u9fff]|[^\s]/g) || [];
     const lines = [];
     let current = '';
 
-    for (const char of words) {
-        const next = `${current}${char}`;
+    for (const token of words) {
+        const joiner = current && /^[A-Za-z0-9.+#/_-]+$/.test(token) && /[A-Za-z0-9.+#/_-]$/.test(current) ? ' ' : '';
+        const next = `${current}${joiner}${token}`;
         if (current && measureDisplayUnits(next) > maxUnits) {
             lines.push(current);
-            current = char;
+            current = token;
             if (lines.length >= maxLines) {
                 break;
             }
@@ -107,33 +132,38 @@ function renderTextLines(lines, { x, y, fontSize, lineHeight, fill, weight = 400
 function buildDailyNewspicOverlaySvg({ date, content }) {
     const items = parseNewspicContent(content);
     const cards = items.map((item, index) => {
-        const column = index % 2;
-        const row = Math.floor(index / 2);
-        const x = 54 + column * 468;
-        const y = 150 + row * 162;
-        const titleLines = wrapDisplayText(item.title, 34, 2);
-        const keyPointLines = wrapDisplayText(item.keyPoint, 40, titleLines.length > 1 ? 2 : 3);
+        const column = index % 5;
+        const row = Math.floor(index / 5);
+        const x = 18 + column * 198;
+        const y = 366 + row * 384;
+        const titleLines = wrapDisplayText(item.title, 12, 3);
+        const keyPointLines = wrapDisplayText(item.keyPoint, 15, titleLines.length > 2 ? 5 : 6);
 
         return [
-            `<rect x="${x}" y="${y}" width="448" height="146" rx="24" fill="rgba(8,14,36,0.72)" stroke="rgba(160,190,255,0.36)" stroke-width="1.2"/>`,
-            `<circle cx="${x + 35}" cy="${y + 36}" r="20" fill="#7c3aed"/>`,
-            `<text x="${x + 35}" y="${y + 43}" text-anchor="middle" font-size="20" font-weight="800" fill="#ffffff">${escapeXml(item.number)}</text>`,
+            `<rect x="${x}" y="${y}" width="190" height="360" fill="#fffdf8" stroke="#9aa3b2" stroke-width="1"/>`,
+            `<rect x="${x + 8}" y="${y + 8}" width="26" height="28" fill="#082345"/>`,
+            `<text x="${x + 21}" y="${y + 29}" text-anchor="middle" font-size="22" font-weight="900" fill="#ffffff">${escapeXml(item.number)}</text>`,
             renderTextLines(titleLines, {
-                x: x + 68,
-                y: y + 34,
+                x: x + 42,
+                y: y + 30,
                 fontSize: 21,
-                lineHeight: 26,
-                fill: '#ffffff',
-                weight: 800
+                lineHeight: 27,
+                fill: '#080808',
+                weight: 900
             }),
+            `<line x1="${x + 10}" y1="${y + 118}" x2="${x + 180}" y2="${y + 118}" stroke="#c9ced8" stroke-width="1"/>`,
             renderTextLines(keyPointLines, {
-                x: x + 26,
-                y: y + 88,
-                fontSize: 17,
-                lineHeight: 23,
-                fill: '#dbeafe',
+                x: x + 12,
+                y: y + 150,
+                fontSize: 16,
+                lineHeight: 25,
+                fill: '#101010',
                 weight: 500
-            })
+            }),
+            `<rect x="${x + 12}" y="${y + 288}" width="166" height="52" rx="6" fill="#f4f7fb" stroke="#b8c0cc" stroke-width="1"/>`,
+            `<line x1="${x + 26}" y1="${y + 323}" x2="${x + 92}" y2="${y + 304}" stroke="#082345" stroke-width="4"/>`,
+            `<circle cx="${x + 110}" cy="${y + 311}" r="18" fill="#0b4aae" opacity="0.88"/>`,
+            `<circle cx="${x + 145}" cy="${y + 311}" r="14" fill="#d12d28" opacity="0.9"/>`
         ].join('\n');
     }).join('\n');
 
@@ -142,50 +172,81 @@ function buildDailyNewspicOverlaySvg({ date, content }) {
   <style>
     text { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", Arial, sans-serif; }
   </style>
-  <rect width="1024" height="1024" fill="rgba(3,7,18,0.42)"/>
-  <rect x="34" y="32" width="956" height="960" rx="38" fill="rgba(4,10,28,0.38)" stroke="rgba(255,255,255,0.18)" stroke-width="1.4"/>
-  <text x="58" y="88" font-size="44" font-weight="900" fill="#ffffff">小元说 AI日报</text>
-  <text x="58" y="122" font-size="22" font-weight="600" fill="#bfdbfe">${escapeXml(formatOverlayDate(date))}</text>
-  <text x="810" y="92" font-size="20" font-weight="700" fill="#c4b5fd">10 条核心信息</text>
-  <line x1="58" y1="132" x2="966" y2="132" stroke="rgba(191,219,254,0.42)" stroke-width="1"/>
+  <rect width="1024" height="1536" fill="#f8f5ee" opacity="0.97"/>
+  <rect x="10" y="12" width="1004" height="1512" fill="none" stroke="#082345" stroke-width="1.4"/>
+  <rect x="18" y="20" width="188" height="54" fill="#082345"/>
+  <text x="40" y="59" font-size="38" font-weight="900" fill="#ffffff">AI 日报</text>
+  <text x="38" y="98" font-size="18" font-weight="700" fill="#080808">人工智能行业动态</text>
+  <text x="34" y="122" font-size="17" font-weight="700" fill="#080808">10条要点 · 每日精选</text>
+  <rect x="22" y="134" width="174" height="54" rx="7" fill="#f8fbff" stroke="#082345" stroke-width="1.4"/>
+  <text x="38" y="167" font-size="22" font-weight="900" fill="#0b4aae">小元说 AI日报</text>
+  <line x1="210" y1="20" x2="210" y2="200" stroke="#9aa3b2" stroke-width="1"/>
+  <text x="225" y="125" font-size="104" font-weight="900" fill="#082345">AI生存指南</text>
+  <text x="232" y="184" font-size="18" font-weight="700" fill="#101010">洞察 AI 前沿 · 把握技术趋势 · 提升认知效率 · AI 时代生存与进化</text>
+  <line x1="846" y1="20" x2="846" y2="200" stroke="#9aa3b2" stroke-width="1"/>
+  <text x="858" y="58" font-size="21" font-weight="900" fill="#d12d28">${escapeXml(formatOverlayChineseDate(date))}</text>
+  <text x="858" y="80" font-size="15" font-weight="800" fill="#d12d28">${escapeXml(formatOverlayDate(date))}</text>
+  <text x="892" y="98" font-size="26" font-weight="900" fill="#080808">${escapeXml(formatOverlayWeekday(date))}</text>
+  <line x1="858" y1="118" x2="1000" y2="118" stroke="#9aa3b2" stroke-width="1"/>
+  <text x="858" y="152" font-size="18" font-weight="800" fill="#080808">第 ${escapeXml(String(date || '').replace(/-/g, ''))} 期</text>
+  <rect x="858" y="166" width="142" height="34" fill="#082345"/>
+  <text x="874" y="190" font-size="19" font-weight="900" fill="#ffffff">今日要闻速览</text>
+  <line x1="10" y1="222" x2="1014" y2="222" stroke="#082345" stroke-width="3"/>
+  <line x1="10" y1="230" x2="1014" y2="230" stroke="#082345" stroke-width="1"/>
+  <text x="28" y="300" font-size="40" font-weight="900" fill="#080808">AI 竞争进入新阶段：从模型、数据到落地与生态</text>
+  <text x="206" y="340" font-size="24" font-weight="800" fill="#080808">资本逻辑、技术突破、成本战与具身智能全面升级</text>
+  <line x1="18" y1="354" x2="1006" y2="354" stroke="#082345" stroke-width="1"/>
   ${cards}
-    </svg>`);
+  <line x1="18" y1="1136" x2="1006" y2="1136" stroke="#082345" stroke-width="1.2"/>
+  <rect x="18" y="1152" width="82" height="188" fill="#082345"/>
+  <text x="47" y="1218" font-size="31" font-weight="900" fill="#ffffff">两条</text>
+  <text x="47" y="1276" font-size="31" font-weight="900" fill="#ffffff">生存</text>
+  <text x="47" y="1334" font-size="31" font-weight="900" fill="#ffffff">智慧</text>
+  <text x="130" y="1180" font-size="22" font-weight="900" fill="#080808">第一件：从模型能力到业务落地</text>
+  <text x="130" y="1218" font-size="17" font-weight="600" fill="#101010">不要只看模型强弱，要看技术能否进入真实场景。</text>
+  <rect x="122" y="1242" width="390" height="76" rx="6" fill="#fffdf8" stroke="#9aa3b2"/>
+  <text x="142" y="1276" font-size="18" font-weight="800" fill="#082345">行动指南：找到高频、具体、可验证的环节</text>
+  <text x="560" y="1180" font-size="22" font-weight="900" fill="#080808">第二件：从数据与成本说起</text>
+  <text x="560" y="1218" font-size="17" font-weight="600" fill="#101010">高质量数据与低成本推理，决定产品能否规模化。</text>
+  <rect x="552" y="1242" width="430" height="76" rx="6" fill="#fffdf8" stroke="#9aa3b2"/>
+  <text x="572" y="1276" font-size="18" font-weight="800" fill="#082345">行动指南：沉淀可复用数据资产，优先验证 ROI</text>
+  <line x1="18" y1="1366" x2="1006" y2="1366" stroke="#082345" stroke-width="1.2"/>
+  <rect x="18" y="1384" width="82" height="82" fill="#082345"/>
+  <text x="38" y="1420" font-size="29" font-weight="900" fill="#ffffff">今日</text>
+  <text x="38" y="1458" font-size="29" font-weight="900" fill="#ffffff">结论</text>
+  <text x="125" y="1432" font-size="18" font-weight="800" fill="#080808">资本：从模型能力转向变现能力</text>
+  <text x="390" y="1432" font-size="18" font-weight="800" fill="#080808">数据：从辅助资源变成战略资产</text>
+  <text x="672" y="1432" font-size="18" font-weight="800" fill="#080808">成本：进入低价时代，应用门槛下降</text>
+  <line x1="18" y1="1486" x2="1006" y2="1486" stroke="#9aa3b2" stroke-width="1"/>
+  <text x="20" y="1514" font-size="17" font-weight="700" fill="#101010">出品：小元说 AI</text>
+  <text x="250" y="1514" font-size="17" font-weight="700" fill="#101010">让复杂的 AI 信息，变得简单、实用、有价值</text>
+  <text x="650" y="1514" font-size="15" font-weight="600" fill="#101010">信息来源：公开资料整理，仅供参考</text>
+</svg>`);
 }
 
 async function createDailyNewspicFallbackBackground({ compressImage = compressImageForWechat } = {}) {
     const svg = Buffer.from(`
 <svg width="${NEWS_IMAGE_WIDTH}" height="${NEWS_IMAGE_HEIGHT}" viewBox="0 0 ${NEWS_IMAGE_WIDTH} ${NEWS_IMAGE_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#06112f"/>
-      <stop offset="48%" stop-color="#27135f"/>
-      <stop offset="100%" stop-color="#020617"/>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fffdf8"/>
+      <stop offset="100%" stop-color="#f1eee6"/>
     </linearGradient>
-    <radialGradient id="glow1" cx="22%" cy="18%" r="58%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.62"/>
-      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glow2" cx="82%" cy="30%" r="54%">
-      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.54"/>
-      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
-    </radialGradient>
   </defs>
-  <rect width="1024" height="1024" fill="url(#bg)"/>
-  <rect width="1024" height="1024" fill="url(#glow1)"/>
-  <rect width="1024" height="1024" fill="url(#glow2)"/>
-  <g opacity="0.16" stroke="#bfdbfe" stroke-width="1">
-    <path d="M80 220 C260 80 410 250 570 120 S850 100 970 210" fill="none"/>
-    <path d="M30 770 C220 620 360 840 540 690 S820 650 990 800" fill="none"/>
-    <path d="M120 110 L910 910" />
-    <path d="M930 130 L120 920" />
+  <rect width="1024" height="1536" fill="url(#paper)"/>
+  <g opacity="0.18" stroke="#082345" stroke-width="1">
+    <path d="M20 224 H1004"/>
+    <path d="M20 356 H1004"/>
+    <path d="M20 1138 H1004"/>
+    <path d="M20 1368 H1004"/>
+    <path d="M210 20 V200"/>
+    <path d="M846 20 V200"/>
   </g>
-  <g opacity="0.22" fill="#ffffff">
-    <circle cx="150" cy="180" r="3"/>
-    <circle cx="860" cy="180" r="4"/>
-    <circle cx="760" cy="780" r="3"/>
-    <circle cx="270" cy="850" r="4"/>
-    <circle cx="520" cy="120" r="2.5"/>
-    <circle cx="920" cy="610" r="2.5"/>
+  <g opacity="0.10" fill="#082345">
+    <rect x="18" y="20" width="188" height="54"/>
+    <rect x="858" y="166" width="142" height="34"/>
+    <rect x="18" y="1152" width="82" height="188"/>
+    <rect x="18" y="1384" width="82" height="82"/>
   </g>
 </svg>`);
     const buffer = await sharp(svg)
@@ -199,7 +260,7 @@ async function composeDailyNewspicImage({ backgroundBuffer, date, content, compr
     const composed = await sharp(backgroundBuffer)
         .rotate()
         .resize(NEWS_IMAGE_WIDTH, NEWS_IMAGE_HEIGHT, { fit: 'cover' })
-        .modulate({ brightness: 0.64, saturation: 0.9 })
+        .modulate({ brightness: 1.02, saturation: 0.84 })
         .composite([{ input: overlaySvg, top: 0, left: 0 }])
         .jpeg({ quality: 84, mozjpeg: true })
         .toBuffer();
@@ -249,6 +310,21 @@ function clampCompression(value, fallback) {
     return Number.isFinite(parsed) ? Math.max(0, Math.min(100, parsed)) : fallback;
 }
 
+function readReferenceImageBuffer(config) {
+    if (Buffer.isBuffer(config.referenceImageBuffer) && config.referenceImageBuffer.length > 0) {
+        return config.referenceImageBuffer;
+    }
+
+    const referenceImagePath = config.referenceImagePath
+        || process.env.TOKENGO_IMAGE_REFERENCE_PATH
+        || DEFAULT_REFERENCE_IMAGE_PATH;
+    const imageBuffer = fs.readFileSync(referenceImagePath);
+    if (!Buffer.isBuffer(imageBuffer) || imageBuffer.length === 0) {
+        throw new Error(`日报参考图为空: ${referenceImagePath}`);
+    }
+    return imageBuffer;
+}
+
 function createInfographicGenerator({ config = {}, fetchImpl = fetch, compressImage = compressImageForWechat } = {}) {
     const tokenGoApiKey = config.tokenGoApiKey ?? process.env.TOKENGO_API_KEY ?? '';
     const tokenGoBaseUrl = String(
@@ -263,6 +339,7 @@ function createInfographicGenerator({ config = {}, fetchImpl = fetch, compressIm
         DEFAULT_OUTPUT_COMPRESSION
     );
     const responseFormat = config.responseFormat || process.env.TOKENGO_IMAGE_RESPONSE_FORMAT || DEFAULT_RESPONSE_FORMAT;
+    const inputFidelity = config.inputFidelity || process.env.TOKENGO_IMAGE_INPUT_FIDELITY || DEFAULT_INPUT_FIDELITY;
     const timeoutMs = Math.max(1000, Number(config.timeoutMs || process.env.INFOGRAPHIC_TIMEOUT_MS || DEFAULT_TIMEOUT_MS));
 
     return {
@@ -277,26 +354,26 @@ function createInfographicGenerator({ config = {}, fetchImpl = fetch, compressIm
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), timeoutMs);
             try {
-                const requestBody = {
-                    model,
-                    prompt: buildImagePrompt(prompt),
-                    size,
-                    quality,
-                    output_format: outputFormat,
-                    response_format: responseFormat,
-                    n: 1
-                };
+                const referenceImageBuffer = readReferenceImageBuffer(config);
+                const requestBody = new FormData();
+                requestBody.append('model', model);
+                requestBody.append('prompt', buildImagePrompt(prompt));
+                requestBody.append('image', new Blob([referenceImageBuffer], { type: 'image/png' }), 'wechat-newspic-reference.png');
+                requestBody.append('size', size);
+                requestBody.append('quality', quality);
+                requestBody.append('output_format', outputFormat);
+                requestBody.append('response_format', responseFormat);
+                requestBody.append('input_fidelity', inputFidelity);
                 if (outputFormat === 'jpeg') {
-                    requestBody.output_compression = outputCompression;
+                    requestBody.append('output_compression', String(outputCompression));
                 }
 
-                const response = await fetchImpl(`${tokenGoBaseUrl}/v1/images/generations`, {
+                const response = await fetchImpl(`${tokenGoBaseUrl}/v1/images/edits`, {
                     method: 'POST',
                     headers: {
-                        Authorization: `Bearer ${tokenGoApiKey}`,
-                        'Content-Type': 'application/json'
+                        Authorization: `Bearer ${tokenGoApiKey}`
                     },
-                    body: JSON.stringify(requestBody),
+                    body: requestBody,
                     signal: controller.signal
                 });
                 const data = await response.json().catch(() => ({}));

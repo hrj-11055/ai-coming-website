@@ -98,6 +98,8 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
 
     assert.equal(generatedPrompts.length, 1);
     assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图底图/);
+    assert.match(generatedPrompts[0], /报纸式日报样图/);
+    assert.match(generatedPrompts[0], /竖版 1024x1536/);
     assert.match(generatedPrompts[0], /内容主题清单/);
     assert.match(generatedPrompts[0], /后期准确排版/);
     assert.match(generatedPrompts[0], /百度升级智能体开发平台/);

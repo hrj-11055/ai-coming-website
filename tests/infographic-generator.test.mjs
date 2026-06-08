@@ -11,25 +11,30 @@ const {
     createInfographicGenerator
 } = require('../server/services/infographic-generator.js');
 
-test('buildImagePromptSystemMessage 使用日报一览图指令', () => {
+test('buildImagePromptSystemMessage 使用图生图日报报纸版式指令', () => {
     const msg = buildImagePromptSystemMessage();
     assert.match(msg, /高质量中文 AI 日报一览图/);
-    assert.match(msg, /方形 1:1/);
+    assert.match(msg, /参考图/);
+    assert.match(msg, /报纸/);
+    assert.match(msg, /竖版/);
 });
 
-test('generateInfographic calls TokenGo Images API and downloads the returned URL', async () => {
+test('generateInfographic calls TokenGo image edits API with reference image and downloads the returned URL', async () => {
     const calls = [];
     const generator = createInfographicGenerator({
         config: {
-            tokenGoApiKey: 'tokengo-key'
+            tokenGoApiKey: 'tokengo-key',
+            referenceImageBuffer: Buffer.from('reference-image-bytes')
         },
         fetchImpl: async (url, opts) => {
             const method = opts?.method || 'GET';
+            const body = opts?.body || null;
             calls.push({
                 url,
                 method,
                 authorization: opts?.headers?.Authorization,
-                body: opts?.body ? JSON.parse(opts.body) : null
+                contentType: opts?.headers?.['Content-Type'] || null,
+                body
             });
             if (method === 'GET') {
                 return new Response(Buffer.from('fake-image-bytes'), {
@@ -49,17 +54,24 @@ test('generateInfographic calls TokenGo Images API and downloads the returned UR
 
     assert.equal(calls.length, 2);
     assert.equal(calls[0].method, 'POST');
-    assert.equal(calls[0].url, 'https://ai.ssgoo.net/v1/images/generations');
+    assert.equal(calls[0].url, 'https://ai.ssgoo.net/v1/images/edits');
     assert.equal(calls[0].authorization, 'Bearer tokengo-key');
-    assert.equal(calls[0].body.model, 'gpt-image-2');
-    assert.match(calls[0].body.prompt, /高质量中文 AI 日报一览图/);
-    assert.match(calls[0].body.prompt, /10 条核心信息/);
-    assert.equal(calls[0].body.n, 1);
-    assert.equal(calls[0].body.size, '1024x1024');
-    assert.equal(calls[0].body.quality, 'high');
-    assert.equal(calls[0].body.output_format, 'jpeg');
-    assert.equal(calls[0].body.output_compression, 80);
-    assert.equal(calls[0].body.response_format, 'url');
+    assert.equal(calls[0].contentType, null);
+    assert.ok(calls[0].body instanceof FormData);
+    assert.equal(calls[0].body.get('model'), 'gpt-image-2');
+    assert.match(calls[0].body.get('prompt'), /高质量中文 AI 日报一览图/);
+    assert.match(calls[0].body.get('prompt'), /参考图/);
+    assert.match(calls[0].body.get('prompt'), /10 条核心信息/);
+    assert.equal(calls[0].body.get('size'), '1024x1536');
+    assert.equal(calls[0].body.get('quality'), 'high');
+    assert.equal(calls[0].body.get('output_format'), 'png');
+    assert.equal(calls[0].body.get('response_format'), 'url');
+    assert.equal(calls[0].body.get('input_fidelity'), 'high');
+    assert.ok(calls[0].body.get('image') instanceof Blob);
+    assert.deepEqual(
+        Buffer.from(await calls[0].body.get('image').arrayBuffer()),
+        Buffer.from('reference-image-bytes')
+    );
     assert.equal(calls[1].method, 'GET');
     assert.equal(calls[1].url, 'https://cdn.example.com/daily.jpg');
 
@@ -71,7 +83,8 @@ test('generateInfographic supports TokenGo b64_json responses', async () => {
     const generator = createInfographicGenerator({
         config: {
             tokenGoApiKey: 'tokengo-key',
-            responseFormat: 'b64_json'
+            responseFormat: 'b64_json',
+            referenceImageBuffer: Buffer.from('reference-image-bytes')
         },
         fetchImpl: async () => new Response(JSON.stringify({
             data: [{ b64_json: Buffer.from('fake-image-bytes').toString('base64') }]
