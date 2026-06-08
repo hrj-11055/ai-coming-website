@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-opacity=".35"/></filter>
+  </defs>
+  <rect width="1200" height="675" rx="32" fill="url(#bg)"/>
+  <circle cx="1040" cy="100" r="180" fill="#2563eb" opacity=".16"/>
+  <circle cx="120" cy="610" r="210" fill="#06b6d4" opacity=".1"/>
+  <text x="70" y="105" fill="#67e8f9" font-size="25" font-family="Arial, PingFang SC, sans-serif" font-weight="700">OPENAI CODEX 入门路线</text>
+  <text x="70" y="168" fill="#fff" font-size="48" font-family="Arial, PingFang SC, sans-serif" font-weight="800">从安装到第一次交付</text>
+  <text x="70" y="212" fill="#cbd5e1" font-size="23" font-family="Arial, PingFang SC, sans-serif">把自然语言需求变成代码修改、测试结果与可审查的 diff</text>
+  <g filter="url(#shadow)">
+    <rect x="70" y="270" width="1060" height="305" rx="24" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+    <rect x="70" y="270" width="1060" height="54" rx="24" fill="#1e293b"/>
+    <circle cx="108" cy="297" r="8" fill="#fb7185"/>
+    <circle cx="136" cy="297" r="8" fill="#fbbf24"/>
+    <circle cx="164" cy="297" r="8" fill="#4ade80"/>
+    <text x="205" y="305" fill="#94a3b8" font-size="18" font-family="Menlo, Consolas, monospace">project-terminal</text>
+    <text x="110" y="375" fill="#67e8f9" font-size="24" font-family="Menlo, Consolas, monospace">$ codex</text>
+    <text x="110" y="426" fill="#e2e8f0" font-size="22" font-family="Menlo, Consolas, monospace">› 先阅读项目结构和 AGENTS.md，修复登录失败问题，</text>
+    <text x="110" y="463" fill="#e2e8f0" font-size="22" font-family="Menlo, Consolas, monospace">  补回归测试，运行测试后总结改动。</text>
+    <rect x="108" y="505" width="720" height="12" rx="6" fill="#1e293b"/>
+    <rect x="108" y="505" width="565" height="12" rx="6" fill="url(#accent)"/>
+    <text x="855" y="520" fill="#a5b4fc" font-size="18" font-family="Arial, PingFang SC, sans-serif">读代码 → 修改 → 测试 → 汇报</text>
+  </g>
+  <text x="70" y="630" fill="#94a3b8" font-size="18" font-family="Arial, PingFang SC, sans-serif">推荐起点：在 Git 仓库根目录启动，并保留默认 workspace-write + 按需审批。</text>
+</svg>

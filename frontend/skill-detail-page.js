@@ -159,7 +159,7 @@ function renderMarkdownGuideDetail(skill) {
                 </nav>
                 ${introItems ? `
                     <div class="markdown-guide-intro-block">
-                        <strong class="markdown-guide-intro-block-title">Claude Code 能做什么</strong>
+                        <strong class="markdown-guide-intro-block-title">${escapeHtml(skill.guideIntroTitle || '你将学会什么')}</strong>
                         <ul class="markdown-guide-intro-list">${introItems}</ul>
                     </div>
                 ` : ''}

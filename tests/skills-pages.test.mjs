@@ -29,7 +29,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             count: module.skills.length
         })),
         [
-            { id: 'ai-coding-assistant', title: '最强AI工具', count: 1 },
+            { id: 'ai-coding-assistant', title: '最强 AI 工具推荐', count: 2 },
             { id: 'document-processing', title: '文档处理', count: 4 },
             { id: 'efficiency-tools', title: '效率工具', count: 4 },
             { id: 'research-content', title: '研究与内容', count: 3 },
@@ -38,7 +38,7 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 19, 'Expected nineteen curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 20, 'Expected twenty curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -65,6 +65,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
     assert.deepEqual(
         ALL_SKILLS.map((skill) => skill.slug),
         [
+            'codex-install-guide',
             'claude-code-config',
             'docx',
             'ppt-master',
@@ -95,6 +96,7 @@ test('featured skills expose user-facing Chinese names', async () => {
     assert.deepEqual(
         ALL_SKILLS.map((skill) => skill.name),
         [
+            'OpenAI Codex 安装与使用教程',
             'Claude Code + MiniMax 安装配置',
             'Word 文档生成',
             'PPT Master',
@@ -178,7 +180,7 @@ test('claude code configuration tutorial is a markdown-style MiniMax Windows gui
     const skill = getSkillBySlug('claude-code-config');
 
     assert.ok(skill, 'Expected the Claude Code configuration tutorial entry to exist');
-    assert.equal(skill?.moduleTitle, '最强AI工具');
+    assert.equal(skill?.moduleTitle, '最强 AI 工具推荐');
     assert.equal(skill?.detailLayout, 'markdown');
     assert.match(skill?.installCommand || '', /npm install -g @anthropic-ai\/claude-code/);
     assert.match(skill?.installCommand || '', /registry\.npmmirror\.com/);
@@ -195,6 +197,25 @@ test('claude code configuration tutorial is a markdown-style MiniMax Windows gui
     assert.ok(
         skill?.markdownSections?.some((section) => section.images?.length >= 16),
         'Expected the guide to include the Git installation image grid'
+    );
+});
+
+test('codex tutorial provides a graphic markdown guide in the strongest AI tools group', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const skill = getSkillBySlug('codex-install-guide');
+
+    assert.ok(skill, 'Expected the Codex installation and usage tutorial to exist');
+    assert.equal(skill?.moduleTitle, '最强 AI 工具推荐');
+    assert.equal(skill?.detailLayout, 'markdown');
+    assert.match(skill?.installCommand || '', /npm install -g @openai\/codex/);
+    assert.match(skill?.installCommand || '', /brew install --cask codex/);
+    assert.ok(skill?.markdownSections?.length >= 10, 'Expected a complete Codex walkthrough');
+    assert.match(JSON.stringify(skill), /AGENTS\.md/);
+    assert.match(JSON.stringify(skill), /\/review/);
+    assert.match(JSON.stringify(skill), /x\.com/);
+    assert.ok(
+        skill?.markdownSections?.filter((section) => section.image?.src?.includes('/pic/skills-guides/codex/')).length >= 3,
+        'Expected the Codex guide to include at least three local tutorial graphics'
     );
 });
 
@@ -229,6 +250,7 @@ test('skills page hero copy reflects the curated newcomer-friendly positioning',
 
     assert.match(html, /一次安装，长期复用/, 'Expected the current curated hero headline');
     assert.match(html, /精选经过验证的 AI 能力入口/, 'Expected the current curated hero copy');
+    assert.match(html, /<strong>12\+<\/strong>/, 'Expected the hero to reflect the newly added Codex guide');
     assert.match(html, /AI 能力库/, 'Expected the page to preserve the AI 能力库 name');
 });
 
