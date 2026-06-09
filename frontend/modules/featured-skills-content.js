@@ -64,251 +64,249 @@ export const FEATURED_SKILL_GROUPS = [
 
 export const FEATURED_SKILL_CONTENT = {
     'codex-install-guide': {
-        name: 'OpenAI Codex 安装与使用教程',
+        name: 'Codex App 从 0 到 1 入门教程',
         slug: 'codex-install-guide',
         detailLayout: 'markdown',
-        statusLabel: '官方资料',
-        featuredBadge: '图文教程',
-        headline: '从零安装 Codex CLI，并用一套可复用的工程工作流完成第一次真实交付。',
+        statusLabel: '小白入门',
+        featuredBadge: '真实截图',
+        headline: '把 Codex App 的界面、项目、插件、自动化和权限一次讲清楚，让第一次打开的人也知道从哪里开始。',
         guideIntro: [
-            '在终端中理解代码库、修改文件、运行命令并验证结果',
-            '用 AGENTS.md 固化项目规则，让每次协作都从正确上下文开始',
-            '使用 /review、Skills、MCP 与子代理扩展复杂任务工作流',
-            '掌握安全边界：默认在工作区内写入，需要越界或联网时再审批'
+            '看懂 Codex App 左边、中间、右边分别在做什么',
+            '分清普通对话、本地项目与云端任务应该怎么选',
+            '理解插件、Skill、MCP、自动化和电脑操控',
+            '按一条低风险路线完成第一次真实任务'
         ],
-        scenario: '适合第一次使用 Codex CLI，或已经安装但还停留在“问一句、改一点”阶段的开发者与产品团队。',
-        overview: '这篇教程基于 OpenAI 最新官方手册、Codex 开源仓库与 X 上的真实实践整理。重点不是罗列所有参数，而是带你完成“安装 → 登录 → 启动 → 给上下文 → 执行 → 验证 → 审查”的完整闭环。',
-        useCases: ['首次安装 Codex CLI', '让 Codex 接手真实代码任务', '用 AGENTS.md 固化项目规范', '通过 Skills、MCP 和子代理扩展工作流'],
+        scenario: '适合第一次打开 Codex App、不懂代码，但希望用它处理文件、做内容、查资料、生成网页或自动完成重复任务的人。',
+        overview: '很多人不是不想用 Codex，而是第一次打开时根本不知道从哪里开始。这篇教程不从命令和技术名词讲起，而是先用大白话带你看懂界面，再完成一个低风险任务，最后才接触插件、自动化、项目和权限。',
+        useCases: ['第一次安装和认识 Codex App', '用 Codex 处理本地文件和项目', '安装插件扩展文档与浏览器能力', '设置自动化和电脑操控'],
         gettingStarted: [
-            '选择适合系统的安装方式，运行 `codex --version` 验证。',
-            '执行 `codex login`，优先使用 ChatGPT 浏览器登录；远程服务器可使用设备码登录。',
-            '进入一个 Git 仓库根目录运行 `codex`，先让它解释项目并列出测试命令。',
-            '用 `/init` 生成 AGENTS.md 草稿，再补齐项目规范与验证命令。',
-            '交付前使用 `/review` 检查未提交改动，并根据实际测试结果验收。'
+            '从 OpenAI 官方 Codex 页面下载并安装 Codex App，用 ChatGPT / OpenAI 账号登录。',
+            '先开一个普通对话，让 Codex 解释概念或整理一段文字，不要一上来操作私人文件。',
+            '熟悉左侧导航、中央对话区和右侧结果区，知道 Codex 的工作过程与产物分别在哪里。',
+            '新建一个干净的演示项目，让 Codex 生成一份简单 Markdown，并让它解释做了什么。',
+            '确认理解权限后，再逐步尝试插件、自动化、浏览器和电脑操控。'
         ],
-        installCommand: `# macOS / Linux 官方安装脚本
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
+        installCommand: `# 打开官方页面下载 Codex App
+https://openai.com/codex/
 
-# 或使用 npm
-npm install -g @openai/codex
-
-# macOS 也可使用 Homebrew
-brew install --cask codex
-
-# 验证
-codex --version`,
-        installHint: '选择一种安装方式即可。Windows 用户请在 PowerShell 使用官方安装脚本，或通过 npm 安装。',
-        promptExample: `先阅读当前仓库的 AGENTS.md、README 和 package.json，不要立即修改代码。
-请先告诉我：
-1. 这个项目的结构和启动方式；
-2. 与当前任务最相关的文件；
-3. 你准备如何实现并验证；
-确认计划后再开始修改。完成后运行相关测试，并总结改动、验证证据和剩余风险。`,
-        resultSummary: '完成教程后，你将能让 Codex 在明确边界内独立读代码、修改、运行测试并给出可审查的结果。',
+# 已安装 Codex CLI 的用户也可以直接启动桌面 App
+codex app`,
+        installHint: '优先从 OpenAI 官方入口下载。本文截图基于 macOS 版 Codex App，版本更新后按钮位置可能变化，但核心逻辑一致。',
+        promptExample: `我是第一次使用 Codex App，也不是程序员。
+请先不要修改任何文件，用大白话告诉我：
+1. 当前对话能访问什么；
+2. 如果我要让你整理一个本地文件夹，应该创建普通对话还是项目；
+3. 你需要哪些权限，每项权限有什么风险；
+4. 给我安排一个低风险的第一次练习任务。`,
+        resultSummary: '完成教程后，你会知道 Codex App 每个核心区域的作用，并能在理解权限的前提下完成第一次任务。',
         resultBullets: [
-            '能够在本地项目中启动 Codex，并选择合理的权限模式。',
-            '能够把模糊需求写成包含上下文、约束和验收标准的高质量任务。',
-            '能够用 AGENTS.md、Skills、MCP、子代理和 /review 构建长期工作流。'
+            '能判断什么时候用普通对话、什么时候创建项目。',
+            '能看懂右侧结果区、插件、自动化和设置页。',
+            '遇到权限请求时，知道如何让 Codex 先解释风险。'
         ],
         markdownSections: [
             {
-                title: 'OpenAI Codex 安装与使用教程：从第一次启动到稳定交付',
+                title: 'Codex App 从 0 到 1：小白第一次打开，到底该从哪里开始？',
                 body: [
-                    'Codex 是 OpenAI 的编码智能体，可以在终端、IDE、桌面应用和云端协作。它不只是回答代码问题，还能读取仓库、编辑文件、运行命令、调用工具并验证结果。',
-                    '本文以 Codex CLI 为主线。核心目标不是记住全部命令，而是建立一套稳定闭环：给足上下文，明确边界，让 Codex 执行，再用测试和代码审查验收。'
+                    '很多人第一次打开 Codex App 的反应不是“好强”，而是“这玩意儿到底从哪开始？”左边一堆入口，中间是聊天，右边还会弹出网页、图片、文件和代码变化。真正困住小白的，往往不是不会提问，而是不知道 Codex 正在做什么。',
+                    '所以这篇教程不讲一大堆技术名词。我们先把 Codex App 当成一个会在电脑上做事的超级助理，按普通人的使用路线一步步拆开。'
                 ],
-                image: { src: '/pic/skills-guides/codex/codex-start.svg', caption: 'Codex 的基本工作方式：读项目、修改、运行测试并汇报结果' },
+                image: { src: '/pic/skills-guides/codex-app/cover.jpg', caption: 'Codex App 从 0 到 1 入门教程。图片来源：逸尘 @gengdaJ' },
                 links: [
-                    { label: 'OpenAI Codex 官方文档', href: 'https://developers.openai.com/codex/' },
-                    { label: 'Codex 开源仓库', href: 'https://github.com/openai/codex' }
+                    { label: '参考原文：逸尘的 Codex App 完整入门教程', href: 'https://x.com/gengdaJ/status/2051891231953920174' },
+                    { label: 'OpenAI Codex 官方入口', href: 'https://openai.com/codex/' }
                 ]
             },
             {
-                title: '一、安装 Codex CLI',
-                body: 'macOS、Linux、Windows 都可以使用 Codex CLI。选择一种安装方式即可；安装完成后先查看版本号。使用 npm 安装时，需要本机已有 Node.js 与 npm。',
-                code: `# macOS / Linux：官方安装脚本
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
-
-# npm：跨平台
-npm install -g @openai/codex
-
-# macOS：Homebrew
-brew install --cask codex
-
-# Windows PowerShell：官方安装脚本
-powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"
-
-# 验证安装
-codex --version`,
-                links: [
-                    { label: '官方 Quickstart', href: 'https://developers.openai.com/codex/quickstart/' },
-                    { label: 'Codex CLI README', href: 'https://github.com/openai/codex/blob/main/README.md' }
-                ]
-            },
-            {
-                title: '二、登录并启动第一个会话',
+                title: '一、一句话解释：Codex App 到底是什么',
                 body: [
-                    '执行 `codex login` 后，通常会打开浏览器完成 ChatGPT 登录。远程服务器或无浏览器环境可使用设备码登录。登录信息会在 CLI、IDE 扩展和 Codex App 之间复用。',
-                    '登录完成后，进入一个 Git 仓库根目录再运行 `codex`。这样 Codex 能从项目根目录发现说明文件、理解完整结构，并把写入范围限制在当前工作区。'
-                ],
-                code: `codex login
-
-# 远程服务器或无浏览器环境
-codex login --device-auth
-
-# 进入项目并启动
-cd /path/to/your-project
-codex`,
-                links: [
-                    { label: '官方身份验证说明', href: 'https://developers.openai.com/codex/auth/' }
-                ]
-            },
-            {
-                title: '三、第一次不要急着让它写代码',
-                body: '先让 Codex 读懂项目、复述任务、列出计划和验证方式。对于陌生仓库，这一步能显著减少改错文件、漏跑测试和扩大改动范围的问题。',
-                code: `先阅读 AGENTS.md、README、package.json 和相关源码，不要立即修改。
-请说明：
-1. 项目结构与启动方式；
-2. 与这个任务最相关的文件；
-3. 实现计划与风险；
-4. 完成后要运行哪些测试。`,
-                image: { src: '/pic/skills-guides/codex/codex-workflow.svg', caption: '把上下文、约束、执行、验证和审查连成一个闭环' }
-            },
-            {
-                title: '四、用 AGENTS.md 固化项目规则',
-                body: [
-                    'AGENTS.md 是给编码智能体看的项目说明。Codex 启动时会自动读取它；离当前工作目录更近的说明优先级更高。适合写项目结构、常用命令、编码风格、测试要求和发布流程。',
-                    '在 CLI 中输入 `/init` 可以生成一份起始草稿。不要把它写成长篇口号，优先记录那些一旦遗漏就会造成返工的具体规则。'
-                ],
-                code: `# AGENTS.md
-## Project commands
-- npm start: run the local server
-- node --test tests/*.test.mjs: run regression tests
-
-## Working rules
-- Read existing patterns before editing.
-- Keep changes scoped to the request.
-- Run targeted tests and report actual results.`,
-                links: [
-                    { label: '官方 AGENTS.md 指南', href: 'https://developers.openai.com/codex/guides/agents-md/' }
-                ]
-            },
-            {
-                title: '五、掌握最常用的 CLI 工作流',
-                body: '日常使用不需要记住全部参数。先掌握启动、继续会话、代码审查、诊断和一次性执行，就能覆盖大多数工作。',
-                code: `codex                         # 启动交互式终端
-codex "解释这个项目的架构"      # 带首条任务启动
-codex resume --last           # 继续最近会话
-codex doctor                  # 诊断安装、登录与配置
-codex exec "运行测试并总结失败" # 非交互执行
-
-# 会话内常用命令
-/init       # 生成 AGENTS.md 草稿
-/review     # 审查分支、提交或未提交改动
-/permissions # 查看或调整权限
-/mcp        # 查看 MCP 连接状态`,
-                links: [
-                    { label: 'CLI 命令参考', href: 'https://developers.openai.com/codex/cli/reference/' },
-                    { label: 'CLI 功能指南', href: 'https://developers.openai.com/codex/cli/features/' }
-                ]
-            },
-            {
-                title: '六、权限与安全：优先保留默认边界',
-                body: [
-                    'Codex 的沙箱决定它可以访问哪些文件和网络，审批策略决定什么时候必须停下来问你。对日常本地开发，推荐使用工作区可写、按需审批的组合。',
-                    '不要在普通开发机器上随意使用 `--yolo`。它会绕过审批与沙箱，只适合已经被外部环境严格隔离的场景。'
-                ],
-                code: `# 推荐的低摩擦本地工作方式
-codex --sandbox workspace-write --ask-for-approval on-request
-
-# 只读分析
-codex --sandbox read-only --ask-for-approval on-request`,
-                links: [
-                    { label: '官方沙箱与审批说明', href: 'https://developers.openai.com/codex/agent-approvals-security/' }
-                ]
-            },
-            {
-                title: '七、进阶：Skills、MCP 与子代理怎么选',
-                body: [
-                    '先用 AGENTS.md 固化仓库规则；反复出现的工作方法做成 Skill；需要访问外部文档、GitHub、浏览器或设计工具时连接 MCP；任务能拆成互不依赖的部分时，再让子代理并行推进。',
-                    '这个顺序很重要：规则不清时直接增加更多工具或代理，只会更快地产生不一致结果。'
-                ],
-                image: { src: '/pic/skills-guides/codex/codex-customization.svg', caption: 'Codex 定制顺序：规则 → 工作流 → 外部系统 → 并行代理' },
-                code: `# 查看 MCP 管理命令
-codex mcp --help
-
-# 添加 Context7 文档 MCP 示例
-codex mcp add context7 -- npx -y @upstash/context7-mcp
-
-# 在会话中显式调用 Skill
-$skill-name 请按这个工作流处理当前任务`,
-                links: [
-                    { label: '官方 Skills 文档', href: 'https://developers.openai.com/codex/skills/' },
-                    { label: '官方 MCP 文档', href: 'https://developers.openai.com/codex/mcp/' },
-                    { label: '官方 Subagents 文档', href: 'https://developers.openai.com/codex/subagents/' }
-                ]
-            },
-            {
-                title: '八、来自 X / Twitter 的高质量实践',
-                body: [
-                    '社区实践与官方建议高度一致：让 Agent 做机械工作，人负责定义约束和验证输出；把成功经验沉淀成 Skill；把 Codex 作为独立的第二审查者；任务足够独立时再使用并行代理。',
-                    '下面几篇内容值得继续阅读。教程只提炼可复用方法，具体产品能力与命令仍以 OpenAI 官方文档为准。'
+                    'Codex App 不是一个只负责回答问题的聊天框。更准确地说，它是一个把 AI Agent 放进电脑里的工作台。',
+                    '普通 ChatGPT 更像“告诉你怎么做”；Codex App 在获得权限后，可以直接读文件、改文件、运行命令、搜索网页、生成图片和文档，甚至操作浏览器或 Mac 应用。你可以先把它理解成：一个更偏“做事”的 ChatGPT。'
                 ],
                 list: [
-                    'Pedro Piñera：让 Codex 完成真实 iOS 工程迁移，人在循环中定义约束、处理反馈并做基准验证，最后把经验沉淀为迁移 Skill。',
-                    'Kyle Boddy：把 Codex 用作最终代码审查者，说明“实现”和“独立审查”可以拆成两个阶段。',
-                    'Michael Schade：不要只给零散小任务，应该提供更高层目标与上下文，让 Codex 能利用会话历史、文件和 Skills。',
-                    'OpenAI Developers：子代理适合保持主上下文清晰、并行处理不同部分，并在执行中分别引导。'
+                    '能和你聊天，也能读取你指定的本地文件。',
+                    '能生成图片、文档、PPT、网页和代码。',
+                    '能通过插件连接 GitHub、Google Drive、Slack 等外部服务。',
+                    '能设置自动化，定期执行检查、总结和跟进任务。'
                 ],
+                image: { src: '/pic/skills-guides/codex-app/interface-overview.jpg', caption: 'Codex App 主界面：左侧找入口，中间对话，右侧展示结果。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '二、下载安装：只认官方入口',
+                body: [
+                    '安装 Codex App 和安装普通桌面软件差不多。打开官方页面下载，安装后使用 ChatGPT / OpenAI 账号登录即可。',
+                    '本文截图基于 macOS 版实测。Codex App 更新很快，你看到的按钮名称和位置可能略有变化，但使用逻辑不会变。'
+                ],
+                code: `官方下载入口：
+https://openai.com/codex/
+
+安装后：
+1. 打开 Codex App
+2. 使用 ChatGPT / OpenAI 账号登录
+3. 先保持默认设置，不要急着开启最大权限`,
                 links: [
-                    { label: 'Pedro Piñera：真实迁移与验证闭环', href: 'https://x.com/pepicrft/status/2019079104029442206' },
-                    { label: 'Kyle Boddy：Codex 最终审查工作流', href: 'https://x.com/drivelinekyle/status/2006843857820844430' },
-                    { label: 'Michael Schade：从小任务转向高层目标', href: 'https://x.com/sch/status/2018398527177801999' },
-                    { label: 'OpenAI Developers：Codex 子代理', href: 'https://x.com/OpenAIDevs/status/2033641301594329138' }
+                    { label: 'OpenAI Codex 官方下载入口', href: 'https://openai.com/codex/' },
+                    { label: 'Codex App 官方文档', href: 'https://developers.openai.com/codex/app/' }
                 ]
             },
             {
-                title: '九、第一次真实任务：直接复制这个模板',
-                body: '把下面模板里的目标、边界和测试命令替换成你的实际内容。它适合修 Bug、小功能、页面改版和脚本任务，也是最值得养成的 Codex 使用习惯。',
-                code: `目标：修复登录页提交后偶发白屏的问题。
-
-开始前：
-- 阅读 AGENTS.md、登录相关路由和现有测试。
-- 先复现并解释根因，不要直接猜修复。
-
-实现边界：
-- 只修改登录流程相关文件。
-- 不新增生产依赖。
-- 保持现有 API 返回结构。
-
-验收：
-- 补一条能覆盖根因的回归测试。
-- 运行相关测试与 lint。
-- 最后总结根因、改动、测试证据和剩余风险。`
+                title: '三、普通对话、本地项目、云端 Codex 怎么选',
+                body: [
+                    '这三个入口看起来很像，但判断方法非常简单：只是问问题，用普通对话；需要处理电脑上的文件或项目，用 Codex App 项目；希望任务在远程持续运行，用云端 Codex。',
+                    '小白第一次使用，建议先开普通对话，等理解权限后，再建一个不含隐私文件的演示项目。'
+                ],
+                list: [
+                    '普通对话：解释概念、写文案、整理思路，不绑定本地项目。',
+                    'Codex App 项目：读取和修改指定文件夹，适合真实工作。',
+                    '云端 Codex：任务在远程环境运行，本地电脑关机也不影响。'
+                ]
             },
             {
-                title: '十、常见问题与排查顺序',
-                list: [
-                    '`codex` 找不到：重新打开终端，运行 `codex --version`；npm 安装用户再检查全局 bin 目录是否在 PATH。',
-                    '登录打不开浏览器：运行 `codex login --device-auth`，按终端提示完成设备码登录。',
-                    'Codex 没按项目规则执行：确认从正确目录启动，并检查 AGENTS.md 是否简短、具体、包含真实命令。',
-                    '改动范围太大：在提示词里写清允许修改的目录、禁止事项和验收命令，并先要求计划。',
-                    '结果看起来完成但不可靠：要求它运行真实测试、展示输出证据，再使用 `/review` 做一次独立检查。',
-                    '环境异常难定位：运行 `codex doctor --summary` 获取安装、配置、登录与运行时诊断。'
+                title: '四、主界面地图：左边找入口，中间下任务，右边看作业',
+                body: [
+                    '把 Codex App 想成一张工作台：左边是抽屉和入口，中间是你和助理沟通的地方，右边是它交作业的地方。',
+                    '当 Codex 生成图片、文件、网页或修改代码时，右侧结果区会展示预览和变化。不要只看聊天里的“完成了”，要去右侧确认真正产出了什么。'
                 ],
+                image: { src: '/pic/skills-guides/codex-app/plugins-layout.jpg', caption: 'Codex App 的三分区布局。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '五、左侧导航栏：每个入口到底干什么',
+                body: [
+                    '左侧是 Codex 的入口区。小白最常用的是新对话、搜索、插件、自动化和项目。',
+                    '不想沿用旧上下文就开新对话；需要找以前做过的事就用搜索；需要处理某个本地文件夹就进入项目。'
+                ],
+                list: [
+                    '新对话：开启一个不沿用旧聊天记录的新任务。',
+                    '搜索：查找历史对话、任务和上下文。',
+                    '插件：给 Codex 增加外部能力。',
+                    '自动化：让 Codex 稍后或定期执行任务。',
+                    '项目：让 Codex 围绕指定文件夹开展工作。'
+                ],
+                image: { src: '/pic/skills-guides/codex-app/sidebar.jpg', caption: '左侧导航栏是进入不同工作流的起点。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '六、插件、连接器、Skill、MCP：别被名字吓到',
+                body: [
+                    '这些词第一次看很技术，其实用大白话很好理解：插件是能力包，连接器是接账号，Skill 是工作流说明书，MCP 是接外部工具的通道。',
+                    '刚开始不要一次装很多。只有当你明确知道“我希望 Codex 帮我做 PPT”或“我要连接 GitHub”时，再去找对应插件。'
+                ],
+                list: [
+                    'Plugin 插件：安装一组能力，例如表格、演示文稿、Browser Use。',
+                    'Connector 连接器：连接 Gmail、GitHub、Google Drive 等账号。',
+                    'Skill 技能：让 Codex 按一套固定步骤完成某类任务。',
+                    'MCP：让外部工具或服务向 Codex 提供能力。'
+                ],
+                image: { src: '/pic/skills-guides/codex-app/plugins.jpg', caption: '插件页：按需要给 Codex 增加能力，不要一开始全装。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '七、自动化：让 Codex 稍后或定期帮你做事',
+                body: [
+                    '自动化就是提前告诉 Codex：什么时候执行、检查什么、输出什么、不要做什么。它适合那些重复、稳定、边界清楚的任务。',
+                    '描述越泛，自动化越容易跑偏。设置前至少写清执行时间、对象、输出格式和异常处理方式。'
+                ],
+                list: [
+                    '每天早上整理项目状态。',
+                    '每周检查一次仓库或网页。',
+                    '半小时后继续当前线程。',
+                    '定时生成日报、周报和复盘。'
+                ],
+                image: { src: '/pic/skills-guides/codex-app/automations.jpg', caption: '自动化页面：设置定期或延后执行的任务。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '八、右侧结果区：不要只听它说完成了',
+                body: [
+                    '右侧结果区可能展示文件、来源、网页预览、图片、PDF、内置浏览器、代码差异和 Git 变化。',
+                    '你可以把中间对话区理解成“它做了什么”，把右侧理解成“它真正交了什么作业”。每次任务完成后，都应该看一眼右侧结果。'
+                ],
+                image: { src: '/pic/skills-guides/codex-app/results-panel.jpg', caption: 'Codex 执行过程与右侧预览：任务结果需要实际检查。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '九、设置页先关注什么：工作模式、权限、个性化',
+                body: [
+                    '设置页内容很多，但第一次只需要关注三件事：工作模式是否适合你、默认权限是否过大、个性化说明是否清楚。',
+                    '如果你不是程序员，可以在个性化说明里要求 Codex 默认用中文、少用术语、每一步标出成功标志，并在修改文件或访问账号前解释风险。'
+                ],
+                code: `请默认用中文回答。
+我不是程序员，涉及技术内容时先用大白话解释目的，再给具体操作。
+如果要修改文件、运行命令、访问外部账号或发布内容，请先说明风险。
+教程类内容请写成我能照着操作的步骤，并标注每一步的成功标志。`,
+                images: [
+                    { src: '/pic/skills-guides/codex-app/general-settings.jpg', caption: '常规设置：优先检查工作模式和默认权限。图片来源：逸尘 @gengdaJ' },
+                    { src: '/pic/skills-guides/codex-app/personalization.jpg', caption: '个性化设置：告诉 Codex 你希望它如何协作。图片来源：逸尘 @gengdaJ' }
+                ]
+            },
+            {
+                title: '十、浏览器使用和电脑操控：很强，但边界一定要说清楚',
+                body: [
+                    '浏览器使用让 Codex 在内置浏览器里打开网页、搜索资料、测试页面和截图。电脑操控则可以操作 Mac 上的应用、点击按钮和处理可视化流程。',
+                    '电脑操控是 Codex App 最强的能力之一，也是最需要谨慎的能力。第一次使用时，只操作无风险应用，不要直接让它操作社媒账号、微信、支付页面、私人邮箱或公司敏感工具。'
+                ],
+                image: { src: '/pic/skills-guides/codex-app/browser-computer-use.jpg', caption: '设置页中的浏览器使用与电脑操控入口。图片来源：逸尘 @gengdaJ' }
+            },
+            {
+                title: '十一、权限确认：看不懂就先让 Codex 自己解释',
+                body: '小白最容易犯的错，是看到确认按钮就直接点。正确做法是先看路径、操作对象和风险；不懂时，直接让 Codex 解释为什么需要这项权限，有没有更低风险的做法。',
+                code: `这个权限具体会让你访问什么？
+为什么当前任务需要它？
+它可能修改、上传或发布什么内容？
+有没有权限更小、风险更低的做法？
+我是第一次使用，应该允许吗？`,
+                list: [
+                    '文件访问：先确认路径是不是你允许它处理的文件夹。',
+                    '终端命令：不懂命令时，先要求解释作用和风险。',
+                    '浏览器操作：付款、删除、发布类操作必须格外谨慎。',
+                    '第三方账号：看清楚授权范围，不要默认全部允许。',
+                    '电脑操控：明确允许操作的 App 和禁止触碰的区域。'
+                ]
+            },
+            {
+                title: '十二、第一次使用路线：不要一上来挑战复杂任务',
+                body: '第一次使用的目标不是展示 Codex 能有多强，而是让你看懂它如何工作、如何交付、如何请求权限。按下面顺序走一遍，比直接丢一个大任务更容易真正学会。',
+                list: [
+                    '打开 App，先熟悉左侧导航，不改任何设置。',
+                    '新建普通对话，问一个低风险问题。',
+                    '建立一个不含隐私内容的演示项目。',
+                    '让 Codex 在项目里生成一份简单 Markdown。',
+                    '去右侧结果区查看文件，让它解释做了什么。',
+                    '再尝试一个官方插件或简单自动化。',
+                    '最后再接触 Git、MCP、浏览器和电脑操控。'
+                ],
+                code: `请在当前演示项目中创建一份“我的第一份 Codex 使用记录.md”。
+内容包括：
+1. 你读取了哪些文件；
+2. 你创建或修改了什么；
+3. 我应该在哪里查看结果；
+4. 如果要继续改，我可以怎么描述需求。
+
+这是第一次练习，不要访问项目文件夹之外的内容。`
+            },
+            {
+                title: '十三、常见踩坑：卡住时先这样处理',
+                list: [
+                    'Codex 一直在跑：先看任务状态，确认它是在执行还是已经结束。',
+                    '权限不知道能不能点：不要直接确认，让 Codex 先解释风险。',
+                    '它改了文件但你看不懂：让它按文件逐个解释本次变化。',
+                    '结果不满意：不要立即重开对话，基于当前结果继续明确修改要求。',
+                    '插件太多不知道装哪个：先不装，等真正需要连接某项能力时再添加。',
+                    '自动化跑偏：补充执行时间、执行对象、输出格式、禁止事项和异常处理。'
+                ],
+                code: `请不要重新开始。
+保留当前结果的整体结构，先告诉我哪里没有满足要求，
+然后只修改这些部分，并在完成后列出具体变化。`,
                 links: [
-                    { label: '官方故障排查', href: 'https://developers.openai.com/codex/troubleshooting/' }
+                    { label: '阅读逸尘的完整原文与全部截图', href: 'https://x.com/gengdaJ/status/2051891231953920174' },
+                    { label: 'OpenAI Codex App 官方文档', href: 'https://developers.openai.com/codex/app/' }
                 ]
             }
         ],
         notes: [
-            '安装命令和功能会持续更新，本文以 OpenAI 官方文档与 Codex 开源仓库为准。',
-            'X / Twitter 内容用于补充真实工作流经验，不作为命令语法的唯一依据。',
-            'API Key、登录缓存和项目密钥都属于敏感信息，不要写入 AGENTS.md 或提交到仓库。'
+            '本文的叙事结构、实操经验和界面截图参考自逸尘 @gengdaJ 的 X 长文，并已在正文中标注来源。',
+            '截图基于 macOS 版 Codex App；产品更新后，具体按钮名称和位置可能变化。',
+            '不要把 API Key、密码、Cookie、身份证、银行卡或公司机密写入个性化说明。'
         ],
-        sourceUrl: 'https://developers.openai.com/codex/',
-        sourceLabel: 'OpenAI Codex 官方文档',
-        skillDocPurpose: '这是 AI 能力库中的 Codex 入门与进阶教程，帮助读者从安装走到可验证、可审查的真实工程交付。'
+        sourceUrl: 'https://x.com/gengdaJ/status/2051891231953920174',
+        sourceLabel: '参考原文：逸尘 @gengdaJ',
+        skillDocPurpose: '这是 AI 能力库中的 Codex App 小白入门教程，用大白话和真实截图帮助第一次使用的人看懂界面、权限与完整使用路线。'
     },
     docx: {
         name: 'Word 文档生成',

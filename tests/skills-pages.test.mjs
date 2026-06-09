@@ -96,7 +96,7 @@ test('featured skills expose user-facing Chinese names', async () => {
     assert.deepEqual(
         ALL_SKILLS.map((skill) => skill.name),
         [
-            'OpenAI Codex 安装与使用教程',
+            'Codex App 从 0 到 1 入门教程',
             'Claude Code + MiniMax 安装配置',
             'Word 文档生成',
             'PPT Master',
@@ -200,22 +200,24 @@ test('claude code configuration tutorial is a markdown-style MiniMax Windows gui
     );
 });
 
-test('codex tutorial provides a graphic markdown guide in the strongest AI tools group', async () => {
+test('codex app tutorial provides a screenshot-rich beginner guide in the strongest AI tools group', async () => {
     const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
     const skill = getSkillBySlug('codex-install-guide');
 
     assert.ok(skill, 'Expected the Codex installation and usage tutorial to exist');
     assert.equal(skill?.moduleTitle, '最强 AI 工具推荐');
     assert.equal(skill?.detailLayout, 'markdown');
-    assert.match(skill?.installCommand || '', /npm install -g @openai\/codex/);
-    assert.match(skill?.installCommand || '', /brew install --cask codex/);
+    assert.match(skill?.installCommand || '', /https:\/\/openai\.com\/codex\//);
+    assert.match(skill?.installCommand || '', /codex app/);
     assert.ok(skill?.markdownSections?.length >= 10, 'Expected a complete Codex walkthrough');
-    assert.match(JSON.stringify(skill), /AGENTS\.md/);
-    assert.match(JSON.stringify(skill), /\/review/);
-    assert.match(JSON.stringify(skill), /x\.com/);
+    assert.match(JSON.stringify(skill), /普通对话/);
+    assert.match(JSON.stringify(skill), /电脑操控/);
+    assert.match(JSON.stringify(skill), /gengdaJ/);
     assert.ok(
-        skill?.markdownSections?.filter((section) => section.image?.src?.includes('/pic/skills-guides/codex/')).length >= 3,
-        'Expected the Codex guide to include at least three local tutorial graphics'
+        skill?.markdownSections
+            ?.flatMap((section) => [section.image, ...(section.images || [])])
+            .filter((image) => image?.src?.includes('/pic/skills-guides/codex-app/')).length >= 10,
+        'Expected the Codex App guide to include at least ten local screenshots'
     );
 });
 
