@@ -23,6 +23,8 @@ const DEFAULT_TTS_POLL_INTERVAL_MS = 3000;
 const DEFAULT_TTS_TIMEOUT_MS = 600000;
 const DEFAULT_PODCAST_SCRIPT_API_URL = 'https://api.deepseek.com/chat/completions';
 const DEFAULT_PODCAST_SCRIPT_MODEL = 'deepseek-v4-flash';
+const PODCAST_AUDIO_REQUIRED_START_DATE = '2026-07-04';
+const LEGACY_PODCAST_PAUSED_SUMMARY = '播客功能暂停无法使用。';
 
 function normalizeNewsPayload(rawData) {
     return Array.isArray(rawData) ? rawData : (rawData && Array.isArray(rawData.articles) ? rawData.articles : []);
@@ -78,6 +80,10 @@ function sleep(ms) {
 
 function isIsoDate(value) {
     return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isBeforePodcastAudioRequirement(date) {
+    return isIsoDate(date) && date < PODCAST_AUDIO_REQUIRED_START_DATE;
 }
 
 function sanitizeSpeechText(value) {
@@ -520,6 +526,21 @@ function createNewsPodcastService({
                 audio_url: localAudioRecord ? localAudioRecord.url : existing.audio_url,
                 can_generate: canGenerate
             };
+        }
+
+        if (isBeforePodcastAudioRequirement(date)) {
+            return createPlaceholderMetadata({
+                date,
+                articles,
+                summary: LEGACY_PODCAST_PAUSED_SUMMARY,
+                canGenerate: false,
+                contentHash,
+                promptHash,
+                generationSignature,
+                ttsVoiceKey,
+                scriptModel: config.script.model,
+                ttsModel: config.minimaxTts.model
+            });
         }
 
         if (existing && existing.generation_signature === generationSignature && existing.status === 'pending') {
@@ -1175,5 +1196,7 @@ function createNewsPodcastService({
 module.exports = {
     createNewsPodcastService,
     createPodcastConfigFromEnv,
-    isPodcastGenerationConfigured
+    isPodcastGenerationConfigured,
+    PODCAST_AUDIO_REQUIRED_START_DATE,
+    LEGACY_PODCAST_PAUSED_SUMMARY
 };

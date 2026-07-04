@@ -10,7 +10,8 @@ const require = createRequire(import.meta.url);
 const {
     createNewsPodcastService,
     createPodcastConfigFromEnv,
-    isPodcastGenerationConfigured
+    isPodcastGenerationConfigured,
+    LEGACY_PODCAST_PAUSED_SUMMARY
 } = require('../server/services/news-podcast.js');
 
 function writeJson(filePath, data) {
@@ -136,6 +137,155 @@ test('isPodcastGenerationConfigured requires both script and minimax tts configu
     }), false);
 });
 
+test('getCurrentMetadata hard-codes paused message for pre-July-4 missing podcast audio', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-legacy-paused-'));
+    const dataDir = path.join(root, 'data');
+    const archiveDir = path.join(dataDir, 'archive', 'daily');
+    const metadataDir = path.join(dataDir, 'podcasts', 'news');
+    const newsFile = path.join(dataDir, 'news.json');
+    const promptFile = path.join(root, 'config', 'podcast-script-system-prompt.md');
+
+    writeJson(newsFile, [
+        {
+            id: 1,
+            title: 'AI workflow agents become mainstream',
+            key_point: 'Agents are moving into daily operations.',
+            summary: 'The market is converging around workflow automation.',
+            source_url: 'https://example.com/legacy-news',
+            source_name: 'Example News',
+            category: 'Enterprise AI',
+            importance_score: 5,
+            created_at: '2026-07-03T08:00:00.000Z'
+        }
+    ]);
+    fs.mkdirSync(path.dirname(promptFile), { recursive: true });
+    fs.writeFileSync(promptFile, '# prompt');
+
+    const service = createNewsPodcastService({
+        readData: createJsonReader(),
+        newsFile,
+        dataDir,
+        dailyArchiveDir: archiveDir,
+        metadataDir,
+        config: {
+            script: {
+                apiKey: 'script-key',
+                apiUrl: 'https://script.example.com',
+                model: 'MiniMax-M2.5',
+                timeoutMs: 120000,
+                systemPromptFile: promptFile
+            },
+            minimaxTts: {
+                apiKey: 'tts-key',
+                apiUrl: 'https://tts.example.com/v1/t2a_async_v2',
+                queryApiUrl: 'https://tts.example.com/v1/query/t2a_async_query_v2',
+                fileMetadataApiUrl: 'https://tts.example.com/v1/files/retrieve',
+                fileApiUrl: 'https://tts.example.com/v1/files/retrieve_content',
+                model: 'speech-2.8-turbo',
+                voiceId: 'male-qn-jingying',
+                audioFormat: 'mp3',
+                speed: 1,
+                volume: 1,
+                pitch: 0,
+                languageBoost: 'Chinese',
+                pollIntervalMs: 1,
+                timeoutMs: 50
+            },
+            oss: {}
+        },
+        podcastScriptService: {
+            async generateScript() {
+                throw new Error('legacy dates should not generate missing podcasts');
+            }
+        }
+    });
+
+    const metadata = service.getCurrentMetadata('2026-07-03');
+    assert.equal(metadata.status, 'unavailable');
+    assert.equal(metadata.summary, LEGACY_PODCAST_PAUSED_SUMMARY);
+    assert.equal(metadata.can_generate, false);
+
+    const generated = await service.generateNewsPodcast('2026-07-03');
+    assert.equal(generated.summary, LEGACY_PODCAST_PAUSED_SUMMARY);
+    assert.equal(generated.can_generate, false);
+});
+
+test('getCurrentMetadata requires playable audio for July 4 and later ready metadata', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-audio-required-'));
+    const dataDir = path.join(root, 'data');
+    const archiveDir = path.join(dataDir, 'archive', 'daily');
+    const metadataDir = path.join(dataDir, 'podcasts', 'news');
+    const newsFile = path.join(dataDir, 'news.json');
+    const promptFile = path.join(root, 'config', 'podcast-script-system-prompt.md');
+
+    writeJson(newsFile, [
+        {
+            id: 1,
+            title: 'AI workflow agents become mainstream',
+            key_point: 'Agents are moving into daily operations.',
+            summary: 'The market is converging around workflow automation.',
+            source_url: 'https://example.com/current-news',
+            source_name: 'Example News',
+            category: 'Enterprise AI',
+            importance_score: 5,
+            created_at: '2026-07-04T08:00:00.000Z'
+        }
+    ]);
+    writeJson(path.join(metadataDir, '2026-07-04.json'), {
+        date: '2026-07-04',
+        status: 'ready',
+        title: '小元说 AI日报',
+        summary: '旧 metadata 写了 ready，但本地音频已经不存在。',
+        audio_url: '/api/podcast/news/2026-07-04/audio',
+        audio_storage: 'local',
+        audio_file: 'missing.mp3',
+        audio_mime_type: 'audio/mpeg',
+        can_generate: true
+    });
+    fs.mkdirSync(path.dirname(promptFile), { recursive: true });
+    fs.writeFileSync(promptFile, '# prompt');
+
+    const service = createNewsPodcastService({
+        readData: createJsonReader(),
+        newsFile,
+        dataDir,
+        dailyArchiveDir: archiveDir,
+        metadataDir,
+        config: {
+            script: {
+                apiKey: 'script-key',
+                apiUrl: 'https://script.example.com',
+                model: 'MiniMax-M2.5',
+                timeoutMs: 120000,
+                systemPromptFile: promptFile
+            },
+            minimaxTts: {
+                apiKey: 'tts-key',
+                apiUrl: 'https://tts.example.com/v1/t2a_async_v2',
+                queryApiUrl: 'https://tts.example.com/v1/query/t2a_async_query_v2',
+                fileMetadataApiUrl: 'https://tts.example.com/v1/files/retrieve',
+                fileApiUrl: 'https://tts.example.com/v1/files/retrieve_content',
+                model: 'speech-2.8-turbo',
+                voiceId: 'male-qn-jingying',
+                audioFormat: 'mp3',
+                speed: 1,
+                volume: 1,
+                pitch: 0,
+                languageBoost: 'Chinese',
+                pollIntervalMs: 1,
+                timeoutMs: 50
+            },
+            oss: {}
+        }
+    });
+
+    const metadata = service.getCurrentMetadata('2026-07-04');
+    assert.equal(metadata.status, 'unavailable');
+    assert.equal(metadata.can_generate, true);
+    assert.notEqual(metadata.summary, LEGACY_PODCAST_PAUSED_SUMMARY);
+    assert.equal(metadata.audio_url, null);
+});
+
 test('generateNewsPodcast persists async minimax transcript metadata and local audio fallback', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'podcast-news-test-'));
     const dataDir = path.join(root, 'data');
@@ -154,7 +304,7 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
             source_name: 'Example News',
             category: 'Enterprise AI',
             importance_score: 5,
-            created_at: '2026-03-18T08:00:00.000Z'
+            created_at: '2026-07-04T08:00:00.000Z'
         }
     ]);
     fs.mkdirSync(path.dirname(promptFile), { recursive: true });
@@ -266,12 +416,12 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
         }
     });
 
-    const pending = await service.generateNewsPodcast('2026-03-18');
+    const pending = await service.generateNewsPodcast('2026-07-04');
     assert.equal(pending.status, 'pending');
 
     await new Promise((resolve) => setTimeout(resolve, 20));
 
-    const ready = service.getCurrentMetadata('2026-03-18');
+    const ready = service.getCurrentMetadata('2026-07-04');
     assert.equal(ready.status, 'ready');
     assert.equal(ready.transcript, '大家好，我是小元，欢迎收听今天的小元说 AI日报。今天我们重点聊企业 AI 工具如何抢占工作流入口。欢迎大家订阅小元说 AI日报的公众号和视频号。');
     assert.equal(ready.script_markdown, '# 小元说 AI日报');
@@ -282,7 +432,7 @@ test('generateNewsPodcast persists async minimax transcript metadata and local a
     assert.equal(ready.tts_file_id, 998);
     assert.equal(ready.tts_status, 'Success');
     assert.equal(ready.audio_storage, 'local');
-    assert.match(ready.audio_url, /\/api\/podcast\/news\/2026-03-18\/audio/);
+    assert.match(ready.audio_url, /\/api\/podcast\/news\/2026-07-04\/audio/);
     assert.deepEqual(ready.excluded_items, ['旧闻示例']);
     assert.deepEqual(ready.selected_titles, ['企业 AI 开始争抢入口']);
 });
@@ -306,7 +456,7 @@ test('generateNewsPodcast triggers podcast email after ready metadata persists',
             source_name: 'Example News',
             category: 'Enterprise AI',
             importance_score: 5,
-            created_at: '2026-03-18T08:00:00.000Z'
+            created_at: '2026-07-04T08:00:00.000Z'
         }
     ]);
     fs.mkdirSync(path.dirname(promptFile), { recursive: true });
@@ -358,7 +508,7 @@ test('generateNewsPodcast triggers podcast email after ready metadata persists',
         },
         podcastEmailService: {
             async sendReadyPodcastEmail(payload) {
-                const savedMetadata = JSON.parse(fs.readFileSync(path.join(metadataDir, '2026-03-18.json'), 'utf8'));
+                const savedMetadata = JSON.parse(fs.readFileSync(path.join(metadataDir, '2026-07-04.json'), 'utf8'));
                 emailCalls.push({
                     ...payload,
                     savedStatus: savedMetadata.status
@@ -406,15 +556,15 @@ test('generateNewsPodcast triggers podcast email after ready metadata persists',
         }
     });
 
-    const pending = await service.generateNewsPodcast('2026-03-18');
+    const pending = await service.generateNewsPodcast('2026-07-04');
     assert.equal(pending.status, 'pending');
 
     await new Promise((resolve) => setTimeout(resolve, 20));
 
-    const ready = service.getCurrentMetadata('2026-03-18');
+    const ready = service.getCurrentMetadata('2026-07-04');
     assert.equal(ready.status, 'ready');
     assert.equal(emailCalls.length, 1);
-    assert.equal(emailCalls[0].date, '2026-03-18');
+    assert.equal(emailCalls[0].date, '2026-07-04');
     assert.equal(emailCalls[0].savedStatus, 'ready');
     assert.equal(emailCalls[0].metadata.status, 'ready');
     assert.ok(Buffer.isBuffer(emailCalls[0].audioBuffer));
@@ -438,7 +588,7 @@ test('generateNewsPodcast keeps ready metadata when podcast email send fails', a
             source_name: 'Example News',
             category: 'Enterprise AI',
             importance_score: 5,
-            created_at: '2026-03-18T08:00:00.000Z'
+            created_at: '2026-07-04T08:00:00.000Z'
         }
     ]);
     fs.mkdirSync(path.dirname(promptFile), { recursive: true });
@@ -536,12 +686,12 @@ test('generateNewsPodcast keeps ready metadata when podcast email send fails', a
             }
         });
 
-        const pending = await service.generateNewsPodcast('2026-03-18');
+        const pending = await service.generateNewsPodcast('2026-07-04');
         assert.equal(pending.status, 'pending');
 
         await new Promise((resolve) => setTimeout(resolve, 20));
 
-        const ready = service.getCurrentMetadata('2026-03-18');
+        const ready = service.getCurrentMetadata('2026-07-04');
         assert.equal(ready.status, 'ready');
     } finally {
         console.error = originalError;
