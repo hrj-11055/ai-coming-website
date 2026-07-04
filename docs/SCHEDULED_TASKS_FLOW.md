@@ -1,6 +1,6 @@
 # 定时任务与数据流转总览
 
-更新日期：`2026-06-05`
+更新日期：`2026-07-04`
 
 ## 当前结论
 
@@ -106,4 +106,29 @@ node scripts/run-wechat-autogen-once.js --verbose
 
 ```text
 "reason":"same_fingerprint"
+```
+
+## 站点健康 watchdog
+
+- 接口：`GET /api/health`
+- 脚本：`scripts/setup-health-watchdog-cron.sh`
+- cron 标记：`# ai-coming health watchdog`
+- 作用：每分钟检查本机 `http://127.0.0.1:3000/api/health`。如果 5 秒内无响应，自动执行：
+
+```bash
+pm2 restart ai-news-system --update-env
+```
+
+这个 watchdog 用来处理 PM2 显示 `online` 但 Node HTTP 服务不响应的情况。
+
+生产 crontab 应包含：
+
+```text
+# ai-coming health watchdog
+```
+
+相关事故记录见：
+
+```text
+docs/NGINX_504_INCIDENT_2026-07-04.md
 ```
