@@ -20,6 +20,7 @@ const { createVisitRouter } = require('./routes/visit');
 const { createSecurityRuntime, createSecurityRouter } = require('./routes/security');
 const { createToolsRouter } = require('./routes/tools');
 const { createStatsRouter } = require('./routes/stats');
+const { createHealthRouter } = require('./routes/health');
 const { createMaintenanceRouter } = require('./routes/maintenance');
 const { createArchiveRouter } = require('./routes/archive');
 const { createTemplateRouter } = require('./routes/template');
@@ -317,6 +318,7 @@ function createJsonRuntime({ rootDir, env = process.env }) {
         keywordsFile,
         newsFile
     }));
+    app.use('/api', createHealthRouter());
     app.use('/api', createMaintenanceRouter({
         readData,
         writeData,

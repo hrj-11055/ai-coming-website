@@ -37,6 +37,7 @@
     "weekly:keywords:once": "node scripts/run-weekly-keywords-once.js",
     "weekly:keywords:once:linux": "bash scripts/run-weekly-keywords-once.sh",
     "weekly:keywords:cron:install": "bash scripts/setup-weekly-keywords-cron.sh",
+    "health:watchdog:cron:install": "bash scripts/setup-health-watchdog-cron.sh",
     "check:assets": "node scripts/check-logo-paths.js",
     "data:normalize:dry": "node scripts/normalize-daily-files.js",
     "data:normalize:apply": "node scripts/normalize-daily-files.js --apply",
