@@ -1,7 +1,10 @@
+import { getShanghaiDateKey } from './modules/date-key.js';
+
 function getDateFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    const value = params.get('date') || new Date().toISOString().slice(0, 10);
-    return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : new Date().toISOString().slice(0, 10);
+    const today = getShanghaiDateKey();
+    const value = params.get('date') || today;
+    return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : today;
 }
 
 function toAbsoluteUrl(value) {

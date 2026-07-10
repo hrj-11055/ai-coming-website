@@ -1,4 +1,5 @@
 import { trackInteraction } from './interaction-tracker.js';
+import { getShanghaiDateKey } from './date-key.js';
 
 // AI资讯网站主JavaScript文件
 
@@ -52,7 +53,7 @@ function withTimeout(promise, timeoutMs, errorMessage) {
 }
 
 function getTodayDateKey() {
-    return new Date().toISOString().split('T')[0];
+    return getShanghaiDateKey();
 }
 
 function clearPodcastPoll() {
@@ -1446,7 +1447,7 @@ function renderQuickTodayTimeline(articles) {
     const timelineContainer = document.getElementById('timelineContainer');
     if (!timelineContainer) return;
 
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDateKey();
     const date = new Date(today);
     const displayDate = `${date.getMonth() + 1}月${date.getDate()}日`;
     const count = Array.isArray(articles) ? articles.length : 0;
@@ -1612,7 +1613,7 @@ function renderTimelineItems(datesData) {
 
 // 检查是否是今天
 function isDateToday(dateStr) {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDateKey();
     return dateStr === today;
 }
 
