@@ -31,14 +31,14 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         [
             { id: 'ai-coding-assistant', title: '最强 AI 工具推荐', count: 2 },
             { id: 'document-processing', title: '文档处理', count: 4 },
-            { id: 'efficiency-tools', title: '效率工具', count: 4 },
+            { id: 'efficiency-tools', title: '效率工具', count: 5 },
             { id: 'research-content', title: '研究与内容', count: 3 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 20, 'Expected twenty curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 21, 'Expected twenty-one curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -75,6 +75,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'find-skills',
             'search-first',
             'creator-skill',
+            'hepha-skill',
             'market-research',
             'content-engine',
             'douyin-video-downloader',
@@ -106,6 +107,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             'Skill 搜索与安装',
             '先搜索再动手',
             'Skill 创建助手',
+            'Hepha 自主迭代交付',
             '市场调研与竞品分析',
             '多平台内容改写',
             '抖音无水印视频下载',
@@ -129,6 +131,22 @@ test('replaces duplicate PPT skills with the Vercel Labs find-skills entry', asy
     assert.equal(getSkillBySlug('powerpoint'), null);
     assert.equal(findSkills?.sourceUrl, 'https://github.com/vercel-labs/skills/tree/main/skills/find-skills');
     assert.match(findSkills?.installCommand || '', /vercel-labs\/skills.+find-skills/);
+});
+
+test('cocoloop monitor adds the selected Hepha delivery workflow skill', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const hepha = getSkillBySlug('hepha-skill');
+
+    assert.ok(hepha, 'Expected the Cocoloop-selected hepha-skill entry to exist');
+    assert.equal(hepha?.moduleTitle, '效率工具');
+    assert.equal(hepha?.sourceUrl, 'https://hub.cocoloop.cn/skills/7572');
+    assert.equal(hepha?.sourceLabel, 'CocoLoop 来源页');
+    assert.match(hepha?.installCommand || '', /hepha-skill-main\.zip/);
+    assert.match(hepha?.featuredBadge || '', /S\+/);
+    assert.ok(
+        hepha?.gallery?.some((item) => item.src.includes('hub.cocoloop.cn/assets/images/')),
+        'Expected Hepha to reuse the Cocoloop skill image'
+    );
 });
 
 test('featured skills expose install commands, prompt examples, and non-placeholder source links', async () => {

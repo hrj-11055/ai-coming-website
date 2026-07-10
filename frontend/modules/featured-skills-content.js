@@ -42,7 +42,7 @@ export const FEATURED_SKILL_GROUPS = [
         icon: 'fa-solid fa-bolt',
         tone: 'amber',
         description: '先把需求想清楚、找到合适 Skill 和现成方案，再把高频经验沉淀成可复用能力。',
-        skillSlugs: ['brainstorming', 'find-skills', 'search-first', 'creator-skill']
+        skillSlugs: ['brainstorming', 'find-skills', 'search-first', 'creator-skill', 'hepha-skill']
     },
     {
         id: 'research-content',
@@ -542,6 +542,65 @@ https://openai.com/codex/
             'Skill 的范围越具体，越容易写清楚触发条件，也越容易测试。',
             '不要把临时一次性任务都做成 Skill；只有反复出现的流程才值得沉淀。',
             '写完后最好用正例和反例各测一次，确认它不会在无关任务里误触发。'
+        ]
+    },
+    'hepha-skill': {
+        name: 'Hepha 自主迭代交付',
+        slug: 'hepha-skill',
+        headline: '把大型需求拆成 plan、execute、check、review、commit 的小步交付循环。',
+        scenario: '适合 Claude Code 深度用户处理多阶段开发任务，希望每一步都有任务账本、质量检查和可回滚提交。',
+        overview: 'Hepha 是 CocoLoop 最新上传区里更贴近工程交付的一项 Skill。它不是可执行工具，而是一套纯文档型工作流协议：通过 .autopilot 目录维护 backlog、progress 和 decision-log，让 Agent 按计划、执行、检查、审查、提交的闭环推进复杂需求。相比人格类或娱乐类 Skill，它更适合 AIcoming 能力库的效率与工程用户。',
+        useCases: ['大型需求拆解', 'Claude Code 自动迭代', '提交前质量门禁', '技术决策留痕'],
+        gettingStarted: [
+            '只在任务确实需要多轮迭代时启用，不要把一次性小改动也套进 Hepha 循环。',
+            '先准备清晰的目标、停止条件和验收方式，再让 Agent 建立 .autopilot 工作文件。',
+            '每个循环只交付一个最小可验证子任务，检查和审查通过后再提交。',
+            '涉及 UI 或流程变化时，要求 Agent 使用浏览器或 Playwright 留下验证证据。'
+        ],
+        installCommand: `# CocoLoop 手动下载
+https://dl.cocoloop.cn/bss/skills/hepha-skill-main.zip
+
+# 来源页
+https://hub.cocoloop.cn/skills/7572`,
+        installHint: 'CocoLoop 当前提供的是下载包入口。下载前请在来源页复核作者、CLS 安全报告和最新版本。',
+        sourceUrl: 'https://hub.cocoloop.cn/skills/7572',
+        sourceLabel: 'CocoLoop 来源页',
+        skillDocPurpose: '这个 Skill 的说明文件把“长任务如何持续推进”协议化：先建立 backlog、progress、decision-log 三本账，再按 plan / research / execute / check / review / commit 的顺序小步循环。它的价值在于减少 AI 直接大跨度改代码带来的不可审计风险。',
+        relatedSlugs: ['verification-loop', 'requesting-code-review', 'subagent-driven-development'],
+        statusLabel: 'CocoLoop 新收录',
+        featuredBadge: 'S+ 安全',
+        beginnerNote: 'Hepha 更适合有代码项目经验的人。第一次使用时建议先拿一个低风险 feature 试跑，不要直接交给生产紧急任务。',
+        preparation: [
+            '准备一个可拆解的开发目标，并写清最终验收标准。',
+            '确认项目里已有可运行的测试、lint、build 或浏览器验证方式。',
+            '提前约定连续失败、需求不清或凭证缺失时必须停下来询问。'
+        ],
+        promptExample: `请进入 hepha mode，帮我把下面这个需求拆成可提交的小步循环：
+
+目标：为当前网站新增一个“最近更新的 AI Skill”展示区。
+要求：
+1. 先建立 .autopilot/backlog.md、progress.md 和 decision-log.md。
+2. 每次只推进一个最小可验证子任务。
+3. 每一轮都要运行相关检查。
+4. 涉及页面展示时必须做浏览器验证。
+5. check 和 review 都通过后再准备提交。`,
+        resultSummary: '你会得到一条更可审计的长任务执行轨道，而不是让 Agent 一口气改完所有东西。',
+        resultBullets: [
+            '任务会被拆成更小的可验证单元，降低一次性大改的风险。',
+            '技术选择和失败原因会进入 decision-log / progress，方便复盘。',
+            'S+ 报告显示它是纯 Markdown 文档型 Skill，无外部 API 调用和可执行代码。'
+        ],
+        gallery: [
+            {
+                src: 'https://hub.cocoloop.cn/assets/images/0a4ee0138dce4d05c2ae93b332ed6409.png',
+                alt: 'CocoLoop hepha-skill 封面图',
+                caption: '图片来源：CocoLoop hepha-skill 详情/列表页，作者账号 melonlee。'
+            }
+        ],
+        notes: [
+            'CocoLoop 标注作者为 melonlee，来源信任级别为 T3 个人开发者/社区项目。',
+            '安全报告日期为 2026-05-02，认证等级 S+，但仍建议使用前阅读来源页和下载包内容。',
+            '它适合“长任务更稳”，不适合“所有任务都自动化”。'
         ]
     },
     'market-research': {

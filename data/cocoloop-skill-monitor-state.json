@@ -1,0 +1,99 @@
+{
+    "source": "https://hub.cocoloop.cn/",
+    "last_run_at": "2026-07-10T05:45:38Z",
+    "last_run_timezone": "Asia/Shanghai",
+    "last_result": {
+        "status": "imported",
+        "discovered_count": 10,
+        "selected_url": "https://hub.cocoloop.cn/skills/7572",
+        "selected_slug": "hepha-skill",
+        "selected_title": "Hepha 自主迭代交付",
+        "reason": "S+ 安全等级、纯文档型工作流协议、MIT 开源、与 AIcoming 能力库的效率和工程交付受众高度匹配。"
+    },
+    "seen_skills": [
+        {
+            "url": "https://hub.cocoloop.cn/skills/7578",
+            "name": "zhuzi-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "多 Agent 辩论框架可用，但本次与工程交付受众匹配度低于 Hepha。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7577",
+            "name": "shuixian-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "偏个人情感镜像，隐私和使用场景更窄。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7576",
+            "name": "ace-taffy-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "虚拟主播人格复刻场景较窄。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7575",
+            "name": "curator-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "人格路由器方向有趣，但来源信任和工程复用价值不如 Hepha。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7573",
+            "name": "department-skill",
+            "author": "ccjincc",
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "职场关系分析涉及聊天记录等敏感材料，入库优先级较低。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7572",
+            "name": "hepha-skill",
+            "author": "melonlee",
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "imported",
+            "imported_at": "2026-07-10T05:45:38Z",
+            "import_path": "frontend/modules/featured-skills-content.js",
+            "image_sources": [
+                "https://hub.cocoloop.cn/assets/images/0a4ee0138dce4d05c2ae93b332ed6409.png"
+            ]
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7571",
+            "name": "liuyishou-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "职业护城河管理偏个人材料沉淀，本次不如 Hepha 通用。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7570",
+            "name": "chat-skills",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "恋爱沟通策略与 AIcoming 当前能力库定位不够贴合。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7569",
+            "name": "wangxiaobo-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "文学角色扮演方向较窄。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/7529",
+            "name": "relationship-training-skill",
+            "author": null,
+            "first_seen_at": "2026-07-10T05:45:38Z",
+            "status": "seen",
+            "skip_reason": "关系训练涉及个人聊天记录，隐私边界更敏感。"
+        }
+    ]
+}
