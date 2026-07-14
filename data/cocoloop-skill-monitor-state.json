@@ -1,14 +1,14 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-10T05:45:38Z",
+    "last_run_at": "2026-07-14T04:32:09Z",
     "last_run_timezone": "Asia/Shanghai",
     "last_result": {
         "status": "imported",
-        "discovered_count": 10,
-        "selected_url": "https://hub.cocoloop.cn/skills/7572",
-        "selected_slug": "hepha-skill",
-        "selected_title": "Hepha 自主迭代交付",
-        "reason": "S+ 安全等级、纯文档型工作流协议、MIT 开源、与 AIcoming 能力库的效率和工程交付受众高度匹配。"
+        "discovered_count": 5,
+        "selected_url": "https://hub.cocoloop.cn/skills/15342",
+        "selected_slug": "aitubiao-smart-chart",
+        "selected_title": "爱图表智能图表",
+        "reason": "40+ 图表类型覆盖分析、汇报和内容配图，用途比其他新增候选更广；作者为 aitubiao 品牌账号，说明、安全解读、计费和风险边界完整。"
     },
     "seen_skills": [
         {
@@ -94,6 +94,49 @@
             "first_seen_at": "2026-07-10T05:45:38Z",
             "status": "seen",
             "skip_reason": "关系训练涉及个人聊天记录，隐私边界更敏感。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15306",
+            "name": "web-publisher",
+            "author": "Ping Si <sipingme@gmail.com>",
+            "first_seen_at": "2026-07-14T04:32:09Z",
+            "status": "seen",
+            "skip_reason": "内容发布能力完整，但依赖作者自托管服务、需公众号凭证与付费额度，发布权限和供应商锁定风险高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15340",
+            "name": "爱图表-桑基图",
+            "author": "aitubiao",
+            "first_seen_at": "2026-07-14T04:32:09Z",
+            "status": "seen",
+            "skip_reason": "桑基图场景清晰且免费，但用途比同账号的 40+ 综合图表 Skill 更窄。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15341",
+            "name": "爱图表-AI图表3D插图",
+            "author": "aitubiao",
+            "first_seen_at": "2026-07-14T04:32:09Z",
+            "status": "seen",
+            "skip_reason": "3D 视觉效果较强，但按次计费、生成较慢且商用权边界受会员等级影响。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15342",
+            "name": "爱图表-智能图表",
+            "author": "aitubiao",
+            "first_seen_at": "2026-07-14T04:32:09Z",
+            "status": "imported",
+            "imported_at": "2026-07-14T04:32:09Z",
+            "import_path": "frontend/modules/featured-skills-content.js",
+            "image_sources": [],
+            "image_note": "CocoLoop 详情页和 aitubiao 账号页未提供作者头像或 Skill 封面；未使用无关平台图片。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15352",
+            "name": "爱图表-AIPPT",
+            "author": "aitubiao",
+            "first_seen_at": "2026-07-14T04:32:09Z",
+            "status": "seen",
+            "skip_reason": "PPT 生成场景实用，但与能力库已有 PPT Master 重复，且详情页安全解读文案与 3D 图表内容错配，质量不如入选项。"
         }
     ]
 }

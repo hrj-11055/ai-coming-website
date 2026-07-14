@@ -32,13 +32,13 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             { id: 'ai-coding-assistant', title: '最强 AI 工具推荐', count: 2 },
             { id: 'document-processing', title: '文档处理', count: 4 },
             { id: 'efficiency-tools', title: '效率工具', count: 5 },
-            { id: 'research-content', title: '研究与内容', count: 3 },
+            { id: 'research-content', title: '研究与内容', count: 4 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 21, 'Expected twenty-one curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 22, 'Expected twenty-two curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -77,6 +77,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'creator-skill',
             'hepha-skill',
             'market-research',
+            'aitubiao-smart-chart',
             'content-engine',
             'douyin-video-downloader',
             'filesystem-mcp',
@@ -109,6 +110,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             'Skill 创建助手',
             'Hepha 自主迭代交付',
             '市场调研与竞品分析',
+            '爱图表智能图表',
             '多平台内容改写',
             '抖音无水印视频下载',
             '文件系统操作（MCP）',
@@ -147,6 +149,19 @@ test('cocoloop monitor adds the selected Hepha delivery workflow skill', async (
         hepha?.gallery?.some((item) => item.src.includes('hub.cocoloop.cn/assets/images/')),
         'Expected Hepha to reuse the Cocoloop skill image'
     );
+});
+
+test('cocoloop monitor adds the selected aitubiao smart chart skill', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const chart = getSkillBySlug('aitubiao-smart-chart');
+
+    assert.ok(chart, 'Expected the Cocoloop-selected aitubiao smart chart entry to exist');
+    assert.equal(chart?.moduleTitle, '研究与内容');
+    assert.equal(chart?.sourceUrl, 'https://hub.cocoloop.cn/skills/15342');
+    assert.equal(chart?.sourceLabel, 'CocoLoop 来源页');
+    assert.match(chart?.installCommand || '', /15342/);
+    assert.match(chart?.featuredBadge || '', /A 级/);
+    assert.equal(chart?.gallery, undefined, 'Expected no unrelated image when the author and detail pages expose no cover');
 });
 
 test('featured skills expose install commands, prompt examples, and non-placeholder source links', async () => {

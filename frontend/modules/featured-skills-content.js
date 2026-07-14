@@ -49,8 +49,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '研究与内容',
         icon: 'fa-solid fa-compass-drafting',
         tone: 'rose',
-        description: '从调研、内容拆分到素材获取，围绕真实业务场景挑出最常用的 3 个 Skill。',
-        skillSlugs: ['market-research', 'content-engine', 'douyin-video-downloader']
+        description: '从调研、数据可视化、内容拆分到素材获取，围绕真实业务场景挑出最常用的 4 个 Skill。',
+        skillSlugs: ['market-research', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
     },
     {
         id: 'mcp-starter',
@@ -628,6 +628,56 @@ https://hub.cocoloop.cn/skills/7572`,
         ],
         notes: [
             '最好明确“最终要决定什么”，否则结果容易泛成一份资料综述。'
+        ]
+    },
+    'aitubiao-smart-chart': {
+        name: '爱图表智能图表',
+        slug: 'aitubiao-smart-chart',
+        headline: '把 Excel、CSV 或粘贴数据转成 40+ 种专业图表，用于分析、汇报和内容配图。',
+        scenario: '适合商务分析、市场运营、产品经理和内容创作者，在不写可视化代码的情况下快速产出柱状图、桑基图、词云等图表。',
+        overview: '这是 CocoLoop 新上传区里用途最广的数据可视化 Skill。它由 aitubiao 账号维护，通过官方 API 解析结构化数据并生成 40 余种图表。它的优势是类型覆盖广、流程和费用确认写得完整；边界是必须上传数据到第三方云端，且免费额度用完后需付费。',
+        useCases: ['汇报图表生成', '运营数据可视化', '研究与论文配图', '内容文章配图'],
+        gettingStarted: [
+            '只使用非敏感或已脱敏的 Excel、CSV 与粘贴数据。',
+            '首次使用前在爱图表官方页面创建 API Key，并确认本地凭证文件权限。',
+            '让 Skill 先识别字段和推荐图表，在它显示预计消耗后再确认生成。',
+            '下载结果后检查数据、标题和标注，不要把 AI 选图当成分析结论。'
+        ],
+        installCommand: `# CocoLoop 手动下载
+https://dl.cocoloop.cn/bss/skills/%E7%88%B1%E5%9B%BE%E8%A1%A8-%E6%99%BA%E8%83%BD%E5%9B%BE%E8%A1%A8.zip
+
+# 来源页
+https://hub.cocoloop.cn/skills/15342`,
+        installHint: '下载前请在 CocoLoop 来源页复核当前版本、安全报告、计费与数据上传条款。',
+        sourceUrl: 'https://hub.cocoloop.cn/skills/15342',
+        sourceLabel: 'CocoLoop 来源页',
+        skillDocPurpose: '该 Skill 把认证、数据识别、图表推荐、费用确认、生成与下载固定成一条可检查流程，并明确禁止对可能重复扣费的创建请求自动重试。',
+        relatedSlugs: ['xlsx', 'market-research', 'ppt-master'],
+        statusLabel: 'CocoLoop 新收录',
+        featuredBadge: 'A 级安全',
+        beginnerNote: '这是云端 API Skill，不适合未脱敏的客户、财务或个人数据；生成前务必确认 AI 贝消耗。',
+        preparation: [
+            '准备一份小于 100KB 的脱敏结构化数据。',
+            '提前想清楚图表需要支撑哪个汇报结论。',
+            '确认能够接受第三方 API、项目数上限和后续付费。'
+        ],
+        promptExample: `请使用爱图表-智能图表分析这份已脱敏的 CSV。
+1. 先说明字段结构和你推荐的 3 种图表。
+2. 解释每种图表分别回答什么业务问题。
+3. 查询配额并明确告诉我预计消耗。
+4. 在我确认前不要创建项目。
+5. 生成后返回在线项目和可下载格式。`,
+        resultSummary: '你会得到一组可在线编辑和导出的图表项目，以及选图与费用说明。',
+        resultBullets: [
+            '覆盖 40+ 种基础与高级图表。',
+            '支持 Excel、CSV、TXT 和粘贴数据。',
+            '结果保存在爱图表云端，可在线编辑并导出。'
+        ],
+        notes: [
+            '原始标题：爱图表-智能图表；作者/账号：aitubiao。',
+            'CocoLoop 标注安全等级 A、来源可信度 T2；使用前仍需自行复核下载包与最新条款。',
+            '该 Skill 会把数据上传到 api.aitubiao.com，不要用于敏感或未授权数据。',
+            '详情页与 aitubiao 账号页未提供作者头像或 Skill 封面，本条目未使用无关平台图片。'
         ]
     },
     'content-engine': {
