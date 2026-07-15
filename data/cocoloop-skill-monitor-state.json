@@ -1,14 +1,14 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-14T21:41:08Z",
+    "last_run_at": "2026-07-15T12:43:18Z",
     "last_run_timezone": "Asia/Shanghai",
     "last_result": {
-        "status": "no_new_skills",
-        "discovered_count": 0,
-        "selected_url": null,
-        "selected_slug": null,
-        "selected_title": null,
-        "reason": "检查 Cocoloop Hub 当前 sitemap 索引及最新 skills-189.xml 分片，未发现上次运行后新增的 Skill URL；仅更新运行记录。"
+        "status": "imported",
+        "discovered_count": 834,
+        "selected_url": "https://hub.cocoloop.cn/skills/62249",
+        "selected_slug": "report-search",
+        "selected_title": "report-search",
+        "reason": "CocoLoop sitemap 从 189 个分片扩展至 206 个；在最新 ID 批次中识别出 834 个新增 URL。抽查最新候选后选择 report-search，因其用途清晰，包含搜索、正文提取、校验脚本、模板和示例，且与 AIcoming 的研究与内容受众高度匹配。"
     },
     "seen_skills": [
         {
@@ -137,6 +137,49 @@
             "first_seen_at": "2026-07-14T04:32:09Z",
             "status": "seen",
             "skip_reason": "PPT 生成场景实用，但与能力库已有 PPT Master 重复，且详情页安全解读文案与 3D 图表内容错配，质量不如入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/62277",
+            "name": "DevRel & Developer Advocacy Engine",
+            "author": "1kalin",
+            "first_seen_at": "2026-07-15T12:43:18Z",
+            "status": "seen",
+            "skip_reason": "文档较完整，但面向开发者关系团队，受众和使用频率不如研报搜索。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/62270",
+            "name": "WebSim API",
+            "author": "upintheairsheep",
+            "first_seen_at": "2026-07-15T12:43:18Z",
+            "status": "seen",
+            "skip_reason": "只覆盖 WebSim 生态，单文件且无安全扫描，通用性不如入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/62268",
+            "name": "OpenA2A Security",
+            "author": "abdelsfane",
+            "first_seen_at": "2026-07-15T12:43:18Z",
+            "status": "seen",
+            "skip_reason": "安全主题重要，但详情页无可用扫描报告，且涉及恶意软件与 CVE 检测，需更高信任证据后再收录。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/62245",
+            "name": "Captions and Clips from YouTube Link",
+            "author": "nosselil",
+            "first_seen_at": "2026-07-15T12:43:18Z",
+            "status": "seen",
+            "skip_reason": "短视频剪辑实用，但依赖第三方 MakeAIClips API，服务锁定和视频版权风险高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/62249",
+            "name": "report-search",
+            "author": "eliauktm",
+            "first_seen_at": "2026-07-15T12:43:18Z",
+            "status": "imported",
+            "imported_at": "2026-07-15T12:43:18Z",
+            "import_path": "frontend/modules/featured-skills-content.js",
+            "image_sources": [],
+            "image_note": "CocoLoop 详情页和 eliauktm 作者页未提供作者头像、Skill 封面或相关图片；未使用无关平台图片。"
         }
     ]
 }

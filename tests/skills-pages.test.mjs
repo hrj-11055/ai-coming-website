@@ -32,13 +32,13 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
             { id: 'ai-coding-assistant', title: '最强 AI 工具推荐', count: 2 },
             { id: 'document-processing', title: '文档处理', count: 4 },
             { id: 'efficiency-tools', title: '效率工具', count: 5 },
-            { id: 'research-content', title: '研究与内容', count: 4 },
+            { id: 'research-content', title: '研究与内容', count: 5 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 22, 'Expected twenty-two curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 23, 'Expected twenty-three curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -77,6 +77,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'creator-skill',
             'hepha-skill',
             'market-research',
+            'report-search',
             'aitubiao-smart-chart',
             'content-engine',
             'douyin-video-downloader',
@@ -110,6 +111,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             'Skill 创建助手',
             'Hepha 自主迭代交付',
             '市场调研与竞品分析',
+            '行业研报搜索与提取',
             '爱图表智能图表',
             '多平台内容改写',
             '抖音无水印视频下载',
@@ -162,6 +164,18 @@ test('cocoloop monitor adds the selected aitubiao smart chart skill', async () =
     assert.match(chart?.installCommand || '', /15342/);
     assert.match(chart?.featuredBadge || '', /A 级/);
     assert.equal(chart?.gallery, undefined, 'Expected no unrelated image when the author and detail pages expose no cover');
+});
+
+test('cocoloop monitor adds the selected report search skill', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const reportSearch = getSkillBySlug('report-search');
+
+    assert.ok(reportSearch, 'Expected the Cocoloop-selected report-search entry to exist');
+    assert.equal(reportSearch?.moduleTitle, '研究与内容');
+    assert.equal(reportSearch?.sourceUrl, 'https://hub.cocoloop.cn/skills/62249');
+    assert.equal(reportSearch?.sourceLabel, 'CocoLoop 来源页');
+    assert.match(reportSearch?.installCommand || '', /eliauktm-report-search-1\.0\.0\.zip/);
+    assert.equal(reportSearch?.gallery, undefined, 'Expected no unrelated image when the detail and author pages expose no cover');
 });
 
 test('featured skills expose install commands, prompt examples, and non-placeholder source links', async () => {

@@ -49,8 +49,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '研究与内容',
         icon: 'fa-solid fa-compass-drafting',
         tone: 'rose',
-        description: '从调研、数据可视化、内容拆分到素材获取，围绕真实业务场景挑出最常用的 4 个 Skill。',
-        skillSlugs: ['market-research', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
+        description: '从调研、研报检索、数据可视化、内容拆分到素材获取，围绕真实业务场景挑出最常用的 5 个 Skill。',
+        skillSlugs: ['market-research', 'report-search', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
     },
     {
         id: 'mcp-starter',
@@ -628,6 +628,56 @@ https://hub.cocoloop.cn/skills/7572`,
         ],
         notes: [
             '最好明确“最终要决定什么”，否则结果容易泛成一份资料综述。'
+        ]
+    },
+    'report-search': {
+        name: '行业研报搜索与提取',
+        slug: 'report-search',
+        headline: '按关键词、机构、作者和时间检索行业研报，并提取摘要与正文用于研究分析。',
+        scenario: '适合市场研究、竞品分析、行业扫描和商业计划书前期取材，需要快速定位中文研报时使用。',
+        overview: '这是 CocoLoop 最新批次中交付物最完整、与 AIcoming 研究受众最匹配的 Skill。它提供搜索、正文提取、校验脚本、模板和示例，但依赖第三方研报站 fxbaogao.com；使用者仍需遵守来源站条款、版权和引用规范。',
+        useCases: ['行业趋势研究', '竞品与市场分析', '机构观点检索', '报告摘要与证据整理'],
+        gettingStarted: [
+            '先明确关键词、时间范围和需要回答的研究问题。',
+            '优先读取报告摘要和元数据，只提取与当前问题直接相关的正文。',
+            '保留报告标题、机构、作者、日期和原始链接，避免把二手摘要当成一手结论。',
+            '下载或引用全文前，确认来源站条款及报告版权允许当前用途。'
+        ],
+        installCommand: `# CocoLoop 手动下载
+https://dl.cocoloop.cn/bss/skills/eliauktm-report-search-1.0.0.zip
+
+# 来源页
+https://hub.cocoloop.cn/skills/62249`,
+        installHint: '下载前请在 CocoLoop 来源页复核当前版本和文件清单；该条目尚无可用安全扫描报告。',
+        sourceUrl: 'https://hub.cocoloop.cn/skills/62249',
+        sourceLabel: 'CocoLoop 来源页',
+        skillDocPurpose: '该 Skill 用脚本把研报搜索、正文提取、结果校验和 Markdown 输出串成可复用流程，并提供示例与模板。',
+        relatedSlugs: ['market-research', 'aitubiao-smart-chart', 'content-engine'],
+        statusLabel: 'CocoLoop 新收录',
+        featuredBadge: '实用研究',
+        beginnerNote: '研报可能受版权和来源站使用条款约束；请做摘要、引用和链接回源，不要未经授权批量转载全文。',
+        preparation: [
+            '准备 2 到 5 个准确行业关键词。',
+            '明确机构、作者或发布日期筛选条件。',
+            '提前定义最终输出是资料清单、观点对比还是研究结论。'
+        ],
+        promptExample: `请使用 report-search 检索近 12 个月的中国企业级 AI Agent 行业研报。
+1. 优先权威机构，并按发布日期倒序筛选。
+2. 返回标题、机构、作者、日期、原始链接和摘要。
+3. 只提取与市场规模、商业模式和竞争格局相关的正文片段。
+4. 区分报告原文、你的概括和你的推断。
+5. 不要转载与问题无关的全文。`,
+        resultSummary: '你会得到一份带来源信息的研报清单，以及围绕研究问题提取的摘要和正文证据。',
+        resultBullets: [
+            '支持按关键词、机构、作者和时间筛选。',
+            '包含搜索、正文提取、校验脚本、模板和示例。',
+            '更适合作为研究取材入口，不应替代对原始报告的核验。'
+        ],
+        notes: [
+            '原始标题：report-search；作者/账号：eliauktm。',
+            '来源可信度标注为 T2，但 CocoLoop 当前未提供该版本的安全扫描结果。',
+            '该 Skill 访问 fxbaogao.com；使用前需自行复核接口稳定性、网站条款与报告版权。',
+            '详情页和作者页未提供作者头像、Skill 封面或相关图片，本条目未使用无关配图。'
         ]
     },
     'aitubiao-smart-chart': {
