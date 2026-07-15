@@ -1,14 +1,14 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-14T04:32:09Z",
+    "last_run_at": "2026-07-14T21:41:08Z",
     "last_run_timezone": "Asia/Shanghai",
     "last_result": {
-        "status": "imported",
-        "discovered_count": 5,
-        "selected_url": "https://hub.cocoloop.cn/skills/15342",
-        "selected_slug": "aitubiao-smart-chart",
-        "selected_title": "爱图表智能图表",
-        "reason": "40+ 图表类型覆盖分析、汇报和内容配图，用途比其他新增候选更广；作者为 aitubiao 品牌账号，说明、安全解读、计费和风险边界完整。"
+        "status": "no_new_skills",
+        "discovered_count": 0,
+        "selected_url": null,
+        "selected_slug": null,
+        "selected_title": null,
+        "reason": "检查 Cocoloop Hub 当前 sitemap 索引及最新 skills-189.xml 分片，未发现上次运行后新增的 Skill URL；仅更新运行记录。"
     },
     "seen_skills": [
         {
