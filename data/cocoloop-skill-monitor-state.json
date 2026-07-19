@@ -1,14 +1,14 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-15T12:43:18Z",
+    "last_run_at": "2026-07-19T09:44:30Z",
     "last_run_timezone": "Asia/Shanghai",
     "last_result": {
         "status": "imported",
-        "discovered_count": 834,
-        "selected_url": "https://hub.cocoloop.cn/skills/62249",
-        "selected_slug": "report-search",
-        "selected_title": "report-search",
-        "reason": "CocoLoop sitemap 从 189 个分片扩展至 206 个；在最新 ID 批次中识别出 834 个新增 URL。抽查最新候选后选择 report-search，因其用途清晰，包含搜索、正文提取、校验脚本、模板和示例，且与 AIcoming 的研究与内容受众高度匹配。"
+        "discovered_count": 13000,
+        "selected_url": "https://hub.cocoloop.cn/skills/15614",
+        "selected_slug": "baoyu-infographic-cocoloop",
+        "selected_title": "Baoyu Infographic",
+        "reason": "CocoLoop 官方列表 API 从上次 sitemap 规模约 20,598 条扩展至 33,598 条，sitemap 从 206 个分片扩展至 336 个。选择 Baoyu Infographic，因其具有 21 种布局、22 种风格、完整文件与开源仓库，CocoLoop 标注 MIT-0、S+ 安全等级，且与 AIcoming 研究与内容受众高度匹配。"
     },
     "seen_skills": [
         {
@@ -180,6 +180,41 @@
             "import_path": "frontend/modules/featured-skills-content.js",
             "image_sources": [],
             "image_note": "CocoLoop 详情页和 eliauktm 作者页未提供作者头像、Skill 封面或相关图片；未使用无关平台图片。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15377",
+            "name": "ATXP",
+            "author": "emilioacc",
+            "first_seen_at": "2026-07-19T09:44:30Z",
+            "status": "seen",
+            "skip_reason": "实时搜索、多媒体和邮件能力广，但依赖第三方付费 API 与代理账户，权限和供应商锁定风险高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15289",
+            "name": "YouTube",
+            "author": "byungkyu",
+            "first_seen_at": "2026-07-19T09:44:30Z",
+            "status": "seen",
+            "skip_reason": "YouTube 数据管理完整，但依赖 Maton 托管 OAuth，且视频研究用途与库内已有条目存在部分重复。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/10190",
+            "name": "Markdown Converter",
+            "author": "steipete",
+            "first_seen_at": "2026-07-19T09:44:30Z",
+            "status": "seen",
+            "skip_reason": "基于 markitdown 的多格式转换很实用，但与能力库现有文档处理组的 DOCX、PDF 和 XLSX 能力重叠较多。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/15614",
+            "name": "Baoyu Infographic",
+            "author": "jimliu",
+            "first_seen_at": "2026-07-19T09:44:30Z",
+            "status": "imported",
+            "imported_at": "2026-07-19T09:44:30Z",
+            "import_path": "frontend/modules/featured-skills-content.js",
+            "image_sources": [],
+            "image_note": "CocoLoop 详情页和 jimliu 作者页未提供作者头像、Skill 封面或交付物图片；未使用无关平台配图。"
         }
     ]
 }

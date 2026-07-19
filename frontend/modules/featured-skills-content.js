@@ -49,8 +49,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '研究与内容',
         icon: 'fa-solid fa-compass-drafting',
         tone: 'rose',
-        description: '从调研、研报检索、数据可视化、内容拆分到素材获取，围绕真实业务场景挑出最常用的 5 个 Skill。',
-        skillSlugs: ['market-research', 'report-search', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
+        description: '从调研、研报检索、数据可视化、信息图、内容拆分到素材获取，围绕真实业务场景挑出最常用的 6 个 Skill。',
+        skillSlugs: ['market-research', 'report-search', 'baoyu-infographic-cocoloop', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
     },
     {
         id: 'mcp-starter',
@@ -678,6 +678,46 @@ https://hub.cocoloop.cn/skills/62249`,
             '来源可信度标注为 T2，但 CocoLoop 当前未提供该版本的安全扫描结果。',
             '该 Skill 访问 fxbaogao.com；使用前需自行复核接口稳定性、网站条款与报告版权。',
             '详情页和作者页未提供作者头像、Skill 封面或相关图片，本条目未使用无关配图。'
+        ]
+    },
+    'baoyu-infographic-cocoloop': {
+        name: '宝玉信息图',
+        slug: 'baoyu-infographic-cocoloop',
+        headline: '自动分析内容，从 21 种布局和 22 种视觉风格中组合生成出版级信息图。',
+        scenario: '适合把研究结论、产品对比、流程、时间线和数据摘要转成可分享的视觉交付物。',
+        overview: '这是 CocoLoop 新增批次中完成度最高的内容可视化 Skill 之一。它会先分析信息结构，再推荐布局与风格组合并生成信息图；原仓库公开，CocoLoop 安全等级为 S+，但仍应在安装前复核当前版本和扫描报告。',
+        useCases: ['研究结论可视化', '产品与竞品对比', '流程与时间线说明', '社交媒体信息卡片'],
+        gettingStarted: [
+            '准备结构清楚的原始内容，并明确受众、用途和画布尺寸。',
+            '先让 Skill 分析信息层级并推荐布局，再选择与品牌和内容匹配的风格。',
+            '生成后人工复核数字、引用、专有名词和中文字形，不把视觉效果当成事实校验。'
+        ],
+        installCommand: `# CocoLoop 手动下载（当前复核版本 1.117.4）
+https://dl.cocoloop.cn/bss/skills/jimliu-baoyu-infographic-1.117.4.zip
+
+# 原始开源仓库
+https://github.com/JimLiu/baoyu-skills`,
+        installHint: '优先从原始 GitHub 仓库核对最新版本；CocoLoop 条目显示 MIT-0 许可、T3 社区来源和 S+ 安全等级。',
+        sourceUrl: 'https://hub.cocoloop.cn/skills/15614',
+        sourceLabel: 'CocoLoop 来源页',
+        skillDocPurpose: '该 Skill 通过内容分析、布局选择、风格匹配和图像生成流程，把长文或结构化资料转换为信息图。',
+        relatedSlugs: ['market-research', 'report-search', 'aitubiao-smart-chart'],
+        statusLabel: 'CocoLoop 新收录',
+        featuredBadge: 'S+ 安全',
+        beginnerNote: '信息图可能重排或简化原文；发布前必须复核数据、引用和图片权利。',
+        preparation: ['原始文本或结构化数据', '目标受众与发布平台', '尺寸、品牌色和字体约束'],
+        promptExample: `请使用 Baoyu Infographic 把以下研究摘要制作成竖版信息图。
+1. 先列出信息层级，并说明推荐的布局和风格。
+2. 保留关键数字、单位、时间和来源。
+3. 不要补写原文没有的数据或因果关系。
+4. 生成后附一份文字校对清单，便于人工验收。`,
+        resultSummary: '你会得到一张与内容结构匹配的信息图，以及便于发布前验收的文字核对依据。',
+        resultBullets: ['21 种布局与 22 种视觉风格可组合', '支持先分析内容再推荐呈现方案', '适合从研究材料直接产出可分享视觉交付物'],
+        notes: [
+            '原始标题：Baoyu Infographic；作者/账号：jimliu。',
+            '出处：CocoLoop 来源页与 JimLiu/baoyu-skills 公开仓库；CocoLoop 标注许可证为 MIT-0。',
+            'CocoLoop 扫描报告显示 S+ 等级、52 个文件和 2 项发现；安装时仍需阅读当前报告和文件清单。',
+            '详情页和作者页未提供作者头像、Skill 封面或交付物图片；本条目未使用无关平台配图。'
         ]
     },
     'aitubiao-smart-chart': {
