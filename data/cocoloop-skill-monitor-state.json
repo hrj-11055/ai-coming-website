@@ -1,14 +1,14 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-19T09:44:30Z",
+    "last_run_at": "2026-07-20T04:30:49Z",
     "last_run_timezone": "Asia/Shanghai",
     "last_result": {
-        "status": "imported",
-        "discovered_count": 13000,
-        "selected_url": "https://hub.cocoloop.cn/skills/15614",
-        "selected_slug": "baoyu-infographic-cocoloop",
-        "selected_title": "Baoyu Infographic",
-        "reason": "CocoLoop 官方列表 API 从上次 sitemap 规模约 20,598 条扩展至 33,598 条，sitemap 从 206 个分片扩展至 336 个。选择 Baoyu Infographic，因其具有 21 种布局、22 种风格、完整文件与开源仓库，CocoLoop 标注 MIT-0、S+ 安全等级，且与 AIcoming 研究与内容受众高度匹配。"
+        "status": "no_new_skills",
+        "discovered_count": 0,
+        "selected_url": null,
+        "selected_slug": null,
+        "selected_title": null,
+        "reason": "CocoLoop sitemap-index.xml 仍为 336 个 Skill 分片，最后更新时间为 2026-07-19T09:39:58.442Z，早于上次自动化完成时间；首页公开列表也未显示新于上次已审查批次的条目。本次未发现新 Skill，未修改能力库。"
     },
     "seen_skills": [
         {
