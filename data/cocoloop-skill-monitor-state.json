@@ -1,14 +1,16 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-20T04:30:49Z",
+    "last_run_at": "2026-07-21T00:55:15Z",
     "last_run_timezone": "Asia/Shanghai",
+    "last_checked_sitemap_fragment": 382,
+    "last_checked_sitemap_lastmod": "2026-07-20T18:51:31.499Z",
     "last_result": {
-        "status": "no_new_skills",
-        "discovered_count": 0,
-        "selected_url": null,
-        "selected_slug": null,
-        "selected_title": null,
-        "reason": "CocoLoop sitemap-index.xml 仍为 336 个 Skill 分片，最后更新时间为 2026-07-19T09:39:58.442Z，早于上次自动化完成时间；首页公开列表也未显示新于上次已审查批次的条目。本次未发现新 Skill，未修改能力库。"
+        "status": "imported",
+        "discovered_count": 4600,
+        "selected_url": "https://hub.cocoloop.cn/skills/110565",
+        "selected_slug": "sitemap-content-scraper",
+        "selected_title": "Sitemap Content Scraper",
+        "reason": "CocoLoop Skill sitemap 从 336 增至 382 个分片，新增 4600 个 URL。最新批次抽样详情中，Sitemap Content Scraper 的用途清晰，提供 Sitemap 发现、范围筛选、Markdown 输出、manifest 和错误记录，复用性与 AIcoming 研究内容受众匹配度最高。"
     },
     "seen_skills": [
         {
@@ -215,6 +217,58 @@
             "import_path": "frontend/modules/featured-skills-content.js",
             "image_sources": [],
             "image_note": "CocoLoop 详情页和 jimliu 作者页未提供作者头像、Skill 封面或交付物图片；未使用无关平台配图。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/110575",
+            "name": "广州日报/融媒云通用测试助手",
+            "author": "freeeye",
+            "first_seen_at": "2026-07-21T00:55:15Z",
+            "status": "seen",
+            "skip_reason": "测试模板与脚本较完整，但高度绑定广州日报/融媒云业务接口，通用性不如入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/110579",
+            "name": "SMFOI-KERNEL",
+            "author": "rigeneproject",
+            "first_seen_at": "2026-07-21T00:55:15Z",
+            "status": "seen",
+            "skip_reason": "概念型内核用途较抽象，交付物规模和面向 AIcoming 用户的直接价值不如入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/110567",
+            "name": "Ai Code Generator",
+            "author": "banxian87",
+            "first_seen_at": "2026-07-21T00:55:15Z",
+            "status": "seen",
+            "skip_reason": "代码生成方向通用，但实现依赖未明确的 LLM 适配层，且与能力库现有编码能力重叠。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/110553",
+            "name": "Openclaw Push Doctor",
+            "author": "cosmofang",
+            "first_seen_at": "2026-07-21T00:55:15Z",
+            "status": "seen",
+            "skip_reason": "诊断覆盖多个推送渠道，但包含自动修复脚本且安全扫描尚未完成，执行风险高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/110576",
+            "name": "Wan Video Generation and Editting",
+            "author": "krisyejh",
+            "first_seen_at": "2026-07-21T00:55:15Z",
+            "status": "seen",
+            "skip_reason": "视频生成与编辑说明完整，但依赖特定 Wan 2.7 API，服务锁定和媒体生成成本高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/110565",
+            "name": "Sitemap Content Scraper",
+            "author": "quareth",
+            "first_seen_at": "2026-07-21T00:55:15Z",
+            "status": "imported",
+            "imported_at": "2026-07-21T00:55:15Z",
+            "import_path": "frontend/modules/featured-skills-content.js",
+            "image_sources": [],
+            "image_note": "CocoLoop 详情页和 quareth 作者页未提供作者头像、Skill 封面或相关图片；未使用无关平台配图。",
+            "security_note": "2026-07-21 复核时 CLS 安全扫描仍在进行中；执行前需复核最终报告和 Python 脚本。"
         }
     ]
 }

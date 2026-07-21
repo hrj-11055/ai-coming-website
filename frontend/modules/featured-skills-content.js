@@ -49,8 +49,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '研究与内容',
         icon: 'fa-solid fa-compass-drafting',
         tone: 'rose',
-        description: '从调研、研报检索、数据可视化、信息图、内容拆分到素材获取，围绕真实业务场景挑出最常用的 6 个 Skill。',
-        skillSlugs: ['market-research', 'report-search', 'baoyu-infographic-cocoloop', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
+        description: '从调研、网页采集、研报检索、数据可视化、信息图、内容拆分到素材获取，围绕真实业务场景挑出最常用的 7 个 Skill。',
+        skillSlugs: ['market-research', 'sitemap-content-scraper', 'report-search', 'baoyu-infographic-cocoloop', 'aitubiao-smart-chart', 'content-engine', 'douyin-video-downloader']
     },
     {
         id: 'mcp-starter',
@@ -678,6 +678,48 @@ https://hub.cocoloop.cn/skills/62249`,
             '来源可信度标注为 T2，但 CocoLoop 当前未提供该版本的安全扫描结果。',
             '该 Skill 访问 fxbaogao.com；使用前需自行复核接口稳定性、网站条款与报告版权。',
             '详情页和作者页未提供作者头像、Skill 封面或相关图片，本条目未使用无关配图。'
+        ]
+    },
+    'sitemap-content-scraper': {
+        name: 'Sitemap 网页内容采集',
+        slug: 'sitemap-content-scraper',
+        headline: '从网站 Sitemap 发现公开页面，按范围批量保存为带来源信息的 Markdown。',
+        scenario: '适合研究资料归档、公开文档备份、内容盘点和站点迁移前的信息收集，需要保留页面来源与抓取记录时使用。',
+        overview: 'Sitemap Content Scraper 是 CocoLoop 本轮新增批次中用途最清晰、复用性最强的采集类 Skill。它提供 Sitemap 自动发现、范围筛选、逐页抓取、Markdown 输出和 manifest 错误清单；但当前 CLS 安全扫描仍在进行中，安装前必须复核最终报告和脚本。',
+        useCases: ['公开文档归档', '研究资料批量采集', '网站内容盘点', '迁移前页面清单整理'],
+        gettingStarted: [
+            '先确认目标站允许自动抓取，并阅读 robots.txt、服务条款和版权声明。',
+            '从 Sitemap 发现结果中选择与任务匹配的文档、博客或帮助中心范围，不要默认抓取全站。',
+            '使用 include / exclude 条件排除账号、购物车、个人信息和无关页面。',
+            '抓取完成后检查 manifest 中的来源 URL、失败记录和空内容警告，再使用 Markdown 文件。'
+        ],
+        installCommand: `# CocoLoop 手动下载（当前复核版本 1.0.2）
+https://dl.cocoloop.cn/bss/skills/quareth-sitemap-content-scraper-1.0.2.zip
+
+# 来源页
+https://hub.cocoloop.cn/skills/110565`,
+        installHint: 'CocoLoop 当前仍在进行 CLS 安全扫描；下载或执行 Python 脚本前，请在来源页复核最终扫描结果和文件内容。',
+        sourceUrl: 'https://hub.cocoloop.cn/skills/110565',
+        sourceLabel: 'CocoLoop 来源页',
+        skillDocPurpose: '该 Skill 把 Sitemap 发现、内容范围选择、逐页提取和 Markdown 归档串成可复用流程，并用 manifest 记录已保存页面、跳过项和错误。',
+        relatedSlugs: ['market-research', 'report-search', 'content-engine'],
+        statusLabel: 'CocoLoop 新收录',
+        featuredBadge: '采集实用',
+        beginnerNote: 'Sitemap 暴露页面不等于授权复制内容；仅抓取公开、获准使用的范围，并控制请求频率。',
+        preparation: ['目标网站 URL', '需要采集的内容范围', '站点条款与 robots.txt 检查结果', '输出目录和更新策略'],
+        promptExample: `请使用 Sitemap Content Scraper 归档这个公开文档站。
+1. 先发现全部 Sitemap，并展示样例 URL。
+2. 只选择 /docs 和 /guides，排除账号、购物车和搜索页。
+3. 尊重站点条款与 robots.txt，控制请求频率。
+4. 每页保存为 Markdown，并保留标题、来源 URL 和抓取时间。
+5. 最后汇总 manifest 中的成功、跳过和失败数量。`,
+        resultSummary: '你会得到按站点路径组织的 Markdown 页面，以及可审计的来源、跳过项和错误清单。',
+        resultBullets: ['自动发现常见 Sitemap 位置', '支持路径包含与排除条件', '用 manifest 记录输出文件、跳过 URL 和错误'],
+        notes: [
+            '原始标题：Sitemap Content Scraper；作者/账号：quareth。',
+            '出处：CocoLoop 来源页；本次复核版本为 1.0.2，包含 2 个 Python 脚本、范围选择参考和使用说明。',
+            '2026-07-21 复核时 CLS 安全扫描仍在进行中；收录不代表安全背书，执行前需检查最终报告和脚本。',
+            '详情页和作者页未提供作者头像、Skill 封面或相关图片；本条目未使用无关配图。'
         ]
     },
     'baoyu-infographic-cocoloop': {
