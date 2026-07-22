@@ -31,14 +31,14 @@ test('skills catalog exposes the curated featured skill and MCP groups', async (
         [
             { id: 'ai-coding-assistant', title: '最强 AI 工具推荐', count: 2 },
             { id: 'document-processing', title: '文档处理', count: 4 },
-            { id: 'efficiency-tools', title: '效率工具', count: 5 },
+            { id: 'efficiency-tools', title: '效率工具', count: 6 },
             { id: 'research-content', title: '研究与内容', count: 7 },
             { id: 'mcp-starter', title: 'MCP 入门', count: 5 }
         ],
         'Expected the skills page to expose five curated groups'
     );
 
-    assert.equal(ALL_SKILLS.length, 25, 'Expected twenty-five curated entries to remain online');
+    assert.equal(ALL_SKILLS.length, 26, 'Expected twenty-six curated entries to remain online');
 
     for (const module of SKILL_MODULES) {
         for (const skill of module.skills) {
@@ -76,6 +76,7 @@ test('skills catalog keeps the requested featured skill order', async () => {
             'search-first',
             'creator-skill',
             'hepha-skill',
+            'react-project-standard',
             'market-research',
             'sitemap-content-scraper',
             'report-search',
@@ -112,6 +113,7 @@ test('featured skills expose user-facing Chinese names', async () => {
             '先搜索再动手',
             'Skill 创建助手',
             'Hepha 自主迭代交付',
+            'React 项目工程规范',
             '市场调研与竞品分析',
             'Sitemap 网页内容采集',
             '行业研报搜索与提取',
@@ -193,6 +195,19 @@ test('cocoloop monitor adds the selected sitemap content scraper skill', async (
     assert.match(scraper?.installCommand || '', /quareth-sitemap-content-scraper-1\.0\.2\.zip/);
     assert.match(scraper?.installHint || '', /安全扫描/);
     assert.equal(scraper?.gallery, undefined, 'Expected no unrelated image when the detail and author pages expose no cover');
+});
+
+test('cocoloop monitor adds the selected React project standard skill', async () => {
+    const { getSkillBySlug } = await import('../frontend/modules/skills-catalog.js');
+    const reactStandard = getSkillBySlug('react-project-standard');
+
+    assert.ok(reactStandard, 'Expected the Cocoloop-selected React project standard entry to exist');
+    assert.equal(reactStandard?.moduleTitle, '效率工具');
+    assert.equal(reactStandard?.sourceUrl, 'https://hub.cocoloop.cn/skills/120673');
+    assert.equal(reactStandard?.sourceLabel, 'CocoLoop 来源页');
+    assert.match(reactStandard?.installCommand || '', /bovinphang-fec-react-project-standard-2\.7\.0\.zip/);
+    assert.match(reactStandard?.featuredBadge || '', /MIT/);
+    assert.equal(reactStandard?.gallery, undefined, 'Expected no unrelated image when the detail and author pages expose no cover');
 });
 
 test('cocoloop monitor adds the selected Baoyu infographic skill', async () => {

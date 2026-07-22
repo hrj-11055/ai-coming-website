@@ -1,16 +1,16 @@
 {
     "source": "https://hub.cocoloop.cn/",
-    "last_run_at": "2026-07-21T00:55:15Z",
+    "last_run_at": "2026-07-22T04:22:54Z",
     "last_run_timezone": "Asia/Shanghai",
-    "last_checked_sitemap_fragment": 382,
-    "last_checked_sitemap_lastmod": "2026-07-20T18:51:31.499Z",
+    "last_checked_sitemap_fragment": 434,
+    "last_checked_sitemap_lastmod": "2026-07-22T01:56:32.464Z",
     "last_result": {
         "status": "imported",
-        "discovered_count": 4600,
-        "selected_url": "https://hub.cocoloop.cn/skills/110565",
-        "selected_slug": "sitemap-content-scraper",
-        "selected_title": "Sitemap Content Scraper",
-        "reason": "CocoLoop Skill sitemap 从 336 增至 382 个分片，新增 4600 个 URL。最新批次抽样详情中，Sitemap Content Scraper 的用途清晰，提供 Sitemap 发现、范围筛选、Markdown 输出、manifest 和错误记录，复用性与 AIcoming 研究内容受众匹配度最高。"
+        "discovered_count": 5200,
+        "selected_url": "https://hub.cocoloop.cn/skills/120673",
+        "selected_slug": "react-project-standard",
+        "selected_title": "React Project Standard",
+        "reason": "CocoLoop Skill sitemap 从 382 增至 434 个分片，新增 5200 个 URL。最新高 ID 候选详情中，React Project Standard 用途清晰，包含完整 SKILL.md、4 份专项参考文档、README 和元数据，上游仓库与 MIT 许可明确，包内无可执行脚本，工程复用性和 AIcoming 受众匹配度最高。"
     },
     "seen_skills": [
         {
@@ -269,6 +269,58 @@
             "image_sources": [],
             "image_note": "CocoLoop 详情页和 quareth 作者页未提供作者头像、Skill 封面或相关图片；未使用无关平台配图。",
             "security_note": "2026-07-21 复核时 CLS 安全扫描仍在进行中；执行前需复核最终报告和 Python 脚本。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/120704",
+            "name": "Ssh Tool",
+            "author": "dinghaibin",
+            "first_seen_at": "2026-07-22T04:22:54Z",
+            "status": "seen",
+            "skip_reason": "SSH 远程执行权限高，包含可执行 Python 脚本，且 CLS 扫描未完成，安全风险高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/120699",
+            "name": "YouTube Content Manager Pro",
+            "author": "baolige2023",
+            "first_seen_at": "2026-07-22T04:22:54Z",
+            "status": "seen",
+            "skip_reason": "包含 Flask 应用与 payment_required 页面，业务和支付依赖未在详情页说清，且 CLS 扫描未完成。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/120695",
+            "name": "数字人口播生成",
+            "author": "xuhongfeii2",
+            "first_seen_at": "2026-07-22T04:22:54Z",
+            "status": "seen",
+            "skip_reason": "交付文档与脚本较完整，但依赖特定平台 API，涉及声音和数字人训练的授权、隐私与肖像风险。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/120690",
+            "name": "X (Twitter) Data Scraper",
+            "author": "lamtest556-blip",
+            "first_seen_at": "2026-07-22T04:22:54Z",
+            "status": "seen",
+            "skip_reason": "文档和脚本较完整，但社媒抓取需额外复核平台条款、账号权限和数据合规，风险高于入选项。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/120689",
+            "name": "Investment Analysis Workflow",
+            "author": "pcchris1995",
+            "first_seen_at": "2026-07-22T04:22:54Z",
+            "status": "seen",
+            "skip_reason": "说明文档完整，但投资分析属高风险决策场景，对来源、时效性和免责约束的要求更高。"
+        },
+        {
+            "url": "https://hub.cocoloop.cn/skills/120673",
+            "name": "React Project Standard",
+            "author": "bovinphang",
+            "first_seen_at": "2026-07-22T04:22:54Z",
+            "status": "imported",
+            "imported_at": "2026-07-22T04:22:54Z",
+            "import_path": "frontend/modules/featured-skills-content.js",
+            "image_sources": [],
+            "image_note": "CocoLoop 详情页和 bovinphang 作者页未提供作者头像、Skill 封面或交付物图片；未使用 CocoLoop Logo 等无关配图。",
+            "security_note": "下载包只含 Markdown、JSON 与 package.json，无可执行脚本；上游元数据标注 MIT 许可。2026-07-22 复核时 CLS 安全扫描仍在进行中。"
         }
     ]
 }

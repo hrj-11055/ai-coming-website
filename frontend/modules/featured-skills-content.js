@@ -41,8 +41,8 @@ export const FEATURED_SKILL_GROUPS = [
         title: '效率工具',
         icon: 'fa-solid fa-bolt',
         tone: 'amber',
-        description: '先把需求想清楚、找到合适 Skill 和现成方案，再把高频经验沉淀成可复用能力。',
-        skillSlugs: ['brainstorming', 'find-skills', 'search-first', 'creator-skill', 'hepha-skill']
+        description: '先把需求想清楚、找到合适 Skill 和现成方案，再把高频经验与工程规范沉淀成可复用能力。',
+        skillSlugs: ['brainstorming', 'find-skills', 'search-first', 'creator-skill', 'hepha-skill', 'react-project-standard']
     },
     {
         id: 'research-content',
@@ -601,6 +601,56 @@ https://hub.cocoloop.cn/skills/7572`,
             'CocoLoop 标注作者为 melonlee，来源信任级别为 T3 个人开发者/社区项目。',
             '安全报告日期为 2026-05-02，认证等级 S+，但仍建议使用前阅读来源页和下载包内容。',
             '它适合“长任务更稳”，不适合“所有任务都自动化”。'
+        ]
+    },
+    'react-project-standard': {
+        name: 'React 项目工程规范',
+        slug: 'react-project-standard',
+        headline: '先尊重现有仓库约定，再设计 React + TypeScript 的页面、Feature、组件、状态与 API 边界。',
+        scenario: '适合中大型 React + TypeScript 项目的新模块设计、页面重构、架构评审和团队工程约定。',
+        overview: 'React Project Standard 把仓库调研、模块分层、状态归属、API 与错误处理、测试和性能检查组织成可执行流程。上游包含 4 份专项参考文档，并明确将表单、可访问性、安全等深度问题分流给更窄的 Skill，避免把单一规范写成万能清单。',
+        useCases: ['React 项目目录与模块设计', '组件与 Hooks 边界评审', '状态与 API 分层', '重构前的工程规范收敛'],
+        gettingStarted: [
+            '先让 Agent 读取现有目录、package.json、请求封装、状态管理和测试约定。',
+            '明确当前任务属于路由页、页面私有组件、Feature 模块还是全局通用能力。',
+            '先输出边界和迁移方案，再写代码；不要为了套模板推翻仓库已有风格。',
+            '交付前检查 loading、error、empty、data 四种状态，以及关键测试和性能风险。'
+        ],
+        installCommand: `# CocoLoop 手动下载
+https://dl.cocoloop.cn/bss/skills/bovinphang-fec-react-project-standard-2.7.0.zip
+
+# 来源页
+https://hub.cocoloop.cn/skills/120673`,
+        installHint: '下载前请在 CocoLoop 来源页复核最新版本和 CLS 安全报告；2026-07-22 复核时扫描仍在进行中。',
+        sourceUrl: 'https://hub.cocoloop.cn/skills/120673',
+        sourceLabel: 'CocoLoop 来源页',
+        skillDocPurpose: '该 Skill 先识别仓库已有约定，再按页面、Feature、通用组件、Hooks、Services 和 Stores 划分边界，最后补齐类型、错误状态、测试与性能检查。',
+        relatedSlugs: ['frontend-patterns', 'coding-standards', 'requesting-code-review'],
+        statusLabel: 'CocoLoop 新收录',
+        featuredBadge: 'MIT 开源',
+        beginnerNote: '这是工程规范型 Skill，不会自动替你选定唯一目录模板；价值在于先读懂现有项目，再给出最小可落地调整。',
+        preparation: [
+            '准备当前 React 项目的目录树和 package.json。',
+            '说清楚是新建模块、重构页面还是进行架构评审。',
+            '列出已有 UI 库、状态管理、请求层与测试框架。'
+        ],
+        promptExample: `请使用 React Project Standard 评审这个 React + TypeScript 项目的新订单模块。
+1. 先读取现有目录、package.json、路由、请求层、状态管理和测试写法。
+2. 列出页面编排、feature、通用组件、hooks 和 services 的边界。
+3. 说明 URL、服务端、表单和全局状态分别应该归属哪里。
+4. 补齐 loading / error / empty / data 状态和关键测试入口。
+5. 先给最小迁移方案，不要直接大规模改代码。`,
+        resultSummary: '你会得到一份与现有仓库兼容的分层和迁移方案，而不是脱离上下文的通用模板。',
+        resultBullets: [
+            '覆盖目录、组件、Hooks、路由、状态、API、错误处理和测试边界。',
+            '包含结构、运行时、质量与性能 4 份专项参考文档。',
+            '上游仓库与 MIT 许可明确，包内不含可执行脚本。'
+        ],
+        notes: [
+            '原始标题：React Project Standard；作者/账号：bovinphang。',
+            '上游仓库：https://github.com/bovinphang/frontend-craft；元数据标注 MIT 许可。',
+            'CocoLoop 详情页标注版本 2.7.0；2026-07-22 复核时 CLS 安全扫描尚未完成，安装前仍应复核最新报告。',
+            '详情页和作者页未提供作者头像、Skill 封面或交付物图片；本条目未使用 CocoLoop Logo 等无关配图。'
         ]
     },
     'market-research': {
