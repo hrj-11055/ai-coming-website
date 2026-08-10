@@ -46,16 +46,18 @@ test('newspic image prompt uses the same ten items as the primary display', () =
     });
 
     assert.match(prompt, /小元说 AI日报/);
-    assert.match(prompt, /基于以上内容画一幅日报图，并附上当天的日期。/);
-    assert.match(prompt, /ChatGPT 网页版/);
-    assert.match(prompt, /内容主题清单/);
-    assert.match(prompt, /必须使用的日报正文/);
-    assert.match(prompt, /不要引入清单之外/);
-    assert.match(prompt, /5 列 x 2 行/);
+    assert.match(prompt, /基于以上内容，画一幅 AI 日报的报纸图，并附上今日日期。/);
+    assert.match(prompt, /资深中文报纸美术编辑和信息视觉设计师/);
+    assert.match(prompt, /自主提炼一个能统领全日内容的主标题/);
+    assert.match(prompt, /品牌标志、产品形象、代表性物件、人物剪影或关键数字/);
+    assert.match(prompt, /不是十个同样大小的文字框/);
+    assert.match(prompt, /不照抄具体布局/);
+    assert.match(prompt, /【今日内容】/);
     assert.match(prompt, new RegExp(content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(prompt, /Anthropic 提交 IPO/);
     assert.match(prompt, /Meta 调整 AI 组织/);
     assert.doesNotMatch(prompt, /第十一条不应出现/);
     assert.doesNotMatch(prompt, /播客/);
     assert.doesNotMatch(prompt, /TokenGo|gpt-image-2|Images API/);
+    assert.doesNotMatch(prompt, /5 列 x 2 行|深蓝报头|白底纸媒/);
 });

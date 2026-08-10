@@ -19,7 +19,9 @@ data/wechat-staging/YYYY-MM-DD-newspic-chatgpt-prompt.txt
 
 - `newspic-summary.json`：来源指纹、DeepSeek 模型、token 用量、10 条结构化摘要。
 - `newspic.txt`：10 条精选正文，总计不超过 500 字。
-- `newspic-chatgpt-prompt.txt`：手动复制到 ChatGPT 网页版的完整绘图指令，已包含当天日期。
+- `newspic-chatgpt-prompt.txt`：手动复制到 ChatGPT 网页版的完整绘图指令，已包含当天日期。提示词只给出报纸编辑方向和事实边界，让 ChatGPT 自主提炼主标题、安排版面，并选择品牌标志、代表性图像或关键数字作为视觉重点。
+
+如有满意的日报参考图，可以在粘贴提示词时一并上传。提示词会要求模型只参考其报纸气质、信息层级和图文节奏，不机械复刻具体布局。
 
 ## 为什么不经过 Gmail
 

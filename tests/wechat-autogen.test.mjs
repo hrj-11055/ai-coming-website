@@ -117,8 +117,9 @@ test('runWechatAutogenOnce prepares one ChatGPT web prompt with ten report-drive
     assert.equal(result.podcast.reason, 'podcast_disabled');
 
     const prompt = fs.readFileSync(result.newspic.promptPath, 'utf8');
-    assert.match(prompt, /ChatGPT 网页版/);
-    assert.match(prompt, /基于以上内容画一幅日报图，并附上当天的日期。/);
+    assert.match(prompt, /基于以上内容，画一幅 AI 日报的报纸图，并附上今日日期。/);
+    assert.match(prompt, /自主提炼一个能统领全日内容的主标题/);
+    assert.match(prompt, /品牌标志、产品形象、代表性物件、人物剪影或关键数字/);
     assert.match(prompt, /2026年6月4日/);
     assert.match(prompt, /Anthropic IPO/);
     assert.match(prompt, /发生变化1。值得关注1。/);
@@ -126,6 +127,7 @@ test('runWechatAutogenOnce prepares one ChatGPT web prompt with ten report-drive
     assert.doesNotMatch(prompt, /第十一条不应出现/);
     assert.doesNotMatch(prompt, /这段播客口播稿/);
     assert.doesNotMatch(prompt, /TokenGo|gpt-image-2|Images API/);
+    assert.doesNotMatch(prompt, /5 列 x 2 行|深蓝报头|白底纸媒/);
 
     const savedState = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8'));
     assert.equal(savedState.newspic.last_prepared_fingerprint, result.newspic.fingerprint);

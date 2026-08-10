@@ -224,10 +224,14 @@ async function maybePublishNewspic({
         sourceUrl: item.sourceUrl,
         importanceScore: item.importanceScore
     }));
-    const fingerprint = hashText(JSON.stringify({
+    const summaryFingerprint = hashText(JSON.stringify({
         version: 'daily-newspic-v9-deepseek-chatgpt-web-prompt',
         date,
         coreItems: fingerprintItems
+    }));
+    const fingerprint = hashText(JSON.stringify({
+        version: 'daily-newspic-v10-autonomous-editorial-prompt',
+        summaryFingerprint
     }));
     if (state?.newspic?.last_prepared_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { reportPath, fingerprint });
@@ -236,7 +240,7 @@ async function maybePublishNewspic({
     const summaryCachePath = path.join(stagingDir, `${date}-newspic-summary.json`);
     const cachedSummary = validateCachedDailyNewsSummary(
         readJsonFileSafe(summaryCachePath, null),
-        fingerprint
+        summaryFingerprint
     );
     let summaryResult = cachedSummary;
     let summarySource = 'cache';
@@ -249,7 +253,7 @@ async function maybePublishNewspic({
         writeJsonFile(summaryCachePath, {
             version: 'daily-news-summary-v2',
             date,
-            source_fingerprint: fingerprint,
+            source_fingerprint: summaryFingerprint,
             model: summaryResult.model || null,
             usage: summaryResult.usage || null,
             character_count: summaryResult.characterCount,
