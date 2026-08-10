@@ -23,6 +23,10 @@ const { createMinimaxAudioClient, createMinimaxTtsClient } = require('../server/
 const { createWechatPodcastFormatter } = require('../server/services/wechat-podcast-formatter');
 const { createWechatPublisher } = require('../server/services/wechat-publisher');
 const {
+    createDailyNewsSummarizer,
+    validateCachedDailyNewsSummary
+} = require('../server/services/daily-news-summary');
+const {
     composeDailyNewspicImage,
     createDailyNewspicFallbackBackground,
     createInfographicGenerator
@@ -205,6 +209,7 @@ async function maybePublishNewspic({
     stagingDir,
     state,
     publisher,
+    dailyNewsSummarizer,
     infographicGenerator,
     imageComposer = composeDailyNewspicImage,
     fallbackBackgroundCreator = createDailyNewspicFallbackBackground,
@@ -220,24 +225,57 @@ async function maybePublishNewspic({
     }
 
     const report = readJsonFileSafe(reportPath, null);
-    const coreItems = selectCoreNewsItems(report, 10);
-    if (coreItems.length < 10) {
+    const sourceCoreItems = selectCoreNewsItems(report, 10);
+    if (sourceCoreItems.length < 10) {
         return normalizeResult('skip', 'report_insufficient_core_items', {
             reportPath,
-            coreItemCount: coreItems.length
+            coreItemCount: sourceCoreItems.length
         });
     }
 
+    const fingerprintItems = sourceCoreItems.map((item) => ({
+        title: item.title,
+        keyPoint: item.keyPoint,
+        sourceName: item.sourceName,
+        sourceUrl: item.sourceUrl,
+        importanceScore: item.importanceScore
+    }));
     const fingerprint = hashText(JSON.stringify({
         version: 'daily-newspic-v7-image-edit-newspaper-reference-overlay',
         date,
-        coreItems
+        coreItems: fingerprintItems
     }));
     if (state?.newspic?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { reportPath, fingerprint });
     }
 
-    const content = buildDailyNewspicContent({ date, coreItems });
+    const summaryCachePath = path.join(stagingDir, `${date}-newspic-summary.json`);
+    const cachedSummary = validateCachedDailyNewsSummary(
+        readJsonFileSafe(summaryCachePath, null),
+        fingerprint
+    );
+    let summaryResult = cachedSummary;
+    let summarySource = 'cache';
+    if (!summaryResult) {
+        summaryResult = await dailyNewsSummarizer.summarizeDailyNews({
+            date,
+            items: sourceCoreItems
+        });
+        summarySource = 'deepseek';
+        writeJsonFile(summaryCachePath, {
+            version: 'daily-news-summary-v1',
+            date,
+            source_fingerprint: fingerprint,
+            model: summaryResult.model || null,
+            usage: summaryResult.usage || null,
+            character_count: summaryResult.characterCount,
+            generated_at: summaryResult.generatedAt || new Date().toISOString(),
+            items: summaryResult.items
+        });
+    }
+
+    const coreItems = summaryResult.items;
+    const content = summaryResult.content || buildDailyNewspicContent({ date, coreItems });
     const prompt = buildDailyNewspicImagePrompt({ date, coreItems, content });
     let imageSource = 'tokengo';
     let imageError = null;
@@ -271,6 +309,11 @@ async function maybePublishNewspic({
         reportPath,
         fingerprint,
         stagingPath,
+        summaryCachePath,
+        summarySource,
+        summaryCharacterCount: summaryResult.characterCount,
+        summaryModel: summaryResult.model || null,
+        summaryUsage: summaryResult.usage || null,
         imagePath,
         coreItems,
         imageSource,
@@ -557,6 +600,7 @@ async function runWechatAutogenOnce(options = {}) {
     }
 
     let publisher = options.publisher || null;
+    let dailyNewsSummarizer = options.dailyNewsSummarizer || null;
     let podcastFormatter = options.podcastFormatter || null;
     let infographicGenerator = options.infographicGenerator || null;
     let podcastAudioDownloader = options.podcastAudioDownloader || null;
@@ -566,6 +610,12 @@ async function runWechatAutogenOnce(options = {}) {
             publisher = createWechatPublisher(options.publisherOptions || {});
         }
         return publisher;
+    }
+    function getDailyNewsSummarizer() {
+        if (!dailyNewsSummarizer) {
+            dailyNewsSummarizer = createDailyNewsSummarizer(options.dailyNewsSummarizerOptions || {});
+        }
+        return dailyNewsSummarizer;
     }
     function getPodcastFormatter() {
         if (!podcastFormatter) {
@@ -599,6 +649,11 @@ async function runWechatAutogenOnce(options = {}) {
         publisher: {
             publishNewspicDraft(payload) {
                 return getPublisher().publishNewspicDraft(payload);
+            }
+        },
+        dailyNewsSummarizer: {
+            summarizeDailyNews(payload) {
+                return getDailyNewsSummarizer().summarizeDailyNews(payload);
             }
         },
         infographicGenerator: {

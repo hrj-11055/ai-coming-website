@@ -16,12 +16,42 @@ function writeJson(filePath, value) {
     fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
 }
 
+function buildFakeDailySummary(items) {
+    const normalizedItems = items.map((item, index) => {
+        const sentence1 = `发生变化${index + 1}`;
+        const sentence2 = `值得关注${index + 1}`;
+        return {
+            ...item,
+            originalTitle: item.title,
+            title: item.title.startsWith('Anthropic 提交 IPO')
+                ? 'Anthropic IPO'
+                : Array.from(item.title).slice(0, 14).join(''),
+            sentence1,
+            sentence2,
+            keyPoint: `${sentence1}。${sentence2}。`
+        };
+    });
+    const content = normalizedItems
+        .map((item, index) => `${index + 1}. ${item.title}：${item.keyPoint}`)
+        .join('\n\n');
+
+    return {
+        items: normalizedItems,
+        content,
+        characterCount: Array.from(content).length,
+        model: 'deepseek-test',
+        usage: { prompt_tokens: 100, completion_tokens: 80, total_tokens: 180 },
+        generatedAt: '2026-06-04T02:00:00.000Z'
+    };
+}
+
 test('runWechatAutogenOnce publishes one newspic draft with ten report-driven core items', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-autogen-newspic-'));
     const reportDir = path.join(root, 'report');
     const podcastMetadataDir = path.join(root, 'podcasts');
     const generatedPrompts = [];
     const composedImages = [];
+    const summaryCalls = [];
     const uploads = [];
 
     writeJson(path.join(reportDir, '2026-06-04.json'), {
@@ -73,6 +103,12 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
         stagingDir: path.join(root, 'staging'),
         enabled: true,
         enabledTypes: ['newspic'],
+        dailyNewsSummarizer: {
+            async summarizeDailyNews(payload) {
+                summaryCalls.push(payload);
+                return buildFakeDailySummary(payload.items);
+            }
+        },
         infographicGenerator: {
             async generateInfographic({ prompt }) {
                 generatedPrompts.push(prompt);
@@ -81,7 +117,8 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
         },
         imageComposer: async ({ backgroundBuffer, content }) => {
             assert.deepEqual(backgroundBuffer, Buffer.from('generated-daily-background'));
-            assert.match(content, /Anthropic 提交 IPO/);
+            assert.match(content, /Anthropic IPO/);
+            assert.match(content, /发生变化1。值得关注1。/);
             composedImages.push(content);
             return Buffer.from('composed-daily-image');
         },
@@ -97,6 +134,8 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
     });
 
     assert.equal(generatedPrompts.length, 1);
+    assert.equal(summaryCalls.length, 1);
+    assert.equal(summaryCalls[0].items.length, 10);
     assert.match(generatedPrompts[0], /高质量中文 AI 日报一览图底图/);
     assert.match(generatedPrompts[0], /报纸式日报样图/);
     assert.match(generatedPrompts[0], /竖版 1024x1536/);
@@ -109,20 +148,27 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
     assert.equal(uploads.length, 1);
     assert.equal(uploads[0].title, '06月04日AI资讯早报');
     assert.deepEqual(uploads[0].imageBuffer, Buffer.from('composed-daily-image'));
-    assert.match(uploads[0].content, /Anthropic 提交 IPO/);
-    assert.match(uploads[0].content, /MiniMax 启动 A 股 IPO/);
-    assert.match(uploads[0].content, /OpenAI 推出企业级 Agent/);
+    assert.match(uploads[0].content, /Anthropic IPO/);
+    assert.match(uploads[0].content, /发生变化1。值得关注1。/);
+    assert.match(uploads[0].content, /MiniMax 启动 A 股/);
+    assert.match(uploads[0].content, /OpenAI 推出企业级/);
     assert.match(uploads[0].content, /谷歌发布新一代 TPU/);
     assert.match(uploads[0].content, /百度升级智能体开发平台/);
     assert.doesNotMatch(uploads[0].content, /第十一条不应出现/);
     assert.doesNotMatch(uploads[0].content, /这段播客口播稿/);
     assert.equal(result.newspic.action, 'uploaded');
     assert.equal(result.newspic.reason, 'newspic_ready_today');
+    assert.equal(result.newspic.summarySource, 'deepseek');
+    assert.ok(result.newspic.summaryCharacterCount <= 500);
     assert.equal(result.podcast.reason, 'podcast_disabled');
 
     const savedState = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8'));
     assert.equal(savedState.newspic.last_media_id, 'newspic-draft-1');
     assert.equal(savedState.newspic.last_image_media_id, 'image-media-1');
+    const summaryCache = JSON.parse(fs.readFileSync(path.join(root, 'staging', '2026-06-04-newspic-summary.json'), 'utf8'));
+    assert.equal(summaryCache.items.length, 10);
+    assert.equal(summaryCache.model, 'deepseek-test');
+    assert.equal(summaryCache.usage.total_tokens, 180);
 
     const second = await runWechatAutogenOnce({
         now: new Date('2026-06-04T02:01:00.000Z'),
@@ -132,6 +178,11 @@ test('runWechatAutogenOnce publishes one newspic draft with ten report-driven co
         stagingDir: path.join(root, 'staging'),
         enabled: true,
         enabledTypes: ['newspic'],
+        dailyNewsSummarizer: {
+            async summarizeDailyNews(payload) {
+                return buildFakeDailySummary(payload.items);
+            }
+        },
         infographicGenerator: {
             async generateInfographic() {
                 throw new Error('should skip before generating image');
@@ -177,6 +228,11 @@ test('runWechatAutogenOnce falls back to a composed image when TokenGo image gen
         stagingDir: path.join(root, 'staging'),
         enabled: true,
         enabledTypes: ['newspic'],
+        dailyNewsSummarizer: {
+            async summarizeDailyNews(payload) {
+                return buildFakeDailySummary(payload.items);
+            }
+        },
         infographicGenerator: {
             async generateInfographic() {
                 throw new Error('image generation unavailable');

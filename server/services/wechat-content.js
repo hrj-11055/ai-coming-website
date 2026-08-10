@@ -220,7 +220,9 @@ function selectCoreNewsItems(report, limit = 10) {
 
         selected.push({
             title,
+            originalTitle: title,
             keyPoint: sanitizeInlineText(article.key_point || article.summary || title),
+            summary: sanitizeInlineText(article.summary || article.key_point || title),
             sourceName: sanitizeInlineText(article.source_name),
             sourceUrl: sanitizeInlineText(article.source_url),
             importanceScore: Number(article.importance_score) || 0
@@ -258,6 +260,7 @@ function buildDailyNewspicImagePrompt({ date, coreItems, content }) {
     const contentReference = String(content || buildDailyNewspicContent({ coreItems })).trim();
 
     return [
+        '基于以上内容画一幅日报图，并附上当天的日期。',
         `参考上传的报纸式日报样图，编辑生成一张 ${formatNewspicChineseDate(date)} 的高质量中文 AI 日报一览图底图，竖版 1024x1536 构图。`,
         '版式要接近参考图：白底纸媒质感、深蓝报头、粗黑大标题、细线分栏、5 列 x 2 行的 10 条要闻区块、底部行动指南和今日结论区域。',
         '内容主题必须来自下面【内容主题清单】，用科技视觉元素和信息图氛围体现这些主题，不要引入清单之外的公司、人物、数字或新闻。',

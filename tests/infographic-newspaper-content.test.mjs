@@ -46,6 +46,7 @@ test('newspic image prompt uses the same ten items as the primary display', () =
     });
 
     assert.match(prompt, /小元说 AI日报/);
+    assert.match(prompt, /基于以上内容画一幅日报图，并附上当天的日期。/);
     assert.match(prompt, /内容主题清单/);
     assert.match(prompt, /后期准确排版/);
     assert.match(prompt, /不要引入清单之外/);

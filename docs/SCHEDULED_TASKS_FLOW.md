@@ -9,7 +9,8 @@
 1. 上游每天生成 AI 日报 JSON。
 2. 网站侧同步当天日报数据。
 3. `wechat-autogen` 定时任务从当天日报中选出 10 条核心信息。
-4. 系统生成一张日报贴图，并把同一份 10 条正文写入微信草稿箱。
+4. DeepSeek 将 10 条新闻分别压缩为短标题和两句话，代码强制总正文不超过 500 字，并缓存结果与 token 用量。
+5. 系统把摘要直接交给 `gpt-image-2` 生成日报贴图，并把同一份 10 条正文写入微信草稿箱；不经过 Gmail。
 
 旧的 podcast 生成、podcast 邮件发送、podcast 邮件补发任务仍保留代码用于历史排障，但不再是生产主链路。
 
@@ -49,12 +50,14 @@
 
 1. 到达扫描窗口后读取当天 `/var/www/json/report/YYYY-MM-DD.json`。
 2. `selectCoreNewsItems` 选出 10 条去重后的高价值新闻。
-3. 生成同一份 10 条正文，写入 `data/wechat-staging/YYYY-MM-DD-newspic.txt`。
-4. 优先调用 TokenGo `gpt-image-2` 生成日报底图。
-5. 如果 TokenGo 超时或返回错误，使用本地 fallback 科技底图。
-6. 用 `sharp` 把 10 条正文精确合成到最终图片，写入 `data/wechat-staging/YYYY-MM-DD-newspic.jpg`。
-7. 通过微信公众号 `newspic` 草稿接口上传一张图片和同一份正文。
-8. 写入 `data/wechat-autogen-state.json`，用 fingerprint 防止重复上传。
+3. 调用 DeepSeek 生成 10 条短标题与两句话概括；代码校验条数、句数和 500 字上限。
+4. 写入 `data/wechat-staging/YYYY-MM-DD-newspic-summary.json`；相同来源指纹重试时直接复用缓存，避免重复 token。
+5. 生成同一份 10 条正文，写入 `data/wechat-staging/YYYY-MM-DD-newspic.txt`。
+6. 优先调用 TokenGo `gpt-image-2` 生成日报底图，提示词包含当天日期。
+7. 如果 TokenGo 超时或返回错误，使用本地 fallback 科技底图。
+8. 用 `sharp` 把 10 条正文精确合成到最终图片，写入 `data/wechat-staging/YYYY-MM-DD-newspic.jpg`。
+9. 通过微信公众号 `newspic` 草稿接口上传一张图片和同一份正文。
+10. 写入 `data/wechat-autogen-state.json`，用 fingerprint 防止重复上传。
 
 ## 旧 podcast 链路状态
 
