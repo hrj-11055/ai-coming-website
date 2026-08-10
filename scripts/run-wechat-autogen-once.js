@@ -26,11 +26,6 @@ const {
     createDailyNewsSummarizer,
     validateCachedDailyNewsSummary
 } = require('../server/services/daily-news-summary');
-const {
-    composeDailyNewspicImage,
-    createDailyNewspicFallbackBackground,
-    createInfographicGenerator
-} = require('../server/services/infographic-generator');
 
 const ROOT_DIR = path.join(__dirname, '..');
 const DEFAULT_REPORT_DIR = process.env.WECHAT_AUTOGEN_REPORT_DIR || '/var/www/json/report';
@@ -43,7 +38,6 @@ const DEFAULT_START_MINUTE = Number(process.env.WECHAT_AUTOGEN_START_MINUTE || 5
 const DEFAULT_SITE_BASE_URL = process.env.WECHAT_AUTOGEN_SITE_BASE_URL || '';
 const DEFAULT_ORIGINAL_ARTICLE_URL = process.env.WECHAT_AUTOGEN_ORIGINAL_ARTICLE_URL || 'https://aicoming.cn/index.html';
 const DEFAULT_ENABLED = isFeatureEnabled(process.env.WECHAT_AUTOGEN_ENABLED, false);
-const DEFAULT_REQUIRE_INFOGRAPHIC = isFeatureEnabled(process.env.WECHAT_AUTOGEN_REQUIRE_INFOGRAPHIC, false);
 const DEFAULT_ENABLED_TYPES = String(process.env.WECHAT_AUTOGEN_ENABLED_TYPES || 'newspic')
     .split(',')
     .map((value) => value.trim().toLowerCase())
@@ -69,11 +63,6 @@ function writeJsonFile(filePath, value) {
 function writeTextFile(filePath, value) {
     ensureParentDir(filePath);
     fs.writeFileSync(filePath, value, 'utf8');
-}
-
-function writeBufferFile(filePath, value) {
-    ensureParentDir(filePath);
-    fs.writeFileSync(filePath, value);
 }
 
 function getArg(flag) {
@@ -132,7 +121,7 @@ function createOptionalFileFingerprint(filePath) {
     return createFileFingerprint(normalizedPath);
 }
 
-function createPodcastFingerprint(date, metadata, formatterFingerprint = '', infographicFingerprint = '', podcastPageUrl = '', originalArticleUrl = '', coverFingerprint = '') {
+function createPodcastFingerprint(date, metadata, formatterFingerprint = '', podcastPageUrl = '', originalArticleUrl = '', coverFingerprint = '') {
     return hashText(JSON.stringify({
         status: metadata?.status || '',
         summary: metadata?.summary || '',
@@ -140,7 +129,6 @@ function createPodcastFingerprint(date, metadata, formatterFingerprint = '', inf
         audio_url: metadata?.audio_url || '',
         wechat_podcast_title: formatWechatPodcastTitle(date),
         formatter_fingerprint: formatterFingerprint || '',
-        infographic_fingerprint: infographicFingerprint || '',
         podcast_page_url: podcastPageUrl || '',
         original_article_url: originalArticleUrl || '',
         cover_fingerprint: coverFingerprint || ''
@@ -208,11 +196,7 @@ async function maybePublishNewspic({
     reportDir,
     stagingDir,
     state,
-    publisher,
     dailyNewsSummarizer,
-    infographicGenerator,
-    imageComposer = composeDailyNewspicImage,
-    fallbackBackgroundCreator = createDailyNewspicFallbackBackground,
     enabledTypes
 }) {
     if (!enabledTypes.has('newspic')) {
@@ -241,11 +225,11 @@ async function maybePublishNewspic({
         importanceScore: item.importanceScore
     }));
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v7-image-edit-newspaper-reference-overlay',
+        version: 'daily-newspic-v8-deepseek-chatgpt-web-prompt',
         date,
         coreItems: fingerprintItems
     }));
-    if (state?.newspic?.last_uploaded_fingerprint === fingerprint) {
+    if (state?.newspic?.last_prepared_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { reportPath, fingerprint });
     }
 
@@ -277,49 +261,23 @@ async function maybePublishNewspic({
     const coreItems = summaryResult.items;
     const content = summaryResult.content || buildDailyNewspicContent({ date, coreItems });
     const prompt = buildDailyNewspicImagePrompt({ date, coreItems, content });
-    let imageSource = 'tokengo';
-    let imageError = null;
-    let backgroundBuffer;
-    try {
-        backgroundBuffer = await infographicGenerator.generateInfographic({ prompt });
-    } catch (error) {
-        imageSource = 'fallback';
-        imageError = error.message;
-        console.warn(`[wechat-autogen] newspic TokenGo image failed, using fallback background: ${error.message}`);
-        backgroundBuffer = await fallbackBackgroundCreator({ date, content, coreItems });
-    }
-    const imageBuffer = await imageComposer({
-        backgroundBuffer,
-        date,
-        content,
-        coreItems
-    });
     const stagingPath = path.join(stagingDir, `${date}-newspic.txt`);
-    const imagePath = path.join(stagingDir, `${date}-newspic.jpg`);
+    const promptPath = path.join(stagingDir, `${date}-newspic-chatgpt-prompt.txt`);
     writeTextFile(stagingPath, content);
-    writeBufferFile(imagePath, imageBuffer);
+    writeTextFile(promptPath, prompt);
 
-    const publishResult = await publisher.publishNewspicDraft({
-        title: formatWechatTitle(date),
-        content,
-        imageBuffer
-    });
-
-    return normalizeResult('uploaded', 'newspic_ready_today', {
+    return normalizeResult('prepared', 'newspic_prompt_ready_today', {
         reportPath,
         fingerprint,
         stagingPath,
+        promptPath,
         summaryCachePath,
         summarySource,
         summaryCharacterCount: summaryResult.characterCount,
         summaryModel: summaryResult.model || null,
         summaryUsage: summaryResult.usage || null,
-        imagePath,
         coreItems,
-        imageSource,
-        imageError,
-        mediaId: publishResult.media_id || null,
-        imageMediaId: publishResult.image_media_id || null
+        prompt
     });
 }
 
@@ -378,8 +336,6 @@ async function maybePublishPodcast({
     state,
     publisher,
     podcastFormatter,
-    infographicGenerator,
-    requireInfographic,
     enabledTypes,
     siteBaseUrl,
     originalArticleUrl,
@@ -402,10 +358,9 @@ async function maybePublishPodcast({
     const formatterFingerprint = typeof podcastFormatter.getFingerprint === 'function'
         ? (podcastFormatter.getFingerprint() || '')
         : '';
-    const infographicFingerprint = requireInfographic ? 'required-v1' : 'optional-v1';
     const podcastPageUrl = buildPodcastLandingPageUrl({ date, siteBaseUrl });
     const coverFingerprint = createOptionalFileFingerprint(coverImagePath);
-    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, infographicFingerprint, podcastPageUrl, originalArticleUrl, coverFingerprint);
+    const fingerprint = createPodcastFingerprint(date, metadata, formatterFingerprint, podcastPageUrl, originalArticleUrl, coverFingerprint);
     if (state?.podcast?.last_uploaded_fingerprint === fingerprint) {
         return normalizeResult('skip', 'same_fingerprint', { metadataPath, fingerprint });
     }
@@ -431,21 +386,6 @@ async function maybePublishPodcast({
         console.warn(`[wechat-autogen] podcast formatter failed, fallback to source markdown: ${formatterFallbackReason}`);
     }
     markdown = appendPodcastListenCta(markdown, podcastPageUrl);
-    let infographicUrl = null;
-    let infographicError = null;
-    if (infographicGenerator) {
-        try {
-            const imageBuffer = await infographicGenerator.generateInfographic({
-                date,
-                scriptMarkdown: metadata.script_markdown || ''
-            });
-            infographicUrl = await publisher.uploadNewsImageForContent({ imageBuffer });
-            markdown = `![小元说 AI日报图片](${infographicUrl})\n\n${markdown}`;
-        } catch (err) {
-            infographicError = err?.message || String(err);
-            console.warn(`[wechat-autogen] infographic generation failed: ${infographicError}`);
-        }
-    }
     const stagingPath = path.join(stagingDir, `${date}-podcast.md`);
     writeTextFile(stagingPath, markdown);
 
@@ -465,9 +405,7 @@ async function maybePublishPodcast({
         formatterFallbackReason,
         podcastPageUrl,
         originalArticleUrl,
-        coverImagePath,
-        infographicUrl,
-        infographicError
+        coverImagePath
     });
 }
 
@@ -564,7 +502,6 @@ async function runWechatAutogenOnce(options = {}) {
     const originalArticleUrl = options.originalArticleUrl || getArg('--original-article-url') || DEFAULT_ORIGINAL_ARTICLE_URL;
     const coverImagePath = options.coverImagePath || getArg('--cover-image') || process.env.WECHAT_AUTOGEN_DEFAULT_COVER_IMAGE || '';
     const enabled = isFeatureEnabled(options.enabled ?? getArg('--enabled') ?? DEFAULT_ENABLED, DEFAULT_ENABLED);
-    const requireInfographic = isFeatureEnabled(options.requireInfographic ?? getArg('--require-infographic') ?? DEFAULT_REQUIRE_INFOGRAPHIC, DEFAULT_REQUIRE_INFOGRAPHIC);
     const enabledTypes = new Set((options.enabledTypes || DEFAULT_ENABLED_TYPES).map((value) => String(value).toLowerCase()));
     const now = options.now || new Date();
     const dateInfo = getCurrentDateInfo(timeZone, now);
@@ -602,7 +539,6 @@ async function runWechatAutogenOnce(options = {}) {
     let publisher = options.publisher || null;
     let dailyNewsSummarizer = options.dailyNewsSummarizer || null;
     let podcastFormatter = options.podcastFormatter || null;
-    let infographicGenerator = options.infographicGenerator || null;
     let podcastAudioDownloader = options.podcastAudioDownloader || null;
     let podcastAudioSynthesizer = options.podcastAudioSynthesizer || null;
     function getPublisher() {
@@ -623,12 +559,6 @@ async function runWechatAutogenOnce(options = {}) {
         }
         return podcastFormatter;
     }
-    function getInfographicGenerator() {
-        if (!infographicGenerator) {
-            infographicGenerator = createInfographicGenerator(options.infographicGeneratorOptions || {});
-        }
-        return infographicGenerator;
-    }
     function getPodcastAudioDownloader() {
         if (!podcastAudioDownloader) {
             podcastAudioDownloader = createMinimaxAudioClient(options.podcastAudioDownloaderOptions || {});
@@ -646,23 +576,11 @@ async function runWechatAutogenOnce(options = {}) {
         reportDir,
         stagingDir,
         state,
-        publisher: {
-            publishNewspicDraft(payload) {
-                return getPublisher().publishNewspicDraft(payload);
-            }
-        },
         dailyNewsSummarizer: {
             summarizeDailyNews(payload) {
                 return getDailyNewsSummarizer().summarizeDailyNews(payload);
             }
         },
-        infographicGenerator: {
-            generateInfographic(payload) {
-                return getInfographicGenerator().generateInfographic(payload);
-            }
-        },
-        imageComposer: options.imageComposer || composeDailyNewspicImage,
-        fallbackBackgroundCreator: options.fallbackBackgroundCreator || createDailyNewspicFallbackBackground,
         enabledTypes
     });
     const reportResult = await maybePublishReport({
@@ -685,9 +603,6 @@ async function runWechatAutogenOnce(options = {}) {
         publisher: {
             publishMarkdownDraft(payload) {
                 return getPublisher().publishMarkdownDraft(payload);
-            },
-            uploadNewsImageForContent(payload) {
-                return getPublisher().uploadNewsImageForContent(payload);
             }
         },
         podcastFormatter: {
@@ -700,12 +615,6 @@ async function runWechatAutogenOnce(options = {}) {
                 return getPodcastFormatter().formatForWechat(payload);
             }
         },
-        infographicGenerator: {
-            generateInfographic(payload) {
-                return getInfographicGenerator().generateInfographic(payload);
-            }
-        },
-        requireInfographic,
         enabledTypes,
         siteBaseUrl,
         originalArticleUrl,
@@ -742,11 +651,13 @@ async function runWechatAutogenOnce(options = {}) {
     state.last_skip_reason = null;
     state.newspic = {
         last_attempted_date: dateInfo.date,
-        last_uploaded_fingerprint: newspicResult.action === 'uploaded' ? newspicResult.fingerprint : (state.newspic?.last_uploaded_fingerprint || null),
+        last_prepared_fingerprint: newspicResult.action === 'prepared' ? newspicResult.fingerprint : (state.newspic?.last_prepared_fingerprint || null),
+        last_uploaded_fingerprint: state.newspic?.last_uploaded_fingerprint || null,
         last_result: newspicResult.action,
         last_reason: newspicResult.reason,
-        last_media_id: newspicResult.mediaId || state.newspic?.last_media_id || null,
-        last_image_media_id: newspicResult.imageMediaId || state.newspic?.last_image_media_id || null,
+        last_prompt_path: newspicResult.promptPath || state.newspic?.last_prompt_path || null,
+        last_media_id: state.newspic?.last_media_id || null,
+        last_image_media_id: state.newspic?.last_image_media_id || null,
         last_error: null
     };
     state.markdown = {
@@ -763,8 +674,7 @@ async function runWechatAutogenOnce(options = {}) {
         last_result: podcastResult.action,
         last_reason: podcastResult.reason,
         last_media_id: podcastResult.mediaId || null,
-        last_error: podcastResult.infographicError || null,
-        last_infographic_url: podcastResult.infographicUrl || state.podcast?.last_infographic_url || null
+        last_error: null
     };
     state.podcast_audio = {
         last_attempted_date: dateInfo.date,
@@ -791,7 +701,7 @@ async function runWechatAutogenOnce(options = {}) {
 if (require.main === module) {
     runWechatAutogenOnce()
         .then((result) => {
-            const hasUpload = result.newspic?.action === 'uploaded'
+            const hasUpload = result.newspic?.action === 'prepared'
                 || result.report?.action === 'uploaded'
                 || result.podcast?.action === 'uploaded'
                 || result.podcastAudio?.action === 'sent';

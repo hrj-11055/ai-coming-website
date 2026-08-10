@@ -47,15 +47,15 @@ test('newspic image prompt uses the same ten items as the primary display', () =
 
     assert.match(prompt, /小元说 AI日报/);
     assert.match(prompt, /基于以上内容画一幅日报图，并附上当天的日期。/);
+    assert.match(prompt, /ChatGPT 网页版/);
     assert.match(prompt, /内容主题清单/);
-    assert.match(prompt, /后期准确排版/);
+    assert.match(prompt, /必须使用的日报正文/);
     assert.match(prompt, /不要引入清单之外/);
-    assert.match(prompt, /参考上传的报纸式日报样图/);
-    assert.match(prompt, /竖版 1024x1536/);
     assert.match(prompt, /5 列 x 2 行/);
     assert.match(prompt, new RegExp(content.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
     assert.match(prompt, /Anthropic 提交 IPO/);
     assert.match(prompt, /Meta 调整 AI 组织/);
     assert.doesNotMatch(prompt, /第十一条不应出现/);
     assert.doesNotMatch(prompt, /播客/);
+    assert.doesNotMatch(prompt, /TokenGo|gpt-image-2|Images API/);
 });

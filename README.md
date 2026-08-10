@@ -146,7 +146,7 @@ npm run podcast:autogen:cron:install  # 安装播客定时任务
 npm run podcast:audit:server          # 审计服务器播客状态
 
 # 微信公众号
-npm run wechat:autogen:once           # 手动触发一次微信草稿上传
+npm run wechat:autogen:once           # 手动生成当日精选与 ChatGPT 网页版绘图提示词
 npm run wechat:autogen:cron:install   # 安装微信定时任务
 
 # 每周关键词

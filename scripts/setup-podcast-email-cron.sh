@@ -11,7 +11,7 @@ FEATURE_FLAG="$(printf '%s' "${PODCAST_EMAIL_CRON_ENABLED:-false}" | tr '[:upper
 
 if [ "$FEATURE_FLAG" != "true" ]; then
   echo "Podcast email cron is legacy and disabled by default." >&2
-  echo "The current downstream workflow is the WeChat daily newspic draft cron." >&2
+  echo "The current downstream workflow prepares the daily DeepSeek summary and ChatGPT web prompt." >&2
   echo "Set PODCAST_EMAIL_CRON_ENABLED=true only if you explicitly need the legacy retry job." >&2
   exit 1
 fi

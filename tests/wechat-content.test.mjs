@@ -62,7 +62,7 @@ test('selectCoreNewsItems returns ten distinct highest-value stories when availa
     assert.equal(items.some((item) => item.title === '第十一条不应出现'), false);
 });
 
-test('daily newspic content contains only ten core items and image prompt is visual-first', () => {
+test('daily newspic content contains only ten core items and produces a ChatGPT web prompt', () => {
     const coreItems = [
         { title: '第一条', keyPoint: '第一条核心信息。' },
         { title: '第二条', keyPoint: '第二条核心信息。' },
@@ -83,10 +83,12 @@ test('daily newspic content contains only ten core items and image prompt is vis
     assert.equal(content.split('\n\n').length, 10);
     assert.match(prompt, /第一条核心信息/);
     assert.match(prompt, /第十条核心信息/);
-    assert.match(prompt, /高质量中文 AI 日报一览图/);
+    assert.match(prompt, /ChatGPT 网页版/);
+    assert.match(prompt, /2026年6月4日/);
     assert.match(prompt, /内容主题清单/);
-    assert.match(prompt, /后期准确排版/);
+    assert.match(prompt, /必须使用的日报正文/);
     assert.match(prompt, /不要引入清单之外/);
+    assert.doesNotMatch(prompt, /TokenGo|gpt-image-2|Images API/);
     assert.doesNotMatch(prompt, /第十一条核心信息/);
     assert.doesNotMatch(prompt, /播客口播稿/);
 });

@@ -4,13 +4,13 @@
 
 ## 当前结论
 
-当前正式下游链路已经从旧的 podcast / 邮件链路切换为微信早报贴图链路：
+当前正式下游链路已经从旧的 podcast / 邮件链路切换为日报精选与 ChatGPT 网页版手工绘图交接：
 
 1. 上游每天生成 AI 日报 JSON。
 2. 网站侧同步当天日报数据。
 3. `wechat-autogen` 定时任务从当天日报中选出 10 条核心信息。
 4. DeepSeek 将 10 条新闻分别压缩为短标题和两句话，代码强制总正文不超过 500 字，并缓存结果与 token 用量。
-5. 系统把摘要直接交给 `gpt-image-2` 生成日报贴图，并把同一份 10 条正文写入微信草稿箱；不经过 Gmail。
+5. 系统写出含当天日期的 ChatGPT 网页版绘图提示词；不调用图片 API、不上传微信草稿，也不经过 Gmail。
 
 旧的 podcast 生成、podcast 邮件发送、podcast 邮件补发任务仍保留代码用于历史排障，但不再是生产主链路。
 
@@ -34,7 +34,7 @@
 - `scripts/check-daily-report-ready.sh`
   - 作用：早间 watchdog，检查当天上游日报是否已经生成。
 
-### 微信早报贴图
+### 日报精选与网页版绘图提示词
 
 - 脚本：`scripts/run-wechat-autogen-once.js`
 - 包装脚本：`scripts/run-wechat-autogen-once.sh`
@@ -53,11 +53,9 @@
 3. 调用 DeepSeek 生成 10 条短标题与两句话概括；代码校验条数、句数和 500 字上限。
 4. 写入 `data/wechat-staging/YYYY-MM-DD-newspic-summary.json`；相同来源指纹重试时直接复用缓存，避免重复 token。
 5. 生成同一份 10 条正文，写入 `data/wechat-staging/YYYY-MM-DD-newspic.txt`。
-6. 优先调用 TokenGo `gpt-image-2` 生成日报底图，提示词包含当天日期。
-7. 如果 TokenGo 超时或返回错误，使用本地 fallback 科技底图。
-8. 用 `sharp` 把 10 条正文精确合成到最终图片，写入 `data/wechat-staging/YYYY-MM-DD-newspic.jpg`。
-9. 通过微信公众号 `newspic` 草稿接口上传一张图片和同一份正文。
-10. 写入 `data/wechat-autogen-state.json`，用 fingerprint 防止重复上传。
+6. 写入 `data/wechat-staging/YYYY-MM-DD-newspic-chatgpt-prompt.txt`，提示词包含当天日期和完整精选正文。
+7. 写入 `data/wechat-autogen-state.json`，用 fingerprint 防止重复生成。
+8. 用户在 Mac 上手动把提示词复制到 ChatGPT 网页版生成图片。
 
 ## 旧 podcast 链路状态
 
@@ -98,14 +96,14 @@ crontab -l | grep -E 'wechat|podcast|autogen|report watch|daily report'
 
 期望能看到 `wechat autogen job`，且看不到 `podcast email retry job`。
 
-手动验证微信早报贴图链路：
+手动验证日报精选与提示词链路：
 
 ```bash
 cd /var/www/ai-coming-website
 node scripts/run-wechat-autogen-once.js --verbose
 ```
 
-若当天已成功上传，同一份日报应返回：
+若当天已成功准备，同一份日报应返回：
 
 ```text
 "reason":"same_fingerprint"

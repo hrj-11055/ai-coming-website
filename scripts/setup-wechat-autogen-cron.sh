@@ -10,8 +10,8 @@ MARKER="# ai-coming wechat autogen job"
 FEATURE_FLAG="$(printf '%s' "${WECHAT_AUTOGEN_ENABLED:-false}" | tr '[:upper:]' '[:lower:]')"
 
 if [ "$FEATURE_FLAG" != "true" ]; then
-  echo "WeChat daily newspic autogen is disabled until WECHAT_AUTOGEN_ENABLED=true is set." >&2
-  echo "Set WECHAT_AUTOGEN_ENABLED_TYPES=newspic to run the current AI daily draft workflow." >&2
+  echo "Daily news prompt autogen is disabled until WECHAT_AUTOGEN_ENABLED=true is set." >&2
+  echo "Set WECHAT_AUTOGEN_ENABLED_TYPES=newspic to run the current DeepSeek summary and ChatGPT web prompt workflow." >&2
   exit 1
 fi
 
