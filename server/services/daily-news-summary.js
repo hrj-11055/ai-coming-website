@@ -9,7 +9,7 @@ const DEFAULT_RETRY_BASE_DELAY_MS = 1000;
 const DAILY_NEWS_LIMIT = 10;
 const MAX_TOTAL_CHARACTERS = 500;
 const MAX_HEADLINE_CHARACTERS = 14;
-const MAX_SENTENCE_CHARACTERS = 12;
+const MAX_SENTENCE_CHARACTERS = 13;
 const RETRYABLE_STATUS_CODES = new Set([408, 409, 425, 429, 500, 502, 503, 504]);
 
 function normalizeChatCompletionsUrl(value) {
@@ -74,7 +74,7 @@ function buildSummaryPrompt({ date, items }) {
     return [
         `请为 ${date} 的 AI 日报精选下面 10 条新闻，并输出 json 对象。`,
         '每条新闻必须保持原索引，只能依据输入内容概括，不得补充输入中没有的事实、数字或结论。',
-        '每条输出一个 4-14 字的 headline，以及恰好两句概括 sentence1、sentence2；每句 6-12 字，不含句末标点。',
+        '每条输出一个 4-14 字的 headline，以及恰好两句概括 sentence1、sentence2；每句 6-13 字，不含句末标点。',
         '两句话应分别说明“发生了什么”和“为什么值得关注”，避免空话、重复标题与营销语气。',
         '输出格式必须是：{"items":[{"index":1,"headline":"短标题","sentence1":"第一句","sentence2":"第二句"}]}。',
         '必须输出 10 条，不能输出 markdown 或额外解释。最终内容会由代码再次校验并限制在 500 字以内。',

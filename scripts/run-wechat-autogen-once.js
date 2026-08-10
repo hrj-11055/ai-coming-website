@@ -225,7 +225,7 @@ async function maybePublishNewspic({
         importanceScore: item.importanceScore
     }));
     const fingerprint = hashText(JSON.stringify({
-        version: 'daily-newspic-v8-deepseek-chatgpt-web-prompt',
+        version: 'daily-newspic-v9-deepseek-chatgpt-web-prompt',
         date,
         coreItems: fingerprintItems
     }));
@@ -247,7 +247,7 @@ async function maybePublishNewspic({
         });
         summarySource = 'deepseek';
         writeJsonFile(summaryCachePath, {
-            version: 'daily-news-summary-v1',
+            version: 'daily-news-summary-v2',
             date,
             source_fingerprint: fingerprint,
             model: summaryResult.model || null,

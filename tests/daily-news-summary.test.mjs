@@ -93,8 +93,8 @@ test('daily news summarizer requests JSON and returns ten two-sentence items und
         assert.ok(item.sentence1);
         assert.ok(item.sentence2);
         assert.ok(countCharacters(item.title) <= 14);
-        assert.ok(countCharacters(item.sentence1) <= 12);
-        assert.ok(countCharacters(item.sentence2) <= 12);
+        assert.ok(countCharacters(item.sentence1) <= 13);
+        assert.ok(countCharacters(item.sentence2) <= 13);
     });
     assert.equal(result.characterCount, countCharacters(result.content));
     assert.ok(result.characterCount <= MAX_TOTAL_CHARACTERS);
