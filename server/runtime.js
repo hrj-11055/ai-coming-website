@@ -37,7 +37,38 @@ function ensureDirectory(dir) {
     }
 }
 
+const INSECURE_PRODUCTION_JWT_SECRETS = new Set([
+    'ai-coming-secret-key-please-change-in-production',
+    'change-me',
+    'secret'
+]);
+const INSECURE_PRODUCTION_ADMIN_PASSWORDS = new Set([
+    'admin123456',
+    'password',
+    '123456'
+]);
+
+function validateProductionSecurityConfig(env) {
+    if (env.NODE_ENV !== 'production') {
+        return;
+    }
+
+    const jwtSecret = String(env.JWT_SECRET || '').trim();
+    if (jwtSecret.length < 32 || INSECURE_PRODUCTION_JWT_SECRETS.has(jwtSecret.toLowerCase())) {
+        throw new Error('Production JWT_SECRET must be a unique secret with at least 32 characters.');
+    }
+
+    const bootstrapPassword = String(env.DEFAULT_ADMIN_PASSWORD || '').trim();
+    if (bootstrapPassword && (
+        bootstrapPassword.length < 12 ||
+        INSECURE_PRODUCTION_ADMIN_PASSWORDS.has(bootstrapPassword.toLowerCase())
+    )) {
+        throw new Error('Production DEFAULT_ADMIN_PASSWORD must be unique and at least 12 characters.');
+    }
+}
+
 function createJsonRuntime({ rootDir, env = process.env }) {
+    validateProductionSecurityConfig(env);
     const jwtSecret = env.JWT_SECRET;
     if (!jwtSecret) {
         throw new Error('JWT_SECRET environment variable is required.');
@@ -64,7 +95,10 @@ function createJsonRuntime({ rootDir, env = process.env }) {
 
     const app = createApp({
         rootDir,
-        staticRoot: env.STATIC_ROOT
+        staticRoot: env.STATIC_ROOT,
+        trustProxy: env.TRUST_PROXY,
+        corsAllowedOrigins: env.CORS_ALLOWED_ORIGINS,
+        jsonBodyLimit: env.JSON_BODY_LIMIT || '64kb'
     });
     const fileStore = createJsonFileStore();
 
@@ -72,44 +106,44 @@ function createJsonRuntime({ rootDir, env = process.env }) {
         ensureDirectory(dir);
     }
 
-    function readData(filename) {
-        return fileStore.readJson(filename, []);
+    function readData(filename, fallbackValue = [], cacheKey = null) {
+        return fileStore.readJson(filename, fallbackValue, cacheKey);
     }
 
-    function writeData(filename, data) {
-        return fileStore.writeJson(filename, data);
+    function writeData(filename, data, cacheKey = null) {
+        return fileStore.writeJson(filename, data, cacheKey);
     }
 
     function initDataFiles() {
         if (!fs.existsSync(keywordsFile)) {
-            fs.writeFileSync(keywordsFile, JSON.stringify([]));
+            writeData(keywordsFile, []);
         }
         if (!fs.existsSync(newsFile)) {
-            fs.writeFileSync(newsFile, JSON.stringify([]));
+            writeData(newsFile, []);
         }
         if (!fs.existsSync(toolsFile)) {
-            fs.writeFileSync(toolsFile, JSON.stringify([]));
+            writeData(toolsFile, []);
         }
         if (!fs.existsSync(toolCategoriesFile)) {
-            fs.writeFileSync(toolCategoriesFile, JSON.stringify([]));
+            writeData(toolCategoriesFile, []);
         }
         if (!fs.existsSync(visitLogsFile)) {
-            fs.writeFileSync(visitLogsFile, JSON.stringify([]));
+            writeData(visitLogsFile, []);
         }
         if (!fs.existsSync(apiCallsFile)) {
-            fs.writeFileSync(apiCallsFile, JSON.stringify([]));
+            writeData(apiCallsFile, []);
         }
         if (!fs.existsSync(aiUsageLogsFile)) {
-            fs.writeFileSync(aiUsageLogsFile, JSON.stringify([]));
+            writeData(aiUsageLogsFile, []);
         }
         if (!fs.existsSync(interactionEventsFile)) {
-            fs.writeFileSync(interactionEventsFile, JSON.stringify([]));
+            writeData(interactionEventsFile, []);
         }
         if (!fs.existsSync(bannedIpsFile)) {
-            fs.writeFileSync(bannedIpsFile, JSON.stringify([]));
+            writeData(bannedIpsFile, []);
         }
         if (!fs.existsSync(keywordsWeeklyJobStateFile)) {
-            fs.writeFileSync(keywordsWeeklyJobStateFile, JSON.stringify({}, null, 2));
+            writeData(keywordsWeeklyJobStateFile, {});
         }
 
         if (!fs.existsSync(adminsFile)) {
@@ -127,10 +161,10 @@ function createJsonRuntime({ rootDir, env = process.env }) {
                     role,
                     created_at: new Date().toISOString()
                 }];
-                fs.writeFileSync(adminsFile, JSON.stringify(defaultAdmin, null, 2));
+                writeData(adminsFile, defaultAdmin);
                 console.log('Default admin ' + username + ' initialized in admins.json');
             } else {
-                fs.writeFileSync(adminsFile, JSON.stringify([]));
+                writeData(adminsFile, []);
                 console.warn('Admins file created without bootstrap user because DEFAULT_ADMIN_USERNAME/DEFAULT_ADMIN_PASSWORD is unset.');
             }
         }
@@ -144,7 +178,7 @@ function createJsonRuntime({ rootDir, env = process.env }) {
                 version: '1.0.0',
                 lastUpdated: new Date().toISOString()
             };
-            fs.writeFileSync(settingsFile, JSON.stringify(defaultSettings, null, 2));
+            writeData(settingsFile, defaultSettings);
         }
     }
 
@@ -337,7 +371,12 @@ function createJsonRuntime({ rootDir, env = process.env }) {
     app.use('/api', createAiRouter({
         systemPrompt,
         aiConfig,
-        aiUsageService
+        aiUsageService,
+        requestLimits: {
+            maxQueryChars: Number(env.AI_MAX_QUERY_CHARS || 12000),
+            maxOutputTokens: Number(env.AI_MAX_OUTPUT_TOKENS || 4000),
+            timeoutMs: Number(env.AI_REQUEST_TIMEOUT_MS || 120000)
+        }
     }));
     app.use('/api', createAiUsageRouter({
         aiUsageService,
@@ -363,7 +402,7 @@ function createJsonRuntime({ rootDir, env = process.env }) {
             });
         }
 
-        startCacheScheduler();
+        startCacheScheduler(fileStore);
 
         return startServer(app, {
             host: env.HOST || '0.0.0.0',
@@ -388,5 +427,6 @@ function startJsonRuntime(options = {}) {
 
 module.exports = {
     createJsonRuntime,
-    startJsonRuntime
+    startJsonRuntime,
+    validateProductionSecurityConfig
 };

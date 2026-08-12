@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 // 内存缓存配置
 const CACHE_CONFIG = {
@@ -7,15 +8,38 @@ const CACHE_CONFIG = {
     bannedIps: { maxSize: 1000, flushInterval: 60000 }       // 封禁IP：最多缓存1000条，每分钟刷盘
 };
 
-// 内存缓存存储
-const memoryCache = new Map();
+function writeJsonAtomic(filePath, data) {
+    const directory = path.dirname(filePath);
+    const temporaryFile = path.join(
+        directory,
+        `.${path.basename(filePath)}.${process.pid}.${Date.now()}.tmp`
+    );
 
-// 缓存脏标记
-const dirtyCache = new Map();
+    fs.mkdirSync(directory, { recursive: true });
+
+    try {
+        fs.writeFileSync(temporaryFile, JSON.stringify(data, null, 2), 'utf8');
+        fs.renameSync(temporaryFile, filePath);
+    } catch (error) {
+        try {
+            if (fs.existsSync(temporaryFile)) {
+                fs.unlinkSync(temporaryFile);
+            }
+        } catch {
+            // Preserve the original write error.
+        }
+        throw error;
+    }
+}
 
 function createJsonFileStore() {
+    const memoryCache = new Map();
+    const dirtyCache = new Map();
+    const cacheFiles = new Map();
+
     // 从文件读取并初始化缓存
     function loadToCache(filePath, cacheKey) {
+        cacheFiles.set(cacheKey, filePath);
         if (!memoryCache.has(cacheKey)) {
             try {
                 const data = fs.readFileSync(filePath, 'utf8');
@@ -35,7 +59,7 @@ function createJsonFileStore() {
         if (dirtyCache.get(cacheKey)) {
             const data = memoryCache.get(cacheKey) || [];
             try {
-                fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+                writeJsonAtomic(filePath, data);
                 dirtyCache.set(cacheKey, false);
                 console.log(`[Cache] 已刷盘 ${cacheKey}: ${data.length} 条记录`);
             } catch (error) {
@@ -67,7 +91,7 @@ function createJsonFileStore() {
         // 如果没有指定缓存键，直接写入文件（兼容旧代码）
         if (!cacheKey) {
             try {
-                fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+                writeJsonAtomic(filePath, data);
                 return true;
             } catch (error) {
                 console.error(`写入文件 ${filePath} 失败:`, error);
@@ -76,6 +100,7 @@ function createJsonFileStore() {
         }
 
         // 使用缓存
+        cacheFiles.set(cacheKey, filePath);
         memoryCache.set(cacheKey, data);
         dirtyCache.set(cacheKey, true);
 
@@ -92,23 +117,13 @@ function createJsonFileStore() {
         if (!cacheKey) {
             // 刷盘所有缓存
             for (const [key] of memoryCache) {
-                const filePath = getFilePathForCache(key);
+                const filePath = cacheFiles.get(key);
                 if (filePath) flushToFile(filePath, key);
             }
         } else {
-            const filePath = getFilePathForCache(cacheKey);
+            const filePath = cacheFiles.get(cacheKey);
             if (filePath) flushToFile(filePath, cacheKey);
         }
-    }
-
-    // 获取缓存键对应的文件路径
-    function getFilePathForCache(cacheKey) {
-        const pathMap = {
-            'visit-logs': 'data/visit-logs.json',
-            'api-calls': 'data/api-calls.json',
-            'banned-ips': 'data/banned-ips.json'
-        };
-        return pathMap[cacheKey];
     }
 
     return {
@@ -123,11 +138,13 @@ function createJsonFileStore() {
 // 定时刷盘任务
 let flushInterval = null;
 
-function startCacheScheduler() {
+function startCacheScheduler(fileStore) {
     if (flushInterval) return;
+    if (!fileStore || typeof fileStore.flushCache !== 'function') {
+        throw new Error('startCacheScheduler requires a file store instance.');
+    }
 
     flushInterval = setInterval(() => {
-        const fileStore = createJsonFileStore();
         fileStore.flushCache('visit-logs');
         fileStore.flushCache('api-calls');
         fileStore.flushCache('banned-ips');
@@ -145,6 +162,7 @@ function stopCacheScheduler() {
 
 module.exports = {
     createJsonFileStore,
+    writeJsonAtomic,
     startCacheScheduler,
     stopCacheScheduler
 };

@@ -33,7 +33,7 @@ npm install
 cp .env.example .env
 ```
 
-最小可运行配置只需设置 `JWT_SECRET`。如需播客、微信等功能，参考 `.env.example` 补齐对应 API Key。
+最小可运行配置需设置强随机 `JWT_SECRET`。首次初始化管理员时，再临时设置 `DEFAULT_ADMIN_USERNAME` 和 `DEFAULT_ADMIN_PASSWORD`；生产环境不接受示例弱密码。如需播客、微信等功能，参考 `.env.example` 补齐对应 API Key。
 
 ### 启动
 
@@ -44,12 +44,9 @@ npm run dev        # 开发模式（nodemon 热重载）
 
 访问 http://localhost:3000
 
-### 默认管理员
+### 管理员登录
 
-```
-用户名: admin
-密码: admin123456
-```
+管理员账号由 `.env` 中的 `DEFAULT_ADMIN_USERNAME` / `DEFAULT_ADMIN_PASSWORD` 在首次启动时初始化，不内置通用默认密码。
 
 登录入口：http://localhost:3000/admin-login.html
 

@@ -7,7 +7,12 @@ const DEFAULT_API_RATE_LIMIT = {
 };
 
 function isLocalIP(ip) {
-    return ip === '127.0.0.1' || ip === '::1' || ip.startsWith('192.168.') || ip.startsWith('10.');
+    const normalized = String(ip || '').replace(/^::ffff:/, '');
+    if (normalized === '127.0.0.1' || normalized === '::1') return true;
+    if (normalized.startsWith('192.168.') || normalized.startsWith('10.')) return true;
+
+    const private172 = normalized.match(/^172\.(\d{1,2})\./);
+    return Boolean(private172 && Number(private172[1]) >= 16 && Number(private172[1]) <= 31);
 }
 
 function createSecurityHelpers({ readData, writeData, bannedIpsFile, apiCallsFile, apiRateLimit = DEFAULT_API_RATE_LIMIT, bannedIpsCacheKey = 'banned-ips', apiCallsCacheKey = 'api-calls' }) {
@@ -418,6 +423,7 @@ function createSecurityRouter({ readData, writeData, bannedIpsFile, apiCallsFile
 }
 
 module.exports = {
+    isLocalIP,
     createSecurityRuntime,
     createSecurityRouter
 };

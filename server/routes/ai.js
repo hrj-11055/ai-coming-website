@@ -1,7 +1,65 @@
 const express = require('express');
 const { isApiKeyConfigured } = require('../services/ai-proxy');
 
-function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
+function toPositiveInteger(value, fallback) {
+    const number = Math.floor(Number(value));
+    return Number.isFinite(number) && number > 0 ? number : fallback;
+}
+
+function normalizeAiRequest(body = {}, requestLimits = {}) {
+    const maxQueryChars = toPositiveInteger(requestLimits.maxQueryChars, 12000);
+    const maxOutputTokens = toPositiveInteger(requestLimits.maxOutputTokens, 4000);
+    const timeoutMs = toPositiveInteger(requestLimits.timeoutMs, 120000);
+    const query = typeof body.query === 'string' ? body.query.trim() : '';
+
+    if (!query) {
+        return {
+            error: {
+                status: 400,
+                message: 'query 参数必须是非空字符串'
+            }
+        };
+    }
+
+    if (query.length > maxQueryChars) {
+        return {
+            error: {
+                status: 413,
+                message: `query 长度不能超过 ${maxQueryChars} 个字符`
+            }
+        };
+    }
+
+    const requestedTemperature = Number(body.temperature ?? 0.7);
+    const temperature = Number.isFinite(requestedTemperature)
+        ? Math.min(2, Math.max(0, requestedTemperature))
+        : 0.7;
+    const requestedMaxTokens = toPositiveInteger(body.max_tokens, maxOutputTokens);
+
+    return {
+        query,
+        temperature,
+        maxTokens: Math.min(requestedMaxTokens, maxOutputTokens),
+        stream: body.stream !== false,
+        timeoutMs
+    };
+}
+
+function normalizeModelError(error) {
+    if (error?.name === 'TimeoutError' || error?.name === 'AbortError') {
+        return {
+            status: 504,
+            message: '上游 AI 服务请求超时'
+        };
+    }
+
+    return {
+        status: 500,
+        message: error?.message || '上游 AI 服务请求失败'
+    };
+}
+
+function createAiRouter({ systemPrompt, aiConfig, aiUsageService, requestLimits = {} }) {
     const router = express.Router();
 
     router.post('/ai/chat', async (req, res) => {
@@ -31,7 +89,6 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
         }
 
         try {
-            const { query, temperature = 0.7, max_tokens = 4000, stream = true } = req.body;
             const { apiKey, apiUrl, model } = aiConfig;
 
             if (!isApiKeyConfigured(apiKey)) {
@@ -41,19 +98,22 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
                 });
             }
 
-            if (!query || typeof query !== 'string') {
-                return res.status(400).json({
+            const normalizedRequest = normalizeAiRequest(req.body, requestLimits);
+            if (normalizedRequest.error) {
+                return res.status(normalizedRequest.error.status).json({
                     error: '参数错误',
-                    message: 'query 参数必须是非空字符串'
+                    message: normalizedRequest.error.message
                 });
             }
+            const { query, temperature, maxTokens, stream, timeoutMs } = normalizedRequest;
 
-            requestChars = query.trim().length;
+            requestChars = query.length;
 
             const messages = [
                 { role: 'system', content: systemPrompt },
-                { role: 'user', content: query.trim() }
+                { role: 'user', content: query }
             ];
+            const signal = AbortSignal.timeout(timeoutMs);
 
             if (stream) {
                 res.setHeader('Content-Type', 'text/event-stream');
@@ -72,10 +132,11 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
                             model,
                             messages,
                             temperature,
-                            max_tokens,
+                            max_tokens: maxTokens,
                             stream: true,
                             stream_options: { include_usage: true }
-                        })
+                        }),
+                        signal
                     });
 
                     if (!response.ok) {
@@ -129,12 +190,13 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
                     });
                     res.end();
                 } catch (error) {
+                    const normalizedError = normalizeModelError(error);
                     console.error('流式API调用错误:', error);
                     recordUsage('error', {
                         stream: true,
-                        error
+                        error: normalizedError.message
                     });
-                    res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+                    res.write(`data: ${JSON.stringify({ error: normalizedError.message })}\n\n`);
                     res.end();
                 }
 
@@ -151,9 +213,10 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
                     model,
                     messages,
                     temperature,
-                    max_tokens,
+                    max_tokens: maxTokens,
                     stream: false
-                })
+                }),
+                signal
             });
 
             if (!response.ok) {
@@ -176,15 +239,16 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
             });
             return res.json(data);
         } catch (error) {
+            const normalizedError = normalizeModelError(error);
             console.error('AI搜索错误:', error);
             recordUsage('error', {
                 stream: Boolean(req.body?.stream),
-                error
+                error: normalizedError.message
             });
             if (!res.headersSent) {
-                return res.status(500).json({
+                return res.status(normalizedError.status).json({
                     error: '服务器错误',
-                    message: error.message
+                    message: normalizedError.message
                 });
             }
             return undefined;
@@ -195,5 +259,7 @@ function createAiRouter({ systemPrompt, aiConfig, aiUsageService }) {
 }
 
 module.exports = {
-    createAiRouter
+    createAiRouter,
+    normalizeAiRequest,
+    normalizeModelError
 };

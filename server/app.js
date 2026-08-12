@@ -7,7 +7,35 @@ const path = require('path');
  * Create and configure express app with shared middleware/static hosting.
  * This keeps runtime behavior aligned with previous server-json.js setup.
  */
-function createApp({ rootDir, staticRoot }) {
+function normalizeTrustProxy(value) {
+    const normalized = String(value ?? '').trim();
+    if (!normalized) return 'loopback';
+    if (normalized === 'true') return true;
+    if (normalized === 'false') return false;
+    if (/^\d+$/.test(normalized)) return Number(normalized);
+    return normalized;
+}
+
+function createCorsOptions(allowedOriginsValue) {
+    const allowedOrigins = new Set(
+        String(allowedOriginsValue || '')
+            .split(',')
+            .map((value) => value.trim())
+            .filter(Boolean)
+    );
+
+    return {
+        origin(origin, callback) {
+            if (!origin || allowedOrigins.has(origin)) {
+                callback(null, true);
+                return;
+            }
+            callback(null, false);
+        }
+    };
+}
+
+function createApp({ rootDir, staticRoot, trustProxy, corsAllowedOrigins, jsonBodyLimit = '64kb' }) {
     const app = express();
     const longCacheExtensions = new Set([
         '.png',
@@ -34,8 +62,9 @@ function createApp({ rootDir, staticRoot }) {
         }
     }
 
-    app.use(cors());
-    app.use(express.json());
+    app.set('trust proxy', normalizeTrustProxy(trustProxy));
+    app.use(cors(createCorsOptions(corsAllowedOrigins)));
+    app.use(express.json({ limit: jsonBodyLimit }));
 
     if (staticRoot) {
         const resolvedStaticRoot = path.resolve(rootDir, staticRoot);
@@ -54,5 +83,7 @@ function createApp({ rootDir, staticRoot }) {
 }
 
 module.exports = {
+    createCorsOptions,
+    normalizeTrustProxy,
     createApp
 };
