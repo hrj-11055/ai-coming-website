@@ -82,7 +82,7 @@ PORT=$(grep "^PORT=" .env 2>/dev/null | cut -d '=' -f2)
 PORT=${PORT:-$DEFAULT_PORT}
 
 echo -e "${BLUE}访问地址:${NC} http://localhost:$PORT"
-echo -e "${BLUE}默认管理员:${NC} admin / admin123456"
+echo -e "${BLUE}管理员账号:${NC} 由 .env 在首次启动时初始化"
 echo -e "${BLUE}按 Ctrl+C 停止服务器${NC}"
 echo ""
 

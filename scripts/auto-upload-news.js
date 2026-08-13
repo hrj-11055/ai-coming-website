@@ -33,8 +33,11 @@ async function login() {
   try {
     log('正在登录...', colors.blue);
 
-    const username = process.env.ADMIN_USERNAME || 'admin';
-    const password = process.env.ADMIN_PASSWORD || 'admin123456';
+    const username = process.env.ADMIN_USERNAME;
+    const password = process.env.ADMIN_PASSWORD;
+    if (!username || !password) {
+      throw new Error('请设置 ADMIN_USERNAME 和 ADMIN_PASSWORD，不再使用默认凭据');
+    }
 
     const response = await axios.post(`${API_BASE}/api/auth/login`, {
       username,

@@ -116,3 +116,20 @@ test('JSON writes replace the target atomically and cached paths flush correctly
         fs.rmSync(directory, { recursive: true, force: true });
     }
 });
+
+test('operational entrypoints do not expose or fall back to the retired default password', () => {
+    const repoRoot = path.resolve(import.meta.dirname, '..');
+    const operationalFiles = [
+        'server/start.js',
+        'sync-json-news.sh',
+        'scripts/smoke-json.js',
+        'scripts/auto-upload-news.js',
+        'scripts/auto_upload_news.py',
+        'run.sh'
+    ];
+
+    for (const relativePath of operationalFiles) {
+        const source = fs.readFileSync(path.join(repoRoot, relativePath), 'utf8');
+        assert.equal(source.includes('admin123456'), false, relativePath);
+    }
+});

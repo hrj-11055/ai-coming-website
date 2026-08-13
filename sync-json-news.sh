@@ -13,7 +13,7 @@ PROJECT_DIR="${PROJECT_DIR:-/var/www/ai-coming-website}"
 LOG_FILE="${LOG_FILE:-$PROJECT_DIR/logs/json-sync.log}"
 API_URL="${API_URL:-http://localhost:3000/api/news/batch}"
 ADMIN_USERNAME="${ADMIN_USERNAME:-admin}"
-ADMIN_PASSWORD="${ADMIN_PASSWORD:-admin123456}"
+ADMIN_PASSWORD_FILE="${ADMIN_PASSWORD_FILE:-/var/lib/ai-coming/admin-password}"
 
 # 创建必要目录
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -67,9 +67,22 @@ log "📊 文章数量: $article_count"
 
 # 获取Token
 log "🔐 获取认证Token..."
+if [ -z "${ADMIN_PASSWORD:-}" ]; then
+    if [ ! -r "$ADMIN_PASSWORD_FILE" ]; then
+        log "❌ 缺少 ADMIN_PASSWORD 或可读的 ADMIN_PASSWORD_FILE: $ADMIN_PASSWORD_FILE"
+        exit 1
+    fi
+    ADMIN_PASSWORD="$(tr -d '\r\n' < "$ADMIN_PASSWORD_FILE")"
+fi
+
+if [ -z "$ADMIN_PASSWORD" ]; then
+    log "❌ 管理员密码为空"
+    exit 1
+fi
+
 token=$(curl -s -X POST http://localhost:3000/api/auth/login \
     -H "Content-Type: application/json" \
-    -d "{\"username\":\"$ADMIN_USERNAME\",\"password\":\"$ADMIN_PASSWORD\"}" \
+    -d "$(jq -n --arg username "$ADMIN_USERNAME" --arg password "$ADMIN_PASSWORD" '{username: $username, password: $password}')" \
     | grep -o '"token":"[^"]*"' | cut -d'"' -f4)
 
 if [ -z "$token" ]; then

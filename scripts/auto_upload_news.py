@@ -129,8 +129,10 @@ def main():
             log('未找到JWT_TOKEN环境变量', Colors.yellow)
             log('正在尝试登录...', Colors.yellow)
 
-            username = os.getenv('ADMIN_USERNAME', 'admin')
-            password = os.getenv('ADMIN_PASSWORD', 'admin123456')
+            username = os.getenv('ADMIN_USERNAME')
+            password = os.getenv('ADMIN_PASSWORD')
+            if not username or not password:
+                raise ValueError('请设置 ADMIN_USERNAME 和 ADMIN_PASSWORD，不再使用默认凭据')
 
             token = login(username, password)
             log(f'\n请设置环境变量以便下次使用:', Colors.yellow)

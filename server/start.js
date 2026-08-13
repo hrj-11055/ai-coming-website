@@ -32,10 +32,6 @@ function logStartup(host, port) {
     console.log('  GET  /api/podcast/news/:date - 获取指定日期播客状态');
     console.log('  GET  /api/podcast/news/:date/audio - 播放本地日报播客音频');
     console.log('  POST /api/podcast/news/:date/generate - 生成指定日期播客');
-    console.log('');
-    console.log('默认管理员账户:');
-    console.log('  用户名: admin');
-    console.log('  密码: admin123456');
 }
 
 function startServer(app, { host, port }) {

@@ -82,8 +82,9 @@ async function run() {
         });
         assert(badLogin.status === 401, `POST /api/auth/login invalid expected 401 got ${badLogin.status}`);
 
-        const adminUser = process.env.SMOKE_ADMIN_USERNAME || process.env.DEFAULT_ADMIN_USERNAME || 'admin';
-        const adminPass = process.env.SMOKE_ADMIN_PASSWORD || process.env.DEFAULT_ADMIN_PASSWORD || 'admin123456';
+        const adminUser = process.env.SMOKE_ADMIN_USERNAME || process.env.DEFAULT_ADMIN_USERNAME;
+        const adminPass = process.env.SMOKE_ADMIN_PASSWORD || process.env.DEFAULT_ADMIN_PASSWORD;
+        assert(adminUser && adminPass, 'Set SMOKE_ADMIN_USERNAME/SMOKE_ADMIN_PASSWORD for authenticated smoke checks');
         const login = await request('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
