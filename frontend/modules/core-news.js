@@ -1707,13 +1707,13 @@ function renderArticlesList(articles) {
 
         html += `
             <article class="article-item ${categoryClass}" id="article-${index}" data-date="${getDateKey(article.published_at)}">
-                <div class="flex items-start justify-between mb-3">
+                <div class="article-item__header flex items-start justify-between mb-3">
                     <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0">
+                        <div class="article-item__icon w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0">
                             <i class="${getCategoryIcon(article.category)}"></i>
                         </div>
-                        <div>
-                            <div class="flex items-center space-x-2 mb-1">
+                        <div class="article-item__taxonomy">
+                            <div class="article-item__category-row flex items-center space-x-2 mb-1">
                                 <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${getCategoryColor(article.category).replace('text-', 'bg-').replace('-700', '-100').replace('-600', '-100')}">${article.category || '其他'}</span>
                                 <span class="text-xs text-gray-400">${article.sub_category || '未分类'}</span>
                             </div>
@@ -1727,28 +1727,32 @@ function renderArticlesList(articles) {
                     <div class="text-right"></div>
                 </div>
 
-                <h3 class="text-xl font-bold text-gray-900 mb-3 leading-snug" itemprop="headline">
+                <h3 class="article-item__title text-xl font-bold text-gray-900 mb-3 leading-snug" itemprop="headline">
                     <a href="${articleUrl}" target="_blank" class="hover:text-blue-600 transition-colors" itemprop="url">${article.title}</a>
                 </h3>
 
-                <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-3">
-                    <p class="text-sm font-medium text-gray-700 flex items-start" itemprop="description">
+                <div class="article-item__key-point bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-3">
+                    <p class="article-item__key-point-text text-sm font-medium text-gray-700 flex items-start" itemprop="description">
                         <i class="fas fa-lightbulb text-yellow-500 mr-2 mt-0.5 flex-shrink-0"></i>
                         <span>${article.key_point || '暂无关键信息'}</span>
                     </p>
                 </div>
 
-                <p class="text-gray-600 mb-4 leading-relaxed" itemprop="description">
+                <p class="article-item__summary text-gray-600 mb-4 leading-relaxed" itemprop="description">
                     ${article.summary || '暂无摘要'}
                 </p>
 
-                <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                <div class="article-item__footer flex items-center justify-between pt-3 border-t border-gray-100">
                     <!-- 隐藏时间显示（AI生成的时间不准确） -->
                     <!-- <div class="text-xs text-gray-500" itemprop="datePublished" content="${publishedDate}">
                         <i class="far fa-calendar mr-1"></i>
                         ${article.published_at ? new Date(article.published_at).toLocaleDateString('zh-CN') : '刚刚'}
                     </div> -->
-                    <a href="${articleUrl}" target="_blank" class="inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
+                    <span class="article-item__source" aria-label="来源：${escapeHtml(article.source_name || '其他')}">
+                        <i class="far fa-newspaper" aria-hidden="true"></i>
+                        <span class="article-item__source-name">${escapeHtml(article.source_name || '其他')}</span>
+                    </span>
+                    <a href="${articleUrl}" target="_blank" rel="noopener noreferrer" class="article-item__read-more inline-flex items-center text-xs font-medium text-blue-600 hover:text-blue-800 transition-colors">
                         阅读原文 <i class="fas fa-external-link-alt ml-1"></i>
                     </a>
                 </div>

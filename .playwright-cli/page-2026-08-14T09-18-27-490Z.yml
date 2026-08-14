@@ -1,0 +1,95 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e5]:
+        - link [ref=e7] [cursor=pointer]:
+          - /url: index.html
+          - img "AIcoming - 让一部分人先用起来" [ref=e8]
+        - generic [ref=e10]:
+          - link "首页" [ref=e11] [cursor=pointer]:
+            - /url: index.html
+          - link "提示生成专家" [ref=e12] [cursor=pointer]:
+            - /url: news.html
+          - link "AI工具集" [ref=e13] [cursor=pointer]:
+            - /url: tools.html
+          - link "AI 能力库" [ref=e14] [cursor=pointer]:
+            - /url: skills.html
+          - link "关于我们" [ref=e15] [cursor=pointer]:
+            - /url: about.html
+        - text: 
+    - text: 
+  - generic [ref=e16]:
+    - generic [ref=e18]:
+      - generic: 近期热点
+      - generic [ref=e19] [cursor=pointer]: SaaS末日
+      - generic [ref=e20] [cursor=pointer]: 代理人经济
+      - generic [ref=e21] [cursor=pointer]: OpenClaw
+      - generic [ref=e22] [cursor=pointer]: DeepSeek V4
+      - generic [ref=e23] [cursor=pointer]: Seedance
+      - generic [ref=e24] [cursor=pointer]: Claude 4.6
+      - generic [ref=e25] [cursor=pointer]: GPT-5.3
+      - generic [ref=e26] [cursor=pointer]: AI春晚
+      - generic [ref=e27] [cursor=pointer]: Moltbook
+      - generic [ref=e28] [cursor=pointer]: RynnBrain
+      - generic [ref=e29] [cursor=pointer]: Engram架构
+      - generic [ref=e30] [cursor=pointer]: Kimi K2.5
+      - generic [ref=e31] [cursor=pointer]: 氛围编程
+      - generic [ref=e32] [cursor=pointer]: 数字隔离
+      - generic [ref=e33] [cursor=pointer]: 具身智能
+      - generic [ref=e34] [cursor=pointer]: 18%关税梗
+      - generic [ref=e35] [cursor=pointer]: 死互联网
+      - generic [ref=e36] [cursor=pointer]: 结构性失业
+      - generic [ref=e37] [cursor=pointer]: 来华过年
+      - generic [ref=e38] [cursor=pointer]: 怀旧2016
+      - generic [ref=e39] [cursor=pointer]: HBM4量产
+      - generic [ref=e40] [cursor=pointer]: Siri接入Gemini
+      - generic [ref=e41] [cursor=pointer]: 万亿参数
+      - generic [ref=e42] [cursor=pointer]: Genie 3
+      - generic [ref=e43] [cursor=pointer]: NVIDIA Rubin
+      - generic [ref=e44] [cursor=pointer]: OCR-2
+      - generic [ref=e45] [cursor=pointer]: M100芯片
+      - generic [ref=e46] [cursor=pointer]: Qwen3.5
+      - generic [ref=e47] [cursor=pointer]: 主权AI
+      - generic [ref=e48] [cursor=pointer]: 声音克隆平民化
+    - generic [ref=e51]:
+      - complementary [ref=e52]:
+        - generic [ref=e53]:
+          - heading " 历史文章" [level=3] [ref=e54]:
+            - generic [ref=e55]: 
+            - text: 历史文章
+          - combobox [ref=e57]:
+            - option "全部月份" [selected]
+          - generic [ref=e59]:
+            - generic [ref=e60]: 
+            - paragraph [ref=e61]: 加载中...
+      - main [ref=e62]:
+        - heading "今日快讯" [level=2] [ref=e65]
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - generic [ref=e69]:
+              - generic [ref=e70]: 今日播客
+              - generic [ref=e71]: 2026-08-14 · 时长生成后可见
+            - generic [ref=e72]: 生成失败
+          - paragraph [ref=e73]: Failed to fetch
+          - button "重新生成播客" [ref=e75] [cursor=pointer]
+        - generic [ref=e77]:
+          - generic [ref=e78]: 地区：
+          - generic [ref=e79]:
+            - button "全部" [ref=e80] [cursor=pointer]
+            - button "中国" [ref=e81] [cursor=pointer]
+            - button "全球" [ref=e82] [cursor=pointer]
+        - generic [ref=e85]:
+          - generic [ref=e86]: 
+          - paragraph [ref=e87]: 暂无今日快讯
+          - paragraph [ref=e88]: 请先通过API导入新闻数据
+      - complementary [ref=e89]:
+        - generic [ref=e90]:
+          - heading " 内容大纲" [level=3] [ref=e91]:
+            - generic [ref=e92]: 
+            - text: 内容大纲
+          - generic [ref=e93]: 加载中...
+          - heading " 今日统计" [level=4] [ref=e96]:
+            - generic [ref=e97]: 
+            - text: 今日统计
+    - contentinfo [ref=e99]:
+      - paragraph [ref=e102]: © 2025 AIcoming. 保留所有权利。让一部分人先用起来。

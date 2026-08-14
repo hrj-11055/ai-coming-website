@@ -166,10 +166,16 @@
             box-shadow: var(--ai-shadow-sm, 0 1px 3px rgba(0,0,0,0.1));
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
+            box-sizing: border-box;
+            max-width: 100%;
+            min-width: 0;
+            overflow: hidden;
         }
-        .article-item:hover {
-            box-shadow: var(--ai-shadow-md, 0 4px 12px rgba(0,0,0,0.15));
-            transform: translateY(-2px);
+        @media (hover: hover) {
+            .article-item:hover {
+                box-shadow: var(--ai-shadow-md, 0 4px 12px rgba(0,0,0,0.15));
+                transform: translateY(-2px);
+            }
         }
         .article-item.tech {
             border-left-color: #3b82f6;
@@ -182,6 +188,128 @@
         }
         .article-item.product {
             border-left-color: #8b5cf6;
+        }
+        .article-item__taxonomy,
+        .article-item__category-row {
+            min-width: 0;
+        }
+        .article-item__title,
+        .article-item__key-point-text,
+        .article-item__summary,
+        .article-item__source {
+            overflow-wrap: anywhere;
+        }
+        .article-item__footer {
+            gap: 16px;
+        }
+        .article-item__source {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+        .article-item__source i {
+            color: #94a3b8;
+        }
+        .article-item__source-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .article-item__read-more {
+            flex-shrink: 0;
+        }
+        .article-item a:focus-visible {
+            border-radius: 4px;
+            outline: 2px solid #2563eb;
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 640px) {
+            #newsSection {
+                padding-top: 16px;
+                padding-bottom: 24px;
+            }
+            .news-toolbar,
+            .news-filters {
+                margin-bottom: 16px;
+            }
+            #sectionTitle {
+                font-size: 1.375rem;
+                line-height: 1.35;
+            }
+            .news-filter-row {
+                align-items: center;
+                gap: 8px;
+            }
+            .news-filter-actions {
+                min-width: 0;
+                gap: 6px;
+            }
+            .news-filter-actions button {
+                padding: 8px 12px;
+            }
+            .podcast-card {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+            .article-item {
+                padding: 16px 16px 14px;
+                margin-bottom: 12px;
+                border-left-width: 3px;
+                border-radius: 10px;
+                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            }
+            .article-item__header {
+                align-items: center;
+                margin-bottom: 12px;
+            }
+            .article-item__icon {
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+            }
+            .article-item__category-row {
+                flex-wrap: wrap;
+                gap: 4px 8px;
+                margin-bottom: 0;
+            }
+            .article-item__title {
+                margin-bottom: 12px;
+                font-size: 1.125rem;
+                line-height: 1.5;
+                letter-spacing: -0.01em;
+            }
+            .article-item__key-point {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            .article-item__key-point-text {
+                display: -webkit-box;
+                overflow: hidden;
+                font-size: 0.8125rem;
+                line-height: 1.65;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 4;
+            }
+            .article-item__summary {
+                display: -webkit-box;
+                overflow: hidden;
+                margin-bottom: 14px;
+                color: #475569;
+                font-size: 0.9375rem;
+                line-height: 1.75;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 5;
+            }
+            .article-item__footer {
+                padding-top: 12px;
+            }
+            .article-item__source {
+                max-width: 68%;
+            }
         }
 
         .podcast-card {
@@ -569,7 +697,7 @@
                     <!-- 中间：文章内容 -->
                     <main class="flex-1 min-w-0">
                         <!-- 顶部控制栏 -->
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="news-toolbar flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-4">
                                 <h2 class="text-2xl font-bold text-gray-900" id="sectionTitle">今日快讯</h2>
                             </div>
@@ -589,10 +717,10 @@
                         </div>
 
                         <!-- 地区筛选 -->
-                        <div class="mb-6">
-                            <div class="flex items-center space-x-2">
+                        <div class="news-filters mb-6">
+                            <div class="news-filter-row flex items-center space-x-2">
                                 <span class="text-sm font-medium text-gray-500">地区：</span>
-                                <div class="flex space-x-2">
+                                <div class="news-filter-actions flex space-x-2">
                                     <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('all')" id="allFilter">全部</button>
                                     <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('china')" id="chinaFilter">中国</button>
                                     <button class="px-4 py-2 text-sm font-medium bg-gray-200 text-gray-700 hover:bg-blue-600 hover:text-white rounded-md transition-colors" onclick="filterArticles('global')" id="globalFilter">全球</button>
